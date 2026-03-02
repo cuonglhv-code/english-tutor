@@ -2,10 +2,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, PenLine, TrendingUp, BarChart2, Cpu, Sliders } from "lucide-react";
+import { Loader2, PenLine, TrendingUp, BarChart2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ScoringMethodBadge } from "@/components/ScoringMethodBadge";
 import { BandProgressChart } from "@/components/dashboard/BandProgressChart";
 import { SubmissionHistoryTable } from "@/components/dashboard/SubmissionHistoryTable";
 import { RecentFeedbackPanel } from "@/components/dashboard/RecentFeedbackPanel";
@@ -131,13 +132,13 @@ export default function DashboardPage() {
               <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                 {lang === "vi" ? "AI / Dự phòng" : "AI / Fallback"}
               </p>
-              <div className="flex justify-center gap-2 mt-2">
-                <div className="flex items-center gap-1">
-                  <Cpu className="h-3.5 w-3.5 text-jaxtina-blue" />
+              <div className="flex flex-col items-center gap-1.5 mt-2">
+                <div className="flex items-center gap-2">
+                  <ScoringMethodBadge method="ai_examiner" lang={lang} size="xs" />
                   <span className="font-bold text-lg">{aiCount}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Sliders className="h-3.5 w-3.5 text-muted-foreground" />
+                <div className="flex items-center gap-2">
+                  <ScoringMethodBadge method="rule_based_fallback" lang={lang} size="xs" />
                   <span className="font-bold text-lg">{ruleCount}</span>
                 </div>
               </div>

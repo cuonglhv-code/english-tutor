@@ -38,11 +38,33 @@ export default function LoginPage() {
   };
 
   const handleGoogle = async () => {
-    const supabase = createBrowserClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/dashboard` },
-    });
+    try {
+      const supabase = createBrowserClient();
+      // IMPORTANT — Supabase dashboard steps required before Google login works:
+      //   1. Authentication → Providers → Google → Enable → paste Client ID + Secret.
+      //   2. In Google Cloud Console: add this as an Authorised Redirect URI:
+      //      https://<your-project-ref>.supabase.co/auth/v1/callback
+      // The redirectTo below routes back through our SSR callback to set session cookies.
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}/auth/callback` },
+      });
+      if (error) {
+        const isDisabled =
+          error.message.toLowerCase().includes("provider is not enabled") ||
+          error.message.toLowerCase().includes("unsupported provider") ||
+          error.message.toLowerCase().includes("validation_failed");
+        toast.error(
+          isDisabled
+            ? lang === "vi"
+              ? "Đăng nhập bằng Google chưa được bật. Vui lòng dùng Email / Mật khẩu."
+              : "Google login is not enabled yet. Please use Email / Password instead."
+            : t("auth", "errorGeneric", lang)
+        );
+      }
+    } catch {
+      toast.error(t("auth", "errorGeneric", lang));
+    }
   };
 
   return (

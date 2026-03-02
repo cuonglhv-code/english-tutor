@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ScoringMethodBadge } from "@/components/ScoringMethodBadge";
 import { bandToColor } from "@/lib/utils";
 import { ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
 import type { SubmissionWithFeedback } from "@/types";
@@ -98,11 +99,7 @@ export function SubmissionHistoryTable({ submissions, lang }: Props) {
                     ) : "—"}
                   </td>
                   <td className="p-3 text-center hidden sm:table-cell">
-                    <Badge variant={s.scoring_method === "ai_examiner" ? "blue" : "outline"} className="text-xs">
-                      {s.scoring_method === "ai_examiner"
-                        ? t("dashboard", "aiExaminer", lang)
-                        : t("dashboard", "ruleBased", lang)}
-                    </Badge>
+                    <ScoringMethodBadge method={s.scoring_method} lang={lang} size="xs" />
                   </td>
                   <td className="p-3 text-center hidden sm:table-cell text-xs text-muted-foreground uppercase">
                     {s.language}

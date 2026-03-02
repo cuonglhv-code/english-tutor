@@ -89,6 +89,21 @@ export interface AIRawResponse {
   feedback: AIRawFeedback;
 }
 
+// ─── Essay Plan API ───────────────────────────────────────────────────────────
+
+export interface EssayPlanRequest {
+  task_type: "academic" | "general";
+  task_number: "1" | "2";
+  prompt_text: string;
+  language: "en" | "vi";
+}
+
+export interface EssayPlanResponse {
+  success: boolean;
+  plan?: string;
+  error?: string;
+}
+
 // ─── Supabase schema types ────────────────────────────────────────────────────
 
 export interface Profile {
@@ -96,11 +111,18 @@ export interface Profile {
   email: string;
   display_name: string | null;
   created_at: string;
+  // Onboarding fields (migration 002)
+  age: number | null;
+  city: string | null;
+  phone: string | null;
+  current_writing_band: string | null;
+  target_writing_band: string | null;
+  profile_completed: boolean;
 }
 
 export interface EssaySubmission {
   id: string;
-  user_id: string;
+  user_id: string | null;
   task_type: "task1" | "task2";
   prompt_text: string;
   essay_text: string;
@@ -108,6 +130,9 @@ export interface EssaySubmission {
   language: "en" | "vi";
   submitted_at: string;
   scoring_method: "ai_examiner" | "rule_based_fallback";
+  // Essay plan fields (migration 002)
+  essay_plan_requested: boolean;
+  essay_plan_text: string | null;
 }
 
 export interface FeedbackResult {

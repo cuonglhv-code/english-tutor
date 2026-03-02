@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { BandsTable } from "@/components/results/BandsTable";
 import { FeedbackAccordion } from "@/components/results/FeedbackAccordion";
 import { TipsCarousel } from "@/components/results/TipsCarousel";
 import { SubscribeCTA } from "@/components/results/SubscribeCTA";
-import { Loader2, RotateCcw, BookOpen, Cpu, Sliders } from "lucide-react";
+import { ScoringMethodBadge } from "@/components/ScoringMethodBadge";
+import { Loader2, RotateCcw, BookOpen, ChevronDown, ChevronUp, FileText } from "lucide-react";
 import type { AnalysisResult, WizardData } from "@/types";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/lib/i18n";
@@ -17,12 +17,14 @@ import { t } from "@/lib/i18n";
 interface StoredResult {
   result: AnalysisResult;
   formData: WizardData;
+  essayPlan?: string | null;
 }
 
 export default function ResultsPage() {
   const { lang } = useLanguage();
   const [stored, setStored] = useState<StoredResult | null>(null);
   const [loading, setLoading] = useState(true);
+  const [planOpen, setPlanOpen] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function ResultsPage() {
 
   if (!stored) return null;
 
-  const { result, formData } = stored;
+  const { result, formData, essayPlan } = stored;
   const scoringMethod = result.scoring_method ?? "rule_based_fallback";
 
   const handlePracticeAgain = () => {
@@ -89,15 +91,7 @@ export default function ResultsPage() {
               <p className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
                 {formData.name} · Task {formData.taskNumber}{" "}
                 {formData.taskType === "academic" ? "Academic" : "General"} · {result.wordCount} {t("common", "words", lang)}
-                <Badge
-                  variant={scoringMethod === "ai_examiner" ? "blue" : "outline"}
-                  className="text-[10px] flex items-center gap-1"
-                >
-                  {scoringMethod === "ai_examiner"
-                    ? <><Cpu className="h-2.5 w-2.5" /> {t("results", "aiExaminer", lang)}</>
-                    : <><Sliders className="h-2.5 w-2.5" /> {t("results", "ruleBased", lang)}</>
-                  }
-                </Badge>
+                <ScoringMethodBadge method={scoringMethod} lang={lang} size="xs" />
               </p>
             </div>
             <Button variant="ghost" size="sm" onClick={handleFullReset} title="Start completely fresh">
@@ -105,6 +99,30 @@ export default function ResultsPage() {
             </Button>
           </div>
         </motion.div>
+
+        {/* Essay Plan Panel */}
+        {essayPlan && (
+          <div className="rounded-xl border overflow-hidden">
+            <button
+              className="w-full flex items-center justify-between px-4 py-3 bg-muted/60 hover:bg-muted/80 transition-colors text-left"
+              onClick={() => setPlanOpen((v) => !v)}
+            >
+              <span className="flex items-center gap-2 font-semibold text-sm">
+                <FileText className="h-4 w-4 text-jaxtina-blue" />
+                {t("essayPlan", "planTitle", lang)}
+              </span>
+              {planOpen
+                ? <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                : <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              }
+            </button>
+            {planOpen && (
+              <div className="p-4">
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">{essayPlan}</p>
+              </div>
+            )}
+          </div>
+        )}
 
         <BandsTable bands={result.bands} taskNumber={formData.taskNumber} lang={lang} />
         <FeedbackAccordion feedback={result.feedback} lang={lang} />

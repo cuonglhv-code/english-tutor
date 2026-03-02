@@ -163,6 +163,51 @@ const translations = {
     viewFull: { en: "View full feedback →", vi: "Xem phản hồi đầy đủ →" },
   },
 
+  // ─── Onboarding ───────────────────────────────────────────────────────────
+  onboarding: {
+    title: { en: "Complete Your Profile", vi: "Hoàn thiện hồ sơ" },
+    desc: { en: "Help us personalise your IELTS practice experience. This takes less than a minute.", vi: "Giúp chúng tôi cá nhân hoá trải nghiệm luyện thi IELTS của bạn. Chỉ mất dưới một phút." },
+    step: { en: "Tell us a bit about yourself", vi: "Cho chúng tôi biết thêm về bạn" },
+    age: { en: "Age", vi: "Tuổi" },
+    city: { en: "City / Province", vi: "Thành phố / Tỉnh" },
+    cityPlaceholder: { en: "e.g. Ho Chi Minh City", vi: "VD: Hồ Chí Minh" },
+    phone: { en: "Phone Number", vi: "Số điện thoại" },
+    phonePlaceholder: { en: "+84 9xx xxx xxx", vi: "+84 9xx xxx xxx" },
+    currentBand: { en: "Current IELTS Writing Band", vi: "Band Viết IELTS hiện tại" },
+    targetBand: { en: "Target IELTS Writing Band", vi: "Band Viết mục tiêu" },
+    notTested: { en: "Not yet tested", vi: "Chưa thi" },
+    saveBtn: { en: "Save & Go to Dashboard →", vi: "Lưu & Vào Dashboard →" },
+    saving: { en: "Saving…", vi: "Đang lưu…" },
+    errorAge: { en: "Please enter your age (16–70).", vi: "Vui lòng nhập tuổi (16–70)." },
+    errorCity: { en: "Please enter your city.", vi: "Vui lòng nhập thành phố." },
+    errorPhone: { en: "Please enter a valid phone number.", vi: "Vui lòng nhập số điện thoại hợp lệ." },
+  },
+
+  // ─── Essay Plan ───────────────────────────────────────────────────────────
+  essayPlan: {
+    modalTitle: { en: "Get an Essay Plan?", vi: "Nhận gợi ý dàn ý?" },
+    modalDesc: { en: "Would you like an AI-generated essay plan for this question before seeing your score?", vi: "Bạn có muốn nhận dàn ý do AI gợi ý cho câu hỏi này trước khi xem điểm không?" },
+    yesBtn: { en: "Yes, suggest a plan", vi: "Có, gợi ý dàn ý cho tôi" },
+    noBtn: { en: "No, go straight to feedback", vi: "Không, chuyển thẳng đến nhận xét" },
+    planTitle: { en: "Your Essay Plan", vi: "Dàn ý gợi ý của bạn" },
+    generating: { en: "Generating essay plan…", vi: "Đang tạo dàn ý…" },
+    error: { en: "Could not generate a plan — proceeding to your results.", vi: "Không thể tạo dàn ý — chuyển đến kết quả của bạn." },
+    collapseBtn: { en: "Collapse plan", vi: "Thu gọn dàn ý" },
+    expandBtn: { en: "View essay plan", vi: "Xem dàn ý" },
+  },
+
+  // ─── Scoring Method Tooltips ──────────────────────────────────────────────
+  tooltip: {
+    aiExaminer: {
+      en: "AI Examiner: Scored by the Claude AI examiner via the Anthropic API — detailed band scores and personalised feedback.",
+      vi: "AI Examiner: Được chấm bởi giám khảo AI (Claude) qua Anthropic API — band điểm chi tiết và nhận xét cá nhân hoá.",
+    },
+    ruleBased: {
+      en: "Rule-Based Fallback: The AI examiner was temporarily unavailable. Scored using the built-in rule-based engine (pattern matching & heuristics). Scores may be less precise.",
+      vi: "Dự phòng (Rule-Based): Giám khảo AI tạm thời không khả dụng. Chấm bằng hệ thống quy tắc tích hợp (nhận dạng mẫu & heuristics). Điểm có thể kém chính xác hơn.",
+    },
+  },
+
   // ─── Common ───────────────────────────────────────────────────────────────
   common: {
     back: { en: "Back", vi: "Quay lại" },

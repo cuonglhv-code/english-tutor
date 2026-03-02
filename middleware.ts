@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-// Protect /dashboard/** — redirect unauthenticated users to /login
+// Routes that require the user to be logged in
+const AUTH_REQUIRED = ["/dashboard"];
+// Routes exempt from the profile-completion redirect
+const PROFILE_EXEMPT = ["/onboarding", "/login", "/register", "/auth"];
+
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
   const response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -23,15 +28,29 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user && request.nextUrl.pathname.startsWith("/dashboard")) {
+  // 1. Protect /dashboard — redirect unauthenticated users to /login
+  if (AUTH_REQUIRED.some((r) => pathname.startsWith(r)) && !user) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("next", request.nextUrl.pathname);
+    loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // 2. Profile-completion gate — logged-in users with incomplete profiles are
+  //    redirected to /onboarding on every route except the exempt list.
+  //    profile_completed is written to user_metadata after onboarding via
+  //    supabase.auth.updateUser({ data: { profile_completed: true } })
+  //    so no extra DB call is needed here.
+  if (user && !PROFILE_EXEMPT.some((r) => pathname.startsWith(r))) {
+    const profileCompleted = user.user_metadata?.profile_completed === true;
+    if (!profileCompleted) {
+      return NextResponse.redirect(new URL("/onboarding", request.url));
+    }
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  // Run on all routes except Next.js internals (static, image) and API routes
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/).*)" ],
 };

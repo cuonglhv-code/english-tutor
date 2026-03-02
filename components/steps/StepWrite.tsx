@@ -2,7 +2,15 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronLeft, Zap, CheckCircle2, GripVertical } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Loader2, ChevronLeft, Zap, CheckCircle2, GripVertical, FileText } from "lucide-react";
 import { toast } from "sonner";
 import type { WizardData } from "@/types";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -19,6 +27,8 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
   const [essay, setEssay] = useState(data.essay || "");
   const [feedbackLang, setFeedbackLang] = useState<"en" | "vi">(data.language || lang);
   const [loading, setLoading] = useState(false);
+  const [showPlanModal, setShowPlanModal] = useState(false);
+  const [planLoading, setPlanLoading] = useState(false);
   const [leftPct, setLeftPct] = useState(42);
   const containerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
@@ -68,7 +78,8 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
       ? "text-yellow-600 dark:text-yellow-400"
       : "text-red-600 dark:text-red-400";
 
-  const handleAnalyze = async () => {
+  // Validate and show the essay plan modal
+  const handleSubmitClick = () => {
     if (wordCount < 1) {
       toast.error(t("write", "errorEmpty", lang));
       return;
@@ -77,14 +88,50 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
       const warnFn = t("write", "warningShort", lang);
       toast.warning(typeof warnFn === "function" ? warnFn(wordCount, minWords) : String(warnFn));
     }
+    setShowPlanModal(true);
+  };
+
+  // Run the full analysis (optionally fetch plan first)
+  const runAnalysis = async (withPlan: boolean) => {
+    setShowPlanModal(false);
+    setLoading(true);
 
     // Exclude questionImage from API payload
     const { questionImage: _img, ...dataForApi } = data as WizardData;
     const fullData: WizardData = { ...dataForApi, essay, language: feedbackLang };
     onUpdate({ essay, language: feedbackLang });
 
-    setLoading(true);
     try {
+      let planText: string | null = null;
+
+      // 1. Optional essay plan
+      if (withPlan) {
+        setPlanLoading(true);
+        try {
+          const planRes = await fetch("/api/essay-plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              task_type: data.taskType,
+              task_number: data.taskNumber,
+              prompt_text: data.question || "",
+              language: feedbackLang,
+            }),
+          });
+          const planJson = await planRes.json();
+          if (planJson.success && planJson.plan) {
+            planText = planJson.plan as string;
+          } else {
+            toast.error(t("essayPlan", "error", lang));
+          }
+        } catch {
+          toast.error(t("essayPlan", "error", lang));
+        } finally {
+          setPlanLoading(false);
+        }
+      }
+
+      // 2. Analyze essay
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -95,20 +142,43 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
 
       sessionStorage.setItem(
         "ielts_result",
-        JSON.stringify({ result: json.result, formData: fullData })
+        JSON.stringify({ result: json.result, formData: fullData, essayPlan: planText })
       );
       router.push("/results");
     } catch (err: unknown) {
-      toast.error(
-        err instanceof Error ? err.message : t("common", "error", lang)
-      );
+      toast.error(err instanceof Error ? err.message : t("common", "error", lang));
     } finally {
       setLoading(false);
+      setPlanLoading(false);
     }
   };
 
+  const isProcessing = loading || planLoading;
+
   return (
     <div className="flex flex-col" style={{ height: "calc(100vh - 56px)" }}>
+      {/* Essay Plan Modal */}
+      <Dialog open={showPlanModal} onOpenChange={(open) => { if (!isProcessing) setShowPlanModal(open); }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-jaxtina-blue" />
+              {t("essayPlan", "modalTitle", lang)}
+            </DialogTitle>
+            <DialogDescription>{t("essayPlan", "modalDesc", lang)}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col sm:flex-col gap-2">
+            <Button onClick={() => runAnalysis(true)} className="w-full">
+              <FileText className="h-4 w-4 mr-2" />
+              {t("essayPlan", "yesBtn", lang)}
+            </Button>
+            <Button variant="outline" onClick={() => runAnalysis(false)} className="w-full">
+              {t("essayPlan", "noBtn", lang)}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Top info bar */}
       <div className="flex items-center justify-between px-4 py-2 bg-muted/70 border-b shrink-0">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
@@ -126,7 +196,7 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
           variant="ghost"
           size="sm"
           onClick={onBack}
-          disabled={loading}
+          disabled={isProcessing}
           className="ml-4 shrink-0"
         >
           <ChevronLeft className="h-4 w-4 mr-1" /> {t("write", "back", lang)}
@@ -200,7 +270,7 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
             value={essay}
             onChange={(e) => setEssay(e.target.value)}
             placeholder={data.taskNumber === "1" ? t("write", "placeholder1", lang) : t("write", "placeholder2", lang)}
-            disabled={loading}
+            disabled={isProcessing}
             spellCheck
           />
           {wordCount > 0 && wordCount < minWords && (
@@ -254,8 +324,12 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
           <span className={`text-sm font-semibold tabular-nums ${wordColor}`}>
             {wordCount} / {minWords} {t("write", "words", lang)}
           </span>
-          <Button onClick={handleAnalyze} disabled={loading} size="sm">
-            {loading ? (
+          <Button onClick={handleSubmitClick} disabled={isProcessing} size="sm">
+            {planLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" /> {t("essayPlan", "generating", lang)}
+              </>
+            ) : loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" /> {t("write", "analyzing", lang)}
               </>

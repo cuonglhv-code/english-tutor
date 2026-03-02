@@ -95,9 +95,12 @@ Required JSON structure:
   }
 }
 
-Language instruction: All feedback prose must be in ${language}.
-If language is 'vi': write feedback in Vietnamese. Retain all IELTS terms in English (Band descriptors, criterion names, Task 1, Task 2, Task Achievement, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy). Maintain formal academic register.
-If language is 'en': write all feedback in formal academic English.`;
+Language instruction: Write ALL feedback prose in ${language === "vi" ? "Vietnamese (Tiếng Việt)" : "English"}.
+${language === "vi" ? `Vietnamese rules (apply strictly):
+- Write strengths, improvements, band_justification, priority_actions, and overall_comment entirely in Vietnamese.
+- Retain these terms in English regardless: Task Achievement, Task Response, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy, Task 1, Task 2, Academic, General Training, Band (and all band numbers), and any specific grammar or vocabulary labels you cite.
+- Do NOT translate IELTS criterion names or band descriptors into Vietnamese.
+- Maintain a formal, encouraging academic register appropriate for a Vietnamese student preparing for IELTS.` : `English rules: Write all feedback in formal academic English.`}`;
 }
 
 // ─── Validate AI response ─────────────────────────────────────────────────────
