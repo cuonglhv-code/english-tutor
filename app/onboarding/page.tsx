@@ -61,20 +61,24 @@ export default function OnboardingPage() {
     try {
       const supabase = createBrowserClient();
 
-      // 1. Save profile fields to the profiles table
+      // 1. Save profile fields — upsert handles both missing and existing rows
       const { error: profileErr } = await supabase
         .from("profiles")
-        .update({
+        .upsert({
+          id: user!.id,
+          email: user!.email ?? "",
           age: ageNum,
           city: city.trim(),
           phone: phone.trim(),
           current_writing_band: currentBand === "not_tested" ? null : (currentBand || null),
           target_writing_band: targetBand || null,
           profile_completed: true,
-        })
-        .eq("id", user!.id);
+        }, { onConflict: "id" });
 
-      if (profileErr) throw profileErr;
+      if (profileErr) {
+        console.error("Profile upsert error:", profileErr.message, profileErr.details);
+        throw profileErr;
+      }
 
       // 2. Write profile_completed into user_metadata so the middleware
       //    can skip the DB call on subsequent navigations.
