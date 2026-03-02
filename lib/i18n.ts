@@ -185,10 +185,8 @@ export function t<
   key: Key,
   lang: Lang
 ): TranslationKey[Section][Key] extends { en: infer V; vi: unknown } ? V : never {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const entry = (translations[section] as any)[key];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (entry?.[lang] ?? entry?.["en"]) as any;
+  const entry = (translations[section] as Record<string, Record<string, unknown>>)[key as string];
+  return (entry?.[lang] ?? entry?.["en"]) as never;
 }
 
 export default translations;

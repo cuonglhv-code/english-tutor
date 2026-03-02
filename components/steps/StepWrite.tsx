@@ -79,7 +79,6 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
     }
 
     // Exclude questionImage from API payload
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { questionImage: _img, ...dataForApi } = data as WizardData;
     const fullData: WizardData = { ...dataForApi, essay, language: feedbackLang };
     onUpdate({ essay, language: feedbackLang });
