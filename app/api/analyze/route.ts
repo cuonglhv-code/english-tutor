@@ -189,16 +189,6 @@ async function persistToSupabase(
 ): Promise<void> {
   try {
     const supabase = createServiceClient();
-
-    // Resolve user from auth header (may be null for anonymous submissions)
-    const { data: { users } } = await supabase.auth.admin.listUsers();
-    // We need to match by email — simpler: accept user_id from a verified JWT
-    // For anonymous submissions, user_id is null (column allows NULL via the check below)
-    // The API route itself doesn't have access to the session cookie directly;
-    // we'll use the anon client path for now and associate server-side if possible.
-    // For robustness, we store with a null user_id when unauthenticated.
-    void users; // prevent unused warning
-
     const taskType = data.taskNumber === "1" ? "task1" : "task2";
 
     const { data: submission, error: subErr } = await supabase
