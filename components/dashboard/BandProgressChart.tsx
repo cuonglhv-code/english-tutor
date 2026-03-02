@@ -1,7 +1,7 @@
 "use client";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Legend,
+  ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 import type { SubmissionWithFeedback } from "@/types";
 import type { Lang } from "@/lib/i18n";
@@ -9,9 +9,10 @@ import type { Lang } from "@/lib/i18n";
 interface Props {
   submissions: SubmissionWithFeedback[];
   lang: Lang;
+  targetBand?: number;
 }
 
-export function BandProgressChart({ submissions, lang }: Props) {
+export function BandProgressChart({ submissions, lang, targetBand }: Props) {
   const data = [...submissions]
     .sort((a, b) => new Date(a.submitted_at).getTime() - new Date(b.submitted_at).getTime())
     .map((s) => {
@@ -45,6 +46,14 @@ export function BandProgressChart({ submissions, lang }: Props) {
           formatter={(value) => [value, ""]}
         />
         <Legend wrapperStyle={{ fontSize: 12 }} />
+        {targetBand && (
+          <ReferenceLine 
+            y={targetBand} 
+            label={{ value: `Target: ${targetBand}`, position: 'insideTopLeft', fill: '#8884d8', fontSize: 12 }} 
+            stroke="#8884d8" 
+            strokeDasharray="3 3" 
+          />
+        )}
         <Line type="monotone" dataKey="Overall" stroke="#D32F2F" strokeWidth={2.5} dot={{ r: 4 }} />
         <Line type="monotone" dataKey="TA" stroke="#1976D2" strokeWidth={1.5} dot={{ r: 3 }} strokeDasharray="4 2" />
         <Line type="monotone" dataKey="CC" stroke="#388E3C" strokeWidth={1.5} dot={{ r: 3 }} strokeDasharray="4 2" />

@@ -15,7 +15,7 @@ import { useUser } from "@/hooks/useUser";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/lib/i18n";
 import { bandToColor } from "@/lib/utils";
-import type { SubmissionWithFeedback, UserProgress } from "@/types";
+import type { SubmissionWithFeedback, UserProgress, Profile } from "@/types";
 
 export default function DashboardPage() {
   const { user, loading: userLoading } = useUser();
@@ -24,6 +24,7 @@ export default function DashboardPage() {
 
   const [submissions, setSubmissions] = useState<SubmissionWithFeedback[]>([]);
   const [progress, setProgress] = useState<UserProgress | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [dataLoading, setDataLoading] = useState(true);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function DashboardPage() {
 
     async function loadData() {
       setDataLoading(true);
-      const [subRes, progRes] = await Promise.all([
+      const [subRes, progRes, profileRes] = await Promise.all([
         supabase
           .from("essay_submissions")
           .select("*, feedback_results(*)")
@@ -50,10 +51,16 @@ export default function DashboardPage() {
           .select("*")
           .eq("user_id", user!.id)
           .single(),
+        supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user!.id)
+          .single(),
       ]);
 
       if (!subRes.error) setSubmissions(subRes.data as SubmissionWithFeedback[]);
       if (!progRes.error) setProgress(progRes.data as UserProgress);
+      if (!profileRes.error) setProfile(profileRes.data as Profile);
       setDataLoading(false);
     }
 
@@ -199,7 +206,11 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <BandProgressChart submissions={submissions} lang={lang} />
+              <BandProgressChart 
+                submissions={submissions} 
+                lang={lang}
+                targetBand={profile?.target_writing_band ? parseFloat(profile.target_writing_band) : undefined}
+              />
             </CardContent>
           </Card>
         )}
