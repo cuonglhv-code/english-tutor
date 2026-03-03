@@ -35,13 +35,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 2. Profile-completion gate — logged-in users with incomplete profiles are
-  //    redirected to /onboarding on every route except the exempt list.
-  //    profile_completed is written to user_metadata after onboarding via
-  //    supabase.auth.updateUser({ data: { profile_completed: true } })
-  //    so no extra DB call is needed here.
+  // 2. Profile-completion gate — query the profiles table directly.
+  //    Using the DB (not user_metadata) avoids depending on a token refresh
+  //    after onboarding, which can hang in some browser environments.
   if (user && !PROFILE_EXEMPT.some((r) => pathname.startsWith(r))) {
-    const profileCompleted = user.user_metadata?.profile_completed === true;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("profile_completed")
+      .eq("id", user.id)
+      .single();
+
+    const profileCompleted = profile?.profile_completed === true;
     if (!profileCompleted) {
       return NextResponse.redirect(new URL("/onboarding", request.url));
     }

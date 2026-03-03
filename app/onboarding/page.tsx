@@ -33,11 +33,18 @@ export default function OnboardingPage() {
     if (!userLoading && !user) router.push("/login");
   }, [user, userLoading, router]);
 
-  // If profile is already complete, go straight to dashboard
+  // If profile is already complete, go straight to dashboard (check DB)
   useEffect(() => {
-    if (user?.user_metadata?.profile_completed === true) {
-      router.replace("/dashboard");
-    }
+    if (!user) return;
+    const supabase = createBrowserClient();
+    supabase
+      .from("profiles")
+      .select("profile_completed")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data?.profile_completed === true) router.replace("/dashboard");
+      });
   }, [user, router]);
 
   const handleSave = async (e: React.FormEvent) => {
@@ -80,19 +87,13 @@ export default function OnboardingPage() {
         throw profileErr;
       }
 
-      // 2. Write profile_completed into user_metadata so the middleware
-      //    can skip the DB call on subsequent navigations.
-      const { error: metaErr } = await supabase.auth.updateUser({
-        data: { profile_completed: true },
-      });
-
-      if (metaErr) throw metaErr;
-
+      // Middleware now checks profiles.profile_completed directly — no need
+      // to wait for auth.updateUser (which can hang before the token refresh).
       router.push("/dashboard");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : (err as { message?: string })?.message ?? "Unknown error";
-      console.error("Onboarding save error:", msg, err);
-      toast.error(msg || t("common", "error", lang));
+      const msg = (err as { message?: string })?.message || t("common", "error", lang);
+      console.error("Onboarding save error:", msg);
+      toast.error(msg);
     } finally {
       setSaving(false);
     }
