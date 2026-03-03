@@ -68,7 +68,7 @@ export default function ResultsPage() {
         language: draft.language,
       };
       localStorage.setItem("ielts_wizard_draft", JSON.stringify(preserved));
-    } catch {}
+    } catch { }
     sessionStorage.removeItem("ielts_result");
     sessionStorage.setItem("ielts_returning", "1");
     router.push("/");
@@ -83,7 +83,7 @@ export default function ResultsPage() {
 
   return (
     <div className="min-h-screen py-8 px-4">
-      <div className="mx-auto max-w-2xl space-y-6">
+      <div className="mx-auto max-w-4xl space-y-6">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between mb-1">
             <div>
@@ -133,24 +133,70 @@ export default function ResultsPage() {
             <h3 className="font-bold text-sm flex items-center gap-2">
               🎯 {t("results", "priorityActions", lang)}
             </h3>
-            <ul className="space-y-1.5">
-              {result.priorityActions.map((action, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm">
-                  <span className="flex-shrink-0 h-5 w-5 rounded-full bg-jaxtina-red text-white text-[10px] flex items-center justify-center font-bold mt-0.5">
-                    {i + 1}
-                  </span>
-                  {action}
-                </li>
-              ))}
-            </ul>
+            {result.priorityActions_vi && result.priorityActions_vi.length > 0 ? (
+              <div className="grid gap-x-4 sm:grid-cols-2">
+                {/* EN column */}
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">EN</p>
+                  <ul className="space-y-1.5">
+                    {result.priorityActions.map((action, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        <span className="flex-shrink-0 h-5 w-5 rounded-full bg-jaxtina-red text-white text-[10px] flex items-center justify-center font-bold mt-0.5">
+                          {i + 1}
+                        </span>
+                        {action}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {/* VI column */}
+                <div className="border-l pl-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">VI</p>
+                  <ul className="space-y-1.5">
+                    {result.priorityActions_vi.map((action, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        <span className="flex-shrink-0 h-5 w-5 rounded-full bg-jaxtina-blue text-white text-[10px] flex items-center justify-center font-bold mt-0.5">
+                          {i + 1}
+                        </span>
+                        <span className="vi">{action}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              <ul className="space-y-1.5">
+                {result.priorityActions.map((action, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm">
+                    <span className="flex-shrink-0 h-5 w-5 rounded-full bg-jaxtina-red text-white text-[10px] flex items-center justify-center font-bold mt-0.5">
+                      {i + 1}
+                    </span>
+                    {action}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
 
         {/* Overall comment for AI feedback */}
         {result.overallComment && (
           <div className="rounded-xl border p-4 bg-muted/30">
-            <h3 className="font-bold text-sm mb-2">{t("results", "overallComment", lang)}</h3>
-            <p className="text-sm leading-relaxed">{result.overallComment}</p>
+            <h3 className="font-bold text-sm mb-3">{t("results", "overallComment", lang)}</h3>
+            {result.overallComment_vi ? (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">EN</p>
+                  <p className="text-sm leading-relaxed">{result.overallComment}</p>
+                </div>
+                <div className="border-l pl-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">VI</p>
+                  <p className="text-sm leading-relaxed vi">{result.overallComment_vi}</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm leading-relaxed">{result.overallComment}</p>
+            )}
           </div>
         )}
 

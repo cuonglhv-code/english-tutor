@@ -48,19 +48,17 @@ function buildUserPrompt(data: WizardData, wordCount: number): string {
         ? "Academic Task 1"
         : "General Training Task 1"
       : "Task 2";
-  const language = data.language || "en";
 
   return `TASK TYPE: IELTS Writing ${taskNumber} (${taskType})
 TASK PROMPT: ${data.question}
 WORD COUNT: ${wordCount}
-RESPONSE LANGUAGE FOR FEEDBACK: ${language}
 
 ESSAY:
 ${data.essay}
 
 ---
 
-Score this essay on all four IELTS criteria. Return your response as a JSON object only, with no preamble or explanation outside the JSON.
+Score this essay on all four IELTS criteria. Return your response as valid JSON only, with no preamble or explanation outside the JSON.
 
 Required JSON structure:
 {
@@ -70,41 +68,31 @@ Required JSON structure:
   "grammatical_range_accuracy_band": <number>,
   "overall_band": <number>,
   "feedback": {
-    "task_achievement": {
-      "strengths": "<2–3 sentences in ${language}, IELTS terms in English>",
-      "improvements": "<2–3 sentences in ${language}, IELTS terms in English>",
-      "band_justification": "<1 sentence in ${language} explaining the band awarded>"
-    },
-    "coherence_cohesion": {
-      "strengths": "<...>",
-      "improvements": "<...>",
-      "band_justification": "<...>"
-    },
-    "lexical_resource": {
-      "strengths": "<...>",
-      "improvements": "<...>",
-      "band_justification": "<...>"
-    },
-    "grammatical_range_accuracy": {
-      "strengths": "<...>",
-      "improvements": "<...>",
-      "band_justification": "<...>"
-    },
-    "priority_actions": ["<action 1 in ${language}>", "<action 2 in ${language}>", "<action 3 in ${language}>"],
-    "overall_comment": "<2–3 sentence summary in ${language}>"
+    "task_achievement":            { "strengths": "<2–3 sentences in English>", "improvements": "<2–3 sentences in English>", "band_justification": "<1 sentence in English>" },
+    "coherence_cohesion":          { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "lexical_resource":            { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "grammatical_range_accuracy":  { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "priority_actions": ["<action 1 in English>", "<action 2 in English>", "<action 3 in English>"],
+    "overall_comment": "<2–3 sentence summary in English>",
+    "task_achievement_vi":            { "strengths": "<same content in Vietnamese>", "improvements": "<same content in Vietnamese>", "band_justification": "<same content in Vietnamese>" },
+    "coherence_cohesion_vi":          { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "lexical_resource_vi":            { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "grammatical_range_accuracy_vi":  { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "priority_actions_vi": ["<action 1 in Vietnamese>", "<action 2 in Vietnamese>", "<action 3 in Vietnamese>"],
+    "overall_comment_vi": "<2–3 sentence summary in Vietnamese>"
   }
 }
 
-Language instruction: Write ALL feedback prose in ${language === "vi" ? "Vietnamese (Tiếng Việt)" : "English"}.
-${language === "vi" ? `Vietnamese rules (apply strictly):
-- Write strengths, improvements, band_justification, priority_actions, and overall_comment entirely in Vietnamese.
-- Retain these terms in English regardless: Task Achievement, Task Response, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy, Task 1, Task 2, Academic, General Training, Band (and all band numbers), and any specific grammar or vocabulary labels you cite.
-- Do NOT translate IELTS criterion names or band descriptors into Vietnamese.
-- Maintain a formal, encouraging academic register appropriate for a Vietnamese student preparing for IELTS.` : `English rules: Write all feedback in formal academic English.`}`;
+Important rules:
+- English feedback (all non-_vi fields): write in formal academic English.
+- Vietnamese feedback (all _vi fields): write in Vietnamese (Tiếng Việt). Keep IELTS criterion names, band numbers, and grammar/vocabulary labels in English inside Vietnamese text.
+- Do NOT translate IELTS criterion names (Task Achievement, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy) into Vietnamese.
+- Maintain a formal, encouraging academic register in both languages.`;
 }
 
+
 // ─── Validate AI response ─────────────────────────────────────────────────────
-const VALID_BANDS = new Set([1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9]);
+const VALID_BANDS = new Set([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9]);
 
 function validateAIResponse(raw: unknown): raw is AIRawResponse {
   if (!raw || typeof raw !== "object") return false;
@@ -121,7 +109,7 @@ function validateAIResponse(raw: unknown): raw is AIRawResponse {
   }
   const fb = r.feedback as Record<string, unknown> | undefined;
   if (!fb || typeof fb !== "object") return false;
-  const criterionKeys = ["task_achievement","coherence_cohesion","lexical_resource","grammatical_range_accuracy"];
+  const criterionKeys = ["task_achievement", "coherence_cohesion", "lexical_resource", "grammatical_range_accuracy"];
   for (const k of criterionKeys) {
     const c = fb[k] as Record<string, unknown> | undefined;
     if (!c || typeof c.strengths !== "string" || typeof c.improvements !== "string" || typeof c.band_justification !== "string") return false;
@@ -144,16 +132,20 @@ function aiToAnalysisResult(
     criterion: "ta" | "cc" | "lr" | "gra",
     band: number,
     label: string,
-    raw: { strengths: string; improvements: string; band_justification: string }
+    rawEn: { strengths: string; improvements: string; band_justification: string },
+    rawVi?: { strengths: string; improvements: string; band_justification: string }
   ): CriterionFeedback {
     return {
       score: band,
       label,
-      wellDone: raw.strengths,
-      improvement: raw.improvements,
+      wellDone: rawEn.strengths,
+      improvement: rawEn.improvements,
       descriptorCurrent: getDescriptor(criterion, Math.floor(band), taskType, taskNumber),
       descriptorNext: getNextDescriptor(criterion, band, taskType, taskNumber),
-      bandJustification: raw.band_justification,
+      bandJustification: rawEn.band_justification,
+      wellDone_vi: rawVi?.strengths,
+      improvement_vi: rawVi?.improvements,
+      bandJustification_vi: rawVi?.band_justification,
     };
   }
 
@@ -167,20 +159,25 @@ function aiToAnalysisResult(
     ),
   };
 
+  const fb = ai.feedback;
+
   return {
     bands,
     feedback: {
-      ta:  makeCriterion("ta",  bands.ta,  taLabel, ai.feedback.task_achievement),
-      cc:  makeCriterion("cc",  bands.cc,  "Coherence & Cohesion", ai.feedback.coherence_cohesion),
-      lr:  makeCriterion("lr",  bands.lr,  "Lexical Resource", ai.feedback.lexical_resource),
-      gra: makeCriterion("gra", bands.gra, "Grammatical Range & Accuracy", ai.feedback.grammatical_range_accuracy),
+      ta: makeCriterion("ta", bands.ta, taLabel, fb.task_achievement, fb.task_achievement_vi),
+      cc: makeCriterion("cc", bands.cc, "Coherence & Cohesion", fb.coherence_cohesion, fb.coherence_cohesion_vi),
+      lr: makeCriterion("lr", bands.lr, "Lexical Resource", fb.lexical_resource, fb.lexical_resource_vi),
+      gra: makeCriterion("gra", bands.gra, "Grammatical Range & Accuracy", fb.grammatical_range_accuracy, fb.grammatical_range_accuracy_vi),
     },
-    tips: ai.feedback.priority_actions,
+    tips: fb.priority_actions,
+    tips_vi: fb.priority_actions_vi,
     wordCount,
     disclaimer: "⚠️ Assessed by AI Examiner (claude-sonnet-4-20250514) — not an official IELTS result.",
     scoring_method: "ai_examiner",
-    overallComment: ai.feedback.overall_comment,
-    priorityActions: ai.feedback.priority_actions,
+    overallComment: fb.overall_comment,
+    overallComment_vi: fb.overall_comment_vi,
+    priorityActions: fb.priority_actions,
+    priorityActions_vi: fb.priority_actions_vi,
   };
 }
 
@@ -286,7 +283,7 @@ export async function POST(req: NextRequest) {
 
         const aiPromise = client.messages.create({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 2048,
+          max_tokens: 4096,
           messages: [{ role: "user", content: userPrompt }],
           system: SYSTEM_PROMPT,
         });

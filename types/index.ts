@@ -37,6 +37,10 @@ export interface CriterionFeedback {
   descriptorNext: string;
   // AI-only fields (optional)
   bandJustification?: string;
+  // Vietnamese mirrors (optional, AI only)
+  wellDone_vi?: string;
+  improvement_vi?: string;
+  bandJustification_vi?: string;
 }
 
 export interface AnalysisResult {
@@ -54,6 +58,10 @@ export interface AnalysisResult {
   // AI-only extras (optional)
   overallComment?: string;
   priorityActions?: string[];
+  // Vietnamese mirrors (optional, AI only)
+  overallComment_vi?: string;
+  priorityActions_vi?: string[];
+  tips_vi?: string[];
 }
 
 export interface AnalyzeResponse {
@@ -78,6 +86,13 @@ export interface AIRawFeedback {
   grammatical_range_accuracy: AIRawCriterionFeedback;
   priority_actions: string[];
   overall_comment: string;
+  // Vietnamese mirrors (present when requested)
+  task_achievement_vi?: AIRawCriterionFeedback;
+  coherence_cohesion_vi?: AIRawCriterionFeedback;
+  lexical_resource_vi?: AIRawCriterionFeedback;
+  grammatical_range_accuracy_vi?: AIRawCriterionFeedback;
+  priority_actions_vi?: string[];
+  overall_comment_vi?: string;
 }
 
 export interface AIRawResponse {
