@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-// Routes that require the user to be logged in
-const AUTH_REQUIRED = ["/dashboard"];
+// Only these routes can be accessed without logging in
+const PUBLIC_ROUTES = ["/login", "/register", "/auth", "/logout"];
 // Routes exempt from the profile-completion redirect
-const PROFILE_EXEMPT = ["/onboarding", "/login", "/register", "/auth"];
+const PROFILE_EXEMPT = ["/personal-details", "/login", "/register", "/auth", "/logout"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -28,17 +28,19 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  // 1. Protect /dashboard — redirect unauthenticated users to /login
-  if (AUTH_REQUIRED.some((r) => pathname.startsWith(r)) && !user) {
+  const isPublic = PUBLIC_ROUTES.some((r) => pathname.startsWith(r));
+
+  // 1. Protect all non-public routes — redirect unauthenticated users to /login
+  if (!user && !isPublic) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("next", pathname);
+    if (pathname !== "/") {
+      loginUrl.searchParams.set("next", pathname);
+    }
     return NextResponse.redirect(loginUrl);
   }
 
-  // 2. Profile-completion gate — query the profiles table directly.
-  //    Using the DB (not user_metadata) avoids depending on a token refresh
-  //    after onboarding, which can hang in some browser environments.
-  if (user && !PROFILE_EXEMPT.some((r) => pathname.startsWith(r))) {
+  // 2. Profile-completion gate
+  if (user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("profile_completed")
@@ -46,8 +48,21 @@ export async function middleware(request: NextRequest) {
       .single();
 
     const profileCompleted = profile?.profile_completed === true;
-    if (!profileCompleted) {
-      return NextResponse.redirect(new URL("/onboarding", request.url));
+
+    // returning users shouldn't access personal-details
+    if (profileCompleted && pathname.startsWith("/personal-details")) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    // new users must complete personal-details
+    const isExempt = PROFILE_EXEMPT.some((r) => pathname.startsWith(r));
+    if (!profileCompleted && !isExempt) {
+      return NextResponse.redirect(new URL("/personal-details", request.url));
+    }
+
+    // if access login or register but already logged in, send them to home
+    if (profileCompleted && (pathname.startsWith("/login") || pathname.startsWith("/register"))) {
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
@@ -56,5 +71,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // Run on all routes except Next.js internals (static, image) and API routes
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/).*)" ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/).*)"],
 };

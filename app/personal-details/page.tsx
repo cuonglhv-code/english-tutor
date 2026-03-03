@@ -33,7 +33,7 @@ export default function OnboardingPage() {
     if (!userLoading && !user) router.push("/login");
   }, [user, userLoading, router]);
 
-  // If profile is already complete, go straight to dashboard (check DB)
+  // If profile is already complete, go straight to practice (Practice is usually /)
   useEffect(() => {
     if (!user) return;
     const supabase = createBrowserClient();
@@ -43,7 +43,7 @@ export default function OnboardingPage() {
       .eq("id", user.id)
       .single()
       .then(({ data }) => {
-        if (data?.profile_completed === true) router.replace("/dashboard");
+        if (data?.profile_completed === true) router.replace("/");
       });
   }, [user, router]);
 
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
 
       // Middleware now checks profiles.profile_completed directly — no need
       // to wait for auth.updateUser (which can hang before the token refresh).
-      router.push("/dashboard");
+      router.push("/");
     } catch (err) {
       const msg = (err as { message?: string })?.message || t("common", "error", lang);
       console.error("Onboarding save error:", msg);

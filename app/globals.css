@@ -63,3 +63,12 @@
   from { height: var(--radix-accordion-content-height); }
   to { height: 0; }
 }
+
+.vi {
+  font-style: italic;
+  color: #555;
+}
+
+.dark .vi {
+  color: #aaa;
+}

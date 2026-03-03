@@ -9,26 +9,33 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { useLanguage } from "@/hooks/useLanguage";
 import type { CsvRow } from "@/lib/readCsv";
+import { viTranslations } from "@/lib/translations";
 
 // ─── i18n strings ─────────────────────────────────────────────────────────────
 
 const labels = {
-  pageTitle:    { en: "Writing 101",                                            vi: "Writing 101" },
-  subtitle:     { en: "IELTS Writing reference guide — structures, tips, and common mistakes.", vi: "Tài liệu tham khảo Writing IELTS — cấu trúc, mẹo viết và lỗi thường gặp." },
-  tab1:         { en: "Task 1 — Academic Report",                               vi: "Task 1 — Báo cáo học thuật" },
-  tab2:         { en: "Task 2 — Essay",                                         vi: "Task 2 — Bài luận" },
-  colType:      { en: "Question Type",                                          vi: "Loại câu hỏi" },
-  colStructure: { en: "Standard Structure",                                     vi: "Cấu trúc chuẩn" },
-  colTips:      { en: "Tips for Band 7+",                                       vi: "Mẹo đạt Band 7+" },
-  colMistakes:  { en: "Common Mistakes",                                        vi: "Lỗi thường gặp" },
-  expandAll:    { en: "Expand all",                                             vi: "Mở rộng tất cả" },
-  collapseAll:  { en: "Collapse all",                                           vi: "Thu gọn tất cả" },
+  pageTitle: { en: "Writing 101", vi: "Writing 101" },
+  subtitle: { en: "IELTS Writing reference guide — structures, tips, and common mistakes.", vi: "Tài liệu tham khảo Writing IELTS — cấu trúc, mẹo viết và lỗi thường gặp." },
+  tab1: { en: "Task 1 — Academic Report", vi: "Báo cáo học thuật" },
+  tab2: { en: "Task 2 — Essay", vi: "Bài luận" },
+  colType: { en: "Question Type", vi: "Loại câu hỏi" },
+  colStructure: { en: "Standard Structure", vi: "Cấu trúc chuẩn" },
+  colTips: { en: "Tips for Band 7+", vi: "Chiến lược đạt Band 7+" },
+  colMistakes: { en: "Common Mistakes", vi: "Lỗi thường gặp" },
+  expandAll: { en: "Expand all", vi: "Mở rộng tất cả" },
+  collapseAll: { en: "Collapse all", vi: "Thu gọn tất cả" },
 };
 
-function L(key: keyof typeof labels, lang: "en" | "vi"): string {
-  return labels[key][lang];
+function L(key: keyof typeof labels): React.ReactNode {
+  if (labels[key].en === labels[key].vi) {
+    return labels[key].en;
+  }
+  return (
+    <>
+      {labels[key].en} / <em className="vi" lang="vi">{labels[key].vi}</em>
+    </>
+  );
 }
 
 // ─── Section block inside an accordion item ───────────────────────────────────
@@ -40,19 +47,31 @@ function Section({
   className = "",
 }: {
   icon: React.ReactNode;
-  heading: string;
+  heading: React.ReactNode;
   text: string;
   className?: string;
 }) {
+  const viText = viTranslations[text] || text;
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
-      <div className="flex items-center gap-1.5">
+      <div className="flex flex-wrap items-center gap-1.5">
         {icon}
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
           {heading}
         </span>
       </div>
-      <p className="text-sm leading-relaxed text-foreground whitespace-pre-line">{text}</p>
+      <p className="text-sm leading-relaxed text-foreground whitespace-pre-line mt-1">
+        {text}
+        {viText !== text && (
+          <>
+            <br />
+            <br />
+            <span className="vi" lang="vi">
+              {viText}
+            </span>
+          </>
+        )}
+      </p>
     </div>
   );
 }
@@ -61,12 +80,10 @@ function Section({
 
 function TaskAccordion({
   rows,
-  lang,
   openItems,
   setOpenItems,
 }: {
   rows: CsvRow[];
-  lang: "en" | "vi";
   openItems: string[];
   setOpenItems: (v: string[]) => void;
 }) {
@@ -79,34 +96,40 @@ function TaskAccordion({
     >
       {rows.map((row, idx) => {
         const itemId = `row-${idx}`;
+        const viTitle = viTranslations[row.questionType] || row.questionType;
         return (
           <AccordionItem key={itemId} value={itemId} className="border rounded-xl mb-3 px-4 last:mb-0">
-            <AccordionTrigger className="hover:no-underline py-3">
-              <div className="flex items-center gap-2 text-left">
+            <AccordionTrigger className="hover:no-underline py-3 text-left">
+              <div className="flex items-center gap-2">
                 <Badge
                   variant="secondary"
                   className="shrink-0 text-[11px] bg-jaxtina-red/10 text-jaxtina-red border-jaxtina-red/20 hover:bg-jaxtina-red/10"
                 >
                   {idx + 1}
                 </Badge>
-                <span className="font-semibold text-sm">{row.questionType}</span>
+                <span className="font-semibold text-sm">
+                  {row.questionType}{" "}
+                  {viTitle !== row.questionType && (
+                    <span className="font-normal">/ <em className="vi" lang="vi">{viTitle}</em></span>
+                  )}
+                </span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="pt-0">
               <div className="grid gap-5 sm:grid-cols-3 border-t pt-4">
                 <Section
                   icon={<AlignLeft className="h-3.5 w-3.5 text-jaxtina-blue" />}
-                  heading={L("colStructure", lang)}
+                  heading={L("colStructure")}
                   text={row.structure}
                 />
                 <Section
                   icon={<CheckCircle2 className="h-3.5 w-3.5 text-green-600" />}
-                  heading={L("colTips", lang)}
+                  heading={L("colTips")}
                   text={row.tips}
                 />
                 <Section
                   icon={<AlertCircle className="h-3.5 w-3.5 text-orange-500" />}
-                  heading={L("colMistakes", lang)}
+                  heading={L("colMistakes")}
                   text={row.mistakes}
                 />
               </div>
@@ -126,7 +149,6 @@ interface Props {
 }
 
 export function Writing101Client({ task1, task2 }: Props) {
-  const { lang } = useLanguage();
   const [activeTab, setActiveTab] = useState<"task1" | "task2">("task1");
 
   const rows = activeTab === "task1" ? task1 : task2;
@@ -138,7 +160,6 @@ export function Writing101Client({ task1, task2 }: Props) {
     setOpenItems(openItems.length === allIds.length ? [] : allIds);
   };
 
-  // Reset open items when switching tabs
   const switchTab = (tab: "task1" | "task2") => {
     setActiveTab(tab);
     setOpenItems([]);
@@ -150,9 +171,12 @@ export function Writing101Client({ task1, task2 }: Props) {
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <BookOpen className="h-6 w-6 text-jaxtina-red" />
-          <h1 className="text-2xl font-black tracking-tight">{L("pageTitle", lang)}</h1>
+          <h1 className="text-2xl font-black tracking-tight">{L("pageTitle")}</h1>
         </div>
-        <p className="text-sm text-muted-foreground">{L("subtitle", lang)}</p>
+        <p className="text-sm text-muted-foreground">{L("subtitle")}</p>
+        <p className="text-xs text-muted-foreground pt-1 bg-muted/50 p-2 rounded-md inline-block mt-2">
+          EN = English | VI = Tiếng Việt. English comes first, Vietnamese follows in italics.
+        </p>
       </div>
 
       {/* Tabs */}
@@ -161,13 +185,12 @@ export function Writing101Client({ task1, task2 }: Props) {
           <button
             key={tab}
             onClick={() => switchTab(tab)}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors border ${
-              activeTab === tab
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors border ${activeTab === tab
                 ? "bg-jaxtina-red text-white border-jaxtina-red"
                 : "bg-background border-border text-muted-foreground hover:bg-muted"
-            }`}
+              }`}
           >
-            {tab === "task1" ? L("tab1", lang) : L("tab2", lang)}
+            {tab === "task1" ? L("tab1") : L("tab2")}
           </button>
         ))}
 
@@ -175,14 +198,13 @@ export function Writing101Client({ task1, task2 }: Props) {
           onClick={toggleAll}
           className="ml-auto rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground border border-border hover:bg-muted transition-colors"
         >
-          {openItems.length === allIds.length ? L("collapseAll", lang) : L("expandAll", lang)}
+          {openItems.length === allIds.length ? L("collapseAll") : L("expandAll")}
         </button>
       </div>
 
       {/* Accordion list */}
       <TaskAccordion
         rows={rows}
-        lang={lang}
         openItems={openItems}
         setOpenItems={setOpenItems}
       />
