@@ -90,8 +90,9 @@ export default function OnboardingPage() {
 
       router.push("/dashboard");
     } catch (err) {
-      console.error("Onboarding save error:", err);
-      toast.error(t("common", "error", lang));
+      const msg = err instanceof Error ? err.message : (err as { message?: string })?.message ?? "Unknown error";
+      console.error("Onboarding save error:", msg, err);
+      toast.error(msg || t("common", "error", lang));
     } finally {
       setSaving(false);
     }
