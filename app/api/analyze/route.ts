@@ -10,11 +10,12 @@ import type {
   AnalysisResult,
   AIRawResponse,
   AIRawFeedback,
+  AIRawCriterionFeedback,
   CriterionFeedback,
 } from "@/types";
 
 export const runtime = "nodejs";
-const TIMEOUT_MS = 15_000;
+const TIMEOUT_MS = 55_000; // bilingual 4096-token response can take 30-45 s
 
 // ─── Anthropic system prompt ──────────────────────────────────────────────────
 const SYSTEM_PROMPT = `You are an expert IELTS examiner with over 15 years of experience assessing Academic and General Training Writing tasks. You assess essays strictly according to the official IELTS Writing Band Descriptors published by Cambridge Assessment English.
@@ -39,7 +40,7 @@ Critical scoring anchors to apply strictly:
 
 You must never award Band 7+ to an essay with frequent grammatical errors, imprecise vocabulary, or inadequate task coverage.`;
 
-// ─── Build user prompt ────────────────────────────────────────────────────────
+// ─── Build scoring prompt (English output only) ─────────────────────────────────
 function buildUserPrompt(data: WizardData, wordCount: number): string {
   const taskNumber = data.taskNumber;
   const taskType =
@@ -68,26 +69,50 @@ Required JSON structure:
   "grammatical_range_accuracy_band": <number>,
   "overall_band": <number>,
   "feedback": {
-    "task_achievement":            { "strengths": "<2–3 sentences in English>", "improvements": "<2–3 sentences in English>", "band_justification": "<1 sentence in English>" },
-    "coherence_cohesion":          { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "lexical_resource":            { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "grammatical_range_accuracy":  { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "priority_actions": ["<action 1 in English>", "<action 2 in English>", "<action 3 in English>"],
-    "overall_comment": "<2–3 sentence summary in English>",
-    "task_achievement_vi":            { "strengths": "<same content in Vietnamese>", "improvements": "<same content in Vietnamese>", "band_justification": "<same content in Vietnamese>" },
-    "coherence_cohesion_vi":          { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "lexical_resource_vi":            { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "grammatical_range_accuracy_vi":  { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "priority_actions_vi": ["<action 1 in Vietnamese>", "<action 2 in Vietnamese>", "<action 3 in Vietnamese>"],
-    "overall_comment_vi": "<2–3 sentence summary in Vietnamese>"
+    "task_achievement":           { "strengths": "<2–3 sentences in English>", "improvements": "<2–3 sentences in English>", "band_justification": "<1 sentence in English>" },
+    "coherence_cohesion":         { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "lexical_resource":           { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "grammatical_range_accuracy": { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
+    "priority_actions": ["<action 1>", "<action 2>", "<action 3>"],
+    "overall_comment": "<2–3 sentence summary>"
   }
 }
 
-Important rules:
-- English feedback (all non-_vi fields): write in formal academic English.
-- Vietnamese feedback (all _vi fields): write in Vietnamese (Tiếng Việt). Keep IELTS criterion names, band numbers, and grammar/vocabulary labels in English inside Vietnamese text.
-- Do NOT translate IELTS criterion names (Task Achievement, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy) into Vietnamese.
-- Maintain a formal, encouraging academic register in both languages.`;
+Write all feedback prose in formal academic English.`;
+}
+
+// ─── Build translation prompt (VI output from EN feedback JSON) ──────────────────
+type EnFeedbackOnly = {
+  task_achievement: AIRawCriterionFeedback;
+  coherence_cohesion: AIRawCriterionFeedback;
+  lexical_resource: AIRawCriterionFeedback;
+  grammatical_range_accuracy: AIRawCriterionFeedback;
+  priority_actions: string[];
+  overall_comment: string;
+};
+
+function buildTranslatePrompt(enFeedback: EnFeedbackOnly): string {
+  return `You are a professional translator specialising in IELTS education materials.
+
+Translate the following IELTS examiner feedback from English into Vietnamese (Tiếng Việt).
+
+IMPORTANT rules:
+- Translate naturally and fluently — do NOT translate field names, only their string values.
+- Keep these terms in English: Task Achievement, Task Response, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy, Band (with numbers), Academic, General Training, IELTS.
+- Return ONLY a valid JSON object, no markdown, no explanation.
+
+Input JSON to translate:
+${JSON.stringify(enFeedback, null, 2)}
+
+Return the translated content using EXACTLY this JSON structure:
+{
+  "task_achievement":           { "strengths": "<VI>", "improvements": "<VI>", "band_justification": "<VI>" },
+  "coherence_cohesion":         { "strengths": "<VI>", "improvements": "<VI>", "band_justification": "<VI>" },
+  "lexical_resource":           { "strengths": "<VI>", "improvements": "<VI>", "band_justification": "<VI>" },
+  "grammatical_range_accuracy": { "strengths": "<VI>", "improvements": "<VI>", "band_justification": "<VI>" },
+  "priority_actions": ["<VI>", "<VI>", "<VI>"],
+  "overall_comment": "<VI>"
+}`;
 }
 
 
@@ -281,9 +306,10 @@ export async function POST(req: NextRequest) {
         const client = new Anthropic({ apiKey });
         const userPrompt = buildUserPrompt(data, wordCount);
 
+        // ── 1a. Primary scoring call (EN only, fast) ───────────────────────
         const aiPromise = client.messages.create({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 4096,
+          max_tokens: 2048,
           messages: [{ role: "user", content: userPrompt }],
           system: SYSTEM_PROMPT,
         });
@@ -296,8 +322,8 @@ export async function POST(req: NextRequest) {
         const content = message.content[0];
         if (content.type !== "text") throw new Error("Unexpected content type from Anthropic");
 
-        // Strip markdown fences if present
-        const jsonText = content.text.replace(/^```json\s*|```\s*$/g, "").trim();
+        // Strip markdown fences if present (```json ... ``` or ``` ... ```)
+        const jsonText = content.text.replace(/^```(?:json)?\s*/m, "").replace(/```\s*$/m, "").trim();
         const parsed: unknown = JSON.parse(jsonText);
 
         if (!validateAIResponse(parsed)) {
@@ -306,7 +332,63 @@ export async function POST(req: NextRequest) {
 
         rawAIFeedback = parsed.feedback;
         result = aiToAnalysisResult(parsed, data, wordCount);
-        console.log("[analyze] scoring_method=ai_examiner");
+
+        // ── 1b. Parallel translation call (VI, non-blocking on failure) ────
+        const enFeedbackForTranslation: EnFeedbackOnly = {
+          task_achievement: parsed.feedback.task_achievement,
+          coherence_cohesion: parsed.feedback.coherence_cohesion,
+          lexical_resource: parsed.feedback.lexical_resource,
+          grammatical_range_accuracy: parsed.feedback.grammatical_range_accuracy,
+          priority_actions: parsed.feedback.priority_actions,
+          overall_comment: parsed.feedback.overall_comment,
+        };
+        const translatePrompt = buildTranslatePrompt(enFeedbackForTranslation);
+
+        const translateCall = client.messages.create({
+          model: "claude-haiku-4-20250514",
+          max_tokens: 2048,
+          messages: [{ role: "user", content: translatePrompt }],
+        });
+        const translateTimeout = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Translation timeout")), TIMEOUT_MS)
+        );
+
+        const [translateOutcome] = await Promise.allSettled([
+          Promise.race([translateCall, translateTimeout]),
+        ]);
+
+        if (translateOutcome.status === "fulfilled") {
+          const tContent = translateOutcome.value.content[0];
+          if (tContent.type === "text") {
+            try {
+              const tJson = tContent.text.replace(/^```(?:json)?\s*/m, "").replace(/```\s*$/m, "").trim();
+              const viData = JSON.parse(tJson) as EnFeedbackOnly;
+              // Merge VI fields into result
+              result.feedback.ta.wellDone_vi = viData.task_achievement?.strengths;
+              result.feedback.ta.improvement_vi = viData.task_achievement?.improvements;
+              result.feedback.ta.bandJustification_vi = viData.task_achievement?.band_justification;
+              result.feedback.cc.wellDone_vi = viData.coherence_cohesion?.strengths;
+              result.feedback.cc.improvement_vi = viData.coherence_cohesion?.improvements;
+              result.feedback.cc.bandJustification_vi = viData.coherence_cohesion?.band_justification;
+              result.feedback.lr.wellDone_vi = viData.lexical_resource?.strengths;
+              result.feedback.lr.improvement_vi = viData.lexical_resource?.improvements;
+              result.feedback.lr.bandJustification_vi = viData.lexical_resource?.band_justification;
+              result.feedback.gra.wellDone_vi = viData.grammatical_range_accuracy?.strengths;
+              result.feedback.gra.improvement_vi = viData.grammatical_range_accuracy?.improvements;
+              result.feedback.gra.bandJustification_vi = viData.grammatical_range_accuracy?.band_justification;
+              result.overallComment_vi = viData.overall_comment;
+              result.priorityActions_vi = viData.priority_actions;
+              result.tips_vi = viData.priority_actions;
+              console.log("[analyze] translation=ok");
+            } catch (parseErr) {
+              console.warn("[analyze] Translation JSON parse failed:", parseErr);
+            }
+          }
+        } else {
+          console.warn("[analyze] Translation failed:", translateOutcome.reason);
+        }
+
+        console.log(`[analyze] scoring_method=ai_examiner | vi=${!!result.overallComment_vi}`);
       } catch (aiErr) {
         console.error("[analyze] Anthropic API failed, falling back:", aiErr instanceof Error ? aiErr.message : aiErr);
       }
