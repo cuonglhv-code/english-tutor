@@ -82,10 +82,18 @@ export function Navbar() {
             <PenLine className="h-4 w-4" /> {t("nav", "practice", lang)}
           </Link>
           <Link
+            href="/writing-101"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+          >
+            <BookOpen className="h-4 w-4" />
+            <span className="hidden sm:inline">{t("nav", "writing101", lang)}</span>
+          </Link>
+          <Link
             href="/courses"
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
           >
-            <BookOpen className="h-4 w-4" /> {t("nav", "courses", lang)}
+            <BookOpen className="h-4 w-4" />
+            <span className="hidden sm:inline">{t("nav", "courses", lang)}</span>
           </Link>
 
           {user ? (

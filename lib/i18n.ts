@@ -7,6 +7,7 @@ const translations = {
   // ─── Navbar ───────────────────────────────────────────────────────────────
   nav: {
     practice: { en: "Practice", vi: "Luyện thi" },
+    writing101: { en: "Writing 101", vi: "Writing 101" },
     courses: { en: "Courses", vi: "Khóa học" },
     dashboard: { en: "Dashboard", vi: "Tổng quan" },
     login: { en: "Log in", vi: "Đăng nhập" },
