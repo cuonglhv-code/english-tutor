@@ -194,6 +194,7 @@ export default function DashboardPage() {
                 goals={goals}
                 writingCurrentBand={progress?.average_band}
                 lang={lang}
+                onUpdate={(updated) => setGoals(updated)}
               />
             </CardContent>
           </Card>
