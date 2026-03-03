@@ -212,7 +212,7 @@ export function GoalTracker({ goals, writingCurrentBand, lang, onUpdate }: Props
             name={lang === "vi" ? "Mục tiêu" : "Target"}
             dataKey="Target" stroke="#D32F2F" fill="#D32F2F" fillOpacity={0.15} strokeDasharray="5 3"
           />
-          <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} formatter={(v: number) => [`Band ${v}`, ""]} />
+          <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} formatter={(v: number | undefined) => [`Band ${v ?? "—"}`, ""]} />
           <Legend wrapperStyle={{ fontSize: 12 }} />
         </RadarChart>
       </ResponsiveContainer>
