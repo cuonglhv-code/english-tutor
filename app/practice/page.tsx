@@ -179,8 +179,8 @@ function FilterSidebar({
                         key={t}
                         onClick={() => { setTaskFilter(t); setTypeFilters([]); }}
                         className={`block w-full text-left px-3 py-1.5 rounded-lg text-sm mb-1 transition-colors ${taskFilter === t
-                                ? "bg-jaxtina-red/10 text-jaxtina-red font-semibold"
-                                : "text-muted-foreground hover:bg-muted"
+                            ? "bg-jaxtina-red/10 text-jaxtina-red font-semibold"
+                            : "text-muted-foreground hover:bg-muted"
                             }`}
                     >
                         {t}
@@ -312,7 +312,7 @@ export default function PracticePage() {
                 question: q.questionText,
                 taskNumber,
                 taskType,
-                questionImage: undefined,
+                questionImage: q.imageUrl ? proxyImg(q.imageUrl) : undefined,
             })
         );
         router.push("/");

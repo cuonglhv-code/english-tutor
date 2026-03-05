@@ -44,13 +44,23 @@ function reconstructResult(
     rawViKey: string
   ): CriterionFeedback {
     const safeband = band ?? 5;
-    const enData = json?.[rawEnKey] as Record<string, string> | undefined;
-    const viData = json?.[rawViKey] as Record<string, string> | undefined;
+    const enData = (json?.[rawEnKey] || json?.[criterion]) as Record<string, string> | undefined;
+    const viData = (json?.[rawViKey] || json?.[`${criterion}_vi`]) as Record<string, string> | undefined;
+
+    // Older schema stored "wellDone", "improvement", "bandJustification" directly on the criterion object
+    const wellDoneEn = enData?.strengths ?? enData?.wellDone ?? "";
+    const improvementEn = enData?.improvements ?? enData?.improvement ?? "";
+    const bandJustEn = enData?.band_justification ?? enData?.bandJustification;
+
+    const wellDoneVi = viData?.strengths ?? viData?.wellDone_vi ?? enData?.wellDone_vi;
+    const improvementVi = viData?.improvements ?? viData?.improvement_vi ?? enData?.improvement_vi;
+    const bandJustVi = viData?.band_justification ?? viData?.bandJustification_vi ?? enData?.bandJustification_vi;
+
     return {
       score: safeband,
       label,
-      wellDone: enData?.strengths ?? enData?.wellDone ?? "",
-      improvement: enData?.improvements ?? enData?.improvement ?? "",
+      wellDone: wellDoneEn,
+      improvement: improvementEn,
       descriptorCurrent: getDescriptor(
         criterion,
         Math.floor(safeband),
@@ -63,10 +73,10 @@ function reconstructResult(
         taskType as "academic" | "general",
         taskNumber as "1" | "2"
       ),
-      bandJustification: enData?.band_justification ?? enData?.bandJustification,
-      wellDone_vi: viData?.strengths,
-      improvement_vi: viData?.improvements,
-      bandJustification_vi: viData?.band_justification,
+      bandJustification: bandJustEn,
+      wellDone_vi: wellDoneVi,
+      improvement_vi: improvementVi,
+      bandJustification_vi: bandJustVi,
     };
   }
 

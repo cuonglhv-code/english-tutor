@@ -40,6 +40,21 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
   const approxMinutes = data.taskNumber === "1" ? 20 : 40;
   const wordCount = essay.trim() === "" ? 0 : essay.trim().split(/\s+/).length;
 
+  const [timeLeft, setTimeLeft] = useState(60 * 60); // 60 mins countdown
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setTimeLeft((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(timerId);
+  }, []);
+
+  const formatTime = (sec: number) => {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
   // Keep feedbackLang in sync if lang toggle changes externally
   useEffect(() => {
     setFeedbackLang(lang);
@@ -77,8 +92,8 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
     wordCount >= minWords
       ? "text-green-600 dark:text-green-400"
       : wordCount >= minWords * 0.8
-      ? "text-yellow-600 dark:text-yellow-400"
-      : "text-red-600 dark:text-red-400";
+        ? "text-yellow-600 dark:text-yellow-400"
+        : "text-red-600 dark:text-red-400";
 
   // Validate and show the essay plan modal
   const handleSubmitClick = () => {
@@ -100,9 +115,9 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
 
     // Exclude questionImage from API payload
     const { questionImage: _img, ...dataForApi } = data as WizardData;
-    const fullData: WizardData = { 
-      ...dataForApi, 
-      essay, 
+    const fullData: WizardData = {
+      ...dataForApi,
+      essay,
       language: feedbackLang,
       ...(user?.id ? { user_id: user.id } : {})
     };
@@ -196,8 +211,11 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
           <span>{data.taskType === "academic" ? "Academic" : "General Training"}</span>
           <span className="text-border">|</span>
           <span>{t("write", "spendAbout", lang)} {approxMinutes} {t("write", "minutes", lang)}</span>
-          <span className="text-border">|</span>
           <span>{t("write", "writeAtLeast", lang)} {minWords} {t("write", "words", lang)}</span>
+          <span className="text-border">|</span>
+          <span className="font-semibold text-jaxtina-red font-mono bg-jaxtina-red/10 px-2 py-0.5 rounded flex items-center gap-1">
+            ⏱️ {formatTime(timeLeft)}
+          </span>
         </div>
         <Button
           variant="ghost"
@@ -221,6 +239,17 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
             {t("write", "questionPanel", lang)}
           </p>
 
+          {data.question &&
+            !(data.questionImage && data.question.startsWith("[Image question:")) ? (
+            <p className="text-base leading-relaxed whitespace-pre-wrap mb-4">
+              {data.question}
+            </p>
+          ) : !data.questionImage ? (
+            <p className="text-sm text-muted-foreground italic mb-4">
+              {lang === "vi" ? "Không có nội dung câu hỏi." : "No question text was provided."}
+            </p>
+          ) : null}
+
           {data.questionImage && (
             <div className="mb-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -232,17 +261,6 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
               />
             </div>
           )}
-
-          {data.question &&
-          !(data.questionImage && data.question.startsWith("[Image question:")) ? (
-            <p className="text-base leading-relaxed whitespace-pre-wrap">
-              {data.question}
-            </p>
-          ) : !data.questionImage ? (
-            <p className="text-sm text-muted-foreground italic">
-              {lang === "vi" ? "Không có nội dung câu hỏi." : "No question text was provided."}
-            </p>
-          ) : null}
         </div>
 
         {/* Draggable divider */}
@@ -296,11 +314,10 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
             return (
               <div
                 key={n}
-                className={`flex items-center gap-1.5 rounded px-3 py-1 text-sm font-medium select-none ${
-                  isActive
+                className={`flex items-center gap-1.5 rounded px-3 py-1 text-sm font-medium select-none ${isActive
                     ? "bg-jaxtina-red text-white"
                     : "bg-muted text-muted-foreground"
-                }`}
+                  }`}
               >
                 {isActive && <CheckCircle2 className="h-3.5 w-3.5" />}
                 Part {n}
@@ -315,11 +332,10 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
               <button
                 key={l}
                 onClick={() => { setFeedbackLang(l); setLang(l); }}
-                className={`px-2.5 h-full font-semibold transition-colors ${
-                  feedbackLang === l
+                className={`px-2.5 h-full font-semibold transition-colors ${feedbackLang === l
                     ? "bg-jaxtina-blue text-white"
                     : "hover:bg-muted text-muted-foreground"
-                }`}
+                  }`}
               >
                 {l.toUpperCase()}
               </button>
