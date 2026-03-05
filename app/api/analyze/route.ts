@@ -39,48 +39,10 @@ You must score all four criteria independently: Task Achievement (Task 1) / Task
 - [cite_start]**LR (Band 6 Anchor):** The resource is generally adequate and appropriate for the task[cite: 19, 46]. [cite_start]To reach Band 7, there must be some ability to use less common and/or idiomatic items, even if inappropriacies occur[cite: 12, 38].
 - [cite_start]**GRA (Band 6/7 Threshold):** A mix of simple and complex sentence forms is used but flexibility is limited[cite: 19, 46]. [cite_start]You must not award Band 7+ unless error-free sentences are frequent and grammar/punctuation are generally well controlled[cite: 12, 38].
 
-# Output Format (Bilingual Markdown)
-You must structure your response exactly as follows, ensuring a balanced tone of professional rigour and encouraging mentorship.
+# Output Requirement
+You must return your assessment as a bilingual JSON object as structured in the user prompt. Ensure a professional and encouraging tone in the feedback prose. Provide natural and high-quality Vietnamese translations for all feedback fields.`;
 
-## 📊 Band Score Summary / Tóm tắt điểm số
-| Criterion / Tiêu chí | Score / Điểm |
-| :--- | :--- |
-| Task Achievement/Response | [Score] |
-| Coherence & Cohesion | [Score] |
-| Lexical Resource | [Score] |
-| Grammatical Range & Accuracy | [Score] |
-| **OVERALL BAND / ĐIỂM TỔNG** | **[Total]** |
-
----
-
-## 🔍 Diagnostic Feedback / Phân tích chi tiết
-
-*(For each section below, provide an encouraging assessment of what worked, followed by a candid diagnosis of what restricted the score, citing the specific descriptor language).*
-
-### 1. Task Achievement/Response (TA/TR)
-* **What went well / Điểm tốt:** * [English] / [Tiếng Việt]
-* **What could be better / Điểm cần cải thiện:** * [English] / [Tiếng Việt]
-
-### 2. Coherence & Cohesion (CC)
-* **What went well / Điểm tốt:** * [English] / [Tiếng Việt]
-* **What could be better / Điểm cần cải thiện:** * [English] / [Tiếng Việt]
-
-### 3. Lexical Resource (LR)
-* **What went well / Điểm tốt:** * [English] / [Tiếng Việt]
-* **What could be better / Điểm cần cải thiện:** * [English] / [Tiếng Việt]
-
-### 4. Grammatical Range & Accuracy (GRA)
-* **What went well / Điểm tốt:** * [English] / [Tiếng Việt]
-* **What could be better / Điểm cần cải thiện:** * [English] / [Tiếng Việt]
-
----
-
-## 💡 Pathway to Band [Next Half-Band] / Lộ trình lên Band [X]
-*(Provide exactly two highly specific, actionable steps the student must take in their next essay to overcome the limiters identified above).*
-1. **[Specific Focus Area]:** [English explanation] / [Tiếng Việt]
-2. **[Specific Focus Area]:** [English explanation] / [Tiếng Việt]`;
-
-// ─── Build scoring prompt (English output only) ─────────────────────────────────
+// ─── Build scoring prompt (Bilingual JSON) ──────────────────────────────────
 function buildUserPrompt(data: WizardData, wordCount: number): string {
   const taskNumber = data.taskNumber;
   const taskType =
@@ -99,9 +61,9 @@ ${data.essay}
 
 ---
 
-Score this essay on all four IELTS criteria. Return your response as valid JSON only, with no preamble or explanation outside the JSON.
+Score this essay according to the SYSTEM_PROMPT. Return your response as valid JSON ONLY.
 
-Required JSON structure:
+Required JSON structure (Bilingual):
 {
   "task_achievement_band": <number>,
   "coherence_cohesion_band": <number>,
@@ -109,51 +71,32 @@ Required JSON structure:
   "grammatical_range_accuracy_band": <number>,
   "overall_band": <number>,
   "feedback": {
-    "task_achievement":           { "strengths": "<2–3 sentences in English>", "improvements": "<2–3 sentences in English>", "band_justification": "<1 sentence in English>" },
-    "coherence_cohesion":         { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "lexical_resource":           { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "grammatical_range_accuracy": { "strengths": "<...>", "improvements": "<...>", "band_justification": "<...>" },
-    "priority_actions": ["<action 1>", "<action 2>", "<action 3>"],
-    "overall_comment": "<2–3 sentence summary>"
+    "task_achievement":           { 
+        "strengths": "<EN>", "improvements": "<EN>", "band_justification": "<EN>",
+        "strengths_vi": "<VI>", "improvements_vi": "<VI>", "band_justification_vi": "<VI>" 
+    },
+    "coherence_cohesion":         { 
+        "strengths": "<EN>", "improvements": "<EN>", "band_justification": "<EN>",
+        "strengths_vi": "<VI>", "improvements_vi": "<VI>", "band_justification_vi": "<VI>" 
+    },
+    "lexical_resource":           { 
+        "strengths": "<EN>", "improvements": "<EN>", "band_justification": "<EN>",
+        "strengths_vi": "<VI>", "improvements_vi": "<VI>", "band_justification_vi": "<VI>" 
+    },
+    "grammatical_range_accuracy": { 
+        "strengths": "<EN>", "improvements": "<EN>", "band_justification": "<EN>",
+        "strengths_vi": "<VI>", "improvements_vi": "<VI>", "band_justification_vi": "<VI>" 
+    },
+    "priority_actions": ["<EN action 1>", "<EN action 2>"],
+    "priority_actions_vi": ["<VI action 1>", "<VI action 2>"],
+    "overall_comment": "<EN summary>",
+    "overall_comment_vi": "<VI summary>"
   }
 }
 
-Write all feedback prose in formal academic English.`;
+Use the rigour and diagnostic rules from the system prompt. For Vietnamese fields, provide natural, high-quality translations. Keep IELTS technical terms in English.`;
 }
 
-// ─── Build translation prompt (VI output from EN feedback JSON) ──────────────────
-type EnFeedbackOnly = {
-  task_achievement: AIRawCriterionFeedback;
-  coherence_cohesion: AIRawCriterionFeedback;
-  lexical_resource: AIRawCriterionFeedback;
-  grammatical_range_accuracy: AIRawCriterionFeedback;
-  priority_actions: string[];
-  overall_comment: string;
-};
-
-function buildTranslatePrompt(enFeedback: EnFeedbackOnly): string {
-  return `You are a professional translator specialising in IELTS education materials.
-
-Translate the following IELTS examiner feedback from English into Vietnamese (Tiếng Việt).
-
-IMPORTANT rules:
-- Translate naturally and fluently — do NOT translate field names, only their string values.
-- Keep these terms in English: Task Achievement, Task Response, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy, Band (with numbers), Academic, General Training, IELTS.
-- Return ONLY a valid JSON object, no markdown, no explanation.
-
-Input JSON to translate:
-${JSON.stringify(enFeedback, null, 2)}
-
-Return the translated content using EXACTLY this JSON structure:
-{
-  "task_achievement":           { "strengths": "<VI>", "improvements": "<VI>", "band_justification": "<VI>" },
-  "coherence_cohesion":         { "strengths": "<VI>", "improvements": "<VI>", "band_justification": "<VI>" },
-  "lexical_resource":           { "strengths": "<VI>", "improvements": "<VI>", "band_justification": "<VI>" },
-  "grammatical_range_accuracy": { "strengths": "<VI>", "improvements": "<VI>", "band_justification": "<VI>" },
-  "priority_actions": ["<VI>", "<VI>", "<VI>"],
-  "overall_comment": "<VI>"
-}`;
-}
 
 
 // ─── Validate AI response ─────────────────────────────────────────────────────
@@ -177,7 +120,7 @@ function validateAIResponse(raw: unknown): raw is AIRawResponse {
   const criterionKeys = ["task_achievement", "coherence_cohesion", "lexical_resource", "grammatical_range_accuracy"];
   for (const k of criterionKeys) {
     const c = fb[k] as Record<string, unknown> | undefined;
-    if (!c || typeof c.strengths !== "string" || typeof c.improvements !== "string" || typeof c.band_justification !== "string") return false;
+    if (!c || typeof c.strengths !== "string" || typeof c.improvements !== "string") return false;
   }
   if (!Array.isArray(fb.priority_actions) || typeof fb.overall_comment !== "string") return false;
   return true;
@@ -229,10 +172,26 @@ function aiToAnalysisResult(
   return {
     bands,
     feedback: {
-      ta: makeCriterion("ta", bands.ta, taLabel, fb.task_achievement, fb.task_achievement_vi),
-      cc: makeCriterion("cc", bands.cc, "Coherence & Cohesion", fb.coherence_cohesion, fb.coherence_cohesion_vi),
-      lr: makeCriterion("lr", bands.lr, "Lexical Resource", fb.lexical_resource, fb.lexical_resource_vi),
-      gra: makeCriterion("gra", bands.gra, "Grammatical Range & Accuracy", fb.grammatical_range_accuracy, fb.grammatical_range_accuracy_vi),
+      ta: makeCriterion("ta", bands.ta, taLabel, fb.task_achievement, {
+        strengths: fb.task_achievement.strengths_vi || "",
+        improvements: fb.task_achievement.improvements_vi || "",
+        band_justification: fb.task_achievement.band_justification_vi || ""
+      }),
+      cc: makeCriterion("cc", bands.cc, "Coherence & Cohesion", fb.coherence_cohesion, {
+        strengths: fb.coherence_cohesion.strengths_vi || "",
+        improvements: fb.coherence_cohesion.improvements_vi || "",
+        band_justification: fb.coherence_cohesion.band_justification_vi || ""
+      }),
+      lr: makeCriterion("lr", bands.lr, "Lexical Resource", fb.lexical_resource, {
+        strengths: fb.lexical_resource.strengths_vi || "",
+        improvements: fb.lexical_resource.improvements_vi || "",
+        band_justification: fb.lexical_resource.band_justification_vi || ""
+      }),
+      gra: makeCriterion("gra", bands.gra, "Grammatical Range & Accuracy", fb.grammatical_range_accuracy, {
+        strengths: fb.grammatical_range_accuracy.strengths_vi || "",
+        improvements: fb.grammatical_range_accuracy.improvements_vi || "",
+        band_justification: fb.grammatical_range_accuracy.band_justification_vi || ""
+      }),
     },
     tips: fb.priority_actions,
     tips_vi: fb.priority_actions_vi,
@@ -370,14 +329,17 @@ export async function POST(req: NextRequest) {
     if (apiKey) {
       try {
         const client = new Anthropic({ apiKey });
+        // buildUserPrompt should now generate a prompt that requests both EN and VI feedback
+        // and incorporates high-rigour scoring rules.
         const userPrompt = buildUserPrompt(data, wordCount);
 
-        // ── 1a. Primary scoring call (EN only, fast) ───────────────────────
+        // The SYSTEM_PROMPT should also be updated to reflect the high-rigour scoring rules
+        // and the expectation of bilingual output.
         const aiPromise = client.messages.create({
           model: "claude-3-5-sonnet-20241022",
-          max_tokens: 2048,
+          max_tokens: 4096, // Increased max_tokens to accommodate bilingual output
           messages: [{ role: "user", content: userPrompt }],
-          system: SYSTEM_PROMPT,
+          system: SYSTEM_PROMPT, // SYSTEM_PROMPT is assumed to be updated elsewhere
         });
 
         const timeoutPromise = new Promise<never>((_, reject) =>
@@ -397,66 +359,13 @@ export async function POST(req: NextRequest) {
         }
 
         rawAIFeedback = parsed.feedback;
+        // aiToAnalysisResult should now be capable of extracting both EN and VI feedback
+        // from the single 'parsed' object.
         result = aiToAnalysisResult(parsed, data, wordCount);
 
-        // ── 1b. Parallel translation call (VI, non-blocking on failure) ────
-        const enFeedbackForTranslation: EnFeedbackOnly = {
-          task_achievement: parsed.feedback.task_achievement,
-          coherence_cohesion: parsed.feedback.coherence_cohesion,
-          lexical_resource: parsed.feedback.lexical_resource,
-          grammatical_range_accuracy: parsed.feedback.grammatical_range_accuracy,
-          priority_actions: parsed.feedback.priority_actions,
-          overall_comment: parsed.feedback.overall_comment,
-        };
-        const translatePrompt = buildTranslatePrompt(enFeedbackForTranslation);
-
-        const translateCall = client.messages.create({
-          model: "claude-3-haiku-20240307",
-          max_tokens: 2048,
-          messages: [{ role: "user", content: translatePrompt }],
-        });
-        const translateTimeout = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error("Translation timeout")), TIMEOUT_MS)
-        );
-
-        const [translateOutcome] = await Promise.allSettled([
-          Promise.race([translateCall, translateTimeout]),
-        ]);
-
-        if (translateOutcome.status === "fulfilled") {
-          const tContent = translateOutcome.value.content[0];
-          if (tContent.type === "text") {
-            try {
-              const tJson = tContent.text.replace(/^```(?:json)?\s*/m, "").replace(/```\s*$/m, "").trim();
-              const viData = JSON.parse(tJson) as EnFeedbackOnly;
-              // Merge VI fields into result
-              result.feedback.ta.wellDone_vi = viData.task_achievement?.strengths;
-              result.feedback.ta.improvement_vi = viData.task_achievement?.improvements;
-              result.feedback.ta.bandJustification_vi = viData.task_achievement?.band_justification;
-              result.feedback.cc.wellDone_vi = viData.coherence_cohesion?.strengths;
-              result.feedback.cc.improvement_vi = viData.coherence_cohesion?.improvements;
-              result.feedback.cc.bandJustification_vi = viData.coherence_cohesion?.band_justification;
-              result.feedback.lr.wellDone_vi = viData.lexical_resource?.strengths;
-              result.feedback.lr.improvement_vi = viData.lexical_resource?.improvements;
-              result.feedback.lr.bandJustification_vi = viData.lexical_resource?.band_justification;
-              result.feedback.gra.wellDone_vi = viData.grammatical_range_accuracy?.strengths;
-              result.feedback.gra.improvement_vi = viData.grammatical_range_accuracy?.improvements;
-              result.feedback.gra.bandJustification_vi = viData.grammatical_range_accuracy?.band_justification;
-              result.overallComment_vi = viData.overall_comment;
-              result.priorityActions_vi = viData.priority_actions;
-              result.tips_vi = viData.priority_actions;
-              console.log("[analyze] translation=ok");
-            } catch (parseErr) {
-              console.warn("[analyze] Translation JSON parse failed:", parseErr);
-            }
-          }
-        } else {
-          console.warn("[analyze] Translation failed:", translateOutcome.reason);
-        }
-
         console.log(`[analyze] scoring_method=ai_examiner | vi=${!!result.overallComment_vi}`);
-      } catch (aiErr) {
-        console.error("[analyze] Anthropic API failed, falling back:", aiErr instanceof Error ? aiErr.message : aiErr);
+      } catch (aiErr: any) {
+        console.error("[analyze] Anthropic API failed, falling back:", aiErr.message);
       }
     }
 

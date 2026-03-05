@@ -78,6 +78,9 @@ export interface AIRawCriterionFeedback {
   strengths: string;
   improvements: string;
   band_justification: string;
+  strengths_vi?: string;
+  improvements_vi?: string;
+  band_justification_vi?: string;
 }
 
 export interface AIRawFeedback {
@@ -86,13 +89,8 @@ export interface AIRawFeedback {
   lexical_resource: AIRawCriterionFeedback;
   grammatical_range_accuracy: AIRawCriterionFeedback;
   priority_actions: string[];
-  overall_comment: string;
-  // Vietnamese mirrors (present when requested)
-  task_achievement_vi?: AIRawCriterionFeedback;
-  coherence_cohesion_vi?: AIRawCriterionFeedback;
-  lexical_resource_vi?: AIRawCriterionFeedback;
-  grammatical_range_accuracy_vi?: AIRawCriterionFeedback;
   priority_actions_vi?: string[];
+  overall_comment: string;
   overall_comment_vi?: string;
 }
 
