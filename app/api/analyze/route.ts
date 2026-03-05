@@ -402,35 +402,36 @@ export async function POST(req: NextRequest) {
       console.log("[analyze] scoring_method=rule_based_fallback");
     }
 
-    // ── 3. Persist to Supabase (non-blocking) ─────────────────────────────────
+    // ── 3. Persist to Supabase and Sheets (await to prevent serverless cancellation) ──
     const feedbackToStore: AIRawFeedback | Record<string, unknown> =
       rawAIFeedback ?? (result.feedback as unknown as Record<string, unknown>);
-    persistToSupabase(data, result, feedbackToStore).catch(console.error);
 
-    // ── 4. Persist to Google Sheets (non-blocking, legacy) ────────────────────
-    appendToSheet({
-      name: data.name || "",
-      age: data.age || "",
-      address: data.address || "",
-      mobile: data.mobile || "",
-      email: data.email || "",
-      currentBandL: data.currentBands?.listening || "",
-      currentBandR: data.currentBands?.reading || "",
-      currentBandW: data.currentBands?.writing || "",
-      currentBandS: data.currentBands?.speaking || "",
-      targetBand: data.targetBand || "",
-      taskType: data.taskType,
-      taskNumber: data.taskNumber,
-      question: data.question || "",
-      wordCount: result.wordCount,
-      bandTA: result.bands.ta,
-      bandCC: result.bands.cc,
-      bandLR: result.bands.lr,
-      bandGRA: result.bands.gra,
-      bandOverall: result.bands.overall,
-      feedback: result.feedback,
-      subscribed: false,
-    }).catch(console.error);
+    await Promise.allSettled([
+      persistToSupabase(data, result, feedbackToStore),
+      appendToSheet({
+        name: data.name || "",
+        age: data.age || "",
+        address: data.address || "",
+        mobile: data.mobile || "",
+        email: data.email || "",
+        currentBandL: data.currentBands?.listening || "",
+        currentBandR: data.currentBands?.reading || "",
+        currentBandW: data.currentBands?.writing || "",
+        currentBandS: data.currentBands?.speaking || "",
+        targetBand: data.targetBand || "",
+        taskType: data.taskType,
+        taskNumber: data.taskNumber,
+        question: data.question || "",
+        wordCount: result.wordCount,
+        bandTA: result.bands.ta,
+        bandCC: result.bands.cc,
+        bandLR: result.bands.lr,
+        bandGRA: result.bands.gra,
+        bandOverall: result.bands.overall,
+        feedback: result.feedback,
+        subscribed: false,
+      })
+    ]);
 
     return NextResponse.json({
       success: true,
