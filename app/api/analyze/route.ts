@@ -219,6 +219,7 @@ async function persistToSupabase(
     const { data: submission, error: subErr } = await supabase
       .from("essay_submissions")
       .insert({
+        user_id: data.user_id || null,
         task_type: taskType,
         prompt_text: data.question || "",
         essay_text: data.essay,
@@ -308,7 +309,7 @@ export async function POST(req: NextRequest) {
 
         // ── 1a. Primary scoring call (EN only, fast) ───────────────────────
         const aiPromise = client.messages.create({
-          model: "claude-sonnet-4-20250514",
+          model: "claude-3-5-sonnet-20241022",
           max_tokens: 2048,
           messages: [{ role: "user", content: userPrompt }],
           system: SYSTEM_PROMPT,
@@ -345,7 +346,7 @@ export async function POST(req: NextRequest) {
         const translatePrompt = buildTranslatePrompt(enFeedbackForTranslation);
 
         const translateCall = client.messages.create({
-          model: "claude-haiku-4-20250514",
+          model: "claude-3-haiku-20240307",
           max_tokens: 2048,
           messages: [{ role: "user", content: translatePrompt }],
         });

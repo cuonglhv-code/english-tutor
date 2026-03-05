@@ -17,6 +17,7 @@ export interface WizardData {
   questionImage?: string; // base64 Data URL of uploaded image (display only, not sent to API)
   essay: string;
   language: "en" | "vi";
+  user_id?: string;
 }
 
 export interface BandScores {

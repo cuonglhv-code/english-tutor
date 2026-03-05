@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import type { WizardData } from "@/types";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/lib/i18n";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   data: Partial<WizardData>;
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export function StepWrite({ data, onUpdate, onBack }: Props) {
+  const { user } = useUser();
   const { lang, setLang } = useLanguage();
   const [essay, setEssay] = useState(data.essay || "");
   const [feedbackLang, setFeedbackLang] = useState<"en" | "vi">(data.language || lang);
@@ -98,7 +100,12 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
 
     // Exclude questionImage from API payload
     const { questionImage: _img, ...dataForApi } = data as WizardData;
-    const fullData: WizardData = { ...dataForApi, essay, language: feedbackLang };
+    const fullData: WizardData = { 
+      ...dataForApi, 
+      essay, 
+      language: feedbackLang,
+      ...(user?.id ? { user_id: user.id } : {})
+    };
     onUpdate({ essay, language: feedbackLang });
 
     try {
