@@ -193,15 +193,15 @@ function aiToAnalysisResult(
         band_justification: fb.grammatical_range_accuracy.band_justification_vi || ""
       }),
     },
-    tips: fb.priority_actions,
-    tips_vi: fb.priority_actions_vi,
+    tips: fb.priority_actions || [],
+    tips_vi: fb.priority_actions_vi || fb.priority_actions || [],
     wordCount,
-    disclaimer: "⚠️ Assessed by AI Examiner (claude-sonnet-4-20250514) — not an official IELTS result.",
+    disclaimer: "⚠️ Assessed by AI Examiner (Claude 3.5 Sonnet) — not an official IELTS result.",
     scoring_method: "ai_examiner",
     overallComment: fb.overall_comment,
     overallComment_vi: fb.overall_comment_vi,
-    priorityActions: fb.priority_actions,
-    priorityActions_vi: fb.priority_actions_vi,
+    priorityActions: fb.priority_actions || [],
+    priorityActions_vi: fb.priority_actions_vi || fb.priority_actions || [],
   };
 }
 
@@ -365,8 +365,14 @@ export async function POST(req: NextRequest) {
 
         console.log(`[analyze] scoring_method=ai_examiner | vi=${!!result.overallComment_vi}`);
       } catch (aiErr: any) {
-        console.error("[analyze] Anthropic API failed, falling back:", aiErr.message);
+        console.error("[analyze] Anthropic API failed:", aiErr.message);
+        // Include partial details if it's a validation error
+        if (aiErr.message.includes("validation")) {
+          console.error("[analyze] Validation error details - ensure prompt and schema match.");
+        }
       }
+    } else {
+      console.warn("[analyze] ANTHROPIC_API_KEY is missing. Falling back to rule-based.");
     }
 
     // ── 2. Fallback to rule-based engine ─────────────────────────────────────

@@ -184,31 +184,59 @@ function generateCriterionFeedback(
   const descriptorNext = getNextDescriptor(criterion, score, taskType, taskNumber);
   const nextBand = roundToHalfBand(Math.ceil(score * 2) / 2 + 0.5);
 
-  const wellDones: Record<string, string> = {
-    ta:
-      taskNumber === "1"
+  const wellDones: Record<string, { en: string; vi: string }> = {
+    ta: {
+      en: taskNumber === "1"
         ? "Your response selects and presents key features from the data. You have attempted to cover the main trends in your writing."
         : "Your response addresses the question and presents a viewpoint. You have attempted to structure your argument with an introduction and body paragraphs.",
-    cc: "You have used cohesive devices to connect your ideas. There is an overall structure visible in your response with paragraphing attempted.",
-    lr: "You have attempted to use a variety of vocabulary rather than repeating the same words. Some topic-specific language is evident.",
-    gra: "You have attempted to use a variety of sentence structures including some complex sentences. Some error-free sentences demonstrate grammatical competence.",
+      vi: taskNumber === "1"
+        ? "Bài viết của bạn đã chọn lọc và trình bày được các đặc điểm chính từ dữ liệu. Bạn đã cố gắng bao quát các xu hướng chính."
+        : "Bài viết của bạn đã trả lời câu hỏi và đưa ra quan điểm. Bạn đã cố gắng cấu trúc lập luận với phần mở bài và các thân bài."
+    },
+    cc: {
+      en: "You have used cohesive devices to connect your ideas. There is an overall structure visible in your response with paragraphing attempted.",
+      vi: "Bạn đã sử dụng các từ nối để liên kết ý tưởng. Có một cấu trúc tổng thể rõ ràng và đã chia đoạn văn."
+    },
+    lr: {
+      en: "You have attempted to use a variety of vocabulary rather than repeating the same words. Some topic-specific language is evident.",
+      vi: "Bạn đã cố gắng sử dụng từ vựng đa dạng thay vì lặp lại các từ giống nhau. Có dấu hiệu của ngôn ngữ chuyên biệt theo chủ đề."
+    },
+    gra: {
+      en: "You have attempted to use a variety of sentence structures including some complex sentences. Some error-free sentences demonstrate grammatical competence.",
+      vi: "Bạn đã cố gắng sử dụng các cấu trúc câu đa dạng, bao gồm cả câu phức. Một số câu không lỗi cho thấy năng lực ngữ pháp tốt."
+    },
   };
 
-  const improvements: Record<string, string> = {
-    ta:
-      taskNumber === "1"
+  const improvements: Record<string, { en: string; vi: string }> = {
+    ta: {
+      en: taskNumber === "1"
         ? `To reach Band ${nextBand}: ${descriptorNext}\n\nKey fix: Add a clear overview paragraph (paragraph 2) summarising the 1-2 most significant trends — this is essential for Band 6+. Do NOT describe every data point.`
         : `To reach Band ${nextBand}: ${descriptorNext}\n\nKey fix: Ensure ALL parts of the question are addressed directly. Extend each main idea with a specific example or explanation. Add a clear concluding paragraph that restates your position.`,
-    cc: `To reach Band ${nextBand}: ${descriptorNext}\n\nKey fix: Use a wider variety of cohesive devices — don't repeat "however" or "furthermore" more than once each. Ensure every paragraph has a clear topic sentence and that each sentence within it relates back to it.`,
-    lr: `To reach Band ${nextBand}: ${descriptorNext}\n\nKey fix: Replace basic words with precise alternatives (e.g., "went up a lot" → "increased dramatically"; "bad" → "detrimental"). Learn and use collocations: "play a vital role", "a wide range of", "have a significant impact on".`,
-    gra: `To reach Band ${nextBand}: ${descriptorNext}\n\nKey fix: Aim for 50%+ of sentences to be complex (containing subordinate clauses: "Although...", "which...", "because..."). Vary sentence openings — start some sentences with adverbial clauses or participle phrases.`,
+      vi: taskNumber === "1"
+        ? `Để đạt Band ${nextBand}: ${descriptorNext}\n\nCách sửa: Thêm một đoạn tổng quan (đoạn 2) tóm tắt 1-2 xu hướng quan trọng nhất — điều này là bắt buộc để đạt Band 6+. Đừng mô tả mọi điểm dữ liệu.`
+        : `Để đạt Band ${nextBand}: ${descriptorNext}\n\nCách sửa: Đảm bảo TẤT CẢ các phần của câu hỏi được trả lời trực tiếp. Mở rộng mỗi ý chính bằng ví dụ hoặc lời giải thích cụ thể. Thêm đoạn kết luận rõ ràng khẳng định lại quan điểm.`
+    },
+    cc: {
+      en: `To reach Band ${nextBand}: ${descriptorNext}\n\nKey fix: Use a wider variety of cohesive devices — don't repeat "however" or "furthermore" more than once each. Ensure every paragraph has a clear topic sentence and that each sentence within it relates back to it.`,
+      vi: `Để đạt Band ${nextBand}: ${descriptorNext}\n\nCách sửa: Sử dụng đa dạng các từ nối — đừng lặp lại "however" hay "furthermore" quá một lần. Đảm bảo mỗi đoạn văn có câu chủ đề rõ ràng và các câu bên trong phải liên quan đến nó.`
+    },
+    lr: {
+      en: `To reach Band ${nextBand}: ${descriptorNext}\n\nKey fix: Replace basic words with precise alternatives (e.g., "went up a lot" → "increased dramatically"; "bad" → "detrimental"). Learn and use collocations: "play a vital role", "a wide range of", "have a significant impact on".`,
+      vi: `Để đạt Band ${nextBand}: ${descriptorNext}\n\nCách sửa: Thay thế các từ cơ bản bằng các từ chính xác hơn (VD: "went up a lot" → "increased dramatically"). Học và sử dụng các cụm từ (collocations): "play a vital role", "a wide range of".`
+    },
+    gra: {
+      en: `To reach Band ${nextBand}: ${descriptorNext}\n\nKey fix: Aim for 50%+ of sentences to be complex (containing subordinate clauses: "Although...", "which...", "because..."). Vary sentence openings — start some sentences with adverbial clauses or participle phrases.`,
+      vi: `Để đạt Band ${nextBand}: ${descriptorNext}\n\nCách sửa: Mục tiêu 50%+ số câu là câu phức (chứa mệnh đề phụ). Đa dạng hóa cách mở đầu câu — bắt đầu bằng các mệnh đề trạng ngữ hoặc ngữ phân từ.`
+    },
   };
 
   return {
     score,
     label,
-    wellDone: wellDones[criterion] || "Good effort on this criterion.",
-    improvement: improvements[criterion] || `To reach Band ${nextBand}: ${descriptorNext}`,
+    wellDone: wellDones[criterion]?.en || "Good effort on this criterion.",
+    wellDone_vi: wellDones[criterion]?.vi,
+    improvement: improvements[criterion]?.en || `To reach Band ${nextBand}: ${descriptorNext}`,
+    improvement_vi: improvements[criterion]?.vi,
     descriptorCurrent,
     descriptorNext,
   };
