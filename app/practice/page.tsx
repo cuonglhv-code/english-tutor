@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -282,7 +282,9 @@ export default function PracticePage() {
         fetchQuestions();
     }, []);
 
-    const allQuestions = [...dbQuestions, ...SEED_QUESTIONS];
+    const allQuestions = useMemo(() => {
+        return [...dbQuestions, ...SEED_QUESTIONS];
+    }, [dbQuestions]);
 
 
     // Load submitted question IDs from Supabase for authenticated users
@@ -306,7 +308,7 @@ export default function PracticePage() {
                 }
                 setLoadingDone(false);
             });
-    }, [user, dbQuestions]);
+    }, [user, allQuestions]);
 
     const allTypes = taskFilter === "Task 1"
         ? TASK1_TYPES

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { StepTask } from "@/components/steps/StepTask";
@@ -69,7 +69,15 @@ export default function HomePage() {
   }
 
   if (!user) {
-    return <LoginPageContent />;
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-jaxtina-red" />
+        </div>
+      }>
+        <LoginPageContent />
+      </Suspense>
+    );
   }
 
 
