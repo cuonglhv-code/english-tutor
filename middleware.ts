@@ -8,10 +8,11 @@ const PUBLIC_ROUTES = [
   "/auth",
   "/logout",
   "/writing-101",
-  "/courses"
+  "/courses",
+  "/practice"
 ];
 // Routes exempt from the profile-completion redirect
-const PROFILE_EXEMPT = ["/personal-details", "/login", "/register", "/auth", "/logout"];
+const PROFILE_EXEMPT = ["/personal-details", "/login", "/register", "/auth", "/logout", "/practice"];
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });

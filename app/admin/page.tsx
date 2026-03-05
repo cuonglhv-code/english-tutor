@@ -29,8 +29,10 @@ import { createBrowserClient } from "@/lib/supabase";
 import { TASK1_TYPES, TASK2_TYPES, SOURCES } from "@/lib/questionBank";
 
 // Simple admin auth check
-const ADMIN_USER = process.env.NEXT_PUBLIC_ADMIN_USER || "admin";
-const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASS || "jaxtina2024";
+const ADMIN_ACCOUNTS = [
+    { user: "admin", pass: "jaxtina@2026" },
+    { user: "cuonglhv@jaxtina.com", pass: "Jaxtina@2026" }
+];
 
 export default function AdminDashboard() {
     const router = useRouter();
@@ -69,7 +71,11 @@ export default function AdminDashboard() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (loginForm.user === ADMIN_USER && loginForm.pass === ADMIN_PASS) {
+        const isValid = ADMIN_ACCOUNTS.some(
+            acc => acc.user === loginForm.user && acc.pass === loginForm.pass
+        );
+
+        if (isValid) {
             setIsLoggedIn(true);
             sessionStorage.setItem("admin_auth", "true");
             toast.success("Welcome back, Admin!");

@@ -8,10 +8,14 @@ import { StepWrite } from "@/components/steps/StepWrite";
 import type { WizardData } from "@/types";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t } from "@/lib/i18n";
-import { GraduationCap } from "lucide-react";
+import { useUser } from "@/hooks/useUser";
+import { LoginPageContent } from "@/components/auth/LoginPageContent";
+import { Loader2, GraduationCap } from "lucide-react";
 
 export default function HomePage() {
+  const { user, loading: userLoading } = useUser();
   const { lang } = useLanguage();
+
   const [step, setStep] = useState(0);
   const [data, setData] = useState<Partial<WizardData>>({});
 
@@ -55,6 +59,19 @@ export default function HomePage() {
   const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
   const progress = ((step + 1) / STEPS.length) * 100;
+
+  if (userLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-jaxtina-red" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginPageContent />;
+  }
+
 
   if (step === 2) {
     return <StepWrite data={data} onUpdate={updateData} onBack={back} />;
