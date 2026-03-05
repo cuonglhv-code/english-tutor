@@ -207,6 +207,8 @@ function aiToAnalysisResult(
 }
 
 // ─── Persist to Supabase ──────────────────────────────────────────────────────
+// Builds a comprehensive feedback_json that includes all VI translations
+// so that the submission detail page can fully reconstruct the bilingual feedback.
 async function persistToSupabase(
   data: WizardData,
   result: AnalysisResult,
@@ -235,6 +237,29 @@ async function persistToSupabase(
       return;
     }
 
+    // Build an enriched feedback_json that includes VI translations merged from result
+    // This ensures the submission detail page can show bilingual content.
+    const enrichedFeedbackJson = {
+      ...rawFeedback,
+      // Merge VI translations that were added after the primary AI call
+      task_achievement_vi: result.feedback.ta.wellDone_vi
+        ? { strengths: result.feedback.ta.wellDone_vi, improvements: result.feedback.ta.improvement_vi, band_justification: result.feedback.ta.bandJustification_vi }
+        : undefined,
+      coherence_cohesion_vi: result.feedback.cc.wellDone_vi
+        ? { strengths: result.feedback.cc.wellDone_vi, improvements: result.feedback.cc.improvement_vi, band_justification: result.feedback.cc.bandJustification_vi }
+        : undefined,
+      lexical_resource_vi: result.feedback.lr.wellDone_vi
+        ? { strengths: result.feedback.lr.wellDone_vi, improvements: result.feedback.lr.improvement_vi, band_justification: result.feedback.lr.bandJustification_vi }
+        : undefined,
+      grammatical_range_accuracy_vi: result.feedback.gra.wellDone_vi
+        ? { strengths: result.feedback.gra.wellDone_vi, improvements: result.feedback.gra.improvement_vi, band_justification: result.feedback.gra.bandJustification_vi }
+        : undefined,
+      overall_comment_vi: result.overallComment_vi,
+      priority_actions_vi: result.priorityActions_vi,
+      // Store full AnalysisResult so the detail page can reconstruct the UI exactly
+      _full_result: result,
+    };
+
     const { error: fbErr } = await supabase.from("feedback_results").insert({
       submission_id: submission.id,
       overall_band: result.bands.overall,
@@ -242,7 +267,7 @@ async function persistToSupabase(
       coherence_cohesion_band: result.bands.cc,
       lexical_resource_band: result.bands.lr,
       grammatical_range_accuracy_band: result.bands.gra,
-      feedback_json: rawFeedback,
+      feedback_json: enrichedFeedbackJson,
     });
 
     if (fbErr) console.error("Supabase feedback insert error:", fbErr.message);
