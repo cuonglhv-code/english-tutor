@@ -249,8 +249,41 @@ export default function PracticePage() {
     const [search, setSearch] = useState("");
     const [doneTab, setDoneTab] = useState<"todo" | "all" | "done">("all");
     const [filtersOpen, setFiltersOpen] = useState(true);
+    const [dbQuestions, setDbQuestions] = useState<PracticeQuestion[]>([]);
+
     const [doneIds, setDoneIds] = useState<Set<string>>(new Set());
+    const [loading, setLoading] = useState(false);
     const [loadingDone, setLoadingDone] = useState(false);
+
+    // Fetch dynamic questions from the exercises table
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            setLoading(true);
+            const supabase = createBrowserClient();
+            const { data, error } = await supabase
+                .from("exercises")
+                .select("*")
+                .eq("is_published", true)
+                .eq("skill", "writing");
+
+            if (data && !error) {
+                const mapped: PracticeQuestion[] = data.map(ex => ({
+                    id: ex.id,
+                    task: ex.task_type === "task1" ? "Task 1" : "Task 2",
+                    type: ex.question_type || (ex.task_type === "task1" ? "Task 1" : "Task 2"),
+                    source: ex.source || "External",
+                    questionText: ex.description || ex.body_text || "",
+                    imageUrl: ex.image_url || ""
+                }));
+                setDbQuestions(mapped);
+            }
+            setLoading(false);
+        };
+        fetchQuestions();
+    }, []);
+
+    const allQuestions = [...dbQuestions, ...SEED_QUESTIONS];
+
 
     // Load submitted question IDs from Supabase for authenticated users
     useEffect(() => {
@@ -263,10 +296,9 @@ export default function PracticePage() {
             .eq("user_id", user.id)
             .then(({ data }) => {
                 if (data) {
-                    // Match by prompt_text against SEED_QUESTIONS
                     const promptSet = new Set(data.map((r) => r.prompt_text.trim()));
                     const ids = new Set(
-                        SEED_QUESTIONS
+                        allQuestions
                             .filter((q) => promptSet.has(q.questionText.trim()))
                             .map((q) => q.id)
                     );
@@ -274,7 +306,7 @@ export default function PracticePage() {
                 }
                 setLoadingDone(false);
             });
-    }, [user]);
+    }, [user, dbQuestions]);
 
     const allTypes = taskFilter === "Task 1"
         ? TASK1_TYPES
@@ -282,15 +314,15 @@ export default function PracticePage() {
             ? TASK2_TYPES
             : [...TASK1_TYPES, ...TASK2_TYPES];
 
-    const filtered = SEED_QUESTIONS.filter((q) => {
+    const filtered = allQuestions.filter((q) => {
         if (taskFilter !== "All" && q.task !== taskFilter) return false;
         if (typeFilters.length && !typeFilters.includes(q.type)) return false;
         if (sourceFilters.length && !sourceFilters.includes(q.source)) return false;
         if (
             search &&
             !q.questionText.toLowerCase().includes(search.toLowerCase()) &&
-            !q.type.toLowerCase().includes(search.toLowerCase()) &&
-            !q.source.toLowerCase().includes(search.toLowerCase())
+            !q.type?.toLowerCase().includes(search.toLowerCase()) &&
+            !q.source?.toLowerCase().includes(search.toLowerCase())
         )
             return false;
         if (doneTab === "done" && user) return doneIds.has(q.id);
@@ -319,7 +351,7 @@ export default function PracticePage() {
     }
 
     const doneCount = doneIds.size;
-    const totalCount = SEED_QUESTIONS.length;
+    const totalCount = allQuestions.length;
 
     return (
         <div className="min-h-screen py-8 px-4">
