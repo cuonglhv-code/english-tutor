@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -80,6 +80,13 @@ export function Navbar() {
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
           >
             <PenLine className="h-4 w-4" /> {t("nav", "practice", lang)}
+          </Link>
+          <Link
+            href="/practice"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+          >
+            <Library className="h-4 w-4" />
+            <span className="hidden sm:inline">{lang === "vi" ? "Thư viện" : "Library"}</span>
           </Link>
           <Link
             href="/writing-101"

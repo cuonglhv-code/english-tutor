@@ -26,6 +26,31 @@ export default function HomePage() {
     setData((prev) => ({ ...prev, language: lang }));
   }, [lang]);
 
+  // Pre-populate from Practice Library handoff
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("practice_question");
+      if (!raw) return;
+      sessionStorage.removeItem("practice_question");
+      const preloaded = JSON.parse(raw) as {
+        question: string;
+        taskNumber: "1" | "2";
+        taskType: "academic" | "general";
+        questionImage?: string;
+      };
+      setData((prev) => ({
+        ...prev,
+        question: preloaded.question,
+        taskNumber: preloaded.taskNumber,
+        taskType: preloaded.taskType,
+        questionImage: preloaded.questionImage,
+      }));
+      // Jump straight to the Write step
+      setStep(2);
+    } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const updateData = (d: Partial<WizardData>) => setData((prev) => ({ ...prev, ...d }));
   const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
