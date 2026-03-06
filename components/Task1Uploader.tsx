@@ -17,12 +17,17 @@ import { toast } from "sonner";
 
 interface Task1UploaderProps {
     onComplete?: (result: { submissionId: string; overallBand: number }) => void;
+    /** When selected from question bank, pass the DB row id so the scoring API can resolve visual_description_json */
+    questionId?: string | null;
+    /** Pre-populated chart data (from question bank row's visual_description_json). Skips UPLOAD/CONFIRM steps. */
+    preloadedChartData?: any;
 }
 
 type Step = "UPLOAD" | "CONFIRM" | "ESSAY" | "RESULTS";
 
-export default function Task1Uploader({ onComplete }: Task1UploaderProps) {
-    const [step, setStep] = useState<Step>("UPLOAD");
+export default function Task1Uploader({ onComplete, questionId, preloadedChartData }: Task1UploaderProps) {
+    // If preloadedChartData is provided we jump straight to ESSAY
+    const [step, setStep] = useState<Step>(preloadedChartData ? "ESSAY" : "UPLOAD");
     const [loading, setLoading] = useState(false);
     const [loadingMsg, setLoadingMsg] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -31,8 +36,8 @@ export default function Task1Uploader({ onComplete }: Task1UploaderProps) {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [imagePath, setImagePath] = useState<string | null>(null);
-    const [chartData, setChartData] = useState<any>(null);
-    const [editedJson, setEditedJson] = useState("");
+    const [chartData, setChartData] = useState<any>(preloadedChartData ?? null);
+    const [editedJson, setEditedJson] = useState(preloadedChartData ? JSON.stringify(preloadedChartData, null, 2) : "");
     const [isJsonExpanded, setIsJsonExpanded] = useState(false);
     const [essay, setEssay] = useState("");
     const [results, setResults] = useState<any>(null);
@@ -116,7 +121,8 @@ export default function Task1Uploader({ onComplete }: Task1UploaderProps) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     essay,
-                    chartData,
+                    chartData: imagePath ? chartData : null,  // only send chartData if it came from an image upload
+                    questionId: !imagePath ? questionId : null, // fall back to question bank when no image
                     imagePath,
                 }),
             });
@@ -141,11 +147,11 @@ export default function Task1Uploader({ onComplete }: Task1UploaderProps) {
     };
 
     const handleReset = () => {
-        setStep("UPLOAD");
+        setStep(preloadedChartData ? "ESSAY" : "UPLOAD");
         setImageFile(null);
         setImagePreview(null);
         setImagePath(null);
-        setChartData(null);
+        setChartData(preloadedChartData ?? null);
         setEssay("");
         setResults(null);
         setError(null);

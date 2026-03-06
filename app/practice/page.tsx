@@ -254,6 +254,11 @@ export default function PracticePage() {
     const [dbQuestions, setDbQuestions] = useState<PracticeQuestion[]>([]);
     const [activeTab, setActiveTab] = useState<"task1" | "task2">("task2");
 
+    // Task 1 question-selector state
+    const [selectedTask1Q, setSelectedTask1Q] = useState<PracticeQuestion | null>(null);
+    const [task1Mode, setTask1Mode] = useState<"bank" | "upload">("bank");
+    const [task1Search, setTask1Search] = useState("");
+
     const [doneIds, setDoneIds] = useState<Set<string>>(new Set());
     const [loading, setLoading] = useState(false);
     const [loadingDone, setLoadingDone] = useState(false);
@@ -432,9 +437,145 @@ export default function PracticePage() {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-card border rounded-3xl p-6 sm:p-10 shadow-card"
+                        className="space-y-6"
                     >
-                        <Task1Uploader />
+                        {/* ── Task 1: writing mode (question selected) ── */}
+                        {selectedTask1Q ? (
+                            <div className="space-y-4">
+                                {/* Header: selected question info */}
+                                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 bg-card border rounded-2xl p-5 shadow-sm">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap mb-2">
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${TYPE_COLORS[selectedTask1Q.type] ?? "bg-gray-100 text-gray-600"}`}>
+                                                {selectedTask1Q.type}
+                                            </span>
+                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{selectedTask1Q.source}</span>
+                                        </div>
+                                        <p className="text-sm text-foreground/80 leading-relaxed">{selectedTask1Q.questionText}</p>
+                                    </div>
+                                    <button
+                                        onClick={() => { setSelectedTask1Q(null); setTask1Mode("bank"); }}
+                                        className="shrink-0 text-xs text-muted-foreground hover:text-foreground border rounded-lg px-3 py-1.5 hover:bg-muted transition-colors"
+                                    >
+                                        ← Back to questions
+                                    </button>
+                                </div>
+
+                                {/* Visual description panel */}
+                                {selectedTask1Q.visualDescription && task1Mode === "bank" && (
+                                    <div className="bg-muted/40 border border-muted rounded-2xl p-5 space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">📊 Visual Description</p>
+                                            <button
+                                                onClick={() => setTask1Mode("upload")}
+                                                className="text-xs text-jaxtina-blue hover:underline font-medium flex items-center gap-1"
+                                            >
+                                                Have an image? Upload it instead →
+                                            </button>
+                                        </div>
+                                        <p className="text-sm leading-relaxed text-foreground/80">{selectedTask1Q.visualDescription}</p>
+                                        <p className="text-[10px] text-muted-foreground italic">
+                                            This description is used by the AI examiner to assess your Task Achievement accurately.
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* Image upload mode toggle */}
+                                {task1Mode === "upload" && (
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <button
+                                            onClick={() => setTask1Mode("bank")}
+                                            className="text-xs text-muted-foreground hover:text-foreground border rounded-lg px-3 py-1.5 hover:bg-muted transition-colors"
+                                        >
+                                            ← Use question bank description instead
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* Task1Uploader component */}
+                                <div className="bg-card border rounded-3xl p-6 sm:p-10 shadow-card">
+                                    {task1Mode === "bank" ? (
+                                        // Question bank mode: preload chart data, no upload step
+                                        <Task1Uploader
+                                            key={`bank-${selectedTask1Q.id}`}
+                                            questionId={selectedTask1Q.id}
+                                            preloadedChartData={selectedTask1Q.visualDescriptionJson ?? null}
+                                        />
+                                    ) : (
+                                        // Image upload mode: full upload flow
+                                        <Task1Uploader
+                                            key={`upload-${selectedTask1Q.id}`}
+                                            questionId={selectedTask1Q.id}
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            /* ── Task 1: question selector ── */
+                            <div className="space-y-5">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+                                    <div>
+                                        <h2 className="text-xl font-bold tracking-tight">Select a Task 1 Question</h2>
+                                        <p className="text-sm text-muted-foreground mt-0.5">Choose a visual prompt from the question bank, or upload your own image below.</p>
+                                    </div>
+                                    <button
+                                        onClick={() => { setSelectedTask1Q(null); setTask1Mode("upload"); setSelectedTask1Q({ id: "custom", task: "Task 1", type: "Custom Upload", source: "Custom", questionText: "Your uploaded visual prompt", imageUrl: "" }); }}
+                                        className="shrink-0 text-sm font-semibold bg-jaxtina-blue hover:bg-jaxtina-blue/90 text-white px-5 py-2 rounded-xl flex items-center gap-2 transition-colors"
+                                    >
+                                        📤 Upload my own image
+                                    </button>
+                                </div>
+
+                                {/* Search */}
+                                <div className="relative max-w-md">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    <Input
+                                        placeholder="Search Task 1 questions…"
+                                        value={task1Search}
+                                        onChange={(e) => setTask1Search(e.target.value)}
+                                        className="pl-9"
+                                    />
+                                </div>
+
+                                {/* Question grid */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {allQuestions
+                                        .filter(q => q.task === "Task 1")
+                                        .filter(q => !task1Search ||
+                                            q.questionText.toLowerCase().includes(task1Search.toLowerCase()) ||
+                                            q.type.toLowerCase().includes(task1Search.toLowerCase())
+                                        )
+                                        .map(q => (
+                                            <div
+                                                key={q.id}
+                                                onClick={() => { setSelectedTask1Q(q); setTask1Mode("bank"); }}
+                                                className="group bg-card rounded-2xl border shadow-sm hover:shadow-md hover:border-jaxtina-blue/40 transition-all cursor-pointer flex flex-col overflow-hidden"
+                                            >
+                                                {q.imageUrl ? (
+                                                    <div className="relative w-full h-32 bg-muted shrink-0 overflow-hidden">
+                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                        <img
+                                                            src={proxyImg(q.imageUrl)}
+                                                            alt="chart preview"
+                                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="h-24 flex items-center justify-center text-4xl bg-blue-50 dark:bg-blue-900/20 shrink-0">📊</div>
+                                                )}
+                                                <div className="p-4 flex flex-col flex-1 gap-2">
+                                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full w-fit ${TYPE_COLORS[q.type] ?? "bg-gray-100 text-gray-600"}`}>
+                                                        {q.type}
+                                                    </span>
+                                                    <p className="text-sm text-foreground/80 line-clamp-3 flex-1 leading-relaxed">{q.questionText}</p>
+                                                    <span className="text-xs text-jaxtina-blue font-semibold group-hover:underline mt-auto">Select → Write →</span>
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        )}
                     </motion.div>
                 ) : (
                     <>

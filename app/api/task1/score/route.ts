@@ -50,25 +50,63 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // 2. Parse and validate body
-        const { essay, chartData, submissionId, imagePath } = await req.json();
+        // 2. Parse request body
+        // chartData  — set when student uploaded an image and confirmed extraction
+        // questionId — set when student picked a question from the bank (no image)
+        // imagePath  — Supabase storage path from the extract step (optional)
+        // submissionId — if the submission was already created upstream (optional)
+        const { essay, chartData: rawChartData, questionId, submissionId, imagePath } = await req.json();
 
-        if (!essay || !chartData) {
-            return NextResponse.json({ error: "Missing essay or chart data" }, { status: 400 });
+        if (!essay) {
+            return NextResponse.json({ error: "Missing essay text" }, { status: 400 });
         }
 
         if (essay.length < 50) {
             return NextResponse.json({ error: "Essay must be at least 50 characters" }, { status: 400 });
         }
 
-        // 3. Call Anthropic API
+        // 3. Resolve the visual description
+        // Priority: chartData (image upload path) → visual_description_json from DB (question bank path)
+        let resolvedChartData = rawChartData ?? null;
+        let resolvedImagePath = imagePath ?? null;
+        let questionTitle = "IELTS Writing Task 1";
+
+        if (!resolvedChartData && questionId) {
+            // Fetch the question row from the 'questions' table
+            const serviceClient = createServiceClient();
+            const { data: qRow, error: qErr } = await serviceClient
+                .from("questions")
+                .select("visual_description_json, title, image_url")
+                .eq("id", questionId)
+                .single();
+
+            if (qErr || !qRow) {
+                return NextResponse.json(
+                    { error: "Question not found or has no visual description." },
+                    { status: 404 }
+                );
+            }
+
+            resolvedChartData = qRow.visual_description_json;
+            questionTitle = qRow.title ?? questionTitle;
+            // No image path for question-bank path — image is already shown to student via imageUrl
+        }
+
+        if (!resolvedChartData) {
+            return NextResponse.json(
+                { error: "No visual description available for scoring. Please upload an image or select a question from the bank." },
+                { status: 400 }
+            );
+        }
+
+        // 4. Call Anthropic API
         const apiKey = process.env.ANTHROPIC_API_KEY;
         if (!apiKey) {
             return NextResponse.json({ error: "AI service configuration missing" }, { status: 500 });
         }
 
         const anthropic = new Anthropic({ apiKey });
-        const userMessage = `CONFIRMED VISUAL DESCRIPTION:\n${JSON.stringify(chartData)}\n\nCANDIDATE ESSAY:\n${essay}`;
+        const userMessage = `CONFIRMED VISUAL DESCRIPTION:\n${JSON.stringify(resolvedChartData)}\n\nCANDIDATE ESSAY:\n${essay}`;
 
         const message = await anthropic.messages.create({
             model: "claude-3-5-sonnet-20241022",
@@ -87,9 +125,11 @@ export async function POST(req: NextRequest) {
         const jsonMatch = content.text.replace(/```json/g, "").replace(/```/g, "").trim();
         const result = JSON.parse(jsonMatch);
 
-        // 4. Persistence
+        // 5. Persistence
         const serviceClient = createServiceClient();
         let currentSubmissionId = submissionId;
+
+        const promptTitle = (resolvedChartData?.title || questionTitle || "IELTS Writing Task 1").slice(0, 512);
 
         if (!currentSubmissionId) {
             // Auto-create a submission record for Task 1
@@ -98,10 +138,10 @@ export async function POST(req: NextRequest) {
                 .insert({
                     user_id: user.id,
                     task_type: "task1",
-                    prompt_text: (chartData.title || "IELTS Writing Task 1").slice(0, 512),
+                    prompt_text: promptTitle,
                     essay_text: essay,
-                    image_path: imagePath || null,
-                    chart_data: chartData,
+                    image_path: resolvedImagePath || null,
+                    chart_data: resolvedChartData,
                     word_count: essay.trim().split(/\s+/).length,
                     scoring_method: "ai_examiner"
                 })
@@ -109,16 +149,16 @@ export async function POST(req: NextRequest) {
                 .single();
 
             if (createError) {
-                console.error("Task 1 Submission direct creation error:", createError);
+                console.error("Task 1 Submission creation error:", createError);
             } else {
                 currentSubmissionId = newSub.id;
             }
         } else {
-            // Update existing (unlikely in current flow but kept for safety)
+            // Update an existing submission
             const { error: updateError } = await serviceClient
                 .from("essay_submissions")
                 .update({
-                    chart_data: chartData,
+                    chart_data: resolvedChartData,
                     essay_text: essay,
                     word_count: essay.trim().split(/\s+/).length
                 })
@@ -130,7 +170,6 @@ export async function POST(req: NextRequest) {
         }
 
         if (currentSubmissionId) {
-            // Store the score result in feedback_results
             const { error: fbError } = await serviceClient
                 .from("feedback_results")
                 .insert({
@@ -152,7 +191,6 @@ export async function POST(req: NextRequest) {
                 console.error("Feedback insert error:", fbError);
             }
 
-            // Include ID in response
             result.submissionId = currentSubmissionId;
         }
 
