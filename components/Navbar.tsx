@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -9,6 +9,7 @@ import { useUser } from "@/hooks/useUser";
 import { useLanguage } from "@/hooks/useLanguage";
 import { t, type Lang } from "@/lib/i18n";
 import { toast } from "sonner";
+import { useState, useEffect, useRef } from "react";
 
 function JaxtinaMark() {
   return (
@@ -48,6 +49,36 @@ export function Navbar() {
   const { user } = useUser();
   const { lang, setLang } = useLanguage();
   const router = useRouter();
+  const [unread, setUnread] = useState(0);
+  const channelRef = useRef<any>(null);
+
+  // Fetch unread count and subscribe to new messages
+  useEffect(() => {
+    if (!user) { setUnread(0); return; }
+
+    // Initial fetch
+    fetch("/api/messages")
+      .then(r => r.json())
+      .then(json => setUnread(json.unread ?? 0))
+      .catch(() => { });
+
+    // Realtime subscription for new incoming messages
+    const supabase = createBrowserClient();
+    const channel = supabase
+      .channel("navbar-inbox")
+      .on("postgres_changes", {
+        event: "INSERT", schema: "public", table: "messages",
+        filter: `recipient_id=eq.${user.id}`,
+      }, () => setUnread(n => n + 1))
+      .on("postgres_changes", {
+        event: "INSERT", schema: "public", table: "messages",
+        filter: `recipient_id=is.null`,
+      }, () => setUnread(n => n + 1))
+      .subscribe();
+
+    channelRef.current = channel;
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
 
   const handleLogout = async () => {
     const supabase = createBrowserClient();
@@ -111,6 +142,20 @@ export function Navbar() {
               >
                 <LayoutDashboard className="h-4 w-4" />
                 <span className="hidden sm:inline">{t("nav", "dashboard", lang)}</span>
+              </Link>
+              <Link
+                href="/inbox"
+                onClick={() => setUnread(0)}
+                className="relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                aria-label="Inbox"
+              >
+                <Mail className="h-4 w-4" />
+                <span className="hidden sm:inline">{lang === "vi" ? "Hộp thư" : "Inbox"}</span>
+                {unread > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-jaxtina-red text-white text-[9px] font-black flex items-center justify-center">
+                    {unread > 99 ? "99+" : unread}
+                  </span>
+                )}
               </Link>
               <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
                 <LogOut className="h-4 w-4" />

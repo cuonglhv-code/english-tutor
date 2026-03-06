@@ -89,6 +89,23 @@ export async function middleware(request: NextRequest) {
       supabaseResponse.cookies.getAll().forEach((c) => redirectRes.cookies.set(c.name, c.value, c));
       return redirectRes;
     }
+    // 3. Admin route guard — role must be 'admin'
+    //    We already have the profile query above; re-query only if hitting /admin/*
+    if (pathname.startsWith("/admin")) {
+      const { data: adminProfile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user!.id)
+        .single();
+
+      if (!adminProfile || adminProfile.role !== "admin") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/dashboard";
+        const redirectRes = NextResponse.redirect(url);
+        supabaseResponse.cookies.getAll().forEach((c) => redirectRes.cookies.set(c.name, c.value, c));
+        return redirectRes;
+      }
+    }
   }
 
   return supabaseResponse;
