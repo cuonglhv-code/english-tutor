@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 // PATCH /api/messages/[id]/read  — marks a message as read
 export async function PATCH(
     _req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -15,7 +15,7 @@ export async function PATCH(
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Only allow marking a message as read if it's addressed to this user
     // (or a broadcast — recipient_id IS NULL). We use the anon client so
