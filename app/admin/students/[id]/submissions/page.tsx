@@ -5,13 +5,14 @@ import { ArrowLeft, ChevronDown } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default async function StudentSubmissionsPage({ params }: { params: { id: string } }) {
+export default async function StudentSubmissionsPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const service = createServiceClient();
 
     const { data: profile } = await service
         .from("profiles")
         .select("full_name, display_name, email, current_band, target_band")
-        .eq("id", params.id)
+        .eq("id", id)
         .single();
 
     if (!profile) notFound();
@@ -19,7 +20,7 @@ export default async function StudentSubmissionsPage({ params }: { params: { id:
     const { data: subs } = await service
         .from("essay_submissions")
         .select(`id, task_type, prompt_text, essay_text, word_count, submitted_at, feedback_results(overall_band, task_achievement_band, coherence_cohesion_band, lexical_resource_band, grammatical_range_accuracy_band, feedback_json)`)
-        .eq("user_id", params.id)
+        .eq("user_id", id)
         .order("submitted_at", { ascending: false });
 
     const name = profile.full_name || profile.display_name || profile.email;

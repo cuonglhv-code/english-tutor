@@ -34,6 +34,7 @@ const emptyForm = {
 
 export default function QuestionsPage() {
     const toast = useToast();
+    const { error: toastError } = toast;
     const [tab, setTab] = useState<"task1" | "task2">("task1");
     const [questions, setQuestions] = useState<Exercise[]>([]);
     const [loading, setLoading] = useState(true);
@@ -50,9 +51,9 @@ export default function QuestionsPage() {
         const res = await fetch("/api/admin/questions");
         const json = await res.json();
         if (res.ok) setQuestions(json.questions ?? []);
-        else toast.error(json.error ?? "Failed to load questions");
+        else toastError(json.error ?? "Failed to load questions");
         setLoading(false);
-    }, []);
+    }, [toastError]);
 
     useEffect(() => { fetchAll(); }, [fetchAll]);
 

@@ -32,6 +32,7 @@ function actionColor(action: string) {
 
 export default function AuditPage() {
     const toast = useToast();
+    const { error: toastError } = toast;
     const [logs, setLogs] = useState<AuditLog[]>([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -54,9 +55,9 @@ export default function AuditPage() {
         const res = await fetch(`/api/admin/audit?${params}`);
         const json = await res.json();
         if (res.ok) { setLogs(json.logs ?? []); setTotal(json.total ?? 0); }
-        else toast.error(json.error ?? "Failed to load audit log");
+        else toastError(json.error ?? "Failed to load audit log");
         setLoading(false);
-    }, [page, actionFilter, dateFrom, dateTo]);
+    }, [page, actionFilter, dateFrom, dateTo, toastError]);
 
     useEffect(() => { fetchLogs(); }, [fetchLogs]);
 

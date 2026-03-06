@@ -27,6 +27,7 @@ interface Student {
 
 export default function StudentsPage() {
     const toast = useToast();
+    const { error: toastError } = toast;
     const [students, setStudents] = useState<Student[]>([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -70,10 +71,10 @@ export default function StudentsPage() {
             setStudents(json.users ?? []);
             setTotal(json.total ?? 0);
         } else {
-            toast.error(json.error ?? "Failed to load students");
+            toastError(json.error ?? "Failed to load students");
         }
         setLoading(false);
-    }, [page, debouncedSearch, sortKey, sortDir, statusFilter]);
+    }, [page, debouncedSearch, sortKey, sortDir, statusFilter, toastError]);
 
     useEffect(() => { fetchStudents(); }, [fetchStudents]);
 
