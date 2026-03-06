@@ -32,14 +32,28 @@ export function LoginPageContent() {
 
         try {
             if (mode === "login") {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) {
                     toast.error(t("auth", "errorInvalid", lang) || error.message);
                     return;
                 }
+
+                let targetUrl = nextUrl;
+                if (authData?.user) {
+                    const { data: profile } = await supabase
+                        .from("profiles")
+                        .select("role")
+                        .eq("id", authData.user.id)
+                        .single();
+
+                    if (profile?.role === "admin" && targetUrl === "/") {
+                        targetUrl = "/admin/dashboard";
+                    }
+                }
+
                 toast.success(lang === "vi" ? "Đăng nhập thành công!" : "Logged in successfully!");
                 router.refresh();
-                router.push(nextUrl);
+                router.push(targetUrl);
             } else {
                 if (password.length < 8) {
                     toast.error(lang === "vi" ? "Mật khẩu phải từ 8 ký tự." : "Password must be at least 8 chars.");

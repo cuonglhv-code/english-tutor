@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -46,7 +46,7 @@ function LangToggle({ lang, setLang }: { lang: Lang; setLang: (l: Lang) => void 
 }
 
 export function Navbar() {
-  const { user } = useUser();
+  const { user, role } = useUser();
   const { lang, setLang } = useLanguage();
   const router = useRouter();
   const [unread, setUnread] = useState(0);
@@ -143,6 +143,15 @@ export function Navbar() {
                 <LayoutDashboard className="h-4 w-4" />
                 <span className="hidden sm:inline">{t("nav", "dashboard", lang)}</span>
               </Link>
+              {role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold text-jaxtina-blue hover:bg-jaxtina-blue/10 transition-colors"
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  <span className="hidden sm:inline">Admin</span>
+                </Link>
+              )}
               <Link
                 href="/inbox"
                 onClick={() => setUnread(0)}
