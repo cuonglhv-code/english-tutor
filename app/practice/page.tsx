@@ -6,6 +6,7 @@ import {
     Search, Filter, PenLine, CheckCircle2, BookMarked,
     RotateCcw, ChevronDown, ChevronUp, Library, Loader2,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +21,7 @@ import {
     TYPE_COLORS,
     type PracticeQuestion,
 } from "@/lib/questionBank";
+import Task1Uploader from "@/components/Task1Uploader";
 
 // ─── Proxy helper (same logic as ielts-examiner.tsx) ─────────────────────────
 function proxyImg(url: string) {
@@ -250,6 +252,7 @@ export default function PracticePage() {
     const [doneTab, setDoneTab] = useState<"todo" | "all" | "done">("all");
     const [filtersOpen, setFiltersOpen] = useState(true);
     const [dbQuestions, setDbQuestions] = useState<PracticeQuestion[]>([]);
+    const [activeTab, setActiveTab] = useState<"task1" | "task2">("task2");
 
     const [doneIds, setDoneIds] = useState<Set<string>>(new Set());
     const [loading, setLoading] = useState(false);
@@ -403,141 +406,159 @@ export default function PracticePage() {
                     </div>
                 </div>
 
-                {/* ── Done/Todo tabs (only shown when logged in) ── */}
-                {user && (
-                    <div className="flex items-center gap-1 bg-muted rounded-xl p-1 w-fit">
-                        {([
-                            ["all", lang === "vi" ? "Tất cả" : "All"],
-                            ["todo", lang === "vi" ? "Chưa làm" : "To Do"],
-                            ["done", lang === "vi" ? "Đã làm" : "Done"],
-                        ] as const).map(([k, l]) => (
-                            <button
-                                key={k}
-                                onClick={() => setDoneTab(k)}
-                                className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${doneTab === k ? "bg-card text-jaxtina-red shadow-sm" : "text-muted-foreground"
-                                    }`}
-                            >
-                                {l}
-                                {k === "done" && doneCount > 0 && (
-                                    <span className="ml-1.5 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">
-                                        {doneCount}
-                                    </span>
-                                )}
-                            </button>
-                        ))}
-                    </div>
-                )}
-
-                {/* ── Search bar ── */}
-                <div className="relative max-w-md">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        placeholder={lang === "vi" ? "Tìm kiếm câu hỏi..." : "Search questions..."}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="pl-9"
-                    />
+                {/* ── Tab Switcher ── */}
+                <div className="flex items-center gap-1 bg-muted/60 p-1.5 rounded-2xl w-full sm:w-fit border shadow-sm">
+                    <button
+                        onClick={() => setActiveTab("task1")}
+                        className={`flex-1 sm:flex-none px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === "task1"
+                            ? "bg-card text-jaxtina-red shadow-md scale-[1.02]"
+                            : "text-muted-foreground hover:text-foreground"
+                            }`}
+                    >
+                        Task 1 (Image Upload)
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("task2")}
+                        className={`flex-1 sm:flex-none px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === "task2"
+                            ? "bg-card text-jaxtina-red shadow-md scale-[1.02]"
+                            : "text-muted-foreground hover:text-foreground"
+                            }`}
+                    >
+                        Task 2 (Library)
+                    </button>
                 </div>
 
-                {/* ── Main layout: sidebar + grid ── */}
-                <div className="flex flex-col md:flex-row gap-6 items-start">
-                    <FilterSidebar
-                        taskFilter={taskFilter}
-                        setTaskFilter={setTaskFilter}
-                        typeFilters={typeFilters}
-                        setTypeFilters={setTypeFilters}
-                        sourceFilters={sourceFilters}
-                        setSourceFilters={setSourceFilters}
-                        allTypes={allTypes}
-                        open={filtersOpen}
-                    />
-
-                    <div className="flex-1 min-w-0">
-                        {/* Result count */}
-                        {filtered.length > 0 && (
-                            <p className="text-xs text-muted-foreground mb-3">
-                                {lang === "vi"
-                                    ? `Hiển thị ${filtered.length} câu hỏi`
-                                    : `Showing ${filtered.length} question${filtered.length !== 1 ? "s" : ""}`}
-                            </p>
-                        )}
-
-                        {/* Empty states */}
-                        {filtered.length === 0 && search && (
-                            <div className="text-center py-20 text-muted-foreground">
-                                <div className="text-5xl mb-3">🔍</div>
-                                <p className="font-medium">
-                                    {lang === "vi" ? "Không tìm thấy câu hỏi phù hợp." : "No questions match your search."}
-                                </p>
-                                <button
-                                    onClick={() => setSearch("")}
-                                    className="mt-3 text-sm text-jaxtina-red hover:underline"
-                                >
-                                    Clear search
-                                </button>
-                            </div>
-                        )}
-                        {filtered.length === 0 && !search && doneTab === "done" && (
-                            <div className="text-center py-20 text-muted-foreground">
-                                <div className="text-5xl mb-3">📭</div>
-                                <p className="font-medium">
-                                    {lang === "vi" ? "Bạn chưa làm bài nào." : "You haven't completed any questions yet."}
-                                </p>
-                                <button
-                                    onClick={() => setDoneTab("all")}
-                                    className="mt-3 text-sm text-jaxtina-red hover:underline"
-                                >
-                                    {lang === "vi" ? "Xem tất cả câu hỏi" : "Browse all questions"}
-                                </button>
-                            </div>
-                        )}
-                        {filtered.length === 0 && !search && doneTab === "todo" && (
-                            <div className="text-center py-20 text-muted-foreground">
-                                <div className="text-5xl mb-3">🎉</div>
-                                <p className="font-medium text-green-600 font-bold">
-                                    {lang === "vi" ? "Bạn đã làm hết tất cả câu hỏi!" : "You've completed all questions!"}
-                                </p>
-                                <button
-                                    onClick={() => setDoneTab("done")}
-                                    className="mt-3 text-sm text-jaxtina-red hover:underline"
-                                >
-                                    {lang === "vi" ? "Xem bài đã làm" : "Review completed questions"}
-                                </button>
-                            </div>
-                        )}
-
-                        {/* Question grid */}
-                        {filtered.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {filtered.map((q) => (
-                                    <TaskCard
-                                        key={q.id}
-                                        q={q}
-                                        done={doneIds.has(q.id)}
-                                        onPractice={handlePractice}
-                                    />
+                {activeTab === "task1" ? (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-card border rounded-3xl p-6 sm:p-10 shadow-card"
+                    >
+                        <Task1Uploader />
+                    </motion.div>
+                ) : (
+                    <>
+                        {/* ── Done/Todo tabs (only shown when logged in) ── */}
+                        {user && (
+                            <div className="flex items-center gap-1 bg-muted rounded-xl p-1 w-fit">
+                                {([
+                                    ["all", lang === "vi" ? "Tất cả" : "All"],
+                                    ["todo", lang === "vi" ? "Chưa làm" : "To Do"],
+                                    ["done", lang === "vi" ? "Đã làm" : "Done"],
+                                ] as const).map(([k, l]) => (
+                                    <button
+                                        key={k}
+                                        onClick={() => setDoneTab(k)}
+                                        className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${doneTab === k ? "bg-card text-jaxtina-red shadow-sm" : "text-muted-foreground"
+                                            }`}
+                                    >
+                                        {l}
+                                        {k === "done" && doneCount > 0 && (
+                                            <span className="ml-1.5 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-bold">
+                                                {doneCount}
+                                            </span>
+                                        )}
+                                    </button>
                                 ))}
                             </div>
                         )}
 
-                        {/* Login prompt for done/todo tracking */}
-                        {!user && !userLoading && (
-                            <div className="mt-8 rounded-2xl border bg-muted/40 p-5 text-center">
-                                <BookMarked className="h-8 w-8 mx-auto text-jaxtina-blue mb-2" />
-                                <p className="font-semibold text-sm">
-                                    {lang === "vi"
-                                        ? "Đăng nhập để theo dõi bài đã làm"
-                                        : "Log in to track which questions you've done"}
-                                </p>
-                                <Button asChild size="sm" className="mt-3">
-                                    <Link href="/login">
-                                        {lang === "vi" ? "Đăng nhập" : "Log In"}
-                                    </Link>
-                                </Button>
+                        {/* ── Search bar ── */}
+                        <div className="relative max-w-md">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder={lang === "vi" ? "Tìm kiếm câu hỏi..." : "Search questions..."}
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="pl-9"
+                            />
+                        </div>
+
+                        {/* ── Main layout: sidebar + grid ── */}
+                        <div className="flex flex-col md:flex-row gap-6 items-start">
+                            <FilterSidebar
+                                taskFilter={taskFilter}
+                                setTaskFilter={setTaskFilter}
+                                typeFilters={typeFilters}
+                                setTypeFilters={setTypeFilters}
+                                sourceFilters={sourceFilters}
+                                setSourceFilters={setSourceFilters}
+                                allTypes={allTypes}
+                                open={filtersOpen}
+                            />
+
+                            <div className="flex-1 min-w-0">
+                                {/* Result count */}
+                                {filtered.length > 0 && (
+                                    <p className="text-xs text-muted-foreground mb-3">
+                                        {lang === "vi"
+                                            ? `Hiển thị ${filtered.length} câu hỏi`
+                                            : `Showing ${filtered.length} question${filtered.length !== 1 ? "s" : ""}`}
+                                    </p>
+                                )}
+
+                                {/* Empty states */}
+                                {filtered.length === 0 && search && (
+                                    <div className="text-center py-20 text-muted-foreground">
+                                        <div className="text-5xl mb-3">🔍</div>
+                                        <p className="font-medium">
+                                            {lang === "vi" ? "Không tìm thấy câu hỏi phù hợp." : "No questions match your search."}
+                                        </p>
+                                        <button
+                                            onClick={() => setSearch("")}
+                                            className="mt-3 text-sm text-jaxtina-red hover:underline"
+                                        >
+                                            Clear search
+                                        </button>
+                                    </div>
+                                )}
+                                {filtered.length === 0 && !search && doneTab === "done" && (
+                                    <div className="text-center py-20 text-muted-foreground">
+                                        <div className="text-5xl mb-3">📭</div>
+                                        <p className="font-medium">
+                                            {lang === "vi" ? "Bạn chưa làm bài nào." : "You haven't completed any questions yet."}
+                                        </p>
+                                        <button
+                                            onClick={() => setDoneTab("all")}
+                                            className="mt-3 text-sm text-jaxtina-red hover:underline"
+                                        >
+                                            {lang === "vi" ? "Xem tất cả câu hỏi" : "Browse all questions"}
+                                        </button>
+                                    </div>
+                                )}
+                                {filtered.length === 0 && !search && doneTab === "todo" && (
+                                    <div className="text-center py-20 text-muted-foreground">
+                                        <div className="text-5xl mb-3">🎉</div>
+                                        <p className="font-medium text-green-600 font-bold">
+                                            {lang === "vi" ? "Bạn đã làm hết tất cả câu hỏi!" : "You've completed all questions!"}
+                                        </p>
+                                        <button
+                                            onClick={() => setDoneTab("done")}
+                                            className="mt-3 text-sm text-jaxtina-red hover:underline"
+                                        >
+                                            {lang === "vi" ? "Xem bài đã làm" : "Review completed questions"}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* Question grid */}
+                                {filtered.length > 0 && (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {filtered.map((q) => (
+                                            <TaskCard
+                                                key={q.id}
+                                                q={q}
+                                                done={doneIds.has(q.id)}
+                                                onPractice={handlePractice}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
                             </div>
-                        )}
-                    </div>
-                </div>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

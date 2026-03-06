@@ -144,9 +144,12 @@ export interface EssaySubmission {
   language: "en" | "vi";
   submitted_at: string;
   scoring_method: "ai_examiner" | "rule_based_fallback";
-  // Essay plan fields (migration 002)
+  // Essay plan fields
   essay_plan_requested: boolean;
   essay_plan_text: string | null;
+  // Task 1 Image fields
+  image_path?: string | null;
+  chart_data?: Record<string, unknown> | null;
 }
 
 export interface FeedbackResult {
