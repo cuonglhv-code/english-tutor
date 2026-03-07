@@ -95,7 +95,7 @@ Required JSON structure (Bilingual):
   }
 }
 
-Use the rigour and diagnostic rules from the system prompt. For Vietnamese fields, provide natural, high-quality translations. Keep IELTS technical terms in English.`;
+Use the rigour and diagnostic rules from the system prompt. For all *_vi fields, provide natural, high-quality, FULL translations of the English text into Vietnamese. Translate everything, including any IELTS band descriptors or sentences you quote. DO NOT leave entire English sentences untranslated in the Vietnamese fields.`;
 }
 
 
