@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase-server";
+import prisma from "@/lib/prisma";
 import OverviewClient from "@/components/admin/OverviewClient";
 
 export const dynamic = "force-dynamic";
@@ -6,36 +7,46 @@ export const dynamic = "force-dynamic";
 async function fetchStats() {
     const service = createServiceClient();
     const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-    const weekStart = new Date(now.getTime() - 7 * 86400000).toISOString();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekStart = new Date(now.getTime() - 7 * 86400000);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [statsRes, totalRes, todayRes, weekRes, monthRes, taskRes, bandsRes, byDayRes, byMonthRes] =
-        await Promise.all([
-            service.from("admin_student_stats").select("*").single(),
-            service.from("essay_submissions").select("id", { count: "exact", head: true }),
-            service.from("essay_submissions").select("id", { count: "exact", head: true }).gte("submitted_at", todayStart),
-            service.from("essay_submissions").select("id", { count: "exact", head: true }).gte("submitted_at", weekStart),
-            service.from("essay_submissions").select("id", { count: "exact", head: true }).gte("submitted_at", monthStart),
-            service.from("essay_submissions").select("task_type"),
-            service.from("feedback_results").select("overall_band"),
-            service.from("essay_submissions")
-                .select("submitted_at, task_type, feedback_results(overall_band)")
-                .gte("submitted_at", new Date(now.getTime() - 30 * 86400000).toISOString())
-                .order("submitted_at"),
-            service.from("essay_submissions")
-                .select("submitted_at, task_type, feedback_results(overall_band)")
-                .gte("submitted_at", new Date(now.getFullYear() - 1, now.getMonth(), 1).toISOString())
-                .order("submitted_at"),
-        ]);
+    const [
+        statsRes,
+        totalCount,
+        todayCount,
+        weekCount,
+        monthCount,
+        taskRows,
+        bandsData,
+        byDayData,
+        byMonthData
+    ] = await Promise.all([
+        service.from("admin_student_stats").select("*").single(),
+        prisma.essaySubmission.count(),
+        prisma.essaySubmission.count({ where: { submitted_at: { gte: todayStart } } }),
+        prisma.essaySubmission.count({ where: { submitted_at: { gte: weekStart } } }),
+        prisma.essaySubmission.count({ where: { submitted_at: { gte: monthStart } } }),
+        prisma.essaySubmission.findMany({ select: { task_type: true } }),
+        prisma.feedbackResult.findMany({ select: { overall_band: true } }),
+        prisma.essaySubmission.findMany({
+            where: { submitted_at: { gte: new Date(now.getTime() - 30 * 86400000) } },
+            select: { submitted_at: true, task_type: true, feedback_results: { select: { overall_band: true } } },
+            orderBy: { submitted_at: "asc" }
+        }),
+        prisma.essaySubmission.findMany({
+            where: { submitted_at: { gte: new Date(now.getFullYear() - 1, now.getMonth(), 1) } },
+            select: { submitted_at: true, task_type: true, feedback_results: { select: { overall_band: true } } },
+            orderBy: { submitted_at: "asc" }
+        }),
+    ]);
 
     const sv = statsRes.data ?? {};
-    const taskRows: any[] = taskRes.data ?? [];
 
     // by_day
     const dayMap = new Map<string, { count: number; bands: number[]; t1: number; t2: number }>();
-    for (const r of (byDayRes.data ?? []) as any[]) {
-        const day = r.submitted_at.slice(0, 10);
+    for (const r of byDayData) {
+        const day = r.submitted_at.toISOString().slice(0, 10);
         if (!dayMap.has(day)) dayMap.set(day, { count: 0, bands: [], t1: 0, t2: 0 });
         const e = dayMap.get(day)!;
         e.count++;
@@ -49,10 +60,10 @@ async function fetchStats() {
         avg_band: v.bands.length ? +(v.bands.reduce((a, b) => a + b, 0) / v.bands.length).toFixed(1) : null,
     })).sort((a, b) => a.date.localeCompare(b.date));
 
-    // by_month (stacked task1/task2)
+    // by_month
     const monthMap = new Map<string, { t1: number; t2: number; bands: number[] }>();
-    for (const r of (byMonthRes.data ?? []) as any[]) {
-        const m = r.submitted_at.slice(0, 7);
+    for (const r of byMonthData) {
+        const m = r.submitted_at.toISOString().slice(0, 7);
         if (!monthMap.has(m)) monthMap.set(m, { t1: 0, t2: 0, bands: [] });
         const e = monthMap.get(m)!;
         if (r.task_type === "task1") e.t1++; else e.t2++;
@@ -69,7 +80,7 @@ async function fetchStats() {
     // band distribution
     const bandMap = new Map<number, number>();
     for (let b = 1.0; b <= 9.0; b += 0.5) bandMap.set(+b.toFixed(1), 0);
-    for (const r of (bandsRes.data ?? []) as any[]) {
+    for (const r of bandsData) {
         const rounded = Math.round(Number(r.overall_band) * 2) / 2;
         if (bandMap.has(rounded)) bandMap.set(rounded, bandMap.get(rounded)! + 1);
     }
@@ -83,10 +94,10 @@ async function fetchStats() {
             avg_target_band: sv.avg_target_band ? Number(sv.avg_target_band) : null,
         },
         submissions: {
-            total: totalRes.count ?? 0,
-            today: todayRes.count ?? 0,
-            week: weekRes.count ?? 0,
-            month: monthRes.count ?? 0,
+            total: totalCount,
+            today: todayCount,
+            week: weekCount,
+            month: monthCount,
             task1: taskRows.filter((r: any) => r.task_type === "task1").length,
             task2: taskRows.filter((r: any) => r.task_type === "task2").length,
         },

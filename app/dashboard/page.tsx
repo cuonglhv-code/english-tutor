@@ -37,12 +37,12 @@ export default function DashboardPage() {
 
   // ── Existing writing-analysis state ────────────────────────────────────────
   const [submissions, setSubmissions] = useState<SubmissionWithFeedback[]>([]);
-  const [progress,    setProgress]    = useState<UserProgress | null>(null);
-  const [profile,     setProfile]     = useState<Profile | null>(null);
+  const [progress, setProgress] = useState<UserProgress | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   // ── New LMS state ──────────────────────────────────────────────────────────
-  const [goals,       setGoals]       = useState<UserGoals | null>(null);
-  const [examDate,    setExamDate]    = useState<UserExamDate | null>(null);
+  const [goals, setGoals] = useState<UserGoals | null>(null);
+  const [examDate, setExamDate] = useState<UserExamDate | null>(null);
   const [activityLog, setActivityLog] = useState<ActivityDay[]>([]);
 
   const [dataLoading, setDataLoading] = useState(true);
@@ -67,12 +67,11 @@ export default function DashboardPage() {
 
       const [subRes, progRes, profileRes, goalsRes, examRes, activityRes] =
         await Promise.all([
-          // ── Existing queries ──────────────────────────────────────────────
-          supabase
-            .from("essay_submissions")
-            .select("*, feedback_results(*)")
-            .eq("user_id", user!.id)
-            .order("submitted_at", { ascending: false }),
+          // ── Switched to Prisma/Neon ───────────────────────────────────────
+          fetch("/api/user/submissions")
+            .then(res => res.json())
+            .then(data => ({ data: Array.isArray(data) ? data : [], error: data.error ? new Error(data.error) : null })),
+
           supabase
             .from("user_progress")
             .select("*")
@@ -102,11 +101,11 @@ export default function DashboardPage() {
             .order("activity_date", { ascending: true }),
         ]);
 
-      if (!subRes.error)     setSubmissions(subRes.data as SubmissionWithFeedback[]);
-      if (!progRes.error)    setProgress(progRes.data as UserProgress);
+      if (!subRes.error) setSubmissions(subRes.data as SubmissionWithFeedback[]);
+      if (!progRes.error) setProgress(progRes.data as UserProgress);
       if (!profileRes.error) setProfile(profileRes.data as Profile);
-      if (!goalsRes.error)   setGoals(goalsRes.data as UserGoals);
-      if (!examRes.error)    setExamDate(examRes.data as UserExamDate);
+      if (!goalsRes.error) setGoals(goalsRes.data as UserGoals);
+      if (!examRes.error) setExamDate(examRes.data as UserExamDate);
 
       if (!activityRes.error && activityRes.data) {
         // Aggregate DB rows → one ActivityDay per date
@@ -140,16 +139,16 @@ export default function DashboardPage() {
   if (!user) return null;
 
   // ── Derived writing stats (unchanged) ─────────────────────────────────────
-  const task1Count      = submissions.filter((s) => s.task_type === "task1").length;
-  const task2Count      = submissions.filter((s) => s.task_type === "task2").length;
-  const aiCount         = submissions.filter((s) => s.scoring_method === "ai_examiner").length;
-  const ruleCount       = submissions.filter((s) => s.scoring_method === "rule_based_fallback").length;
+  const task1Count = submissions.filter((s) => s.task_type === "task1").length;
+  const task2Count = submissions.filter((s) => s.task_type === "task2").length;
+  const aiCount = submissions.filter((s) => s.scoring_method === "ai_examiner").length;
+  const ruleCount = submissions.filter((s) => s.scoring_method === "rule_based_fallback").length;
   const avgPerCriterion = progress?.average_per_criterion;
 
   const criteriaStats = [
-    { key: "ta",  label: "Task Achievement / Task Response" },
-    { key: "cc",  label: "Coherence and Cohesion" },
-    { key: "lr",  label: "Lexical Resource" },
+    { key: "ta", label: "Task Achievement / Task Response" },
+    { key: "cc", label: "Coherence and Cohesion" },
+    { key: "lr", label: "Lexical Resource" },
     { key: "gra", label: "Grammatical Range and Accuracy" },
   ] as const;
 
@@ -272,9 +271,8 @@ export default function DashboardPage() {
                 {t("dashboard", "avgBand", lang)}
               </p>
               <p
-                className={`text-3xl font-black ${
-                  progress ? bandToColor(progress.average_band) : ""
-                }`}
+                className={`text-3xl font-black ${progress ? bandToColor(progress.average_band) : ""
+                  }`}
               >
                 {progress ? progress.average_band : "—"}
               </p>
@@ -311,9 +309,9 @@ export default function DashboardPage() {
               <p className="text-sm font-semibold mt-2">
                 {progress?.last_submission_at
                   ? new Date(progress.last_submission_at).toLocaleDateString(
-                      lang === "vi" ? "vi-VN" : "en-GB",
-                      { day: "2-digit", month: "short", year: "numeric" }
-                    )
+                    lang === "vi" ? "vi-VN" : "en-GB",
+                    { day: "2-digit", month: "short", year: "numeric" }
+                  )
                   : "—"}
               </p>
             </CardContent>
@@ -343,9 +341,8 @@ export default function DashboardPage() {
                         {label}
                       </p>
                       <p
-                        className={`text-2xl font-black ${
-                          avg ? bandToColor(avg) : ""
-                        }`}
+                        className={`text-2xl font-black ${avg ? bandToColor(avg) : ""
+                          }`}
                       >
                         {avg ?? "—"}
                       </p>

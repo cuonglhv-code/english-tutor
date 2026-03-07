@@ -263,27 +263,26 @@ export default function PracticePage() {
     const [loading, setLoading] = useState(false);
     const [loadingDone, setLoadingDone] = useState(false);
 
-    // Fetch dynamic questions from the exercises table
+    // Fetch dynamic questions from the Prisma Postgres
     useEffect(() => {
         const fetchQuestions = async () => {
             setLoading(true);
-            const supabase = createBrowserClient();
-            const { data, error } = await supabase
-                .from("exercises")
-                .select("*")
-                .eq("is_published", true)
-                .eq("skill", "writing");
-
-            if (data && !error) {
-                const mapped: PracticeQuestion[] = data.map(ex => ({
-                    id: ex.id,
-                    task: ex.task_type === "task1" ? "Task 1" : "Task 2",
-                    type: ex.question_type || (ex.task_type === "task1" ? "Task 1" : "Task 2"),
-                    source: ex.source || "External",
-                    questionText: ex.description || ex.body_text || "",
-                    imageUrl: ex.image_url || ""
-                }));
-                setDbQuestions(mapped);
+            try {
+                const res = await fetch("/api/questions");
+                if (res.ok) {
+                    const data = await res.json();
+                    const mapped: PracticeQuestion[] = data.map((ex: any) => ({
+                        id: ex.id,
+                        task: ex.task_type === "task1" ? "Task 1" : "Task 2",
+                        type: ex.question_type || (ex.task_type === "task1" ? "Task 1" : "Task 2"),
+                        source: ex.source || "External",
+                        questionText: ex.description || ex.body_text || "",
+                        imageUrl: ex.image_url || ""
+                    }));
+                    setDbQuestions(mapped);
+                }
+            } catch (err) {
+                console.error("Failed to load practice questions:", err);
             }
             setLoading(false);
         };
@@ -295,18 +294,15 @@ export default function PracticePage() {
     }, [dbQuestions]);
 
 
-    // Load submitted question IDs from Supabase for authenticated users
+    // Load submitted question IDs from Prisma for authenticated users
     useEffect(() => {
         if (!user) return;
         setLoadingDone(true);
-        const supabase = createBrowserClient();
-        supabase
-            .from("essay_submissions")
-            .select("prompt_text")
-            .eq("user_id", user.id)
-            .then(({ data }) => {
-                if (data) {
-                    const promptSet = new Set(data.map((r) => r.prompt_text.trim()));
+        fetch("/api/user/submissions")
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    const promptSet = new Set(data.map((r: any) => r.prompt_text?.trim()).filter(Boolean));
                     const ids = new Set(
                         allQuestions
                             .filter((q) => promptSet.has(q.questionText.trim()))
@@ -315,7 +311,8 @@ export default function PracticePage() {
                     setDoneIds(ids);
                 }
                 setLoadingDone(false);
-            });
+            })
+            .catch(() => setLoadingDone(false));
     }, [user, allQuestions]);
 
     const allTypes = taskFilter === "Task 1"

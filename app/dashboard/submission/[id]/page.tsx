@@ -124,17 +124,20 @@ export default function SubmissionDetailPage() {
 
   useEffect(() => {
     if (!user || !id) return;
-    const supabase = createBrowserClient();
-    supabase
-      .from("essay_submissions")
-      .select("*, feedback_results(*)")
-      .eq("id", id)
-      .eq("user_id", user.id)
-      .single()
-      .then(({ data, error }) => {
-        if (error || !data) { router.push("/dashboard"); return; }
+
+    fetch(`/api/user/submissions/${id}`)
+      .then(res => res.json())
+      .then((data) => {
+        if (data.error || !data.id) {
+          router.push("/dashboard");
+          return;
+        }
         setSubmission(data as SubmissionWithFeedback);
         setLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to load submission:", err);
+        router.push("/dashboard");
       });
   }, [user, id, router]);
 
