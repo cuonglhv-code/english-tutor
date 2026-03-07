@@ -26,6 +26,7 @@ export default function OnboardingPage() {
   const [phone, setPhone] = useState("");
   const [currentBand, setCurrentBand] = useState("");
   const [targetBand, setTargetBand] = useState("");
+  const [nearestCenter, setNearestCenter] = useState("");
   const [saving, setSaving] = useState(false);
 
   // Redirect logged-out users to login
@@ -63,6 +64,10 @@ export default function OnboardingPage() {
       toast.error(t("onboarding", "errorPhone", lang));
       return;
     }
+    if (!nearestCenter) {
+      toast.error("Please select your nearest Jaxtina center.");
+      return;
+    }
 
     setSaving(true);
     try {
@@ -79,6 +84,7 @@ export default function OnboardingPage() {
           phone: phone.trim(),
           current_writing_band: currentBand === "not_tested" ? null : (currentBand || null),
           target_writing_band: targetBand || null,
+          nearest_center: nearestCenter,
           profile_completed: true,
         }, { onConflict: "id" });
 
@@ -170,6 +176,32 @@ export default function OnboardingPage() {
                   onChange={(e) => setPhone(e.target.value)}
                   disabled={saving}
                 />
+              </div>
+
+              {/* Nearest Center */}
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  Nearest Center *
+                </label>
+                <select
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 transition-all text-gray-600"
+                  value={nearestCenter}
+                  onChange={(e) => setNearestCenter(e.target.value)}
+                  disabled={saving}
+                  required
+                >
+                  <option value="" disabled>Select your nearest center</option>
+                  <option>Jaxtina Trần Quốc Hoàn, 239 Trần Quốc Hoàn, Cầu Giấy</option>
+                  <option>Jaxtina Chiến Thắng, Số 112 Chiến Thắng, Hà Đông, Hà Nội</option>
+                  <option>Jaxtina Minh Khai, Số 3 Phố Minh Khai, Hai Bà Trưng, Hà Nội</option>
+                  <option>Jaxtina Thủ Đức, 25 Đường 1, Khu dân cư Areco, Linh Tây, Thủ Đức, TP.HCM</option>
+                  <option>Jaxtina Quận 5, 3C Đ. Trần Phú, P4, Quận 5, TP.HCM</option>
+                  <option>Jaxtina Gò Vấp, 12 Đường Số 12, Cityland Park Hills, P10, Quận Gò Vấp, TP.HCM</option>
+                  <option>Jaxtina Nguyễn Văn Cừ, 60-62 Nguyễn Văn Cừ, Bồ Đề, Long Biên</option>
+                </select>
               </div>
 
               {/* Current Writing Band */}
