@@ -42,12 +42,14 @@ export function LoginPageContent() {
                 if (authData?.user) {
                     const { data: profile } = await supabase
                         .from("profiles")
-                        .select("role")
+                        .select("role, profile_completed")
                         .eq("id", authData.user.id)
                         .single();
 
                     if (profile?.role === "admin" && targetUrl === "/") {
                         targetUrl = "/admin/dashboard";
+                    } else if (profile?.profile_completed !== true) {
+                        targetUrl = "/personal-details";
                     }
                 }
 
@@ -71,7 +73,8 @@ export function LoginPageContent() {
                 }
                 toast.success(t("auth", "successRegister", lang));
                 router.refresh();
-                router.push(nextUrl);
+                // Send new users directly to the profile completion screen
+                router.push("/personal-details");
             }
         } catch {
             toast.error(t("auth", "errorGeneric", lang));
