@@ -93,9 +93,9 @@ export default function OnboardingPage() {
         throw profileErr;
       }
 
-      // Middleware now checks profiles.profile_completed directly — no need
-      // to wait for auth.updateUser (which can hang before the token refresh).
-      router.push("/");
+      // Middleware now checks profiles.profile_completed directly
+      router.refresh();
+      router.push("/dashboard");
     } catch (err) {
       const msg = (err as { message?: string })?.message || t("common", "error", lang);
       console.error("Onboarding save error:", msg);
@@ -157,12 +157,20 @@ export default function OnboardingPage() {
                 <Label className="flex items-center gap-1">
                   <MapPin className="h-3.5 w-3.5" /> {t("onboarding", "city", lang)} *
                 </Label>
-                <Input
-                  placeholder={t("onboarding", "cityPlaceholder", lang)}
+                <select
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 transition-all text-gray-600"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   disabled={saving}
-                />
+                  required
+                >
+                  <option value="" disabled>Select your city/province</option>
+                  {[
+                    "An Giang", "Bà Rịa - Vũng Tàu", "Bạc Liêu", "Bắc Giang", "Bắc Kạn", "Bắc Ninh", "Bến Tre", "Bình Dương", "Bình Định", "Bình Phước", "Bình Thuận", "Cà Mau", "Cao Bằng", "Cần Thơ", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lạng Sơn", "Lào Cai", "Lâm Đồng", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP Hồ Chí Minh", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+                  ].map(p => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Phone */}
