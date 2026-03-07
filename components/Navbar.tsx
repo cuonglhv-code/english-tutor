@@ -106,6 +106,37 @@ export function Navbar() {
         </Link>
 
         <div className="flex items-center gap-1">
+          {role !== "admin" && (
+            <>
+              <Link
+                href="/"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+              >
+                <PenLine className="h-4 w-4" /> {t("nav", "practice", lang)}
+              </Link>
+              <Link
+                href="/practice"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+              >
+                <Library className="h-4 w-4" />
+                <span className="hidden sm:inline">{lang === "vi" ? "Thư viện" : "Library"}</span>
+              </Link>
+              <Link
+                href="/writing-101"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+              >
+                <BookOpen className="h-4 w-4" />
+                <span className="hidden sm:inline">{t("nav", "writing101", lang)}</span>
+              </Link>
+              <Link
+                href="/courses"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+              >
+                <BookOpen className="h-4 w-4" />
+                <span className="hidden sm:inline">{t("nav", "courses", lang)}</span>
+              </Link>
+            </>
+          )}
           {user ? (
             <>
               <Link
