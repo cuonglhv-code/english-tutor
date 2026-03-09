@@ -20,7 +20,7 @@ import type { CsvRow } from "@/lib/readCsv";
 import { viTranslations } from "@/lib/translations";
 
 const labels = {
-    tab1: { en: "Task 1 — Academic Report", vi: "Báo cáo học thuật" },
+    tab1: { en: "Task 1 — Report", vi: "Báo cáo" },
     tab2: { en: "Task 2 — Essay", vi: "Bài luận" },
     colStructure: { en: "Standard Structure", vi: "Cấu trúc chuẩn" },
     colTips: { en: "Tips for Band 7+", vi: "Chiến lược đạt Band 7+" },
