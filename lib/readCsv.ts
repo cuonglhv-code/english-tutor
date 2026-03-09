@@ -13,6 +13,7 @@ export interface VocabRow {
   task: number;
   vocabItem: string;
   category: string;
+  exampleSentence: string;
 }
 
 /** Minimal RFC-4180 CSV parser — no external dependencies. */
@@ -90,7 +91,7 @@ export function readTask2Csv(): CsvRow[] {
 }
 
 export function readVocabCsv(): VocabRow[] {
-  const file = path.join(process.cwd(), "ielts_writing_vocab_by_band.csv");
+  const file = path.join(process.cwd(), "ielts_writing_vocab_by_band_with_examples.csv");
   if (!fs.existsSync(file)) return [];
   const rows = parseCsv(fs.readFileSync(file, "utf-8"));
   return rows.slice(1).map((r) => ({
@@ -98,5 +99,6 @@ export function readVocabCsv(): VocabRow[] {
     task: parseInt(r[1], 10) || 0,
     vocabItem: r[2] ?? "",
     category: r[3] ?? "",
+    exampleSentence: r[4] ?? "",
   }));
 }

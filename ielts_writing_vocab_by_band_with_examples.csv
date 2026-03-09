@@ -1,0 +1,901 @@
+band,task,vocab_item,category,example_sentence
+1,1,a bit be big,trend/description,The chart shows that the figure a bit be big over the period.
+1,1,a bit be high,trend/description,The chart shows that the figure a bit be high over the period.
+1,1,a bit be low,trend/description,The chart shows that the figure a bit be low over the period.
+1,1,a bit be small,trend/description,The chart shows that the figure a bit be small over the period.
+1,1,a bit be the same,trend/description,The chart shows that the figure a bit be the same over the period.
+1,1,a bit change,trend/description,The chart shows that the figure a bit change over the period.
+1,1,a bit get bigger,trend/description,The chart shows that the figure a bit get bigger over the period.
+1,1,a bit get smaller,trend/description,The chart shows that the figure a bit get smaller over the period.
+1,1,a bit go down,trend/description,The chart shows that the figure a bit go down over the period.
+1,1,a bit go up,trend/description,The chart shows that the figure a bit go up over the period.
+1,1,a little be big,trend/description,The chart shows that the figure a little be big over the period.
+1,1,a little be high,trend/description,The chart shows that the figure a little be high over the period.
+1,1,a little be low,trend/description,The chart shows that the figure a little be low over the period.
+1,1,a little be small,trend/description,The chart shows that the figure a little be small over the period.
+1,1,a little be the same,trend/description,The chart shows that the figure a little be the same over the period.
+1,1,a little change,trend/description,The chart shows that the figure a little change over the period.
+1,1,a little get bigger,trend/description,The chart shows that the figure a little get bigger over the period.
+1,1,a little get smaller,trend/description,The chart shows that the figure a little get smaller over the period.
+1,1,a little go down,trend/description,The chart shows that the figure a little go down over the period.
+1,1,a little go up,trend/description,The chart shows that the figure a little go up over the period.
+1,1,quite be big,trend/description,The chart shows that the figure quite be big over the period.
+1,1,quite be high,trend/description,The chart shows that the figure quite be high over the period.
+1,1,quite be low,trend/description,The chart shows that the figure quite be low over the period.
+1,1,quite be small,trend/description,The chart shows that the figure quite be small over the period.
+1,1,quite be the same,trend/description,The chart shows that the figure quite be the same over the period.
+1,1,quite change,trend/description,The chart shows that the figure quite change over the period.
+1,1,quite get bigger,trend/description,The chart shows that the figure quite get bigger over the period.
+1,1,quite get smaller,trend/description,The chart shows that the figure quite get smaller over the period.
+1,1,quite go down,trend/description,The chart shows that the figure quite go down over the period.
+1,1,quite go up,trend/description,The chart shows that the figure quite go up over the period.
+1,1,really be big,trend/description,The chart shows that the figure really be big over the period.
+1,1,really be high,trend/description,The chart shows that the figure really be high over the period.
+1,1,really be low,trend/description,The chart shows that the figure really be low over the period.
+1,1,really be small,trend/description,The chart shows that the figure really be small over the period.
+1,1,really be the same,trend/description,The chart shows that the figure really be the same over the period.
+1,1,really change,trend/description,The chart shows that the figure really change over the period.
+1,1,really get bigger,trend/description,The chart shows that the figure really get bigger over the period.
+1,1,really get smaller,trend/description,The chart shows that the figure really get smaller over the period.
+1,1,really go down,trend/description,The chart shows that the figure really go down over the period.
+1,1,really go up,trend/description,The chart shows that the figure really go up over the period.
+1,1,very be big,trend/description,The chart shows that the figure very be big over the period.
+1,1,very be high,trend/description,The chart shows that the figure very be high over the period.
+1,1,very be low,trend/description,The chart shows that the figure very be low over the period.
+1,1,very be small,trend/description,The chart shows that the figure very be small over the period.
+1,1,very be the same,trend/description,The chart shows that the figure very be the same over the period.
+1,1,very change,trend/description,The chart shows that the figure very change over the period.
+1,1,very get bigger,trend/description,The chart shows that the figure very get bigger over the period.
+1,1,very get smaller,trend/description,The chart shows that the figure very get smaller over the period.
+1,1,very go down,trend/description,The chart shows that the figure very go down over the period.
+1,1,very go up,trend/description,The chart shows that the figure very go up over the period.
+2,1,a little change,trend/description,The chart shows that the figure a little change over the period.
+2,1,a little decrease,trend/description,The chart shows that the figure a little decrease over the period.
+2,1,a little drop,trend/description,The chart shows that the figure a little drop over the period.
+2,1,a little fall,trend/description,The chart shows that the figure a little fall over the period.
+2,1,a little go down,trend/description,The chart shows that the figure a little go down over the period.
+2,1,a little go up,trend/description,The chart shows that the figure a little go up over the period.
+2,1,a little grow,trend/description,The chart shows that the figure a little grow over the period.
+2,1,a little increase,trend/description,The chart shows that the figure a little increase over the period.
+2,1,a little rise,trend/description,The chart shows that the figure a little rise over the period.
+2,1,a little stay the same,trend/description,The chart shows that the figure a little stay the same over the period.
+2,1,a lot change,trend/description,The chart shows that the figure a lot change over the period.
+2,1,a lot decrease,trend/description,The chart shows that the figure a lot decrease over the period.
+2,1,a lot drop,trend/description,The chart shows that the figure a lot drop over the period.
+2,1,a lot fall,trend/description,The chart shows that the figure a lot fall over the period.
+2,1,a lot go down,trend/description,The chart shows that the figure a lot go down over the period.
+2,1,a lot go up,trend/description,The chart shows that the figure a lot go up over the period.
+2,1,a lot grow,trend/description,The chart shows that the figure a lot grow over the period.
+2,1,a lot increase,trend/description,The chart shows that the figure a lot increase over the period.
+2,1,a lot rise,trend/description,The chart shows that the figure a lot rise over the period.
+2,1,a lot stay the same,trend/description,The chart shows that the figure a lot stay the same over the period.
+2,1,quickly change,trend/description,The chart shows that the figure quickly change over the period.
+2,1,quickly decrease,trend/description,The chart shows that the figure quickly decrease over the period.
+2,1,quickly drop,trend/description,The chart shows that the figure quickly drop over the period.
+2,1,quickly fall,trend/description,The chart shows that the figure quickly fall over the period.
+2,1,quickly go down,trend/description,The chart shows that the figure quickly go down over the period.
+2,1,quickly go up,trend/description,The chart shows that the figure quickly go up over the period.
+2,1,quickly grow,trend/description,The chart shows that the figure quickly grow over the period.
+2,1,quickly increase,trend/description,The chart shows that the figure quickly increase over the period.
+2,1,quickly rise,trend/description,The chart shows that the figure quickly rise over the period.
+2,1,quickly stay the same,trend/description,The chart shows that the figure quickly stay the same over the period.
+2,1,slowly change,trend/description,The chart shows that the figure slowly change over the period.
+2,1,slowly decrease,trend/description,The chart shows that the figure slowly decrease over the period.
+2,1,slowly drop,trend/description,The chart shows that the figure slowly drop over the period.
+2,1,slowly fall,trend/description,The chart shows that the figure slowly fall over the period.
+2,1,slowly go down,trend/description,The chart shows that the figure slowly go down over the period.
+2,1,slowly go up,trend/description,The chart shows that the figure slowly go up over the period.
+2,1,slowly grow,trend/description,The chart shows that the figure slowly grow over the period.
+2,1,slowly increase,trend/description,The chart shows that the figure slowly increase over the period.
+2,1,slowly rise,trend/description,The chart shows that the figure slowly rise over the period.
+2,1,slowly stay the same,trend/description,The chart shows that the figure slowly stay the same over the period.
+2,1,suddenly change,trend/description,The chart shows that the figure suddenly change over the period.
+2,1,suddenly decrease,trend/description,The chart shows that the figure suddenly decrease over the period.
+2,1,suddenly drop,trend/description,The chart shows that the figure suddenly drop over the period.
+2,1,suddenly fall,trend/description,The chart shows that the figure suddenly fall over the period.
+2,1,suddenly go down,trend/description,The chart shows that the figure suddenly go down over the period.
+2,1,suddenly go up,trend/description,The chart shows that the figure suddenly go up over the period.
+2,1,suddenly grow,trend/description,The chart shows that the figure suddenly grow over the period.
+2,1,suddenly increase,trend/description,The chart shows that the figure suddenly increase over the period.
+2,1,suddenly rise,trend/description,The chart shows that the figure suddenly rise over the period.
+2,1,suddenly stay the same,trend/description,The chart shows that the figure suddenly stay the same over the period.
+3,1,gradually change,trend/description,The chart shows that the figure gradually change over the period.
+3,1,gradually decrease,trend/description,The chart shows that the figure gradually decrease over the period.
+3,1,gradually drop,trend/description,The chart shows that the figure gradually drop over the period.
+3,1,gradually fall,trend/description,The chart shows that the figure gradually fall over the period.
+3,1,gradually go down,trend/description,The chart shows that the figure gradually go down over the period.
+3,1,gradually go up,trend/description,The chart shows that the figure gradually go up over the period.
+3,1,gradually increase,trend/description,The chart shows that the figure gradually increase over the period.
+3,1,gradually remain steady,trend/description,The chart shows that the figure gradually remain steady over the period.
+3,1,gradually rise,trend/description,The chart shows that the figure gradually rise over the period.
+3,1,gradually stay stable,trend/description,The chart shows that the figure gradually stay stable over the period.
+3,1,quickly change,trend/description,The chart shows that the figure quickly change over the period.
+3,1,quickly decrease,trend/description,The chart shows that the figure quickly decrease over the period.
+3,1,quickly drop,trend/description,The chart shows that the figure quickly drop over the period.
+3,1,quickly fall,trend/description,The chart shows that the figure quickly fall over the period.
+3,1,quickly go down,trend/description,The chart shows that the figure quickly go down over the period.
+3,1,quickly go up,trend/description,The chart shows that the figure quickly go up over the period.
+3,1,quickly increase,trend/description,The chart shows that the figure quickly increase over the period.
+3,1,quickly remain steady,trend/description,The chart shows that the figure quickly remain steady over the period.
+3,1,quickly rise,trend/description,The chart shows that the figure quickly rise over the period.
+3,1,quickly stay stable,trend/description,The chart shows that the figure quickly stay stable over the period.
+3,1,slightly change,trend/description,The chart shows that the figure slightly change over the period.
+3,1,slightly decrease,trend/description,The chart shows that the figure slightly decrease over the period.
+3,1,slightly drop,trend/description,The chart shows that the figure slightly drop over the period.
+3,1,slightly fall,trend/description,The chart shows that the figure slightly fall over the period.
+3,1,slightly go down,trend/description,The chart shows that the figure slightly go down over the period.
+3,1,slightly go up,trend/description,The chart shows that the figure slightly go up over the period.
+3,1,slightly increase,trend/description,The chart shows that the figure slightly increase over the period.
+3,1,slightly remain steady,trend/description,The chart shows that the figure slightly remain steady over the period.
+3,1,slightly rise,trend/description,The chart shows that the figure slightly rise over the period.
+3,1,slightly stay stable,trend/description,The chart shows that the figure slightly stay stable over the period.
+3,1,steadily change,trend/description,The chart shows that the figure steadily change over the period.
+3,1,steadily decrease,trend/description,The chart shows that the figure steadily decrease over the period.
+3,1,steadily drop,trend/description,The chart shows that the figure steadily drop over the period.
+3,1,steadily fall,trend/description,The chart shows that the figure steadily fall over the period.
+3,1,steadily go down,trend/description,The chart shows that the figure steadily go down over the period.
+3,1,steadily go up,trend/description,The chart shows that the figure steadily go up over the period.
+3,1,steadily increase,trend/description,The chart shows that the figure steadily increase over the period.
+3,1,steadily remain steady,trend/description,The chart shows that the figure steadily remain steady over the period.
+3,1,steadily rise,trend/description,The chart shows that the figure steadily rise over the period.
+3,1,steadily stay stable,trend/description,The chart shows that the figure steadily stay stable over the period.
+3,1,suddenly change,trend/description,The chart shows that the figure suddenly change over the period.
+3,1,suddenly decrease,trend/description,The chart shows that the figure suddenly decrease over the period.
+3,1,suddenly drop,trend/description,The chart shows that the figure suddenly drop over the period.
+3,1,suddenly fall,trend/description,The chart shows that the figure suddenly fall over the period.
+3,1,suddenly go down,trend/description,The chart shows that the figure suddenly go down over the period.
+3,1,suddenly go up,trend/description,The chart shows that the figure suddenly go up over the period.
+3,1,suddenly increase,trend/description,The chart shows that the figure suddenly increase over the period.
+3,1,suddenly remain steady,trend/description,The chart shows that the figure suddenly remain steady over the period.
+3,1,suddenly rise,trend/description,The chart shows that the figure suddenly rise over the period.
+3,1,suddenly stay stable,trend/description,The chart shows that the figure suddenly stay stable over the period.
+4,1,gradually climb,trend/description,The chart shows that the figure gradually climb over the period.
+4,1,gradually decline,trend/description,The chart shows that the figure gradually decline over the period.
+4,1,gradually decrease,trend/description,The chart shows that the figure gradually decrease over the period.
+4,1,gradually drop,trend/description,The chart shows that the figure gradually drop over the period.
+4,1,gradually fall,trend/description,The chart shows that the figure gradually fall over the period.
+4,1,gradually fluctuate,trend/description,The chart shows that the figure gradually fluctuate over the period.
+4,1,gradually increase,trend/description,The chart shows that the figure gradually increase over the period.
+4,1,gradually reach a peak,trend/description,The chart shows that the figure gradually reach a peak over the period.
+4,1,gradually remain stable,trend/description,The chart shows that the figure gradually remain stable over the period.
+4,1,gradually rise,trend/description,The chart shows that the figure gradually rise over the period.
+4,1,sharply climb,trend/description,The chart shows that the figure sharply climb over the period.
+4,1,sharply decline,trend/description,The chart shows that the figure sharply decline over the period.
+4,1,sharply decrease,trend/description,The chart shows that the figure sharply decrease over the period.
+4,1,sharply drop,trend/description,The chart shows that the figure sharply drop over the period.
+4,1,sharply fall,trend/description,The chart shows that the figure sharply fall over the period.
+4,1,sharply fluctuate,trend/description,The chart shows that the figure sharply fluctuate over the period.
+4,1,sharply increase,trend/description,The chart shows that the figure sharply increase over the period.
+4,1,sharply reach a peak,trend/description,The chart shows that the figure sharply reach a peak over the period.
+4,1,sharply remain stable,trend/description,The chart shows that the figure sharply remain stable over the period.
+4,1,sharply rise,trend/description,The chart shows that the figure sharply rise over the period.
+4,1,significantly climb,trend/description,The chart shows that the figure significantly climb over the period.
+4,1,significantly decline,trend/description,The chart shows that the figure significantly decline over the period.
+4,1,significantly decrease,trend/description,The chart shows that the figure significantly decrease over the period.
+4,1,significantly drop,trend/description,The chart shows that the figure significantly drop over the period.
+4,1,significantly fall,trend/description,The chart shows that the figure significantly fall over the period.
+4,1,significantly fluctuate,trend/description,The chart shows that the figure significantly fluctuate over the period.
+4,1,significantly increase,trend/description,The chart shows that the figure significantly increase over the period.
+4,1,significantly reach a peak,trend/description,The chart shows that the figure significantly reach a peak over the period.
+4,1,significantly remain stable,trend/description,The chart shows that the figure significantly remain stable over the period.
+4,1,significantly rise,trend/description,The chart shows that the figure significantly rise over the period.
+4,1,slightly climb,trend/description,The chart shows that the figure slightly climb over the period.
+4,1,slightly decline,trend/description,The chart shows that the figure slightly decline over the period.
+4,1,slightly decrease,trend/description,The chart shows that the figure slightly decrease over the period.
+4,1,slightly drop,trend/description,The chart shows that the figure slightly drop over the period.
+4,1,slightly fall,trend/description,The chart shows that the figure slightly fall over the period.
+4,1,slightly fluctuate,trend/description,The chart shows that the figure slightly fluctuate over the period.
+4,1,slightly increase,trend/description,The chart shows that the figure slightly increase over the period.
+4,1,slightly reach a peak,trend/description,The chart shows that the figure slightly reach a peak over the period.
+4,1,slightly remain stable,trend/description,The chart shows that the figure slightly remain stable over the period.
+4,1,slightly rise,trend/description,The chart shows that the figure slightly rise over the period.
+4,1,steadily climb,trend/description,The chart shows that the figure steadily climb over the period.
+4,1,steadily decline,trend/description,The chart shows that the figure steadily decline over the period.
+4,1,steadily decrease,trend/description,The chart shows that the figure steadily decrease over the period.
+4,1,steadily drop,trend/description,The chart shows that the figure steadily drop over the period.
+4,1,steadily fall,trend/description,The chart shows that the figure steadily fall over the period.
+4,1,steadily fluctuate,trend/description,The chart shows that the figure steadily fluctuate over the period.
+4,1,steadily increase,trend/description,The chart shows that the figure steadily increase over the period.
+4,1,steadily reach a peak,trend/description,The chart shows that the figure steadily reach a peak over the period.
+4,1,steadily remain stable,trend/description,The chart shows that the figure steadily remain stable over the period.
+4,1,steadily rise,trend/description,The chart shows that the figure steadily rise over the period.
+5,1,dramatically climb,trend/description,The chart shows that the figure dramatically climb over the period.
+5,1,dramatically decline,trend/description,The chart shows that the figure dramatically decline over the period.
+5,1,dramatically decrease,trend/description,The chart shows that the figure dramatically decrease over the period.
+5,1,dramatically drop,trend/description,The chart shows that the figure dramatically drop over the period.
+5,1,dramatically fall,trend/description,The chart shows that the figure dramatically fall over the period.
+5,1,dramatically fluctuate,trend/description,The chart shows that the figure dramatically fluctuate over the period.
+5,1,dramatically increase,trend/description,The chart shows that the figure dramatically increase over the period.
+5,1,dramatically reach a peak,trend/description,The chart shows that the figure dramatically reach a peak over the period.
+5,1,dramatically remain stable,trend/description,The chart shows that the figure dramatically remain stable over the period.
+5,1,dramatically rise,trend/description,The chart shows that the figure dramatically rise over the period.
+5,1,moderately climb,trend/description,The chart shows that the figure moderately climb over the period.
+5,1,moderately decline,trend/description,The chart shows that the figure moderately decline over the period.
+5,1,moderately decrease,trend/description,The chart shows that the figure moderately decrease over the period.
+5,1,moderately drop,trend/description,The chart shows that the figure moderately drop over the period.
+5,1,moderately fall,trend/description,The chart shows that the figure moderately fall over the period.
+5,1,moderately fluctuate,trend/description,The chart shows that the figure moderately fluctuate over the period.
+5,1,moderately increase,trend/description,The chart shows that the figure moderately increase over the period.
+5,1,moderately reach a peak,trend/description,The chart shows that the figure moderately reach a peak over the period.
+5,1,moderately remain stable,trend/description,The chart shows that the figure moderately remain stable over the period.
+5,1,moderately rise,trend/description,The chart shows that the figure moderately rise over the period.
+5,1,significantly climb,trend/description,The chart shows that the figure significantly climb over the period.
+5,1,significantly decline,trend/description,The chart shows that the figure significantly decline over the period.
+5,1,significantly decrease,trend/description,The chart shows that the figure significantly decrease over the period.
+5,1,significantly drop,trend/description,The chart shows that the figure significantly drop over the period.
+5,1,significantly fall,trend/description,The chart shows that the figure significantly fall over the period.
+5,1,significantly fluctuate,trend/description,The chart shows that the figure significantly fluctuate over the period.
+5,1,significantly increase,trend/description,The chart shows that the figure significantly increase over the period.
+5,1,significantly reach a peak,trend/description,The chart shows that the figure significantly reach a peak over the period.
+5,1,significantly remain stable,trend/description,The chart shows that the figure significantly remain stable over the period.
+5,1,significantly rise,trend/description,The chart shows that the figure significantly rise over the period.
+5,1,slightly climb,trend/description,The chart shows that the figure slightly climb over the period.
+5,1,slightly decline,trend/description,The chart shows that the figure slightly decline over the period.
+5,1,slightly decrease,trend/description,The chart shows that the figure slightly decrease over the period.
+5,1,slightly drop,trend/description,The chart shows that the figure slightly drop over the period.
+5,1,slightly fall,trend/description,The chart shows that the figure slightly fall over the period.
+5,1,slightly fluctuate,trend/description,The chart shows that the figure slightly fluctuate over the period.
+5,1,slightly increase,trend/description,The chart shows that the figure slightly increase over the period.
+5,1,slightly reach a peak,trend/description,The chart shows that the figure slightly reach a peak over the period.
+5,1,slightly remain stable,trend/description,The chart shows that the figure slightly remain stable over the period.
+5,1,slightly rise,trend/description,The chart shows that the figure slightly rise over the period.
+5,1,steadily climb,trend/description,The chart shows that the figure steadily climb over the period.
+5,1,steadily decline,trend/description,The chart shows that the figure steadily decline over the period.
+5,1,steadily decrease,trend/description,The chart shows that the figure steadily decrease over the period.
+5,1,steadily drop,trend/description,The chart shows that the figure steadily drop over the period.
+5,1,steadily fall,trend/description,The chart shows that the figure steadily fall over the period.
+5,1,steadily fluctuate,trend/description,The chart shows that the figure steadily fluctuate over the period.
+5,1,steadily increase,trend/description,The chart shows that the figure steadily increase over the period.
+5,1,steadily reach a peak,trend/description,The chart shows that the figure steadily reach a peak over the period.
+5,1,steadily remain stable,trend/description,The chart shows that the figure steadily remain stable over the period.
+5,1,steadily rise,trend/description,The chart shows that the figure steadily rise over the period.
+6,1,considerably decrease,trend/description,The chart shows that the figure considerably decrease over the period.
+6,1,considerably drop,trend/description,The chart shows that the figure considerably drop over the period.
+6,1,considerably fall,trend/description,The chart shows that the figure considerably fall over the period.
+6,1,considerably fluctuate,trend/description,The chart shows that the figure considerably fluctuate over the period.
+6,1,considerably increase,trend/description,The chart shows that the figure considerably increase over the period.
+6,1,considerably level off,trend/description,The chart shows that the figure considerably level off over the period.
+6,1,considerably peak,trend/description,The chart shows that the figure considerably peak over the period.
+6,1,considerably plummet,trend/description,The chart shows that the figure considerably plummet over the period.
+6,1,considerably rise,trend/description,The chart shows that the figure considerably rise over the period.
+6,1,considerably surge,trend/description,The chart shows that the figure considerably surge over the period.
+6,1,gradually decrease,trend/description,The chart shows that the figure gradually decrease over the period.
+6,1,gradually drop,trend/description,The chart shows that the figure gradually drop over the period.
+6,1,gradually fall,trend/description,The chart shows that the figure gradually fall over the period.
+6,1,gradually fluctuate,trend/description,The chart shows that the figure gradually fluctuate over the period.
+6,1,gradually increase,trend/description,The chart shows that the figure gradually increase over the period.
+6,1,gradually level off,trend/description,The chart shows that the figure gradually level off over the period.
+6,1,gradually peak,trend/description,The chart shows that the figure gradually peak over the period.
+6,1,gradually plummet,trend/description,The chart shows that the figure gradually plummet over the period.
+6,1,gradually rise,trend/description,The chart shows that the figure gradually rise over the period.
+6,1,gradually surge,trend/description,The chart shows that the figure gradually surge over the period.
+6,1,markedly decrease,trend/description,The chart shows that the figure markedly decrease over the period.
+6,1,markedly drop,trend/description,The chart shows that the figure markedly drop over the period.
+6,1,markedly fall,trend/description,The chart shows that the figure markedly fall over the period.
+6,1,markedly fluctuate,trend/description,The chart shows that the figure markedly fluctuate over the period.
+6,1,markedly increase,trend/description,The chart shows that the figure markedly increase over the period.
+6,1,markedly level off,trend/description,The chart shows that the figure markedly level off over the period.
+6,1,markedly peak,trend/description,The chart shows that the figure markedly peak over the period.
+6,1,markedly plummet,trend/description,The chart shows that the figure markedly plummet over the period.
+6,1,markedly rise,trend/description,The chart shows that the figure markedly rise over the period.
+6,1,markedly surge,trend/description,The chart shows that the figure markedly surge over the period.
+6,1,steadily decrease,trend/description,The chart shows that the figure steadily decrease over the period.
+6,1,steadily drop,trend/description,The chart shows that the figure steadily drop over the period.
+6,1,steadily fall,trend/description,The chart shows that the figure steadily fall over the period.
+6,1,steadily fluctuate,trend/description,The chart shows that the figure steadily fluctuate over the period.
+6,1,steadily increase,trend/description,The chart shows that the figure steadily increase over the period.
+6,1,steadily level off,trend/description,The chart shows that the figure steadily level off over the period.
+6,1,steadily peak,trend/description,The chart shows that the figure steadily peak over the period.
+6,1,steadily plummet,trend/description,The chart shows that the figure steadily plummet over the period.
+6,1,steadily rise,trend/description,The chart shows that the figure steadily rise over the period.
+6,1,steadily surge,trend/description,The chart shows that the figure steadily surge over the period.
+6,1,substantially decrease,trend/description,The chart shows that the figure substantially decrease over the period.
+6,1,substantially drop,trend/description,The chart shows that the figure substantially drop over the period.
+6,1,substantially fall,trend/description,The chart shows that the figure substantially fall over the period.
+6,1,substantially fluctuate,trend/description,The chart shows that the figure substantially fluctuate over the period.
+6,1,substantially increase,trend/description,The chart shows that the figure substantially increase over the period.
+6,1,substantially level off,trend/description,The chart shows that the figure substantially level off over the period.
+6,1,substantially peak,trend/description,The chart shows that the figure substantially peak over the period.
+6,1,substantially plummet,trend/description,The chart shows that the figure substantially plummet over the period.
+6,1,substantially rise,trend/description,The chart shows that the figure substantially rise over the period.
+6,1,substantially surge,trend/description,The chart shows that the figure substantially surge over the period.
+7,1,dramatically diminish,trend/description,The chart shows that the figure dramatically diminish over the period.
+7,1,dramatically escalate,trend/description,The chart shows that the figure dramatically escalate over the period.
+7,1,dramatically fluctuate,trend/description,The chart shows that the figure dramatically fluctuate over the period.
+7,1,dramatically intensify,trend/description,The chart shows that the figure dramatically intensify over the period.
+7,1,dramatically peak,trend/description,The chart shows that the figure dramatically peak over the period.
+7,1,dramatically plateau,trend/description,The chart shows that the figure dramatically plateau over the period.
+7,1,dramatically plummet,trend/description,The chart shows that the figure dramatically plummet over the period.
+7,1,dramatically soar,trend/description,The chart shows that the figure dramatically soar over the period.
+7,1,dramatically stabilise,trend/description,The chart shows that the figure dramatically stabilise over the period.
+7,1,dramatically wane,trend/description,The chart shows that the figure dramatically wane over the period.
+7,1,gradually diminish,trend/description,The chart shows that the figure gradually diminish over the period.
+7,1,gradually escalate,trend/description,The chart shows that the figure gradually escalate over the period.
+7,1,gradually fluctuate,trend/description,The chart shows that the figure gradually fluctuate over the period.
+7,1,gradually intensify,trend/description,The chart shows that the figure gradually intensify over the period.
+7,1,gradually peak,trend/description,The chart shows that the figure gradually peak over the period.
+7,1,gradually plateau,trend/description,The chart shows that the figure gradually plateau over the period.
+7,1,gradually plummet,trend/description,The chart shows that the figure gradually plummet over the period.
+7,1,gradually soar,trend/description,The chart shows that the figure gradually soar over the period.
+7,1,gradually stabilise,trend/description,The chart shows that the figure gradually stabilise over the period.
+7,1,gradually wane,trend/description,The chart shows that the figure gradually wane over the period.
+7,1,progressively diminish,trend/description,The chart shows that the figure progressively diminish over the period.
+7,1,progressively escalate,trend/description,The chart shows that the figure progressively escalate over the period.
+7,1,progressively fluctuate,trend/description,The chart shows that the figure progressively fluctuate over the period.
+7,1,progressively intensify,trend/description,The chart shows that the figure progressively intensify over the period.
+7,1,progressively peak,trend/description,The chart shows that the figure progressively peak over the period.
+7,1,progressively plateau,trend/description,The chart shows that the figure progressively plateau over the period.
+7,1,progressively plummet,trend/description,The chart shows that the figure progressively plummet over the period.
+7,1,progressively soar,trend/description,The chart shows that the figure progressively soar over the period.
+7,1,progressively stabilise,trend/description,The chart shows that the figure progressively stabilise over the period.
+7,1,progressively wane,trend/description,The chart shows that the figure progressively wane over the period.
+7,1,sharply diminish,trend/description,The chart shows that the figure sharply diminish over the period.
+7,1,sharply escalate,trend/description,The chart shows that the figure sharply escalate over the period.
+7,1,sharply fluctuate,trend/description,The chart shows that the figure sharply fluctuate over the period.
+7,1,sharply intensify,trend/description,The chart shows that the figure sharply intensify over the period.
+7,1,sharply peak,trend/description,The chart shows that the figure sharply peak over the period.
+7,1,sharply plateau,trend/description,The chart shows that the figure sharply plateau over the period.
+7,1,sharply plummet,trend/description,The chart shows that the figure sharply plummet over the period.
+7,1,sharply soar,trend/description,The chart shows that the figure sharply soar over the period.
+7,1,sharply stabilise,trend/description,The chart shows that the figure sharply stabilise over the period.
+7,1,sharply wane,trend/description,The chart shows that the figure sharply wane over the period.
+7,1,significantly diminish,trend/description,The chart shows that the figure significantly diminish over the period.
+7,1,significantly escalate,trend/description,The chart shows that the figure significantly escalate over the period.
+7,1,significantly fluctuate,trend/description,The chart shows that the figure significantly fluctuate over the period.
+7,1,significantly intensify,trend/description,The chart shows that the figure significantly intensify over the period.
+7,1,significantly peak,trend/description,The chart shows that the figure significantly peak over the period.
+7,1,significantly plateau,trend/description,The chart shows that the figure significantly plateau over the period.
+7,1,significantly plummet,trend/description,The chart shows that the figure significantly plummet over the period.
+7,1,significantly soar,trend/description,The chart shows that the figure significantly soar over the period.
+7,1,significantly stabilise,trend/description,The chart shows that the figure significantly stabilise over the period.
+7,1,significantly wane,trend/description,The chart shows that the figure significantly wane over the period.
+8,1,considerably decline,trend/description,The chart shows that the figure considerably decline over the period.
+8,1,considerably deteriorate,trend/description,The chart shows that the figure considerably deteriorate over the period.
+8,1,considerably drop off,trend/description,The chart shows that the figure considerably drop off over the period.
+8,1,considerably escalate,trend/description,The chart shows that the figure considerably escalate over the period.
+8,1,considerably fluctuate,trend/description,The chart shows that the figure considerably fluctuate over the period.
+8,1,considerably peak,trend/description,The chart shows that the figure considerably peak over the period.
+8,1,considerably plateau,trend/description,The chart shows that the figure considerably plateau over the period.
+8,1,considerably stabilise,trend/description,The chart shows that the figure considerably stabilise over the period.
+8,1,considerably stagnate,trend/description,The chart shows that the figure considerably stagnate over the period.
+8,1,considerably surge,trend/description,The chart shows that the figure considerably surge over the period.
+8,1,marginally decline,trend/description,The chart shows that the figure marginally decline over the period.
+8,1,marginally deteriorate,trend/description,The chart shows that the figure marginally deteriorate over the period.
+8,1,marginally drop off,trend/description,The chart shows that the figure marginally drop off over the period.
+8,1,marginally escalate,trend/description,The chart shows that the figure marginally escalate over the period.
+8,1,marginally fluctuate,trend/description,The chart shows that the figure marginally fluctuate over the period.
+8,1,marginally peak,trend/description,The chart shows that the figure marginally peak over the period.
+8,1,marginally plateau,trend/description,The chart shows that the figure marginally plateau over the period.
+8,1,marginally stabilise,trend/description,The chart shows that the figure marginally stabilise over the period.
+8,1,marginally stagnate,trend/description,The chart shows that the figure marginally stagnate over the period.
+8,1,marginally surge,trend/description,The chart shows that the figure marginally surge over the period.
+8,1,noticeably decline,trend/description,The chart shows that the figure noticeably decline over the period.
+8,1,noticeably deteriorate,trend/description,The chart shows that the figure noticeably deteriorate over the period.
+8,1,noticeably drop off,trend/description,The chart shows that the figure noticeably drop off over the period.
+8,1,noticeably escalate,trend/description,The chart shows that the figure noticeably escalate over the period.
+8,1,noticeably fluctuate,trend/description,The chart shows that the figure noticeably fluctuate over the period.
+8,1,noticeably peak,trend/description,The chart shows that the figure noticeably peak over the period.
+8,1,noticeably plateau,trend/description,The chart shows that the figure noticeably plateau over the period.
+8,1,noticeably stabilise,trend/description,The chart shows that the figure noticeably stabilise over the period.
+8,1,noticeably stagnate,trend/description,The chart shows that the figure noticeably stagnate over the period.
+8,1,noticeably surge,trend/description,The chart shows that the figure noticeably surge over the period.
+8,1,steeply decline,trend/description,The chart shows that the figure steeply decline over the period.
+8,1,steeply deteriorate,trend/description,The chart shows that the figure steeply deteriorate over the period.
+8,1,steeply drop off,trend/description,The chart shows that the figure steeply drop off over the period.
+8,1,steeply escalate,trend/description,The chart shows that the figure steeply escalate over the period.
+8,1,steeply fluctuate,trend/description,The chart shows that the figure steeply fluctuate over the period.
+8,1,steeply peak,trend/description,The chart shows that the figure steeply peak over the period.
+8,1,steeply plateau,trend/description,The chart shows that the figure steeply plateau over the period.
+8,1,steeply stabilise,trend/description,The chart shows that the figure steeply stabilise over the period.
+8,1,steeply stagnate,trend/description,The chart shows that the figure steeply stagnate over the period.
+8,1,steeply surge,trend/description,The chart shows that the figure steeply surge over the period.
+8,1,substantially decline,trend/description,The chart shows that the figure substantially decline over the period.
+8,1,substantially deteriorate,trend/description,The chart shows that the figure substantially deteriorate over the period.
+8,1,substantially drop off,trend/description,The chart shows that the figure substantially drop off over the period.
+8,1,substantially escalate,trend/description,The chart shows that the figure substantially escalate over the period.
+8,1,substantially fluctuate,trend/description,The chart shows that the figure substantially fluctuate over the period.
+8,1,substantially peak,trend/description,The chart shows that the figure substantially peak over the period.
+8,1,substantially plateau,trend/description,The chart shows that the figure substantially plateau over the period.
+8,1,substantially stabilise,trend/description,The chart shows that the figure substantially stabilise over the period.
+8,1,substantially stagnate,trend/description,The chart shows that the figure substantially stagnate over the period.
+8,1,substantially surge,trend/description,The chart shows that the figure substantially surge over the period.
+9,1,exponentially decline,trend/description,The chart shows that the figure exponentially decline over the period.
+9,1,exponentially escalate,trend/description,The chart shows that the figure exponentially escalate over the period.
+9,1,exponentially fluctuate,trend/description,The chart shows that the figure exponentially fluctuate over the period.
+9,1,exponentially peak,trend/description,The chart shows that the figure exponentially peak over the period.
+9,1,exponentially plateau,trend/description,The chart shows that the figure exponentially plateau over the period.
+9,1,exponentially stabilise,trend/description,The chart shows that the figure exponentially stabilise over the period.
+9,1,exponentially stagnate,trend/description,The chart shows that the figure exponentially stagnate over the period.
+9,1,exponentially subside,trend/description,The chart shows that the figure exponentially subside over the period.
+9,1,exponentially surge,trend/description,The chart shows that the figure exponentially surge over the period.
+9,1,exponentially tail off,trend/description,The chart shows that the figure exponentially tail off over the period.
+9,1,incrementally decline,trend/description,The chart shows that the figure incrementally decline over the period.
+9,1,incrementally escalate,trend/description,The chart shows that the figure incrementally escalate over the period.
+9,1,incrementally fluctuate,trend/description,The chart shows that the figure incrementally fluctuate over the period.
+9,1,incrementally peak,trend/description,The chart shows that the figure incrementally peak over the period.
+9,1,incrementally plateau,trend/description,The chart shows that the figure incrementally plateau over the period.
+9,1,incrementally stabilise,trend/description,The chart shows that the figure incrementally stabilise over the period.
+9,1,incrementally stagnate,trend/description,The chart shows that the figure incrementally stagnate over the period.
+9,1,incrementally subside,trend/description,The chart shows that the figure incrementally subside over the period.
+9,1,incrementally surge,trend/description,The chart shows that the figure incrementally surge over the period.
+9,1,incrementally tail off,trend/description,The chart shows that the figure incrementally tail off over the period.
+9,1,marginally decline,trend/description,The chart shows that the figure marginally decline over the period.
+9,1,marginally escalate,trend/description,The chart shows that the figure marginally escalate over the period.
+9,1,marginally fluctuate,trend/description,The chart shows that the figure marginally fluctuate over the period.
+9,1,marginally peak,trend/description,The chart shows that the figure marginally peak over the period.
+9,1,marginally plateau,trend/description,The chart shows that the figure marginally plateau over the period.
+9,1,marginally stabilise,trend/description,The chart shows that the figure marginally stabilise over the period.
+9,1,marginally stagnate,trend/description,The chart shows that the figure marginally stagnate over the period.
+9,1,marginally subside,trend/description,The chart shows that the figure marginally subside over the period.
+9,1,marginally surge,trend/description,The chart shows that the figure marginally surge over the period.
+9,1,marginally tail off,trend/description,The chart shows that the figure marginally tail off over the period.
+9,1,markedly decline,trend/description,The chart shows that the figure markedly decline over the period.
+9,1,markedly escalate,trend/description,The chart shows that the figure markedly escalate over the period.
+9,1,markedly fluctuate,trend/description,The chart shows that the figure markedly fluctuate over the period.
+9,1,markedly peak,trend/description,The chart shows that the figure markedly peak over the period.
+9,1,markedly plateau,trend/description,The chart shows that the figure markedly plateau over the period.
+9,1,markedly stabilise,trend/description,The chart shows that the figure markedly stabilise over the period.
+9,1,markedly stagnate,trend/description,The chart shows that the figure markedly stagnate over the period.
+9,1,markedly subside,trend/description,The chart shows that the figure markedly subside over the period.
+9,1,markedly surge,trend/description,The chart shows that the figure markedly surge over the period.
+9,1,markedly tail off,trend/description,The chart shows that the figure markedly tail off over the period.
+9,1,precipitously decline,trend/description,The chart shows that the figure precipitously decline over the period.
+9,1,precipitously escalate,trend/description,The chart shows that the figure precipitously escalate over the period.
+9,1,precipitously fluctuate,trend/description,The chart shows that the figure precipitously fluctuate over the period.
+9,1,precipitously peak,trend/description,The chart shows that the figure precipitously peak over the period.
+9,1,precipitously plateau,trend/description,The chart shows that the figure precipitously plateau over the period.
+9,1,precipitously stabilise,trend/description,The chart shows that the figure precipitously stabilise over the period.
+9,1,precipitously stagnate,trend/description,The chart shows that the figure precipitously stagnate over the period.
+9,1,precipitously subside,trend/description,The chart shows that the figure precipitously subside over the period.
+9,1,precipitously surge,trend/description,The chart shows that the figure precipitously surge over the period.
+9,1,precipitously tail off,trend/description,The chart shows that the figure precipitously tail off over the period.
+1,2,First,cohesion/argument,"First, governments should invest more in public transport."
+1,2,"First, also",cohesion/argument,"First, also, governments should invest more in public transport."
+1,2,"First, and",cohesion/argument,"First, and, governments should invest more in public transport."
+1,2,"First, because of this",cohesion/argument,"First, because of this, governments should invest more in public transport."
+1,2,"First, but",cohesion/argument,"First, but, governments should invest more in public transport."
+1,2,"First, for example",cohesion/argument,"First, for example, governments should invest more in public transport."
+1,2,"First, for instance",cohesion/argument,"First, for instance, governments should invest more in public transport."
+1,2,"First, however",cohesion/argument,"First, however, governments should invest more in public transport."
+1,2,"First, in general",cohesion/argument,"First, in general, governments should invest more in public transport."
+1,2,"First, overall",cohesion/argument,"First, overall, governments should invest more in public transport."
+1,2,"First, so",cohesion/argument,"First, so, governments should invest more in public transport."
+1,2,I believe,cohesion/argument,"I believe, governments should invest more in public transport."
+1,2,"I believe, also",cohesion/argument,"I believe, also, governments should invest more in public transport."
+1,2,"I believe, and",cohesion/argument,"I believe, and, governments should invest more in public transport."
+1,2,"I believe, because of this",cohesion/argument,"I believe, because of this, governments should invest more in public transport."
+1,2,"I believe, but",cohesion/argument,"I believe, but, governments should invest more in public transport."
+1,2,"I believe, for example",cohesion/argument,"I believe, for example, governments should invest more in public transport."
+1,2,"I believe, for instance",cohesion/argument,"I believe, for instance, governments should invest more in public transport."
+1,2,"I believe, however",cohesion/argument,"I believe, however, governments should invest more in public transport."
+1,2,"I believe, in general",cohesion/argument,"I believe, in general, governments should invest more in public transport."
+1,2,"I believe, overall",cohesion/argument,"I believe, overall, governments should invest more in public transport."
+1,2,"I believe, so",cohesion/argument,"I believe, so, governments should invest more in public transport."
+1,2,I think,cohesion/argument,"I think, governments should invest more in public transport."
+1,2,"I think, also",cohesion/argument,"I think, also, governments should invest more in public transport."
+1,2,"I think, and",cohesion/argument,"I think, and, governments should invest more in public transport."
+1,2,"I think, because of this",cohesion/argument,"I think, because of this, governments should invest more in public transport."
+1,2,"I think, but",cohesion/argument,"I think, but, governments should invest more in public transport."
+1,2,"I think, for example",cohesion/argument,"I think, for example, governments should invest more in public transport."
+1,2,"I think, for instance",cohesion/argument,"I think, for instance, governments should invest more in public transport."
+1,2,"I think, however",cohesion/argument,"I think, however, governments should invest more in public transport."
+1,2,"I think, in general",cohesion/argument,"I think, in general, governments should invest more in public transport."
+1,2,"I think, overall",cohesion/argument,"I think, overall, governments should invest more in public transport."
+1,2,"I think, so",cohesion/argument,"I think, so, governments should invest more in public transport."
+1,2,In conclusion,cohesion/argument,"In conclusion, governments should invest more in public transport."
+1,2,"In conclusion, also",cohesion/argument,"In conclusion, also, governments should invest more in public transport."
+1,2,"In conclusion, and",cohesion/argument,"In conclusion, and, governments should invest more in public transport."
+1,2,"In conclusion, because of this",cohesion/argument,"In conclusion, because of this, governments should invest more in public transport."
+1,2,"In conclusion, but",cohesion/argument,"In conclusion, but, governments should invest more in public transport."
+1,2,"In conclusion, for example",cohesion/argument,"In conclusion, for example, governments should invest more in public transport."
+1,2,"In conclusion, for instance",cohesion/argument,"In conclusion, for instance, governments should invest more in public transport."
+1,2,"In conclusion, however",cohesion/argument,"In conclusion, however, governments should invest more in public transport."
+1,2,"In conclusion, in general",cohesion/argument,"In conclusion, in general, governments should invest more in public transport."
+1,2,"In conclusion, overall",cohesion/argument,"In conclusion, overall, governments should invest more in public transport."
+1,2,"In conclusion, so",cohesion/argument,"In conclusion, so, governments should invest more in public transport."
+1,2,In my opinion,cohesion/argument,"In my opinion, governments should invest more in public transport."
+1,2,"In my opinion, also",cohesion/argument,"In my opinion, also, governments should invest more in public transport."
+1,2,"In my opinion, and",cohesion/argument,"In my opinion, and, governments should invest more in public transport."
+1,2,"In my opinion, because of this",cohesion/argument,"In my opinion, because of this, governments should invest more in public transport."
+1,2,"In my opinion, but",cohesion/argument,"In my opinion, but, governments should invest more in public transport."
+1,2,"In my opinion, for example",cohesion/argument,"In my opinion, for example, governments should invest more in public transport."
+2,2,Finally,cohesion/argument,"Finally, governments should invest more in public transport."
+2,2,"Finally, also",cohesion/argument,"Finally, also, governments should invest more in public transport."
+2,2,"Finally, as a result",cohesion/argument,"Finally, as a result, governments should invest more in public transport."
+2,2,"Finally, because",cohesion/argument,"Finally, because, governments should invest more in public transport."
+2,2,"Finally, for example",cohesion/argument,"Finally, for example, governments should invest more in public transport."
+2,2,"Finally, for instance",cohesion/argument,"Finally, for instance, governments should invest more in public transport."
+2,2,"Finally, however",cohesion/argument,"Finally, however, governments should invest more in public transport."
+2,2,"Finally, in addition",cohesion/argument,"Finally, in addition, governments should invest more in public transport."
+2,2,"Finally, moreover",cohesion/argument,"Finally, moreover, governments should invest more in public transport."
+2,2,"Finally, on the other hand",cohesion/argument,"Finally, on the other hand, governments should invest more in public transport."
+2,2,"Finally, therefore",cohesion/argument,"Finally, therefore, governments should invest more in public transport."
+2,2,Firstly,cohesion/argument,"Firstly, governments should invest more in public transport."
+2,2,"Firstly, also",cohesion/argument,"Firstly, also, governments should invest more in public transport."
+2,2,"Firstly, as a result",cohesion/argument,"Firstly, as a result, governments should invest more in public transport."
+2,2,"Firstly, because",cohesion/argument,"Firstly, because, governments should invest more in public transport."
+2,2,"Firstly, for example",cohesion/argument,"Firstly, for example, governments should invest more in public transport."
+2,2,"Firstly, for instance",cohesion/argument,"Firstly, for instance, governments should invest more in public transport."
+2,2,"Firstly, however",cohesion/argument,"Firstly, however, governments should invest more in public transport."
+2,2,"Firstly, in addition",cohesion/argument,"Firstly, in addition, governments should invest more in public transport."
+2,2,"Firstly, moreover",cohesion/argument,"Firstly, moreover, governments should invest more in public transport."
+2,2,"Firstly, on the other hand",cohesion/argument,"Firstly, on the other hand, governments should invest more in public transport."
+2,2,"Firstly, therefore",cohesion/argument,"Firstly, therefore, governments should invest more in public transport."
+2,2,From my perspective,cohesion/argument,"From my perspective, governments should invest more in public transport."
+2,2,"From my perspective, also",cohesion/argument,"From my perspective, also, governments should invest more in public transport."
+2,2,"From my perspective, as a result",cohesion/argument,"From my perspective, as a result, governments should invest more in public transport."
+2,2,"From my perspective, because",cohesion/argument,"From my perspective, because, governments should invest more in public transport."
+2,2,"From my perspective, for example",cohesion/argument,"From my perspective, for example, governments should invest more in public transport."
+2,2,"From my perspective, for instance",cohesion/argument,"From my perspective, for instance, governments should invest more in public transport."
+2,2,"From my perspective, however",cohesion/argument,"From my perspective, however, governments should invest more in public transport."
+2,2,"From my perspective, in addition",cohesion/argument,"From my perspective, in addition, governments should invest more in public transport."
+2,2,"From my perspective, moreover",cohesion/argument,"From my perspective, moreover, governments should invest more in public transport."
+2,2,"From my perspective, on the other hand",cohesion/argument,"From my perspective, on the other hand, governments should invest more in public transport."
+2,2,"From my perspective, therefore",cohesion/argument,"From my perspective, therefore, governments should invest more in public transport."
+2,2,In contrast,cohesion/argument,"In contrast, governments should invest more in public transport."
+2,2,"In contrast, also",cohesion/argument,"In contrast, also, governments should invest more in public transport."
+2,2,"In contrast, as a result",cohesion/argument,"In contrast, as a result, governments should invest more in public transport."
+2,2,"In contrast, because",cohesion/argument,"In contrast, because, governments should invest more in public transport."
+2,2,"In contrast, for example",cohesion/argument,"In contrast, for example, governments should invest more in public transport."
+2,2,"In contrast, for instance",cohesion/argument,"In contrast, for instance, governments should invest more in public transport."
+2,2,"In contrast, however",cohesion/argument,"In contrast, however, governments should invest more in public transport."
+2,2,"In contrast, in addition",cohesion/argument,"In contrast, in addition, governments should invest more in public transport."
+2,2,"In contrast, moreover",cohesion/argument,"In contrast, moreover, governments should invest more in public transport."
+2,2,"In contrast, on the other hand",cohesion/argument,"In contrast, on the other hand, governments should invest more in public transport."
+2,2,"In contrast, therefore",cohesion/argument,"In contrast, therefore, governments should invest more in public transport."
+2,2,In my view,cohesion/argument,"In my view, governments should invest more in public transport."
+2,2,"In my view, also",cohesion/argument,"In my view, also, governments should invest more in public transport."
+2,2,"In my view, as a result",cohesion/argument,"In my view, as a result, governments should invest more in public transport."
+2,2,"In my view, because",cohesion/argument,"In my view, because, governments should invest more in public transport."
+2,2,"In my view, for example",cohesion/argument,"In my view, for example, governments should invest more in public transport."
+2,2,"In my view, for instance",cohesion/argument,"In my view, for instance, governments should invest more in public transport."
+3,2,From my point of view,cohesion/argument,"From my point of view, governments should invest more in public transport."
+3,2,"From my point of view, as a result",cohesion/argument,"From my point of view, as a result, governments should invest more in public transport."
+3,2,"From my point of view, for example",cohesion/argument,"From my point of view, for example, governments should invest more in public transport."
+3,2,"From my point of view, for instance",cohesion/argument,"From my point of view, for instance, governments should invest more in public transport."
+3,2,"From my point of view, however",cohesion/argument,"From my point of view, however, governments should invest more in public transport."
+3,2,"From my point of view, in addition",cohesion/argument,"From my point of view, in addition, governments should invest more in public transport."
+3,2,"From my point of view, in particular",cohesion/argument,"From my point of view, in particular, governments should invest more in public transport."
+3,2,"From my point of view, nevertheless",cohesion/argument,"From my point of view, nevertheless, governments should invest more in public transport."
+3,2,"From my point of view, on the other hand",cohesion/argument,"From my point of view, on the other hand, governments should invest more in public transport."
+3,2,"From my point of view, such as",cohesion/argument,"From my point of view, such as, governments should invest more in public transport."
+3,2,"From my point of view, therefore",cohesion/argument,"From my point of view, therefore, governments should invest more in public transport."
+3,2,In conclusion,cohesion/argument,"In conclusion, governments should invest more in public transport."
+3,2,"In conclusion, as a result",cohesion/argument,"In conclusion, as a result, governments should invest more in public transport."
+3,2,"In conclusion, for example",cohesion/argument,"In conclusion, for example, governments should invest more in public transport."
+3,2,"In conclusion, for instance",cohesion/argument,"In conclusion, for instance, governments should invest more in public transport."
+3,2,"In conclusion, however",cohesion/argument,"In conclusion, however, governments should invest more in public transport."
+3,2,"In conclusion, in addition",cohesion/argument,"In conclusion, in addition, governments should invest more in public transport."
+3,2,"In conclusion, in particular",cohesion/argument,"In conclusion, in particular, governments should invest more in public transport."
+3,2,"In conclusion, nevertheless",cohesion/argument,"In conclusion, nevertheless, governments should invest more in public transport."
+3,2,"In conclusion, on the other hand",cohesion/argument,"In conclusion, on the other hand, governments should invest more in public transport."
+3,2,"In conclusion, such as",cohesion/argument,"In conclusion, such as, governments should invest more in public transport."
+3,2,"In conclusion, therefore",cohesion/argument,"In conclusion, therefore, governments should invest more in public transport."
+3,2,In general,cohesion/argument,"In general, governments should invest more in public transport."
+3,2,"In general, as a result",cohesion/argument,"In general, as a result, governments should invest more in public transport."
+3,2,"In general, for example",cohesion/argument,"In general, for example, governments should invest more in public transport."
+3,2,"In general, for instance",cohesion/argument,"In general, for instance, governments should invest more in public transport."
+3,2,"In general, however",cohesion/argument,"In general, however, governments should invest more in public transport."
+3,2,"In general, in addition",cohesion/argument,"In general, in addition, governments should invest more in public transport."
+3,2,"In general, in particular",cohesion/argument,"In general, in particular, governments should invest more in public transport."
+3,2,"In general, nevertheless",cohesion/argument,"In general, nevertheless, governments should invest more in public transport."
+3,2,"In general, on the other hand",cohesion/argument,"In general, on the other hand, governments should invest more in public transport."
+3,2,"In general, such as",cohesion/argument,"In general, such as, governments should invest more in public transport."
+3,2,"In general, therefore",cohesion/argument,"In general, therefore, governments should invest more in public transport."
+3,2,In summary,cohesion/argument,"In summary, governments should invest more in public transport."
+3,2,"In summary, as a result",cohesion/argument,"In summary, as a result, governments should invest more in public transport."
+3,2,"In summary, for example",cohesion/argument,"In summary, for example, governments should invest more in public transport."
+3,2,"In summary, for instance",cohesion/argument,"In summary, for instance, governments should invest more in public transport."
+3,2,"In summary, however",cohesion/argument,"In summary, however, governments should invest more in public transport."
+3,2,"In summary, in addition",cohesion/argument,"In summary, in addition, governments should invest more in public transport."
+3,2,"In summary, in particular",cohesion/argument,"In summary, in particular, governments should invest more in public transport."
+3,2,"In summary, nevertheless",cohesion/argument,"In summary, nevertheless, governments should invest more in public transport."
+3,2,"In summary, on the other hand",cohesion/argument,"In summary, on the other hand, governments should invest more in public transport."
+3,2,"In summary, such as",cohesion/argument,"In summary, such as, governments should invest more in public transport."
+3,2,"In summary, therefore",cohesion/argument,"In summary, therefore, governments should invest more in public transport."
+3,2,It is clear that,cohesion/argument,"It is clear that, governments should invest more in public transport."
+3,2,"It is clear that, as a result",cohesion/argument,"It is clear that, as a result, governments should invest more in public transport."
+3,2,"It is clear that, for example",cohesion/argument,"It is clear that, for example, governments should invest more in public transport."
+3,2,"It is clear that, for instance",cohesion/argument,"It is clear that, for instance, governments should invest more in public transport."
+3,2,"It is clear that, however",cohesion/argument,"It is clear that, however, governments should invest more in public transport."
+3,2,"It is clear that, in addition",cohesion/argument,"It is clear that, in addition, governments should invest more in public transport."
+4,2,acknowledge,cohesion/argument,"acknowledge, governments should invest more in public transport."
+4,2,argue,cohesion/argument,"argue, governments should invest more in public transport."
+4,2,broadly,cohesion/argument,"broadly, governments should invest more in public transport."
+4,2,broadly acknowledge,cohesion/argument,"broadly acknowledge, governments should invest more in public transport."
+4,2,broadly argue,cohesion/argument,"broadly argue, governments should invest more in public transport."
+4,2,broadly claim,cohesion/argument,"broadly claim, governments should invest more in public transport."
+4,2,broadly contend,cohesion/argument,"broadly contend, governments should invest more in public transport."
+4,2,broadly demonstrate,cohesion/argument,"broadly demonstrate, governments should invest more in public transport."
+4,2,broadly emphasise,cohesion/argument,"broadly emphasise, governments should invest more in public transport."
+4,2,broadly highlight,cohesion/argument,"broadly highlight, governments should invest more in public transport."
+4,2,broadly illustrate,cohesion/argument,"broadly illustrate, governments should invest more in public transport."
+4,2,broadly maintain,cohesion/argument,"broadly maintain, governments should invest more in public transport."
+4,2,broadly suggest,cohesion/argument,"broadly suggest, governments should invest more in public transport."
+4,2,claim,cohesion/argument,"claim, governments should invest more in public transport."
+4,2,commonly,cohesion/argument,"commonly, governments should invest more in public transport."
+4,2,commonly acknowledge,cohesion/argument,"commonly acknowledge, governments should invest more in public transport."
+4,2,commonly argue,cohesion/argument,"commonly argue, governments should invest more in public transport."
+4,2,commonly claim,cohesion/argument,"commonly claim, governments should invest more in public transport."
+4,2,commonly contend,cohesion/argument,"commonly contend, governments should invest more in public transport."
+4,2,commonly demonstrate,cohesion/argument,"commonly demonstrate, governments should invest more in public transport."
+4,2,commonly emphasise,cohesion/argument,"commonly emphasise, governments should invest more in public transport."
+4,2,commonly highlight,cohesion/argument,"commonly highlight, governments should invest more in public transport."
+4,2,commonly illustrate,cohesion/argument,"commonly illustrate, governments should invest more in public transport."
+4,2,commonly maintain,cohesion/argument,"commonly maintain, governments should invest more in public transport."
+4,2,commonly suggest,cohesion/argument,"commonly suggest, governments should invest more in public transport."
+4,2,contend,cohesion/argument,"contend, governments should invest more in public transport."
+4,2,demonstrate,cohesion/argument,"demonstrate, governments should invest more in public transport."
+4,2,emphasise,cohesion/argument,"emphasise, governments should invest more in public transport."
+4,2,especially,cohesion/argument,"especially, governments should invest more in public transport."
+4,2,especially acknowledge,cohesion/argument,"especially acknowledge, governments should invest more in public transport."
+4,2,especially argue,cohesion/argument,"especially argue, governments should invest more in public transport."
+4,2,especially claim,cohesion/argument,"especially claim, governments should invest more in public transport."
+4,2,especially contend,cohesion/argument,"especially contend, governments should invest more in public transport."
+4,2,especially demonstrate,cohesion/argument,"especially demonstrate, governments should invest more in public transport."
+4,2,especially emphasise,cohesion/argument,"especially emphasise, governments should invest more in public transport."
+4,2,especially highlight,cohesion/argument,"especially highlight, governments should invest more in public transport."
+4,2,especially illustrate,cohesion/argument,"especially illustrate, governments should invest more in public transport."
+4,2,especially maintain,cohesion/argument,"especially maintain, governments should invest more in public transport."
+4,2,especially suggest,cohesion/argument,"especially suggest, governments should invest more in public transport."
+4,2,firmly,cohesion/argument,"firmly, governments should invest more in public transport."
+4,2,firmly acknowledge,cohesion/argument,"firmly acknowledge, governments should invest more in public transport."
+4,2,firmly argue,cohesion/argument,"firmly argue, governments should invest more in public transport."
+4,2,firmly claim,cohesion/argument,"firmly claim, governments should invest more in public transport."
+4,2,firmly contend,cohesion/argument,"firmly contend, governments should invest more in public transport."
+4,2,firmly demonstrate,cohesion/argument,"firmly demonstrate, governments should invest more in public transport."
+4,2,firmly emphasise,cohesion/argument,"firmly emphasise, governments should invest more in public transport."
+4,2,firmly highlight,cohesion/argument,"firmly highlight, governments should invest more in public transport."
+4,2,firmly illustrate,cohesion/argument,"firmly illustrate, governments should invest more in public transport."
+4,2,firmly maintain,cohesion/argument,"firmly maintain, governments should invest more in public transport."
+4,2,firmly suggest,cohesion/argument,"firmly suggest, governments should invest more in public transport."
+5,2,argue,cohesion/argument,"argue, governments should invest more in public transport."
+5,2,assert,cohesion/argument,"assert, governments should invest more in public transport."
+5,2,commonly,cohesion/argument,"commonly, governments should invest more in public transport."
+5,2,commonly argue,cohesion/argument,"commonly argue, governments should invest more in public transport."
+5,2,commonly assert,cohesion/argument,"commonly assert, governments should invest more in public transport."
+5,2,commonly contend,cohesion/argument,"commonly contend, governments should invest more in public transport."
+5,2,commonly demonstrate,cohesion/argument,"commonly demonstrate, governments should invest more in public transport."
+5,2,commonly illustrate,cohesion/argument,"commonly illustrate, governments should invest more in public transport."
+5,2,commonly imply,cohesion/argument,"commonly imply, governments should invest more in public transport."
+5,2,commonly indicate,cohesion/argument,"commonly indicate, governments should invest more in public transport."
+5,2,commonly maintain,cohesion/argument,"commonly maintain, governments should invest more in public transport."
+5,2,commonly propose,cohesion/argument,"commonly propose, governments should invest more in public transport."
+5,2,commonly suggest,cohesion/argument,"commonly suggest, governments should invest more in public transport."
+5,2,contend,cohesion/argument,"contend, governments should invest more in public transport."
+5,2,convincingly,cohesion/argument,"convincingly, governments should invest more in public transport."
+5,2,convincingly argue,cohesion/argument,"convincingly argue, governments should invest more in public transport."
+5,2,convincingly assert,cohesion/argument,"convincingly assert, governments should invest more in public transport."
+5,2,convincingly contend,cohesion/argument,"convincingly contend, governments should invest more in public transport."
+5,2,convincingly demonstrate,cohesion/argument,"convincingly demonstrate, governments should invest more in public transport."
+5,2,convincingly illustrate,cohesion/argument,"convincingly illustrate, governments should invest more in public transport."
+5,2,convincingly imply,cohesion/argument,"convincingly imply, governments should invest more in public transport."
+5,2,convincingly indicate,cohesion/argument,"convincingly indicate, governments should invest more in public transport."
+5,2,convincingly maintain,cohesion/argument,"convincingly maintain, governments should invest more in public transport."
+5,2,convincingly propose,cohesion/argument,"convincingly propose, governments should invest more in public transport."
+5,2,convincingly suggest,cohesion/argument,"convincingly suggest, governments should invest more in public transport."
+5,2,demonstrate,cohesion/argument,"demonstrate, governments should invest more in public transport."
+5,2,firmly,cohesion/argument,"firmly, governments should invest more in public transport."
+5,2,firmly argue,cohesion/argument,"firmly argue, governments should invest more in public transport."
+5,2,firmly assert,cohesion/argument,"firmly assert, governments should invest more in public transport."
+5,2,firmly contend,cohesion/argument,"firmly contend, governments should invest more in public transport."
+5,2,firmly demonstrate,cohesion/argument,"firmly demonstrate, governments should invest more in public transport."
+5,2,firmly illustrate,cohesion/argument,"firmly illustrate, governments should invest more in public transport."
+5,2,firmly imply,cohesion/argument,"firmly imply, governments should invest more in public transport."
+5,2,firmly indicate,cohesion/argument,"firmly indicate, governments should invest more in public transport."
+5,2,firmly maintain,cohesion/argument,"firmly maintain, governments should invest more in public transport."
+5,2,firmly propose,cohesion/argument,"firmly propose, governments should invest more in public transport."
+5,2,firmly suggest,cohesion/argument,"firmly suggest, governments should invest more in public transport."
+5,2,generally,cohesion/argument,"generally, governments should invest more in public transport."
+5,2,generally argue,cohesion/argument,"generally argue, governments should invest more in public transport."
+5,2,generally assert,cohesion/argument,"generally assert, governments should invest more in public transport."
+5,2,generally contend,cohesion/argument,"generally contend, governments should invest more in public transport."
+5,2,generally demonstrate,cohesion/argument,"generally demonstrate, governments should invest more in public transport."
+5,2,generally illustrate,cohesion/argument,"generally illustrate, governments should invest more in public transport."
+5,2,generally imply,cohesion/argument,"generally imply, governments should invest more in public transport."
+5,2,generally indicate,cohesion/argument,"generally indicate, governments should invest more in public transport."
+5,2,generally maintain,cohesion/argument,"generally maintain, governments should invest more in public transport."
+5,2,generally propose,cohesion/argument,"generally propose, governments should invest more in public transport."
+5,2,generally suggest,cohesion/argument,"generally suggest, governments should invest more in public transport."
+5,2,illustrate,cohesion/argument,"illustrate, governments should invest more in public transport."
+5,2,imply,cohesion/argument,"imply, governments should invest more in public transport."
+6,2,A common view is that,cohesion/argument,"A common view is that, governments should invest more in public transport."
+6,2,"A common view is that, one key reason is that",cohesion/argument,"A common view is that, one key reason is that, governments should invest more in public transport."
+6,2,"A common view is that, this can be attributed to",cohesion/argument,"A common view is that, this can be attributed to, governments should invest more in public transport."
+6,2,"A common view is that, this can be explained by",cohesion/argument,"A common view is that, this can be explained by, governments should invest more in public transport."
+6,2,"A common view is that, this frequently leads to",cohesion/argument,"A common view is that, this frequently leads to, governments should invest more in public transport."
+6,2,"A common view is that, this highlights the fact that",cohesion/argument,"A common view is that, this highlights the fact that, governments should invest more in public transport."
+6,2,"A common view is that, this is largely due to",cohesion/argument,"A common view is that, this is largely due to, governments should invest more in public transport."
+6,2,"A common view is that, this is mainly because",cohesion/argument,"A common view is that, this is mainly because, governments should invest more in public transport."
+6,2,"A common view is that, this may contribute to",cohesion/argument,"A common view is that, this may contribute to, governments should invest more in public transport."
+6,2,"A common view is that, this often results in",cohesion/argument,"A common view is that, this often results in, governments should invest more in public transport."
+6,2,"A common view is that, this raises the issue of",cohesion/argument,"A common view is that, this raises the issue of, governments should invest more in public transport."
+6,2,It is frequently argued that,cohesion/argument,"It is frequently argued that, governments should invest more in public transport."
+6,2,"It is frequently argued that, one key reason is that",cohesion/argument,"It is frequently argued that, one key reason is that, governments should invest more in public transport."
+6,2,"It is frequently argued that, this can be attributed to",cohesion/argument,"It is frequently argued that, this can be attributed to, governments should invest more in public transport."
+6,2,"It is frequently argued that, this can be explained by",cohesion/argument,"It is frequently argued that, this can be explained by, governments should invest more in public transport."
+6,2,"It is frequently argued that, this frequently leads to",cohesion/argument,"It is frequently argued that, this frequently leads to, governments should invest more in public transport."
+6,2,"It is frequently argued that, this highlights the fact that",cohesion/argument,"It is frequently argued that, this highlights the fact that, governments should invest more in public transport."
+6,2,"It is frequently argued that, this is largely due to",cohesion/argument,"It is frequently argued that, this is largely due to, governments should invest more in public transport."
+6,2,"It is frequently argued that, this is mainly because",cohesion/argument,"It is frequently argued that, this is mainly because, governments should invest more in public transport."
+6,2,"It is frequently argued that, this may contribute to",cohesion/argument,"It is frequently argued that, this may contribute to, governments should invest more in public transport."
+6,2,"It is frequently argued that, this often results in",cohesion/argument,"It is frequently argued that, this often results in, governments should invest more in public transport."
+6,2,"It is frequently argued that, this raises the issue of",cohesion/argument,"It is frequently argued that, this raises the issue of, governments should invest more in public transport."
+6,2,It is generally accepted that,cohesion/argument,"It is generally accepted that, governments should invest more in public transport."
+6,2,"It is generally accepted that, one key reason is that",cohesion/argument,"It is generally accepted that, one key reason is that, governments should invest more in public transport."
+6,2,"It is generally accepted that, this can be attributed to",cohesion/argument,"It is generally accepted that, this can be attributed to, governments should invest more in public transport."
+6,2,"It is generally accepted that, this can be explained by",cohesion/argument,"It is generally accepted that, this can be explained by, governments should invest more in public transport."
+6,2,"It is generally accepted that, this frequently leads to",cohesion/argument,"It is generally accepted that, this frequently leads to, governments should invest more in public transport."
+6,2,"It is generally accepted that, this highlights the fact that",cohesion/argument,"It is generally accepted that, this highlights the fact that, governments should invest more in public transport."
+6,2,"It is generally accepted that, this is largely due to",cohesion/argument,"It is generally accepted that, this is largely due to, governments should invest more in public transport."
+6,2,"It is generally accepted that, this is mainly because",cohesion/argument,"It is generally accepted that, this is mainly because, governments should invest more in public transport."
+6,2,"It is generally accepted that, this may contribute to",cohesion/argument,"It is generally accepted that, this may contribute to, governments should invest more in public transport."
+6,2,"It is generally accepted that, this often results in",cohesion/argument,"It is generally accepted that, this often results in, governments should invest more in public transport."
+6,2,"It is generally accepted that, this raises the issue of",cohesion/argument,"It is generally accepted that, this raises the issue of, governments should invest more in public transport."
+6,2,It is increasingly recognised that,cohesion/argument,"It is increasingly recognised that, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, one key reason is that",cohesion/argument,"It is increasingly recognised that, one key reason is that, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this can be attributed to",cohesion/argument,"It is increasingly recognised that, this can be attributed to, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this can be explained by",cohesion/argument,"It is increasingly recognised that, this can be explained by, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this frequently leads to",cohesion/argument,"It is increasingly recognised that, this frequently leads to, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this highlights the fact that",cohesion/argument,"It is increasingly recognised that, this highlights the fact that, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this is largely due to",cohesion/argument,"It is increasingly recognised that, this is largely due to, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this is mainly because",cohesion/argument,"It is increasingly recognised that, this is mainly because, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this may contribute to",cohesion/argument,"It is increasingly recognised that, this may contribute to, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this often results in",cohesion/argument,"It is increasingly recognised that, this often results in, governments should invest more in public transport."
+6,2,"It is increasingly recognised that, this raises the issue of",cohesion/argument,"It is increasingly recognised that, this raises the issue of, governments should invest more in public transport."
+6,2,It is often claimed that,cohesion/argument,"It is often claimed that, governments should invest more in public transport."
+6,2,"It is often claimed that, one key reason is that",cohesion/argument,"It is often claimed that, one key reason is that, governments should invest more in public transport."
+6,2,"It is often claimed that, this can be attributed to",cohesion/argument,"It is often claimed that, this can be attributed to, governments should invest more in public transport."
+6,2,"It is often claimed that, this can be explained by",cohesion/argument,"It is often claimed that, this can be explained by, governments should invest more in public transport."
+6,2,"It is often claimed that, this frequently leads to",cohesion/argument,"It is often claimed that, this frequently leads to, governments should invest more in public transport."
+6,2,"It is often claimed that, this highlights the fact that",cohesion/argument,"It is often claimed that, this highlights the fact that, governments should invest more in public transport."
+7,2,Conversely,cohesion/argument,"Conversely, governments should invest more in public transport."
+7,2,"Conversely, it could be argued that",cohesion/argument,"Conversely, it could be argued that, governments should invest more in public transport."
+7,2,"Conversely, it is also important to remember that",cohesion/argument,"Conversely, it is also important to remember that, governments should invest more in public transport."
+7,2,"Conversely, it is crucial to note that",cohesion/argument,"Conversely, it is crucial to note that, governments should invest more in public transport."
+7,2,"Conversely, it is essential to recognise that",cohesion/argument,"Conversely, it is essential to recognise that, governments should invest more in public transport."
+7,2,"Conversely, it is important to acknowledge that",cohesion/argument,"Conversely, it is important to acknowledge that, governments should invest more in public transport."
+7,2,"Conversely, it is reasonable to assume that",cohesion/argument,"Conversely, it is reasonable to assume that, governments should invest more in public transport."
+7,2,"Conversely, it is worth considering that",cohesion/argument,"Conversely, it is worth considering that, governments should invest more in public transport."
+7,2,"Conversely, this demonstrates that",cohesion/argument,"Conversely, this demonstrates that, governments should invest more in public transport."
+7,2,"Conversely, this illustrates that",cohesion/argument,"Conversely, this illustrates that, governments should invest more in public transport."
+7,2,"Conversely, this suggests that",cohesion/argument,"Conversely, this suggests that, governments should invest more in public transport."
+7,2,From a broader perspective,cohesion/argument,"From a broader perspective, governments should invest more in public transport."
+7,2,"From a broader perspective, it could be argued that",cohesion/argument,"From a broader perspective, it could be argued that, governments should invest more in public transport."
+7,2,"From a broader perspective, it is also important to remember that",cohesion/argument,"From a broader perspective, it is also important to remember that, governments should invest more in public transport."
+7,2,"From a broader perspective, it is crucial to note that",cohesion/argument,"From a broader perspective, it is crucial to note that, governments should invest more in public transport."
+7,2,"From a broader perspective, it is essential to recognise that",cohesion/argument,"From a broader perspective, it is essential to recognise that, governments should invest more in public transport."
+7,2,"From a broader perspective, it is important to acknowledge that",cohesion/argument,"From a broader perspective, it is important to acknowledge that, governments should invest more in public transport."
+7,2,"From a broader perspective, it is reasonable to assume that",cohesion/argument,"From a broader perspective, it is reasonable to assume that, governments should invest more in public transport."
+7,2,"From a broader perspective, it is worth considering that",cohesion/argument,"From a broader perspective, it is worth considering that, governments should invest more in public transport."
+7,2,"From a broader perspective, this demonstrates that",cohesion/argument,"From a broader perspective, this demonstrates that, governments should invest more in public transport."
+7,2,"From a broader perspective, this illustrates that",cohesion/argument,"From a broader perspective, this illustrates that, governments should invest more in public transport."
+7,2,"From a broader perspective, this suggests that",cohesion/argument,"From a broader perspective, this suggests that, governments should invest more in public transport."
+7,2,From a societal perspective,cohesion/argument,"From a societal perspective, governments should invest more in public transport."
+7,2,"From a societal perspective, it could be argued that",cohesion/argument,"From a societal perspective, it could be argued that, governments should invest more in public transport."
+7,2,"From a societal perspective, it is also important to remember that",cohesion/argument,"From a societal perspective, it is also important to remember that, governments should invest more in public transport."
+7,2,"From a societal perspective, it is crucial to note that",cohesion/argument,"From a societal perspective, it is crucial to note that, governments should invest more in public transport."
+7,2,"From a societal perspective, it is essential to recognise that",cohesion/argument,"From a societal perspective, it is essential to recognise that, governments should invest more in public transport."
+7,2,"From a societal perspective, it is important to acknowledge that",cohesion/argument,"From a societal perspective, it is important to acknowledge that, governments should invest more in public transport."
+7,2,"From a societal perspective, it is reasonable to assume that",cohesion/argument,"From a societal perspective, it is reasonable to assume that, governments should invest more in public transport."
+7,2,"From a societal perspective, it is worth considering that",cohesion/argument,"From a societal perspective, it is worth considering that, governments should invest more in public transport."
+7,2,"From a societal perspective, this demonstrates that",cohesion/argument,"From a societal perspective, this demonstrates that, governments should invest more in public transport."
+7,2,"From a societal perspective, this illustrates that",cohesion/argument,"From a societal perspective, this illustrates that, governments should invest more in public transport."
+7,2,"From a societal perspective, this suggests that",cohesion/argument,"From a societal perspective, this suggests that, governments should invest more in public transport."
+7,2,In contrast,cohesion/argument,"In contrast, governments should invest more in public transport."
+7,2,"In contrast, it could be argued that",cohesion/argument,"In contrast, it could be argued that, governments should invest more in public transport."
+7,2,"In contrast, it is also important to remember that",cohesion/argument,"In contrast, it is also important to remember that, governments should invest more in public transport."
+7,2,"In contrast, it is crucial to note that",cohesion/argument,"In contrast, it is crucial to note that, governments should invest more in public transport."
+7,2,"In contrast, it is essential to recognise that",cohesion/argument,"In contrast, it is essential to recognise that, governments should invest more in public transport."
+7,2,"In contrast, it is important to acknowledge that",cohesion/argument,"In contrast, it is important to acknowledge that, governments should invest more in public transport."
+7,2,"In contrast, it is reasonable to assume that",cohesion/argument,"In contrast, it is reasonable to assume that, governments should invest more in public transport."
+7,2,"In contrast, it is worth considering that",cohesion/argument,"In contrast, it is worth considering that, governments should invest more in public transport."
+7,2,"In contrast, this demonstrates that",cohesion/argument,"In contrast, this demonstrates that, governments should invest more in public transport."
+7,2,"In contrast, this illustrates that",cohesion/argument,"In contrast, this illustrates that, governments should invest more in public transport."
+7,2,"In contrast, this suggests that",cohesion/argument,"In contrast, this suggests that, governments should invest more in public transport."
+7,2,In light of this,cohesion/argument,"In light of this, governments should invest more in public transport."
+7,2,"In light of this, it could be argued that",cohesion/argument,"In light of this, it could be argued that, governments should invest more in public transport."
+7,2,"In light of this, it is also important to remember that",cohesion/argument,"In light of this, it is also important to remember that, governments should invest more in public transport."
+7,2,"In light of this, it is crucial to note that",cohesion/argument,"In light of this, it is crucial to note that, governments should invest more in public transport."
+7,2,"In light of this, it is essential to recognise that",cohesion/argument,"In light of this, it is essential to recognise that, governments should invest more in public transport."
+7,2,"In light of this, it is important to acknowledge that",cohesion/argument,"In light of this, it is important to acknowledge that, governments should invest more in public transport."
+8,2,beneficial,cohesion/argument,"beneficial, governments should invest more in public transport."
+8,2,beneficial challenge,cohesion/argument,"beneficial challenge, governments should invest more in public transport."
+8,2,beneficial consequence,cohesion/argument,"beneficial consequence, governments should invest more in public transport."
+8,2,beneficial impact,cohesion/argument,"beneficial impact, governments should invest more in public transport."
+8,2,beneficial implication,cohesion/argument,"beneficial implication, governments should invest more in public transport."
+8,2,beneficial issue,cohesion/argument,"beneficial issue, governments should invest more in public transport."
+8,2,beneficial measure,cohesion/argument,"beneficial measure, governments should invest more in public transport."
+8,2,beneficial phenomenon,cohesion/argument,"beneficial phenomenon, governments should invest more in public transport."
+8,2,beneficial policy,cohesion/argument,"beneficial policy, governments should invest more in public transport."
+8,2,beneficial strategy,cohesion/argument,"beneficial strategy, governments should invest more in public transport."
+8,2,beneficial trend,cohesion/argument,"beneficial trend, governments should invest more in public transport."
+8,2,challenge,cohesion/argument,"challenge, governments should invest more in public transport."
+8,2,consequence,cohesion/argument,"consequence, governments should invest more in public transport."
+8,2,controversial,cohesion/argument,"controversial, governments should invest more in public transport."
+8,2,controversial challenge,cohesion/argument,"controversial challenge, governments should invest more in public transport."
+8,2,controversial consequence,cohesion/argument,"controversial consequence, governments should invest more in public transport."
+8,2,controversial impact,cohesion/argument,"controversial impact, governments should invest more in public transport."
+8,2,controversial implication,cohesion/argument,"controversial implication, governments should invest more in public transport."
+8,2,controversial issue,cohesion/argument,"controversial issue, governments should invest more in public transport."
+8,2,controversial measure,cohesion/argument,"controversial measure, governments should invest more in public transport."
+8,2,controversial phenomenon,cohesion/argument,"controversial phenomenon, governments should invest more in public transport."
+8,2,controversial policy,cohesion/argument,"controversial policy, governments should invest more in public transport."
+8,2,controversial strategy,cohesion/argument,"controversial strategy, governments should invest more in public transport."
+8,2,controversial trend,cohesion/argument,"controversial trend, governments should invest more in public transport."
+8,2,detrimental,cohesion/argument,"detrimental, governments should invest more in public transport."
+8,2,detrimental challenge,cohesion/argument,"detrimental challenge, governments should invest more in public transport."
+8,2,detrimental consequence,cohesion/argument,"detrimental consequence, governments should invest more in public transport."
+8,2,detrimental impact,cohesion/argument,"detrimental impact, governments should invest more in public transport."
+8,2,detrimental implication,cohesion/argument,"detrimental implication, governments should invest more in public transport."
+8,2,detrimental issue,cohesion/argument,"detrimental issue, governments should invest more in public transport."
+8,2,detrimental measure,cohesion/argument,"detrimental measure, governments should invest more in public transport."
+8,2,detrimental phenomenon,cohesion/argument,"detrimental phenomenon, governments should invest more in public transport."
+8,2,detrimental policy,cohesion/argument,"detrimental policy, governments should invest more in public transport."
+8,2,detrimental strategy,cohesion/argument,"detrimental strategy, governments should invest more in public transport."
+8,2,detrimental trend,cohesion/argument,"detrimental trend, governments should invest more in public transport."
+8,2,impact,cohesion/argument,"impact, governments should invest more in public transport."
+8,2,implication,cohesion/argument,"implication, governments should invest more in public transport."
+8,2,inevitable,cohesion/argument,"inevitable, governments should invest more in public transport."
+8,2,inevitable challenge,cohesion/argument,"inevitable challenge, governments should invest more in public transport."
+8,2,inevitable consequence,cohesion/argument,"inevitable consequence, governments should invest more in public transport."
+8,2,inevitable impact,cohesion/argument,"inevitable impact, governments should invest more in public transport."
+8,2,inevitable implication,cohesion/argument,"inevitable implication, governments should invest more in public transport."
+8,2,inevitable issue,cohesion/argument,"inevitable issue, governments should invest more in public transport."
+8,2,inevitable measure,cohesion/argument,"inevitable measure, governments should invest more in public transport."
+8,2,inevitable phenomenon,cohesion/argument,"inevitable phenomenon, governments should invest more in public transport."
+8,2,inevitable policy,cohesion/argument,"inevitable policy, governments should invest more in public transport."
+8,2,inevitable strategy,cohesion/argument,"inevitable strategy, governments should invest more in public transport."
+8,2,inevitable trend,cohesion/argument,"inevitable trend, governments should invest more in public transport."
+8,2,issue,cohesion/argument,"issue, governments should invest more in public transport."
+8,2,measure,cohesion/argument,"measure, governments should invest more in public transport."
+9,2,All things considered,cohesion/argument,"All things considered, governments should invest more in public transport."
+9,2,"All things considered, this calls into question the assumption that",cohesion/argument,"All things considered, this calls into question the assumption that, governments should invest more in public transport."
+9,2,"All things considered, this challenges the conventional wisdom that",cohesion/argument,"All things considered, this challenges the conventional wisdom that, governments should invest more in public transport."
+9,2,"All things considered, this has far-reaching implications for",cohesion/argument,"All things considered, this has far-reaching implications for, governments should invest more in public transport."
+9,2,"All things considered, this highlights a fundamental tension between",cohesion/argument,"All things considered, this highlights a fundamental tension between, governments should invest more in public transport."
+9,2,"All things considered, this illustrates the complexity of",cohesion/argument,"All things considered, this illustrates the complexity of, governments should invest more in public transport."
+9,2,"All things considered, this lends support to the view that",cohesion/argument,"All things considered, this lends support to the view that, governments should invest more in public transport."
+9,2,"All things considered, this lends weight to the argument that",cohesion/argument,"All things considered, this lends weight to the argument that, governments should invest more in public transport."
+9,2,"All things considered, this provides compelling evidence that",cohesion/argument,"All things considered, this provides compelling evidence that, governments should invest more in public transport."
+9,2,"All things considered, this raises broader questions about",cohesion/argument,"All things considered, this raises broader questions about, governments should invest more in public transport."
+9,2,"All things considered, this undermines the claim that",cohesion/argument,"All things considered, this undermines the claim that, governments should invest more in public transport."
+9,2,From a long-term perspective,cohesion/argument,"From a long-term perspective, governments should invest more in public transport."
+9,2,"From a long-term perspective, this calls into question the assumption that",cohesion/argument,"From a long-term perspective, this calls into question the assumption that, governments should invest more in public transport."
+9,2,"From a long-term perspective, this challenges the conventional wisdom that",cohesion/argument,"From a long-term perspective, this challenges the conventional wisdom that, governments should invest more in public transport."
+9,2,"From a long-term perspective, this has far-reaching implications for",cohesion/argument,"From a long-term perspective, this has far-reaching implications for, governments should invest more in public transport."
+9,2,"From a long-term perspective, this highlights a fundamental tension between",cohesion/argument,"From a long-term perspective, this highlights a fundamental tension between, governments should invest more in public transport."
+9,2,"From a long-term perspective, this illustrates the complexity of",cohesion/argument,"From a long-term perspective, this illustrates the complexity of, governments should invest more in public transport."
+9,2,"From a long-term perspective, this lends support to the view that",cohesion/argument,"From a long-term perspective, this lends support to the view that, governments should invest more in public transport."
+9,2,"From a long-term perspective, this lends weight to the argument that",cohesion/argument,"From a long-term perspective, this lends weight to the argument that, governments should invest more in public transport."
+9,2,"From a long-term perspective, this provides compelling evidence that",cohesion/argument,"From a long-term perspective, this provides compelling evidence that, governments should invest more in public transport."
+9,2,"From a long-term perspective, this raises broader questions about",cohesion/argument,"From a long-term perspective, this raises broader questions about, governments should invest more in public transport."
+9,2,"From a long-term perspective, this undermines the claim that",cohesion/argument,"From a long-term perspective, this undermines the claim that, governments should invest more in public transport."
+9,2,From a pragmatic standpoint,cohesion/argument,"From a pragmatic standpoint, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this calls into question the assumption that",cohesion/argument,"From a pragmatic standpoint, this calls into question the assumption that, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this challenges the conventional wisdom that",cohesion/argument,"From a pragmatic standpoint, this challenges the conventional wisdom that, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this has far-reaching implications for",cohesion/argument,"From a pragmatic standpoint, this has far-reaching implications for, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this highlights a fundamental tension between",cohesion/argument,"From a pragmatic standpoint, this highlights a fundamental tension between, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this illustrates the complexity of",cohesion/argument,"From a pragmatic standpoint, this illustrates the complexity of, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this lends support to the view that",cohesion/argument,"From a pragmatic standpoint, this lends support to the view that, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this lends weight to the argument that",cohesion/argument,"From a pragmatic standpoint, this lends weight to the argument that, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this provides compelling evidence that",cohesion/argument,"From a pragmatic standpoint, this provides compelling evidence that, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this raises broader questions about",cohesion/argument,"From a pragmatic standpoint, this raises broader questions about, governments should invest more in public transport."
+9,2,"From a pragmatic standpoint, this undermines the claim that",cohesion/argument,"From a pragmatic standpoint, this undermines the claim that, governments should invest more in public transport."
+9,2,From an ethical standpoint,cohesion/argument,"From an ethical standpoint, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this calls into question the assumption that",cohesion/argument,"From an ethical standpoint, this calls into question the assumption that, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this challenges the conventional wisdom that",cohesion/argument,"From an ethical standpoint, this challenges the conventional wisdom that, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this has far-reaching implications for",cohesion/argument,"From an ethical standpoint, this has far-reaching implications for, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this highlights a fundamental tension between",cohesion/argument,"From an ethical standpoint, this highlights a fundamental tension between, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this illustrates the complexity of",cohesion/argument,"From an ethical standpoint, this illustrates the complexity of, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this lends support to the view that",cohesion/argument,"From an ethical standpoint, this lends support to the view that, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this lends weight to the argument that",cohesion/argument,"From an ethical standpoint, this lends weight to the argument that, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this provides compelling evidence that",cohesion/argument,"From an ethical standpoint, this provides compelling evidence that, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this raises broader questions about",cohesion/argument,"From an ethical standpoint, this raises broader questions about, governments should invest more in public transport."
+9,2,"From an ethical standpoint, this undermines the claim that",cohesion/argument,"From an ethical standpoint, this undermines the claim that, governments should invest more in public transport."
+9,2,In practical terms,cohesion/argument,"In practical terms, governments should invest more in public transport."
+9,2,"In practical terms, this calls into question the assumption that",cohesion/argument,"In practical terms, this calls into question the assumption that, governments should invest more in public transport."
+9,2,"In practical terms, this challenges the conventional wisdom that",cohesion/argument,"In practical terms, this challenges the conventional wisdom that, governments should invest more in public transport."
+9,2,"In practical terms, this has far-reaching implications for",cohesion/argument,"In practical terms, this has far-reaching implications for, governments should invest more in public transport."
+9,2,"In practical terms, this highlights a fundamental tension between",cohesion/argument,"In practical terms, this highlights a fundamental tension between, governments should invest more in public transport."
+9,2,"In practical terms, this illustrates the complexity of",cohesion/argument,"In practical terms, this illustrates the complexity of, governments should invest more in public transport."
