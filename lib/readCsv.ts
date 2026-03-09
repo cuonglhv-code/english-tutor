@@ -3,9 +3,16 @@ import path from "path";
 
 export interface CsvRow {
   questionType: string;
-  structure:    string;
-  tips:         string;
-  mistakes:     string;
+  structure: string;
+  tips: string;
+  mistakes: string;
+}
+
+export interface VocabRow {
+  band: number;
+  task: number;
+  vocabItem: string;
+  category: string;
 }
 
 /** Minimal RFC-4180 CSV parser — no external dependencies. */
@@ -66,9 +73,9 @@ function toCsvRows(rows: string[][]): CsvRow[] {
   // Slice off the header row
   return rows.slice(1).map((r) => ({
     questionType: r[0] ?? "",
-    structure:    r[1] ?? "",
-    tips:         r[2] ?? "",
-    mistakes:     r[3] ?? "",
+    structure: r[1] ?? "",
+    tips: r[2] ?? "",
+    mistakes: r[3] ?? "",
   }));
 }
 
@@ -80,4 +87,16 @@ export function readTask1Csv(): CsvRow[] {
 export function readTask2Csv(): CsvRow[] {
   const file = path.join(process.cwd(), "Task 2.csv");
   return toCsvRows(parseCsv(fs.readFileSync(file, "utf-8")));
+}
+
+export function readVocabCsv(): VocabRow[] {
+  const file = path.join(process.cwd(), "ielts_writing_vocab_by_band.csv");
+  if (!fs.existsSync(file)) return [];
+  const rows = parseCsv(fs.readFileSync(file, "utf-8"));
+  return rows.slice(1).map((r) => ({
+    band: parseInt(r[0], 10) || 0,
+    task: parseInt(r[1], 10) || 0,
+    vocabItem: r[2] ?? "",
+    category: r[3] ?? "",
+  }));
 }

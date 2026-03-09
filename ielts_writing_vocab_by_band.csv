@@ -1,0 +1,901 @@
+band,task,vocab_item,category
+1,1,a bit be big,trend/description
+1,1,a bit be high,trend/description
+1,1,a bit be low,trend/description
+1,1,a bit be small,trend/description
+1,1,a bit be the same,trend/description
+1,1,a bit change,trend/description
+1,1,a bit get bigger,trend/description
+1,1,a bit get smaller,trend/description
+1,1,a bit go down,trend/description
+1,1,a bit go up,trend/description
+1,1,a little be big,trend/description
+1,1,a little be high,trend/description
+1,1,a little be low,trend/description
+1,1,a little be small,trend/description
+1,1,a little be the same,trend/description
+1,1,a little change,trend/description
+1,1,a little get bigger,trend/description
+1,1,a little get smaller,trend/description
+1,1,a little go down,trend/description
+1,1,a little go up,trend/description
+1,1,quite be big,trend/description
+1,1,quite be high,trend/description
+1,1,quite be low,trend/description
+1,1,quite be small,trend/description
+1,1,quite be the same,trend/description
+1,1,quite change,trend/description
+1,1,quite get bigger,trend/description
+1,1,quite get smaller,trend/description
+1,1,quite go down,trend/description
+1,1,quite go up,trend/description
+1,1,really be big,trend/description
+1,1,really be high,trend/description
+1,1,really be low,trend/description
+1,1,really be small,trend/description
+1,1,really be the same,trend/description
+1,1,really change,trend/description
+1,1,really get bigger,trend/description
+1,1,really get smaller,trend/description
+1,1,really go down,trend/description
+1,1,really go up,trend/description
+1,1,very be big,trend/description
+1,1,very be high,trend/description
+1,1,very be low,trend/description
+1,1,very be small,trend/description
+1,1,very be the same,trend/description
+1,1,very change,trend/description
+1,1,very get bigger,trend/description
+1,1,very get smaller,trend/description
+1,1,very go down,trend/description
+1,1,very go up,trend/description
+2,1,a little change,trend/description
+2,1,a little decrease,trend/description
+2,1,a little drop,trend/description
+2,1,a little fall,trend/description
+2,1,a little go down,trend/description
+2,1,a little go up,trend/description
+2,1,a little grow,trend/description
+2,1,a little increase,trend/description
+2,1,a little rise,trend/description
+2,1,a little stay the same,trend/description
+2,1,a lot change,trend/description
+2,1,a lot decrease,trend/description
+2,1,a lot drop,trend/description
+2,1,a lot fall,trend/description
+2,1,a lot go down,trend/description
+2,1,a lot go up,trend/description
+2,1,a lot grow,trend/description
+2,1,a lot increase,trend/description
+2,1,a lot rise,trend/description
+2,1,a lot stay the same,trend/description
+2,1,quickly change,trend/description
+2,1,quickly decrease,trend/description
+2,1,quickly drop,trend/description
+2,1,quickly fall,trend/description
+2,1,quickly go down,trend/description
+2,1,quickly go up,trend/description
+2,1,quickly grow,trend/description
+2,1,quickly increase,trend/description
+2,1,quickly rise,trend/description
+2,1,quickly stay the same,trend/description
+2,1,slowly change,trend/description
+2,1,slowly decrease,trend/description
+2,1,slowly drop,trend/description
+2,1,slowly fall,trend/description
+2,1,slowly go down,trend/description
+2,1,slowly go up,trend/description
+2,1,slowly grow,trend/description
+2,1,slowly increase,trend/description
+2,1,slowly rise,trend/description
+2,1,slowly stay the same,trend/description
+2,1,suddenly change,trend/description
+2,1,suddenly decrease,trend/description
+2,1,suddenly drop,trend/description
+2,1,suddenly fall,trend/description
+2,1,suddenly go down,trend/description
+2,1,suddenly go up,trend/description
+2,1,suddenly grow,trend/description
+2,1,suddenly increase,trend/description
+2,1,suddenly rise,trend/description
+2,1,suddenly stay the same,trend/description
+3,1,gradually change,trend/description
+3,1,gradually decrease,trend/description
+3,1,gradually drop,trend/description
+3,1,gradually fall,trend/description
+3,1,gradually go down,trend/description
+3,1,gradually go up,trend/description
+3,1,gradually increase,trend/description
+3,1,gradually remain steady,trend/description
+3,1,gradually rise,trend/description
+3,1,gradually stay stable,trend/description
+3,1,quickly change,trend/description
+3,1,quickly decrease,trend/description
+3,1,quickly drop,trend/description
+3,1,quickly fall,trend/description
+3,1,quickly go down,trend/description
+3,1,quickly go up,trend/description
+3,1,quickly increase,trend/description
+3,1,quickly remain steady,trend/description
+3,1,quickly rise,trend/description
+3,1,quickly stay stable,trend/description
+3,1,slightly change,trend/description
+3,1,slightly decrease,trend/description
+3,1,slightly drop,trend/description
+3,1,slightly fall,trend/description
+3,1,slightly go down,trend/description
+3,1,slightly go up,trend/description
+3,1,slightly increase,trend/description
+3,1,slightly remain steady,trend/description
+3,1,slightly rise,trend/description
+3,1,slightly stay stable,trend/description
+3,1,steadily change,trend/description
+3,1,steadily decrease,trend/description
+3,1,steadily drop,trend/description
+3,1,steadily fall,trend/description
+3,1,steadily go down,trend/description
+3,1,steadily go up,trend/description
+3,1,steadily increase,trend/description
+3,1,steadily remain steady,trend/description
+3,1,steadily rise,trend/description
+3,1,steadily stay stable,trend/description
+3,1,suddenly change,trend/description
+3,1,suddenly decrease,trend/description
+3,1,suddenly drop,trend/description
+3,1,suddenly fall,trend/description
+3,1,suddenly go down,trend/description
+3,1,suddenly go up,trend/description
+3,1,suddenly increase,trend/description
+3,1,suddenly remain steady,trend/description
+3,1,suddenly rise,trend/description
+3,1,suddenly stay stable,trend/description
+4,1,gradually climb,trend/description
+4,1,gradually decline,trend/description
+4,1,gradually decrease,trend/description
+4,1,gradually drop,trend/description
+4,1,gradually fall,trend/description
+4,1,gradually fluctuate,trend/description
+4,1,gradually increase,trend/description
+4,1,gradually reach a peak,trend/description
+4,1,gradually remain stable,trend/description
+4,1,gradually rise,trend/description
+4,1,sharply climb,trend/description
+4,1,sharply decline,trend/description
+4,1,sharply decrease,trend/description
+4,1,sharply drop,trend/description
+4,1,sharply fall,trend/description
+4,1,sharply fluctuate,trend/description
+4,1,sharply increase,trend/description
+4,1,sharply reach a peak,trend/description
+4,1,sharply remain stable,trend/description
+4,1,sharply rise,trend/description
+4,1,significantly climb,trend/description
+4,1,significantly decline,trend/description
+4,1,significantly decrease,trend/description
+4,1,significantly drop,trend/description
+4,1,significantly fall,trend/description
+4,1,significantly fluctuate,trend/description
+4,1,significantly increase,trend/description
+4,1,significantly reach a peak,trend/description
+4,1,significantly remain stable,trend/description
+4,1,significantly rise,trend/description
+4,1,slightly climb,trend/description
+4,1,slightly decline,trend/description
+4,1,slightly decrease,trend/description
+4,1,slightly drop,trend/description
+4,1,slightly fall,trend/description
+4,1,slightly fluctuate,trend/description
+4,1,slightly increase,trend/description
+4,1,slightly reach a peak,trend/description
+4,1,slightly remain stable,trend/description
+4,1,slightly rise,trend/description
+4,1,steadily climb,trend/description
+4,1,steadily decline,trend/description
+4,1,steadily decrease,trend/description
+4,1,steadily drop,trend/description
+4,1,steadily fall,trend/description
+4,1,steadily fluctuate,trend/description
+4,1,steadily increase,trend/description
+4,1,steadily reach a peak,trend/description
+4,1,steadily remain stable,trend/description
+4,1,steadily rise,trend/description
+5,1,dramatically climb,trend/description
+5,1,dramatically decline,trend/description
+5,1,dramatically decrease,trend/description
+5,1,dramatically drop,trend/description
+5,1,dramatically fall,trend/description
+5,1,dramatically fluctuate,trend/description
+5,1,dramatically increase,trend/description
+5,1,dramatically reach a peak,trend/description
+5,1,dramatically remain stable,trend/description
+5,1,dramatically rise,trend/description
+5,1,moderately climb,trend/description
+5,1,moderately decline,trend/description
+5,1,moderately decrease,trend/description
+5,1,moderately drop,trend/description
+5,1,moderately fall,trend/description
+5,1,moderately fluctuate,trend/description
+5,1,moderately increase,trend/description
+5,1,moderately reach a peak,trend/description
+5,1,moderately remain stable,trend/description
+5,1,moderately rise,trend/description
+5,1,significantly climb,trend/description
+5,1,significantly decline,trend/description
+5,1,significantly decrease,trend/description
+5,1,significantly drop,trend/description
+5,1,significantly fall,trend/description
+5,1,significantly fluctuate,trend/description
+5,1,significantly increase,trend/description
+5,1,significantly reach a peak,trend/description
+5,1,significantly remain stable,trend/description
+5,1,significantly rise,trend/description
+5,1,slightly climb,trend/description
+5,1,slightly decline,trend/description
+5,1,slightly decrease,trend/description
+5,1,slightly drop,trend/description
+5,1,slightly fall,trend/description
+5,1,slightly fluctuate,trend/description
+5,1,slightly increase,trend/description
+5,1,slightly reach a peak,trend/description
+5,1,slightly remain stable,trend/description
+5,1,slightly rise,trend/description
+5,1,steadily climb,trend/description
+5,1,steadily decline,trend/description
+5,1,steadily decrease,trend/description
+5,1,steadily drop,trend/description
+5,1,steadily fall,trend/description
+5,1,steadily fluctuate,trend/description
+5,1,steadily increase,trend/description
+5,1,steadily reach a peak,trend/description
+5,1,steadily remain stable,trend/description
+5,1,steadily rise,trend/description
+6,1,considerably decrease,trend/description
+6,1,considerably drop,trend/description
+6,1,considerably fall,trend/description
+6,1,considerably fluctuate,trend/description
+6,1,considerably increase,trend/description
+6,1,considerably level off,trend/description
+6,1,considerably peak,trend/description
+6,1,considerably plummet,trend/description
+6,1,considerably rise,trend/description
+6,1,considerably surge,trend/description
+6,1,gradually decrease,trend/description
+6,1,gradually drop,trend/description
+6,1,gradually fall,trend/description
+6,1,gradually fluctuate,trend/description
+6,1,gradually increase,trend/description
+6,1,gradually level off,trend/description
+6,1,gradually peak,trend/description
+6,1,gradually plummet,trend/description
+6,1,gradually rise,trend/description
+6,1,gradually surge,trend/description
+6,1,markedly decrease,trend/description
+6,1,markedly drop,trend/description
+6,1,markedly fall,trend/description
+6,1,markedly fluctuate,trend/description
+6,1,markedly increase,trend/description
+6,1,markedly level off,trend/description
+6,1,markedly peak,trend/description
+6,1,markedly plummet,trend/description
+6,1,markedly rise,trend/description
+6,1,markedly surge,trend/description
+6,1,steadily decrease,trend/description
+6,1,steadily drop,trend/description
+6,1,steadily fall,trend/description
+6,1,steadily fluctuate,trend/description
+6,1,steadily increase,trend/description
+6,1,steadily level off,trend/description
+6,1,steadily peak,trend/description
+6,1,steadily plummet,trend/description
+6,1,steadily rise,trend/description
+6,1,steadily surge,trend/description
+6,1,substantially decrease,trend/description
+6,1,substantially drop,trend/description
+6,1,substantially fall,trend/description
+6,1,substantially fluctuate,trend/description
+6,1,substantially increase,trend/description
+6,1,substantially level off,trend/description
+6,1,substantially peak,trend/description
+6,1,substantially plummet,trend/description
+6,1,substantially rise,trend/description
+6,1,substantially surge,trend/description
+7,1,dramatically diminish,trend/description
+7,1,dramatically escalate,trend/description
+7,1,dramatically fluctuate,trend/description
+7,1,dramatically intensify,trend/description
+7,1,dramatically peak,trend/description
+7,1,dramatically plateau,trend/description
+7,1,dramatically plummet,trend/description
+7,1,dramatically soar,trend/description
+7,1,dramatically stabilise,trend/description
+7,1,dramatically wane,trend/description
+7,1,gradually diminish,trend/description
+7,1,gradually escalate,trend/description
+7,1,gradually fluctuate,trend/description
+7,1,gradually intensify,trend/description
+7,1,gradually peak,trend/description
+7,1,gradually plateau,trend/description
+7,1,gradually plummet,trend/description
+7,1,gradually soar,trend/description
+7,1,gradually stabilise,trend/description
+7,1,gradually wane,trend/description
+7,1,progressively diminish,trend/description
+7,1,progressively escalate,trend/description
+7,1,progressively fluctuate,trend/description
+7,1,progressively intensify,trend/description
+7,1,progressively peak,trend/description
+7,1,progressively plateau,trend/description
+7,1,progressively plummet,trend/description
+7,1,progressively soar,trend/description
+7,1,progressively stabilise,trend/description
+7,1,progressively wane,trend/description
+7,1,sharply diminish,trend/description
+7,1,sharply escalate,trend/description
+7,1,sharply fluctuate,trend/description
+7,1,sharply intensify,trend/description
+7,1,sharply peak,trend/description
+7,1,sharply plateau,trend/description
+7,1,sharply plummet,trend/description
+7,1,sharply soar,trend/description
+7,1,sharply stabilise,trend/description
+7,1,sharply wane,trend/description
+7,1,significantly diminish,trend/description
+7,1,significantly escalate,trend/description
+7,1,significantly fluctuate,trend/description
+7,1,significantly intensify,trend/description
+7,1,significantly peak,trend/description
+7,1,significantly plateau,trend/description
+7,1,significantly plummet,trend/description
+7,1,significantly soar,trend/description
+7,1,significantly stabilise,trend/description
+7,1,significantly wane,trend/description
+8,1,considerably decline,trend/description
+8,1,considerably deteriorate,trend/description
+8,1,considerably drop off,trend/description
+8,1,considerably escalate,trend/description
+8,1,considerably fluctuate,trend/description
+8,1,considerably peak,trend/description
+8,1,considerably plateau,trend/description
+8,1,considerably stabilise,trend/description
+8,1,considerably stagnate,trend/description
+8,1,considerably surge,trend/description
+8,1,marginally decline,trend/description
+8,1,marginally deteriorate,trend/description
+8,1,marginally drop off,trend/description
+8,1,marginally escalate,trend/description
+8,1,marginally fluctuate,trend/description
+8,1,marginally peak,trend/description
+8,1,marginally plateau,trend/description
+8,1,marginally stabilise,trend/description
+8,1,marginally stagnate,trend/description
+8,1,marginally surge,trend/description
+8,1,noticeably decline,trend/description
+8,1,noticeably deteriorate,trend/description
+8,1,noticeably drop off,trend/description
+8,1,noticeably escalate,trend/description
+8,1,noticeably fluctuate,trend/description
+8,1,noticeably peak,trend/description
+8,1,noticeably plateau,trend/description
+8,1,noticeably stabilise,trend/description
+8,1,noticeably stagnate,trend/description
+8,1,noticeably surge,trend/description
+8,1,steeply decline,trend/description
+8,1,steeply deteriorate,trend/description
+8,1,steeply drop off,trend/description
+8,1,steeply escalate,trend/description
+8,1,steeply fluctuate,trend/description
+8,1,steeply peak,trend/description
+8,1,steeply plateau,trend/description
+8,1,steeply stabilise,trend/description
+8,1,steeply stagnate,trend/description
+8,1,steeply surge,trend/description
+8,1,substantially decline,trend/description
+8,1,substantially deteriorate,trend/description
+8,1,substantially drop off,trend/description
+8,1,substantially escalate,trend/description
+8,1,substantially fluctuate,trend/description
+8,1,substantially peak,trend/description
+8,1,substantially plateau,trend/description
+8,1,substantially stabilise,trend/description
+8,1,substantially stagnate,trend/description
+8,1,substantially surge,trend/description
+9,1,exponentially decline,trend/description
+9,1,exponentially escalate,trend/description
+9,1,exponentially fluctuate,trend/description
+9,1,exponentially peak,trend/description
+9,1,exponentially plateau,trend/description
+9,1,exponentially stabilise,trend/description
+9,1,exponentially stagnate,trend/description
+9,1,exponentially subside,trend/description
+9,1,exponentially surge,trend/description
+9,1,exponentially tail off,trend/description
+9,1,incrementally decline,trend/description
+9,1,incrementally escalate,trend/description
+9,1,incrementally fluctuate,trend/description
+9,1,incrementally peak,trend/description
+9,1,incrementally plateau,trend/description
+9,1,incrementally stabilise,trend/description
+9,1,incrementally stagnate,trend/description
+9,1,incrementally subside,trend/description
+9,1,incrementally surge,trend/description
+9,1,incrementally tail off,trend/description
+9,1,marginally decline,trend/description
+9,1,marginally escalate,trend/description
+9,1,marginally fluctuate,trend/description
+9,1,marginally peak,trend/description
+9,1,marginally plateau,trend/description
+9,1,marginally stabilise,trend/description
+9,1,marginally stagnate,trend/description
+9,1,marginally subside,trend/description
+9,1,marginally surge,trend/description
+9,1,marginally tail off,trend/description
+9,1,markedly decline,trend/description
+9,1,markedly escalate,trend/description
+9,1,markedly fluctuate,trend/description
+9,1,markedly peak,trend/description
+9,1,markedly plateau,trend/description
+9,1,markedly stabilise,trend/description
+9,1,markedly stagnate,trend/description
+9,1,markedly subside,trend/description
+9,1,markedly surge,trend/description
+9,1,markedly tail off,trend/description
+9,1,precipitously decline,trend/description
+9,1,precipitously escalate,trend/description
+9,1,precipitously fluctuate,trend/description
+9,1,precipitously peak,trend/description
+9,1,precipitously plateau,trend/description
+9,1,precipitously stabilise,trend/description
+9,1,precipitously stagnate,trend/description
+9,1,precipitously subside,trend/description
+9,1,precipitously surge,trend/description
+9,1,precipitously tail off,trend/description
+1,2,First,cohesion/argument
+1,2,"First, also",cohesion/argument
+1,2,"First, and",cohesion/argument
+1,2,"First, because of this",cohesion/argument
+1,2,"First, but",cohesion/argument
+1,2,"First, for example",cohesion/argument
+1,2,"First, for instance",cohesion/argument
+1,2,"First, however",cohesion/argument
+1,2,"First, in general",cohesion/argument
+1,2,"First, overall",cohesion/argument
+1,2,"First, so",cohesion/argument
+1,2,I believe,cohesion/argument
+1,2,"I believe, also",cohesion/argument
+1,2,"I believe, and",cohesion/argument
+1,2,"I believe, because of this",cohesion/argument
+1,2,"I believe, but",cohesion/argument
+1,2,"I believe, for example",cohesion/argument
+1,2,"I believe, for instance",cohesion/argument
+1,2,"I believe, however",cohesion/argument
+1,2,"I believe, in general",cohesion/argument
+1,2,"I believe, overall",cohesion/argument
+1,2,"I believe, so",cohesion/argument
+1,2,I think,cohesion/argument
+1,2,"I think, also",cohesion/argument
+1,2,"I think, and",cohesion/argument
+1,2,"I think, because of this",cohesion/argument
+1,2,"I think, but",cohesion/argument
+1,2,"I think, for example",cohesion/argument
+1,2,"I think, for instance",cohesion/argument
+1,2,"I think, however",cohesion/argument
+1,2,"I think, in general",cohesion/argument
+1,2,"I think, overall",cohesion/argument
+1,2,"I think, so",cohesion/argument
+1,2,In conclusion,cohesion/argument
+1,2,"In conclusion, also",cohesion/argument
+1,2,"In conclusion, and",cohesion/argument
+1,2,"In conclusion, because of this",cohesion/argument
+1,2,"In conclusion, but",cohesion/argument
+1,2,"In conclusion, for example",cohesion/argument
+1,2,"In conclusion, for instance",cohesion/argument
+1,2,"In conclusion, however",cohesion/argument
+1,2,"In conclusion, in general",cohesion/argument
+1,2,"In conclusion, overall",cohesion/argument
+1,2,"In conclusion, so",cohesion/argument
+1,2,In my opinion,cohesion/argument
+1,2,"In my opinion, also",cohesion/argument
+1,2,"In my opinion, and",cohesion/argument
+1,2,"In my opinion, because of this",cohesion/argument
+1,2,"In my opinion, but",cohesion/argument
+1,2,"In my opinion, for example",cohesion/argument
+2,2,Finally,cohesion/argument
+2,2,"Finally, also",cohesion/argument
+2,2,"Finally, as a result",cohesion/argument
+2,2,"Finally, because",cohesion/argument
+2,2,"Finally, for example",cohesion/argument
+2,2,"Finally, for instance",cohesion/argument
+2,2,"Finally, however",cohesion/argument
+2,2,"Finally, in addition",cohesion/argument
+2,2,"Finally, moreover",cohesion/argument
+2,2,"Finally, on the other hand",cohesion/argument
+2,2,"Finally, therefore",cohesion/argument
+2,2,Firstly,cohesion/argument
+2,2,"Firstly, also",cohesion/argument
+2,2,"Firstly, as a result",cohesion/argument
+2,2,"Firstly, because",cohesion/argument
+2,2,"Firstly, for example",cohesion/argument
+2,2,"Firstly, for instance",cohesion/argument
+2,2,"Firstly, however",cohesion/argument
+2,2,"Firstly, in addition",cohesion/argument
+2,2,"Firstly, moreover",cohesion/argument
+2,2,"Firstly, on the other hand",cohesion/argument
+2,2,"Firstly, therefore",cohesion/argument
+2,2,From my perspective,cohesion/argument
+2,2,"From my perspective, also",cohesion/argument
+2,2,"From my perspective, as a result",cohesion/argument
+2,2,"From my perspective, because",cohesion/argument
+2,2,"From my perspective, for example",cohesion/argument
+2,2,"From my perspective, for instance",cohesion/argument
+2,2,"From my perspective, however",cohesion/argument
+2,2,"From my perspective, in addition",cohesion/argument
+2,2,"From my perspective, moreover",cohesion/argument
+2,2,"From my perspective, on the other hand",cohesion/argument
+2,2,"From my perspective, therefore",cohesion/argument
+2,2,In contrast,cohesion/argument
+2,2,"In contrast, also",cohesion/argument
+2,2,"In contrast, as a result",cohesion/argument
+2,2,"In contrast, because",cohesion/argument
+2,2,"In contrast, for example",cohesion/argument
+2,2,"In contrast, for instance",cohesion/argument
+2,2,"In contrast, however",cohesion/argument
+2,2,"In contrast, in addition",cohesion/argument
+2,2,"In contrast, moreover",cohesion/argument
+2,2,"In contrast, on the other hand",cohesion/argument
+2,2,"In contrast, therefore",cohesion/argument
+2,2,In my view,cohesion/argument
+2,2,"In my view, also",cohesion/argument
+2,2,"In my view, as a result",cohesion/argument
+2,2,"In my view, because",cohesion/argument
+2,2,"In my view, for example",cohesion/argument
+2,2,"In my view, for instance",cohesion/argument
+3,2,From my point of view,cohesion/argument
+3,2,"From my point of view, as a result",cohesion/argument
+3,2,"From my point of view, for example",cohesion/argument
+3,2,"From my point of view, for instance",cohesion/argument
+3,2,"From my point of view, however",cohesion/argument
+3,2,"From my point of view, in addition",cohesion/argument
+3,2,"From my point of view, in particular",cohesion/argument
+3,2,"From my point of view, nevertheless",cohesion/argument
+3,2,"From my point of view, on the other hand",cohesion/argument
+3,2,"From my point of view, such as",cohesion/argument
+3,2,"From my point of view, therefore",cohesion/argument
+3,2,In conclusion,cohesion/argument
+3,2,"In conclusion, as a result",cohesion/argument
+3,2,"In conclusion, for example",cohesion/argument
+3,2,"In conclusion, for instance",cohesion/argument
+3,2,"In conclusion, however",cohesion/argument
+3,2,"In conclusion, in addition",cohesion/argument
+3,2,"In conclusion, in particular",cohesion/argument
+3,2,"In conclusion, nevertheless",cohesion/argument
+3,2,"In conclusion, on the other hand",cohesion/argument
+3,2,"In conclusion, such as",cohesion/argument
+3,2,"In conclusion, therefore",cohesion/argument
+3,2,In general,cohesion/argument
+3,2,"In general, as a result",cohesion/argument
+3,2,"In general, for example",cohesion/argument
+3,2,"In general, for instance",cohesion/argument
+3,2,"In general, however",cohesion/argument
+3,2,"In general, in addition",cohesion/argument
+3,2,"In general, in particular",cohesion/argument
+3,2,"In general, nevertheless",cohesion/argument
+3,2,"In general, on the other hand",cohesion/argument
+3,2,"In general, such as",cohesion/argument
+3,2,"In general, therefore",cohesion/argument
+3,2,In summary,cohesion/argument
+3,2,"In summary, as a result",cohesion/argument
+3,2,"In summary, for example",cohesion/argument
+3,2,"In summary, for instance",cohesion/argument
+3,2,"In summary, however",cohesion/argument
+3,2,"In summary, in addition",cohesion/argument
+3,2,"In summary, in particular",cohesion/argument
+3,2,"In summary, nevertheless",cohesion/argument
+3,2,"In summary, on the other hand",cohesion/argument
+3,2,"In summary, such as",cohesion/argument
+3,2,"In summary, therefore",cohesion/argument
+3,2,It is clear that,cohesion/argument
+3,2,"It is clear that, as a result",cohesion/argument
+3,2,"It is clear that, for example",cohesion/argument
+3,2,"It is clear that, for instance",cohesion/argument
+3,2,"It is clear that, however",cohesion/argument
+3,2,"It is clear that, in addition",cohesion/argument
+4,2,acknowledge,cohesion/argument
+4,2,argue,cohesion/argument
+4,2,broadly,cohesion/argument
+4,2,broadly acknowledge,cohesion/argument
+4,2,broadly argue,cohesion/argument
+4,2,broadly claim,cohesion/argument
+4,2,broadly contend,cohesion/argument
+4,2,broadly demonstrate,cohesion/argument
+4,2,broadly emphasise,cohesion/argument
+4,2,broadly highlight,cohesion/argument
+4,2,broadly illustrate,cohesion/argument
+4,2,broadly maintain,cohesion/argument
+4,2,broadly suggest,cohesion/argument
+4,2,claim,cohesion/argument
+4,2,commonly,cohesion/argument
+4,2,commonly acknowledge,cohesion/argument
+4,2,commonly argue,cohesion/argument
+4,2,commonly claim,cohesion/argument
+4,2,commonly contend,cohesion/argument
+4,2,commonly demonstrate,cohesion/argument
+4,2,commonly emphasise,cohesion/argument
+4,2,commonly highlight,cohesion/argument
+4,2,commonly illustrate,cohesion/argument
+4,2,commonly maintain,cohesion/argument
+4,2,commonly suggest,cohesion/argument
+4,2,contend,cohesion/argument
+4,2,demonstrate,cohesion/argument
+4,2,emphasise,cohesion/argument
+4,2,especially,cohesion/argument
+4,2,especially acknowledge,cohesion/argument
+4,2,especially argue,cohesion/argument
+4,2,especially claim,cohesion/argument
+4,2,especially contend,cohesion/argument
+4,2,especially demonstrate,cohesion/argument
+4,2,especially emphasise,cohesion/argument
+4,2,especially highlight,cohesion/argument
+4,2,especially illustrate,cohesion/argument
+4,2,especially maintain,cohesion/argument
+4,2,especially suggest,cohesion/argument
+4,2,firmly,cohesion/argument
+4,2,firmly acknowledge,cohesion/argument
+4,2,firmly argue,cohesion/argument
+4,2,firmly claim,cohesion/argument
+4,2,firmly contend,cohesion/argument
+4,2,firmly demonstrate,cohesion/argument
+4,2,firmly emphasise,cohesion/argument
+4,2,firmly highlight,cohesion/argument
+4,2,firmly illustrate,cohesion/argument
+4,2,firmly maintain,cohesion/argument
+4,2,firmly suggest,cohesion/argument
+5,2,argue,cohesion/argument
+5,2,assert,cohesion/argument
+5,2,commonly,cohesion/argument
+5,2,commonly argue,cohesion/argument
+5,2,commonly assert,cohesion/argument
+5,2,commonly contend,cohesion/argument
+5,2,commonly demonstrate,cohesion/argument
+5,2,commonly illustrate,cohesion/argument
+5,2,commonly imply,cohesion/argument
+5,2,commonly indicate,cohesion/argument
+5,2,commonly maintain,cohesion/argument
+5,2,commonly propose,cohesion/argument
+5,2,commonly suggest,cohesion/argument
+5,2,contend,cohesion/argument
+5,2,convincingly,cohesion/argument
+5,2,convincingly argue,cohesion/argument
+5,2,convincingly assert,cohesion/argument
+5,2,convincingly contend,cohesion/argument
+5,2,convincingly demonstrate,cohesion/argument
+5,2,convincingly illustrate,cohesion/argument
+5,2,convincingly imply,cohesion/argument
+5,2,convincingly indicate,cohesion/argument
+5,2,convincingly maintain,cohesion/argument
+5,2,convincingly propose,cohesion/argument
+5,2,convincingly suggest,cohesion/argument
+5,2,demonstrate,cohesion/argument
+5,2,firmly,cohesion/argument
+5,2,firmly argue,cohesion/argument
+5,2,firmly assert,cohesion/argument
+5,2,firmly contend,cohesion/argument
+5,2,firmly demonstrate,cohesion/argument
+5,2,firmly illustrate,cohesion/argument
+5,2,firmly imply,cohesion/argument
+5,2,firmly indicate,cohesion/argument
+5,2,firmly maintain,cohesion/argument
+5,2,firmly propose,cohesion/argument
+5,2,firmly suggest,cohesion/argument
+5,2,generally,cohesion/argument
+5,2,generally argue,cohesion/argument
+5,2,generally assert,cohesion/argument
+5,2,generally contend,cohesion/argument
+5,2,generally demonstrate,cohesion/argument
+5,2,generally illustrate,cohesion/argument
+5,2,generally imply,cohesion/argument
+5,2,generally indicate,cohesion/argument
+5,2,generally maintain,cohesion/argument
+5,2,generally propose,cohesion/argument
+5,2,generally suggest,cohesion/argument
+5,2,illustrate,cohesion/argument
+5,2,imply,cohesion/argument
+6,2,A common view is that,cohesion/argument
+6,2,"A common view is that, one key reason is that",cohesion/argument
+6,2,"A common view is that, this can be attributed to",cohesion/argument
+6,2,"A common view is that, this can be explained by",cohesion/argument
+6,2,"A common view is that, this frequently leads to",cohesion/argument
+6,2,"A common view is that, this highlights the fact that",cohesion/argument
+6,2,"A common view is that, this is largely due to",cohesion/argument
+6,2,"A common view is that, this is mainly because",cohesion/argument
+6,2,"A common view is that, this may contribute to",cohesion/argument
+6,2,"A common view is that, this often results in",cohesion/argument
+6,2,"A common view is that, this raises the issue of",cohesion/argument
+6,2,It is frequently argued that,cohesion/argument
+6,2,"It is frequently argued that, one key reason is that",cohesion/argument
+6,2,"It is frequently argued that, this can be attributed to",cohesion/argument
+6,2,"It is frequently argued that, this can be explained by",cohesion/argument
+6,2,"It is frequently argued that, this frequently leads to",cohesion/argument
+6,2,"It is frequently argued that, this highlights the fact that",cohesion/argument
+6,2,"It is frequently argued that, this is largely due to",cohesion/argument
+6,2,"It is frequently argued that, this is mainly because",cohesion/argument
+6,2,"It is frequently argued that, this may contribute to",cohesion/argument
+6,2,"It is frequently argued that, this often results in",cohesion/argument
+6,2,"It is frequently argued that, this raises the issue of",cohesion/argument
+6,2,It is generally accepted that,cohesion/argument
+6,2,"It is generally accepted that, one key reason is that",cohesion/argument
+6,2,"It is generally accepted that, this can be attributed to",cohesion/argument
+6,2,"It is generally accepted that, this can be explained by",cohesion/argument
+6,2,"It is generally accepted that, this frequently leads to",cohesion/argument
+6,2,"It is generally accepted that, this highlights the fact that",cohesion/argument
+6,2,"It is generally accepted that, this is largely due to",cohesion/argument
+6,2,"It is generally accepted that, this is mainly because",cohesion/argument
+6,2,"It is generally accepted that, this may contribute to",cohesion/argument
+6,2,"It is generally accepted that, this often results in",cohesion/argument
+6,2,"It is generally accepted that, this raises the issue of",cohesion/argument
+6,2,It is increasingly recognised that,cohesion/argument
+6,2,"It is increasingly recognised that, one key reason is that",cohesion/argument
+6,2,"It is increasingly recognised that, this can be attributed to",cohesion/argument
+6,2,"It is increasingly recognised that, this can be explained by",cohesion/argument
+6,2,"It is increasingly recognised that, this frequently leads to",cohesion/argument
+6,2,"It is increasingly recognised that, this highlights the fact that",cohesion/argument
+6,2,"It is increasingly recognised that, this is largely due to",cohesion/argument
+6,2,"It is increasingly recognised that, this is mainly because",cohesion/argument
+6,2,"It is increasingly recognised that, this may contribute to",cohesion/argument
+6,2,"It is increasingly recognised that, this often results in",cohesion/argument
+6,2,"It is increasingly recognised that, this raises the issue of",cohesion/argument
+6,2,It is often claimed that,cohesion/argument
+6,2,"It is often claimed that, one key reason is that",cohesion/argument
+6,2,"It is often claimed that, this can be attributed to",cohesion/argument
+6,2,"It is often claimed that, this can be explained by",cohesion/argument
+6,2,"It is often claimed that, this frequently leads to",cohesion/argument
+6,2,"It is often claimed that, this highlights the fact that",cohesion/argument
+7,2,Conversely,cohesion/argument
+7,2,"Conversely, it could be argued that",cohesion/argument
+7,2,"Conversely, it is also important to remember that",cohesion/argument
+7,2,"Conversely, it is crucial to note that",cohesion/argument
+7,2,"Conversely, it is essential to recognise that",cohesion/argument
+7,2,"Conversely, it is important to acknowledge that",cohesion/argument
+7,2,"Conversely, it is reasonable to assume that",cohesion/argument
+7,2,"Conversely, it is worth considering that",cohesion/argument
+7,2,"Conversely, this demonstrates that",cohesion/argument
+7,2,"Conversely, this illustrates that",cohesion/argument
+7,2,"Conversely, this suggests that",cohesion/argument
+7,2,From a broader perspective,cohesion/argument
+7,2,"From a broader perspective, it could be argued that",cohesion/argument
+7,2,"From a broader perspective, it is also important to remember that",cohesion/argument
+7,2,"From a broader perspective, it is crucial to note that",cohesion/argument
+7,2,"From a broader perspective, it is essential to recognise that",cohesion/argument
+7,2,"From a broader perspective, it is important to acknowledge that",cohesion/argument
+7,2,"From a broader perspective, it is reasonable to assume that",cohesion/argument
+7,2,"From a broader perspective, it is worth considering that",cohesion/argument
+7,2,"From a broader perspective, this demonstrates that",cohesion/argument
+7,2,"From a broader perspective, this illustrates that",cohesion/argument
+7,2,"From a broader perspective, this suggests that",cohesion/argument
+7,2,From a societal perspective,cohesion/argument
+7,2,"From a societal perspective, it could be argued that",cohesion/argument
+7,2,"From a societal perspective, it is also important to remember that",cohesion/argument
+7,2,"From a societal perspective, it is crucial to note that",cohesion/argument
+7,2,"From a societal perspective, it is essential to recognise that",cohesion/argument
+7,2,"From a societal perspective, it is important to acknowledge that",cohesion/argument
+7,2,"From a societal perspective, it is reasonable to assume that",cohesion/argument
+7,2,"From a societal perspective, it is worth considering that",cohesion/argument
+7,2,"From a societal perspective, this demonstrates that",cohesion/argument
+7,2,"From a societal perspective, this illustrates that",cohesion/argument
+7,2,"From a societal perspective, this suggests that",cohesion/argument
+7,2,In contrast,cohesion/argument
+7,2,"In contrast, it could be argued that",cohesion/argument
+7,2,"In contrast, it is also important to remember that",cohesion/argument
+7,2,"In contrast, it is crucial to note that",cohesion/argument
+7,2,"In contrast, it is essential to recognise that",cohesion/argument
+7,2,"In contrast, it is important to acknowledge that",cohesion/argument
+7,2,"In contrast, it is reasonable to assume that",cohesion/argument
+7,2,"In contrast, it is worth considering that",cohesion/argument
+7,2,"In contrast, this demonstrates that",cohesion/argument
+7,2,"In contrast, this illustrates that",cohesion/argument
+7,2,"In contrast, this suggests that",cohesion/argument
+7,2,In light of this,cohesion/argument
+7,2,"In light of this, it could be argued that",cohesion/argument
+7,2,"In light of this, it is also important to remember that",cohesion/argument
+7,2,"In light of this, it is crucial to note that",cohesion/argument
+7,2,"In light of this, it is essential to recognise that",cohesion/argument
+7,2,"In light of this, it is important to acknowledge that",cohesion/argument
+8,2,beneficial,cohesion/argument
+8,2,beneficial challenge,cohesion/argument
+8,2,beneficial consequence,cohesion/argument
+8,2,beneficial impact,cohesion/argument
+8,2,beneficial implication,cohesion/argument
+8,2,beneficial issue,cohesion/argument
+8,2,beneficial measure,cohesion/argument
+8,2,beneficial phenomenon,cohesion/argument
+8,2,beneficial policy,cohesion/argument
+8,2,beneficial strategy,cohesion/argument
+8,2,beneficial trend,cohesion/argument
+8,2,challenge,cohesion/argument
+8,2,consequence,cohesion/argument
+8,2,controversial,cohesion/argument
+8,2,controversial challenge,cohesion/argument
+8,2,controversial consequence,cohesion/argument
+8,2,controversial impact,cohesion/argument
+8,2,controversial implication,cohesion/argument
+8,2,controversial issue,cohesion/argument
+8,2,controversial measure,cohesion/argument
+8,2,controversial phenomenon,cohesion/argument
+8,2,controversial policy,cohesion/argument
+8,2,controversial strategy,cohesion/argument
+8,2,controversial trend,cohesion/argument
+8,2,detrimental,cohesion/argument
+8,2,detrimental challenge,cohesion/argument
+8,2,detrimental consequence,cohesion/argument
+8,2,detrimental impact,cohesion/argument
+8,2,detrimental implication,cohesion/argument
+8,2,detrimental issue,cohesion/argument
+8,2,detrimental measure,cohesion/argument
+8,2,detrimental phenomenon,cohesion/argument
+8,2,detrimental policy,cohesion/argument
+8,2,detrimental strategy,cohesion/argument
+8,2,detrimental trend,cohesion/argument
+8,2,impact,cohesion/argument
+8,2,implication,cohesion/argument
+8,2,inevitable,cohesion/argument
+8,2,inevitable challenge,cohesion/argument
+8,2,inevitable consequence,cohesion/argument
+8,2,inevitable impact,cohesion/argument
+8,2,inevitable implication,cohesion/argument
+8,2,inevitable issue,cohesion/argument
+8,2,inevitable measure,cohesion/argument
+8,2,inevitable phenomenon,cohesion/argument
+8,2,inevitable policy,cohesion/argument
+8,2,inevitable strategy,cohesion/argument
+8,2,inevitable trend,cohesion/argument
+8,2,issue,cohesion/argument
+8,2,measure,cohesion/argument
+9,2,All things considered,cohesion/argument
+9,2,"All things considered, this calls into question the assumption that",cohesion/argument
+9,2,"All things considered, this challenges the conventional wisdom that",cohesion/argument
+9,2,"All things considered, this has far-reaching implications for",cohesion/argument
+9,2,"All things considered, this highlights a fundamental tension between",cohesion/argument
+9,2,"All things considered, this illustrates the complexity of",cohesion/argument
+9,2,"All things considered, this lends support to the view that",cohesion/argument
+9,2,"All things considered, this lends weight to the argument that",cohesion/argument
+9,2,"All things considered, this provides compelling evidence that",cohesion/argument
+9,2,"All things considered, this raises broader questions about",cohesion/argument
+9,2,"All things considered, this undermines the claim that",cohesion/argument
+9,2,From a long-term perspective,cohesion/argument
+9,2,"From a long-term perspective, this calls into question the assumption that",cohesion/argument
+9,2,"From a long-term perspective, this challenges the conventional wisdom that",cohesion/argument
+9,2,"From a long-term perspective, this has far-reaching implications for",cohesion/argument
+9,2,"From a long-term perspective, this highlights a fundamental tension between",cohesion/argument
+9,2,"From a long-term perspective, this illustrates the complexity of",cohesion/argument
+9,2,"From a long-term perspective, this lends support to the view that",cohesion/argument
+9,2,"From a long-term perspective, this lends weight to the argument that",cohesion/argument
+9,2,"From a long-term perspective, this provides compelling evidence that",cohesion/argument
+9,2,"From a long-term perspective, this raises broader questions about",cohesion/argument
+9,2,"From a long-term perspective, this undermines the claim that",cohesion/argument
+9,2,From a pragmatic standpoint,cohesion/argument
+9,2,"From a pragmatic standpoint, this calls into question the assumption that",cohesion/argument
+9,2,"From a pragmatic standpoint, this challenges the conventional wisdom that",cohesion/argument
+9,2,"From a pragmatic standpoint, this has far-reaching implications for",cohesion/argument
+9,2,"From a pragmatic standpoint, this highlights a fundamental tension between",cohesion/argument
+9,2,"From a pragmatic standpoint, this illustrates the complexity of",cohesion/argument
+9,2,"From a pragmatic standpoint, this lends support to the view that",cohesion/argument
+9,2,"From a pragmatic standpoint, this lends weight to the argument that",cohesion/argument
+9,2,"From a pragmatic standpoint, this provides compelling evidence that",cohesion/argument
+9,2,"From a pragmatic standpoint, this raises broader questions about",cohesion/argument
+9,2,"From a pragmatic standpoint, this undermines the claim that",cohesion/argument
+9,2,From an ethical standpoint,cohesion/argument
+9,2,"From an ethical standpoint, this calls into question the assumption that",cohesion/argument
+9,2,"From an ethical standpoint, this challenges the conventional wisdom that",cohesion/argument
+9,2,"From an ethical standpoint, this has far-reaching implications for",cohesion/argument
+9,2,"From an ethical standpoint, this highlights a fundamental tension between",cohesion/argument
+9,2,"From an ethical standpoint, this illustrates the complexity of",cohesion/argument
+9,2,"From an ethical standpoint, this lends support to the view that",cohesion/argument
+9,2,"From an ethical standpoint, this lends weight to the argument that",cohesion/argument
+9,2,"From an ethical standpoint, this provides compelling evidence that",cohesion/argument
+9,2,"From an ethical standpoint, this raises broader questions about",cohesion/argument
+9,2,"From an ethical standpoint, this undermines the claim that",cohesion/argument
+9,2,In practical terms,cohesion/argument
+9,2,"In practical terms, this calls into question the assumption that",cohesion/argument
+9,2,"In practical terms, this challenges the conventional wisdom that",cohesion/argument
+9,2,"In practical terms, this has far-reaching implications for",cohesion/argument
+9,2,"In practical terms, this highlights a fundamental tension between",cohesion/argument
+9,2,"In practical terms, this illustrates the complexity of",cohesion/argument

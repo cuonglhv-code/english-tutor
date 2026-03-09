@@ -9,8 +9,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import type { CsvRow } from "@/lib/readCsv";
+import type { CsvRow, VocabRow } from "@/lib/readCsv";
 import { viTranslations } from "@/lib/translations";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // ─── i18n strings ─────────────────────────────────────────────────────────────
 
@@ -141,20 +148,68 @@ function TaskAccordion({
   );
 }
 
+// ─── Key Vocab renders ────────────────────────────────────────────────────────
+
+function VocabAccordion({ vocabRows }: { vocabRows: VocabRow[] }) {
+  // Group by category, then sort by band if needed
+  const grouped = vocabRows.reduce((acc, row) => {
+    if (!acc[row.category]) acc[row.category] = [];
+    acc[row.category].push(row);
+    return acc;
+  }, {} as Record<string, VocabRow[]>);
+
+  const categories = Object.keys(grouped).sort();
+
+  return (
+    <Accordion type="single" collapsible className="w-full">
+      {categories.map((cat, idx) => (
+        <AccordionItem key={cat} value={`cat-${idx}`} className="border rounded-xl mb-3 px-4 last:mb-0">
+          <AccordionTrigger className="hover:no-underline py-3 text-left">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-jaxtina-blue border-jaxtina-blue/30">
+                {cat.toUpperCase()}
+              </Badge>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="pt-0">
+            <div className="border-t pt-2 grid gap-1">
+              {grouped[cat].sort((a, b) => b.band - a.band).map((v, i) => (
+                <div key={i} className="flex flex-wrap items-center justify-between p-2 hover:bg-muted/50 rounded-lg">
+                  <span className="font-medium text-sm text-foreground">{v.vocabItem}</span>
+                  <div className="flex gap-2 items-center">
+                    <Badge variant="secondary" className="text-[10px] bg-jaxtina-red/10 text-jaxtina-red">
+                      Task {v.task}
+                    </Badge>
+                    <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white border-0 text-[10px]">
+                      Band {v.band}+
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  );
+}
+
 // ─── Main page client component ───────────────────────────────────────────────
 
 interface Props {
   task1: CsvRow[];
   task2: CsvRow[];
+  vocab: VocabRow[];
 }
 
-export function Writing101Client({ task1, task2 }: Props) {
+export function Writing101Client({ task1, task2, vocab }: Props) {
   const [activeTab, setActiveTab] = useState<"task1" | "task2">("task1");
+  const [viewMode, setViewMode] = useState<"explanation" | "vocab">("explanation");
+  const [openItems, setOpenItems] = useState<string[]>([]);
 
   const rows = activeTab === "task1" ? task1 : task2;
+  const filteredVocab = vocab.filter(v => activeTab === "task1" ? v.task === 1 : v.task === 2);
   const allIds = rows.map((_, i) => `row-${i}`);
-
-  const [openItems, setOpenItems] = useState<string[]>([]);
 
   const toggleAll = () => {
     setOpenItems(openItems.length === allIds.length ? [] : allIds);
@@ -179,35 +234,54 @@ export function Writing101Client({ task1, task2 }: Props) {
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 flex-wrap">
-        {(["task1", "task2"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => switchTab(tab)}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors border ${activeTab === tab
-                ? "bg-jaxtina-red text-white border-jaxtina-red"
-                : "bg-background border-border text-muted-foreground hover:bg-muted"
-              }`}
-          >
-            {tab === "task1" ? L("tab1") : L("tab2")}
-          </button>
-        ))}
+      {/* Tabs & Controls */}
+      <div className="flex gap-4 flex-wrap items-center">
+        {/* Dropdown 1: View Mode */}
+        <div className="w-48">
+          <Select value={viewMode} onValueChange={(v: any) => setViewMode(v)}>
+            <SelectTrigger className="font-semibold bg-white">
+              <SelectValue placeholder="Select view..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="explanation">Task Explanation</SelectItem>
+              <SelectItem value="vocab">Key Vocabulary</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-        <button
-          onClick={toggleAll}
-          className="ml-auto rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground border border-border hover:bg-muted transition-colors"
-        >
-          {openItems.length === allIds.length ? L("collapseAll") : L("expandAll")}
-        </button>
+        {/* Dropdown 2: Task */}
+        <div className="w-40">
+          <Select value={activeTab} onValueChange={(v: any) => switchTab(v)}>
+            <SelectTrigger className="font-semibold bg-white">
+              <SelectValue placeholder="Select task..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="task1">{L("tab1")}</SelectItem>
+              <SelectItem value="task2">{L("tab2")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {viewMode === "explanation" && (
+          <button
+            onClick={toggleAll}
+            className="ml-auto rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground border border-border hover:bg-muted transition-colors bg-white shadow-sm"
+          >
+            {openItems.length === allIds.length ? L("collapseAll") : L("expandAll")}
+          </button>
+        )}
       </div>
 
-      {/* Accordion list */}
-      <TaskAccordion
-        rows={rows}
-        openItems={openItems}
-        setOpenItems={setOpenItems}
-      />
+      {/* Main Content Area */}
+      {viewMode === "explanation" ? (
+        <TaskAccordion
+          rows={rows}
+          openItems={openItems}
+          setOpenItems={setOpenItems}
+        />
+      ) : (
+        <VocabAccordion vocabRows={filteredVocab} />
+      )}
     </div>
   );
 }

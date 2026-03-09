@@ -1,4 +1,4 @@
-import { readTask1Csv, readTask2Csv } from "@/lib/readCsv";
+import { readTask1Csv, readTask2Csv, readVocabCsv } from "@/lib/readCsv";
 import { Writing101Client } from "./Writing101Client";
 
 export const metadata = {
@@ -9,6 +9,7 @@ export const metadata = {
 export default function Writing101Page() {
   const task1 = readTask1Csv();
   const task2 = readTask2Csv();
+  const vocab = readVocabCsv();
 
-  return <Writing101Client task1={task1} task2={task2} />;
+  return <Writing101Client task1={task1} task2={task2} vocab={vocab} />;
 }
