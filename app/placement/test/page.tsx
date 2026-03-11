@@ -91,12 +91,17 @@ export default function PlacementTestPage() {
     (async () => {
       try {
         const res = await fetch("/api/placement/questions");
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) {
+          const body = await res.text();
+          console.error("[placement/test] questions API error:", res.status, body);
+          throw new Error(body);
+        }
         const json: QuestionsPayload = await res.json();
         setData(json);
         // Start reading timer automatically
         readingTimer.start();
       } catch (e) {
+        console.error("[placement/test] load error:", e);
         setError(t("placement", "errorLoading", lang));
       } finally {
         setLoading(false);
