@@ -10,6 +10,7 @@ const translations = {
     writing101: { en: "Writing 101", vi: "Writing 101" },
     courses: { en: "Courses", vi: "Khóa học" },
     dashboard: { en: "Dashboard", vi: "Tổng quan" },
+    placement: { en: "Placement Test", vi: "Kiểm tra đầu vào" },
     login: { en: "Log in", vi: "Đăng nhập" },
     logout: { en: "Log out", vi: "Đăng xuất" },
     register: { en: "Register", vi: "Đăng ký" },

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -134,6 +134,13 @@ export function Navbar() {
               >
                 <BookOpen className="h-4 w-4" />
                 <span className="hidden sm:inline">{t("nav", "courses", lang)}</span>
+              </Link>
+              <Link
+                href="/placement"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-jaxtina-blue hover:bg-jaxtina-blue/10 transition-colors"
+              >
+                <ClipboardList className="h-4 w-4" />
+                <span className="hidden sm:inline">{t("nav", "placement", lang)}</span>
               </Link>
             </>
           )}
