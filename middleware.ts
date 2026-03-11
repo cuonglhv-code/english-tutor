@@ -9,10 +9,22 @@ const PUBLIC_ROUTES = [
   "/logout",
   "/writing-101",
   "/courses",
-  "/practice"
+  "/practice",
+  // Note: /placement (intro only) is handled via EXACT_PUBLIC_ROUTES below
 ];
-// Routes exempt from the profile-completion redirect
-const PROFILE_EXEMPT = ["/personal-details", "/login", "/register", "/auth", "/logout"];
+
+// Exact-match public routes (only the specific path, not sub-paths)
+const EXACT_PUBLIC_ROUTES = ["/placement"];
+
+// Routes exempt from the profile-completion redirect (new users may take placement test first)
+const PROFILE_EXEMPT = [
+  "/personal-details",
+  "/login",
+  "/register",
+  "/auth",
+  "/logout",
+  "/placement",  // Allow new users to access the full placement flow before completing profile
+];
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -39,7 +51,10 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
 
-  const isPublic = pathname === "/" || PUBLIC_ROUTES.some((r) => pathname.startsWith(r));
+  const isPublic =
+    pathname === "/" ||
+    PUBLIC_ROUTES.some((r) => pathname.startsWith(r)) ||
+    EXACT_PUBLIC_ROUTES.includes(pathname);
 
   // 1. Protect all non-public routes — redirect unauthenticated users to /login
   if (!user && !isPublic) {

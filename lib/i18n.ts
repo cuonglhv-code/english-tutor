@@ -197,6 +197,82 @@ const translations = {
     expandBtn: { en: "View essay plan", vi: "Xem dàn ý" },
   },
 
+  // ─── Placement Test ───────────────────────────────────────────────────────
+  placement: {
+    // Intro page
+    introTitle:    { en: "IELTS Placement Test",    vi: "Bài kiểm tra xếp lớp IELTS" },
+    introDesc:     { en: "This test assesses your current level in Reading, Listening, and Writing to suggest the most suitable study plan.", vi: "Bài kiểm tra này đánh giá trình độ hiện tại của bạn về Reading, Listening và Writing để gợi ý lộ trình học phù hợp nhất." },
+    introDetails:  { en: "3 sections · ~2.5 hours total", vi: "3 phần thi · khoảng 2.5 giờ" },
+    startBtn:      { en: "Start Placement Test",    vi: "Bắt đầu kiểm tra xếp lớp" },
+    loginRequired: { en: "You need to be logged in to take the test.", vi: "Bạn cần đăng nhập để làm bài kiểm tra." },
+
+    // Section titles
+    readingTitle:   { en: "Reading",   vi: "Reading" },
+    listeningTitle: { en: "Listening", vi: "Listening" },
+    writingTitle:   { en: "Writing",   vi: "Writing" },
+    partLabel:      { en: "Part",      vi: "Phần" },
+
+    // Reading
+    readingInstruction: { en: "Read the passage and answer the questions.", vi: "Đọc bài văn và trả lời các câu hỏi." },
+    trueLabel:  { en: "TRUE",      vi: "TRUE" },
+    falseLabel: { en: "FALSE",     vi: "FALSE" },
+    ngLabel:    { en: "NOT GIVEN", vi: "NOT GIVEN" },
+
+    // Listening
+    listeningInstruction: { en: "Read the questions first, then listen to the audio.", vi: "Đọc câu hỏi trước, sau đó nghe đoạn ghi âm." },
+    audioOnce:   { en: "Audio will be played only once", vi: "Đoạn ghi âm chỉ phát một lần" },
+    playAudio:   { en: "Play audio", vi: "Phát âm thanh" },
+    noAudio:     { en: "No audio available for this section.", vi: "Không có file âm thanh cho phần thi này." },
+
+    // Writing
+    writingInstruction: { en: "You should spend about 20 minutes on this task. Write at least 150 words.", vi: "Bạn nên dành khoảng 20 phút cho bài này. Viết ít nhất 150 từ." },
+    writingPlaceholder: { en: "Begin your response here…", vi: "Bắt đầu viết bài của bạn tại đây…" },
+    wordCount:    { en: "Words", vi: "Số từ" },
+
+    // Timer
+    timeLeft:    { en: "Time remaining", vi: "Thời gian còn lại" },
+    timeUp:      { en: "Time is up for this section.", vi: "Hết giờ cho phần thi này." },
+    timeUpBody:  { en: "Your answers have been saved. Moving to the next section.", vi: "Câu trả lời của bạn đã được lưu. Chuyển sang phần thi tiếp theo." },
+    timeUpBtn:   { en: "Continue",  vi: "Tiếp tục" },
+
+    // Navigation
+    back:        { en: "Back",          vi: "Quay lại" },
+    next:        { en: "Next",          vi: "Tiếp theo" },
+    submitTest:  { en: "Submit Test",   vi: "Nộp bài thi" },
+    submitting:  { en: "Submitting…",   vi: "Đang nộp bài…" },
+    question:    { en: "Question",      vi: "Câu" },
+
+    // Results
+    resultsTitle:    { en: "Your Placement Results",       vi: "Kết quả xếp lớp của bạn" },
+    resultsSubtitle: { en: "Based on your performance, here is your estimated entry level and recommended study plan.", vi: "Dựa trên kết quả của bạn, đây là trình độ đầu vào ước tính và lộ trình học phù hợp." },
+    entryBand:       { en: "Estimated Entry Level",        vi: "Trình độ đầu vào ước tính" },
+    overallAvg:      { en: "Overall Average",              vi: "Điểm trung bình" },
+    readingScore:    { en: "Reading Band",                 vi: "Band Reading" },
+    listeningScore:  { en: "Listening Band",               vi: "Band Listening" },
+    writingScore:    { en: "Writing Band",                 vi: "Band Writing" },
+
+    // Study plan suggestion
+    suggestedPlan: { en: "Suggested Study Plan",           vi: "Lộ trình học gợi ý" },
+    yourLevel:     { en: "Your current level",             vi: "Trình độ hiện tại" },
+    yourGoal:      { en: "Your target band",               vi: "Band mục tiêu" },
+    selectGoal:    { en: "Select your target…",            vi: "Chọn mục tiêu…" },
+    noGoalAvailable: { en: "No plan available for this combination.", vi: "Không có lộ trình cho kết hợp này." },
+    totalDuration: { en: "Total duration",                 vi: "Tổng thời gian" },
+    months:        { en: "months",                         vi: "tháng" },
+    stageFocus:    { en: "Focus areas",                    vi: "Nội dung trọng tâm" },
+    savePlan:      { en: "Save my Study Plan",             vi: "Lưu lộ trình học của tôi" },
+    planSaving:    { en: "Saving…",                        vi: "Đang lưu…" },
+    planSaved:     { en: "Study plan saved!",              vi: "Đã lưu lộ trình học!" },
+    planError:     { en: "Could not save plan. Please try again.", vi: "Không thể lưu lộ trình. Vui lòng thử lại." },
+    viewDashboard: { en: "Go to Dashboard",                vi: "Vào Dashboard" },
+    retakeTest:    { en: "Retake Test",                    vi: "Làm lại bài kiểm tra" },
+
+    // Loading / error states
+    loadingQuestions: { en: "Loading questions…",          vi: "Đang tải câu hỏi…" },
+    errorLoading:     { en: "Failed to load test content. Please refresh.", vi: "Không tải được bài thi. Vui lòng tải lại trang." },
+    errorSubmit:      { en: "Submission failed. Please try again.", vi: "Nộp bài thất bại. Vui lòng thử lại." },
+  },
+
   // ─── Scoring Method Tooltips ──────────────────────────────────────────────
   tooltip: {
     aiExaminer: {

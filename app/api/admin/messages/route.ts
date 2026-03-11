@@ -145,7 +145,7 @@ export async function POST(req: NextRequest) {
                     const { Resend } = await import("resend");
                     const resend = new Resend(resendKey);
                     const htmlContent = buildEmailHtml(subject, messageBody);
-                    const fromAddress = "Jaxtina IELTS <no-reply@jaxtina.com>";
+                    const fromAddress = "onboarding@resend.dev";
 
                     // Send emails (batch in chunks of 50 to avoid rate limits)
                     const BATCH = 50;

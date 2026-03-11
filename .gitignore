@@ -17,3 +17,10 @@ out/
 .DS_Store
 *.swp
 /jaxtina-ielts-app
+
+# TypeScript build info (generated, not source)
+tsconfig.tsbuildinfo
+
+# Claude Code local settings (machine-specific, not for repo)
+.claude/settings.local.json
+.claude/launch.json
