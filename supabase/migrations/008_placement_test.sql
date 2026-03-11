@@ -253,13 +253,14 @@ CREATE INDEX IF NOT EXISTS idx_listening_questions_audio ON public.placement_lis
 -- ─── Seed: sample reading passage (Part 1) ────────────────────────────────────
 -- Remove this block after seeding with real content.
 INSERT INTO public.placement_reading_questions
-  (passage_title, passage_text, part_number, question_number, question_type, options, correct_answer, display_order)
+  (passage_title, passage_text, part_number, question_number, question_text, question_type, options, correct_answer, display_order)
 VALUES
   (
     'The History of Public Libraries',
     E'Public libraries have a long and distinguished history. The earliest known library was founded in ancient Assyria around 650 BCE by King Ashurbanipal, who collected clay tablets inscribed with cuneiform text. However, the modern concept of a public library — one freely accessible to all citizens — emerged in the 19th century.\n\nIn 1850, the British Parliament passed the Public Libraries Act, which allowed local councils to levy a rate to fund free public libraries. This was a landmark moment: for the first time, government acknowledged the public\'s right to free access to knowledge. Similar legislation followed in the United States, where philanthropist Andrew Carnegie funded the construction of over 2,500 libraries between 1883 and 1929.\n\nToday, public libraries continue to evolve. Digital collections, coding workshops, and community spaces have supplemented the traditional shelves of books. Despite predictions of their decline in the internet age, library visitor numbers in many countries have remained stable or even increased, suggesting that the public library fulfils social and educational needs that technology alone cannot satisfy.',
     1,
     1,
+    'The earliest known library was founded in ancient Assyria by King Ashurbanipal.',
     'true_false_ng',
     NULL,
     'TRUE',
@@ -270,6 +271,7 @@ VALUES
     E'Public libraries have a long and distinguished history. The earliest known library was founded in ancient Assyria around 650 BCE by King Ashurbanipal, who collected clay tablets inscribed with cuneiform text. However, the modern concept of a public library — one freely accessible to all citizens — emerged in the 19th century.\n\nIn 1850, the British Parliament passed the Public Libraries Act, which allowed local councils to levy a rate to fund free public libraries. This was a landmark moment: for the first time, government acknowledged the public\'s right to free access to knowledge. Similar legislation followed in the United States, where philanthropist Andrew Carnegie funded the construction of over 2,500 libraries between 1883 and 1929.\n\nToday, public libraries continue to evolve. Digital collections, coding workshops, and community spaces have supplemented the traditional shelves of books. Despite predictions of their decline in the internet age, library visitor numbers in many countries have remained stable or even increased, suggesting that the public library fulfils social and educational needs that technology alone cannot satisfy.',
     1,
     2,
+    'The Public Libraries Act was passed by the British Parliament in 1840.',
     'true_false_ng',
     NULL,
     'FALSE',
@@ -280,6 +282,7 @@ VALUES
     E'Public libraries have a long and distinguished history. The earliest known library was founded in ancient Assyria around 650 BCE by King Ashurbanipal, who collected clay tablets inscribed with cuneiform text. However, the modern concept of a public library — one freely accessible to all citizens — emerged in the 19th century.\n\nIn 1850, the British Parliament passed the Public Libraries Act, which allowed local councils to levy a rate to fund free public libraries. This was a landmark moment: for the first time, government acknowledged the public\'s right to free access to knowledge. Similar legislation followed in the United States, where philanthropist Andrew Carnegie funded the construction of over 2,500 libraries between 1883 and 1929.\n\nToday, public libraries continue to evolve. Digital collections, coding workshops, and community spaces have supplemented the traditional shelves of books. Despite predictions of their decline in the internet age, library visitor numbers in many countries have remained stable or even increased, suggesting that the public library fulfils social and educational needs that technology alone cannot satisfy.',
     1,
     3,
+    'Andrew Carnegie personally selected the books stocked in the libraries he funded.',
     'true_false_ng',
     NULL,
     'NOT GIVEN',
@@ -290,6 +293,7 @@ VALUES
     E'Public libraries have a long and distinguished history. The earliest known library was founded in ancient Assyria around 650 BCE by King Ashurbanipal, who collected clay tablets inscribed with cuneiform text. However, the modern concept of a public library — one freely accessible to all citizens — emerged in the 19th century.\n\nIn 1850, the British Parliament passed the Public Libraries Act, which allowed local councils to levy a rate to fund free public libraries. This was a landmark moment: for the first time, government acknowledged the public\'s right to free access to knowledge. Similar legislation followed in the United States, where philanthropist Andrew Carnegie funded the construction of over 2,500 libraries between 1883 and 1929.\n\nToday, public libraries continue to evolve. Digital collections, coding workshops, and community spaces have supplemented the traditional shelves of books. Despite predictions of their decline in the internet age, library visitor numbers in many countries have remained stable or even increased, suggesting that the public library fulfils social and educational needs that technology alone cannot satisfy.',
     1,
     4,
+    'What was the primary purpose of the 1850 Public Libraries Act?',
     'multiple_choice',
     '["A: To tax all citizens equally", "B: To fund free public libraries", "C: To regulate book publishing", "D: To build schools across Britain"]',
     'B',
@@ -300,6 +304,7 @@ VALUES
     E'Public libraries have a long and distinguished history. The earliest known library was founded in ancient Assyria around 650 BCE by King Ashurbanipal, who collected clay tablets inscribed with cuneiform text. However, the modern concept of a public library — one freely accessible to all citizens — emerged in the 19th century.\n\nIn 1850, the British Parliament passed the Public Libraries Act, which allowed local councils to levy a rate to fund free public libraries. This was a landmark moment: for the first time, government acknowledged the public\'s right to free access to knowledge. Similar legislation followed in the United States, where philanthropist Andrew Carnegie funded the construction of over 2,500 libraries between 1883 and 1929.\n\nToday, public libraries continue to evolve. Digital collections, coding workshops, and community spaces have supplemented the traditional shelves of books. Despite predictions of their decline in the internet age, library visitor numbers in many countries have remained stable or even increased, suggesting that the public library fulfils social and educational needs that technology alone cannot satisfy.',
     1,
     5,
+    'Philanthropist _______ funded the construction of over 2,500 libraries in the United States.',
     'fill_blank',
     NULL,
     'Carnegie',
