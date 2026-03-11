@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "IELTS Examiner",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "3001"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["node_modules/.bin/next", "dev", "--port", "3001"],
       "port": 3001
     }
   ]
