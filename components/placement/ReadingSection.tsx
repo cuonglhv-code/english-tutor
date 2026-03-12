@@ -4,6 +4,75 @@ import { GripVertical } from "lucide-react";
 import { t } from "@/lib/i18n";
 import type { Lang } from "@/lib/i18n";
 
+/**
+ * Renders passage text, converting [A], [B] … markers into bold paragraph labels.
+ * The `title` prop is used to skip any duplicate title line at the top of the text.
+ */
+function PassageText({ text, title }: { text: string; title: string }) {
+  // Split on [A], [B], … markers — keeps the letter as a capture group
+  const segments = text.split(/\[([A-Z])\]/);
+
+  // segments = [beforeFirstLabel, label1, content1, label2, content2, …]
+  const hasParagraphLabels = segments.length > 1;
+
+  // Intro lines: everything before the first labelled paragraph (or all text if no labels)
+  const introRaw = segments[0];
+  const introLines = introRaw
+    .split(/\n+/)
+    .map((l) => l.trim())
+    .filter((l) => l && l !== title.trim()); // drop any line that just repeats the title
+
+  return (
+    <div className="text-sm text-slate-700 leading-relaxed font-serif">
+      {/* Subtitle / lead-in lines before first labelled paragraph */}
+      {introLines.map((line, i) => (
+        <p key={`intro-${i}`} className="mb-4 italic text-slate-500">
+          {line}
+        </p>
+      ))}
+
+      {/* Labelled paragraphs [A], [B], … */}
+      {hasParagraphLabels &&
+        (() => {
+          const els: React.ReactNode[] = [];
+          for (let i = 1; i < segments.length; i += 2) {
+            const label = segments[i];
+            const content = (segments[i + 1] ?? "").trim();
+            // A section may contain multiple paragraphs separated by blank lines
+            const paras = content.split(/\n{2,}/).filter((p) => p.trim());
+            els.push(
+              <div key={label} className="flex gap-4 mb-4">
+                <span className="font-bold text-slate-900 shrink-0 w-4 pt-0.5">
+                  {label}
+                </span>
+                <div className="flex-1">
+                  {paras.map((para, j) => (
+                    <p key={j} className={j > 0 ? "mt-3" : ""}>
+                      {para.trim()}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            );
+          }
+          return els;
+        })()}
+
+      {/* Fallback: no labels — render as plain paragraphs */}
+      {!hasParagraphLabels &&
+        introRaw
+          .split(/\n{2,}/)
+          .map((p) => p.trim())
+          .filter((p) => p && p !== title.trim())
+          .map((para, i) => (
+            <p key={i} className="mb-3">
+              {para}
+            </p>
+          ))}
+    </div>
+  );
+}
+
 export interface ReadingQuestion {
   id: string;
   question_number: number;
@@ -89,9 +158,7 @@ export function ReadingSection({ lang, passage, answers, onAnswer }: Props) {
           <h2 className="text-base font-semibold text-slate-800 mb-3 font-serif">
             {passage.passage_title}
           </h2>
-          <div className="text-sm text-slate-700 leading-relaxed font-serif whitespace-pre-wrap">
-            {passage.passage_text}
-          </div>
+          <PassageText text={passage.passage_text} title={passage.passage_title} />
         </div>
 
         {/* Drag divider */}
