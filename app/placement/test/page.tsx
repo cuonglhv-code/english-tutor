@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -59,6 +59,26 @@ export default function PlacementTestPage() {
   const [currentPassageIndex, setCurrentPassageIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [essay, setEssay] = useState("");
+
+  // Strip section prefix so components can look up by bare question number
+  const readingAnswers = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(answers)
+          .filter(([k]) => k.startsWith("reading-"))
+          .map(([k, v]) => [k.replace("reading-", ""), v])
+      ),
+    [answers]
+  );
+  const listeningAnswers = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(answers)
+          .filter(([k]) => k.startsWith("listening-"))
+          .map(([k, v]) => [k.replace("listening-", ""), v])
+      ),
+    [answers]
+  );
   const [showTimeUp, setShowTimeUp] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -294,7 +314,7 @@ export default function PlacementTestPage() {
             <ReadingSection
               lang={lang}
               passage={data.readingPassages[currentPassageIndex]}
-              answers={answers}
+              answers={readingAnswers}
               onAnswer={(qn, v) => handleAnswer("reading", qn, v)}
             />
           </div>
@@ -302,7 +322,7 @@ export default function PlacementTestPage() {
           <ListeningSection
             lang={lang}
             parts={data.listeningParts}
-            answers={answers}
+            answers={listeningAnswers}
             onAnswer={(qn, v) => handleAnswer("listening", qn, v)}
           />
         ) : currentSection === "writing" && data.writingTask ? (
