@@ -15,8 +15,7 @@ import {
 } from "@/components/placement/ReadingSection";
 import {
   ListeningSection,
-  type ListeningAudio,
-  type ListeningQuestion,
+  type ListeningPart,
 } from "@/components/placement/ListeningSection";
 import {
   WritingSection,
@@ -29,8 +28,7 @@ type Section = "reading" | "listening" | "writing";
 interface QuestionsPayload {
   testId: string;
   reading: ReadingPassage | null;
-  listeningAudio: ListeningAudio | null;
-  listeningQuestions: ListeningQuestion[];
+  listeningParts: ListeningPart[];
   writingTask: WritingTask | null;
 }
 
@@ -282,8 +280,7 @@ export default function PlacementTestPage() {
         ) : currentSection === "listening" ? (
           <ListeningSection
             lang={lang}
-            audio={data.listeningAudio}
-            questions={data.listeningQuestions}
+            parts={data.listeningParts}
             answers={answers}
             onAnswer={(qn, v) => handleAnswer("listening", qn, v)}
           />

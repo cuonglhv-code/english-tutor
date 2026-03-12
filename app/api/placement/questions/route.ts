@@ -86,46 +86,44 @@ export async function GET() {
     };
   }
 
-  // ── Listening: fetch the active audio + its questions ───────────────────────
-  const { data: audioRow } = await service
+  // ── Listening: fetch ALL active audio parts ordered by part_number ──────────
+  const { data: audioParts } = await service
     .from("placement_listening_audio")
     .select("*")
     .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
+    .order("part_number", { ascending: true });
 
-  let listeningAudio = null;
-  let listeningQuestions: unknown[] = [];
+  const listeningParts = await Promise.all(
+    (audioParts ?? []).map(async (audioRow: Record<string, unknown>) => {
+      const { data: lqs } = await service
+        .from("placement_listening_questions")
+        .select("*")
+        .eq("audio_id", audioRow.id as string)
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
 
-  if (audioRow) {
-    listeningAudio = {
-      id: audioRow.id as string,
-      title: audioRow.title as string,
-      public_url: audioRow.public_url as string,
-      part_number: audioRow.part_number as number,
-    };
-
-    const { data: lqs } = await service
-      .from("placement_listening_questions")
-      .select("*")
-      .eq("audio_id", audioRow.id)
-      .eq("is_active", true)
-      .order("display_order", { ascending: true });
-
-    listeningQuestions = (lqs ?? []).map((q: Record<string, unknown>) => ({
-      id: q.id as string,
-      question_number: q.question_number as number,
-      question_text: q.question_text as string,
-      question_type: q.question_type as string,
-      options: q.options
-        ? typeof q.options === "string"
-          ? JSON.parse(q.options as string)
-          : q.options
-        : null,
-      context_text: (q.context_text as string) ?? null,
-    }));
-  }
+      return {
+        audio: {
+          id: audioRow.id as string,
+          title: audioRow.title as string,
+          public_url: audioRow.public_url as string,
+          part_number: audioRow.part_number as number,
+        },
+        questions: (lqs ?? []).map((q: Record<string, unknown>) => ({
+          id: q.id as string,
+          question_number: q.question_number as number,
+          question_text: q.question_text as string,
+          question_type: q.question_type as string,
+          options: q.options
+            ? typeof q.options === "string"
+              ? JSON.parse(q.options as string)
+              : q.options
+            : null,
+          context_text: (q.context_text as string) ?? null,
+        })),
+      };
+    })
+  );
 
   // ── Writing: fetch the active writing task ───────────────────────────────────
   const { data: writingRow } = await service
@@ -151,8 +149,7 @@ export async function GET() {
   return NextResponse.json({
     testId,
     reading,
-    listeningAudio,
-    listeningQuestions,
+    listeningParts,
     writingTask,
   });
 }

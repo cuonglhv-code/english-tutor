@@ -231,45 +231,144 @@ BEGIN
      'multiple_choice', '["Carolin Frueh","Holger Krag","Marlon Sorge","Moriba Jah"]', 'A', 40);
 
   -- ── LISTENING – Part 1: Transport survey  (Q1–10) ───────────────────────────
-  -- NOTE: Upload the real audio file via Admin → Listening Audio, then update
-  --       public_url in placement_listening_audio to the Supabase Storage URL.
-
   INSERT INTO public.placement_listening_audio
     (title, storage_path, public_url, part_number, is_active)
-  VALUES
-    (
-      'Cambridge IELTS 18 Test 1 – Part 1: Transport survey',
-      '',   -- ← set to Supabase Storage path after uploading audio
-      '',   -- ← paste Supabase Storage public URL here after uploading
-      1,
-      true
-    )
-  RETURNING id INTO audio_id;
+  VALUES (
+    'Cambridge IELTS 18 Test 1 – Part 1: Transport survey',
+    '18 section1-part1.mp3',
+    'https://wuejnsqetupivmidxylv.supabase.co/storage/v1/object/public/placement-audio/18%20section1-part1.mp3',
+    1, true
+  ) RETURNING id INTO audio_id;
 
   INSERT INTO public.placement_listening_questions
     (audio_id, question_number, question_text, question_type, options, correct_answer, context_text, display_order)
   VALUES
-    (audio_id, 1,  'Postcode: _____',
-     'fill_blank', NULL, 'NR7 4GH',
-     'Complete the notes. Write ONE WORD AND/OR A NUMBER for each answer.', 1),
-    (audio_id, 2,  'Date of bus journey: _____',
-     'fill_blank', NULL, '14th March', NULL, 2),
-    (audio_id, 3,  'Reason for trip: shopping and visit to the _____',
-     'fill_blank', NULL, 'dentist', NULL, 3),
-    (audio_id, 4,  'Travelled by bus because cost of _____ too high',
-     'fill_blank', NULL, 'parking', NULL, 4),
-    (audio_id, 5,  'Got on bus at _____ Street',
-     'fill_blank', NULL, 'Broom', NULL, 5),
-    (audio_id, 6,  'Complaint: bus today was _____',
-     'fill_blank', NULL, 'late', NULL, 6),
-    (audio_id, 7,  'Complaint: frequency of buses in the _____',
-     'fill_blank', NULL, 'evening', NULL, 7),
-    (audio_id, 8,  'Goes to the _____ by car',
-     'fill_blank', NULL, 'supermarket', NULL, 8),
-    (audio_id, 9,  'Dislikes travelling by bike in the city centre because of the _____',
-     'fill_blank', NULL, 'traffic', NULL, 9),
-    (audio_id, 10, 'Does not own a bike because of a lack of _____',
-     'fill_blank', NULL, 'storage', NULL, 10);
+    (audio_id, 1,  'Postcode: _____',                                                              'fill_blank', NULL, 'NR7 4GH',     'Complete the notes. Write ONE WORD AND/OR A NUMBER for each answer.', 1),
+    (audio_id, 2,  'Date of bus journey: _____',                                                   'fill_blank', NULL, '14th March',  NULL, 2),
+    (audio_id, 3,  'Reason for trip: shopping and visit to the _____',                             'fill_blank', NULL, 'dentist',     NULL, 3),
+    (audio_id, 4,  'Travelled by bus because cost of _____ too high',                              'fill_blank', NULL, 'parking',     NULL, 4),
+    (audio_id, 5,  'Got on bus at _____ Street',                                                   'fill_blank', NULL, 'Broom',       NULL, 5),
+    (audio_id, 6,  'Complaint: bus today was _____',                                               'fill_blank', NULL, 'late',        NULL, 6),
+    (audio_id, 7,  'Complaint: frequency of buses in the _____',                                   'fill_blank', NULL, 'evening',     NULL, 7),
+    (audio_id, 8,  'Goes to the _____ by car',                                                     'fill_blank', NULL, 'supermarket', NULL, 8),
+    (audio_id, 9,  'Dislikes travelling by bike in the city centre because of the _____',          'fill_blank', NULL, 'traffic',     NULL, 9),
+    (audio_id, 10, 'Does not own a bike because of a lack of _____',                               'fill_blank', NULL, 'storage',     NULL, 10);
+
+  -- ── LISTENING – Part 2: Becoming a volunteer for ACE  (Q11–20) ──────────────
+  INSERT INTO public.placement_listening_audio
+    (title, storage_path, public_url, part_number, is_active)
+  VALUES (
+    'Cambridge IELTS 18 Test 1 – Part 2: Volunteering for ACE',
+    '18 section1-part2.mp3',
+    'https://wuejnsqetupivmidxylv.supabase.co/storage/v1/object/public/placement-audio/18%20section1-part2.mp3',
+    2, true
+  ) RETURNING id INTO audio_id;
+
+  INSERT INTO public.placement_listening_questions
+    (audio_id, question_number, question_text, question_type, options, correct_answer, context_text, display_order)
+  VALUES
+    -- Q11–13: MCQ
+    (audio_id, 11, 'Why does the speaker apologise about the seats?',
+     'multiple_choice',
+     '["A: They are too small.","B: There are not enough of them.","C: Some of them are very close together."]',
+     'B', 'Choose the correct letter, A, B or C.', 1),
+    (audio_id, 12, 'What does the speaker say about the age of volunteers?',
+     'multiple_choice',
+     '["A: The age of volunteers is less important than other factors.","B: Young volunteers are less reliable than older ones.","C: Most volunteers are about 60 years old."]',
+     'A', NULL, 2),
+    (audio_id, 13, 'What does the speaker say about training?',
+     'multiple_choice',
+     '["A: It is continuous.","B: It is conducted by a manager.","C: It takes place online."]',
+     'A', NULL, 3),
+    -- Q14–15: Choose TWO (simplified as fill_blank – write both letters)
+    (audio_id, 14, 'Which TWO issues does the speaker ask the audience to consider before applying? (Options: A=financial situation, B=level of commitment, C=work experience, D=ambition, E=availability) — write BOTH letters e.g. B, E',
+     'fill_blank', NULL, 'B, E',
+     'Write TWO letters for questions 14 and 15.', 4),
+    (audio_id, 15, '(second answer for questions 14–15 above)',
+     'fill_blank', NULL, 'B, E', NULL, 5),
+    -- Q16–20: Matching (area of work → helpful attribute A–G)
+    (audio_id, 16, 'Fundraising — which helpful attribute? (A=experience on stage, B=original new ideas, C=parenting skills, D=understanding of food and diet, E=retail experience, F=good memory, G=good level of fitness)',
+     'fill_blank', NULL, 'E', 'What would be helpful for each area of voluntary work? Write the correct letter A–G.', 6),
+    (audio_id, 17, 'Litter collection — which helpful attribute? (A–G as above)',
+     'fill_blank', NULL, 'G', NULL, 7),
+    (audio_id, 18, 'Playmates — which helpful attribute? (A–G as above)',
+     'fill_blank', NULL, 'C', NULL, 8),
+    (audio_id, 19, 'Story club — which helpful attribute? (A–G as above)',
+     'fill_blank', NULL, 'F', NULL, 9),
+    (audio_id, 20, 'First aid — which helpful attribute? (A–G as above)',
+     'fill_blank', NULL, 'D', NULL, 10);
+
+  -- ── LISTENING – Part 3: Talk on jobs in fashion design  (Q21–30) ────────────
+  INSERT INTO public.placement_listening_audio
+    (title, storage_path, public_url, part_number, is_active)
+  VALUES (
+    'Cambridge IELTS 18 Test 1 – Part 3: Jobs in fashion design',
+    '18 section1-part3.mp3',
+    'https://wuejnsqetupivmidxylv.supabase.co/storage/v1/object/public/placement-audio/18%20section1-part3.mp3',
+    3, true
+  ) RETURNING id INTO audio_id;
+
+  INSERT INTO public.placement_listening_questions
+    (audio_id, question_number, question_text, question_type, options, correct_answer, context_text, display_order)
+  VALUES
+    (audio_id, 21, 'What problem did Chantal have at the start of the talk?',
+     'multiple_choice',
+     '["A: Her view of the speaker was blocked.","B: She was unable to find an empty seat.","C: The students next to her were talking."]',
+     'A', 'Choose the correct letter, A, B or C.', 1),
+    (audio_id, 22, 'What were Hugo and Chantal surprised to hear about the job market?',
+     'multiple_choice',
+     '["A: It has become more competitive than it used to be.","B: There is more variety in it than they had realised.","C: Some areas of it are more exciting than others."]',
+     'B', NULL, 2),
+    (audio_id, 23, 'Hugo and Chantal agree that the speaker''s message was',
+     'multiple_choice',
+     '["A: unfair to them at times.","B: hard for them to follow.","C: critical of the industry."]',
+     'B', NULL, 3),
+    (audio_id, 24, 'What do Hugo and Chantal criticise about their school careers advice?',
+     'multiple_choice',
+     '["A: when they received the advice","B: how much advice was given","C: who gave the advice"]',
+     'C', NULL, 4),
+    (audio_id, 25, 'When discussing their future, Hugo and Chantal disagree on',
+     'multiple_choice',
+     '["A: which is the best career in fashion.","B: when to choose a career in fashion.","C: why they would like a career in fashion."]',
+     'B', NULL, 5),
+    (audio_id, 26, 'How does Hugo feel about being an unpaid assistant?',
+     'multiple_choice',
+     '["A: He is realistic about the practice.","B: He feels the practice is dishonest.","C: He thinks others want to change the practice."]',
+     'A', NULL, 6),
+    -- Q27–28: Choose TWO mistakes the speaker admitted (A–E)
+    (audio_id, 27, 'Which TWO mistakes did the speaker admit she made in her first job? (A=being dishonest to employer, B=paying too much attention to how she looked, C=expecting to become well known, D=trying to earn a lot of money, E=openly disliking her client) — write BOTH letters',
+     'fill_blank', NULL, 'B, D', 'Write TWO letters for questions 27 and 28.', 7),
+    (audio_id, 28, '(second answer for questions 27–28 above)',
+     'fill_blank', NULL, 'B, D', NULL, 8),
+    -- Q29–30: Choose TWO pieces of retail info (A–E)
+    (audio_id, 29, 'Which TWO pieces of retail information do Hugo and Chantal agree would be useful? (A=reasons people return fashion items, B=how much time people have to shop, C=fashion designs people want but can''t find, D=best time of year for fashion buying, E=most popular fashion sizes) — write BOTH letters',
+     'fill_blank', NULL, 'C, E', 'Write TWO letters for questions 29 and 30.', 9),
+    (audio_id, 30, '(second answer for questions 29–30 above)',
+     'fill_blank', NULL, 'C, E', NULL, 10);
+
+  -- ── LISTENING – Part 4: Elephant translocation  (Q31–40) ────────────────────
+  INSERT INTO public.placement_listening_audio
+    (title, storage_path, public_url, part_number, is_active)
+  VALUES (
+    'Cambridge IELTS 18 Test 1 – Part 4: Elephant translocation',
+    '18 section1-part4.mp3',
+    'https://wuejnsqetupivmidxylv.supabase.co/storage/v1/object/public/placement-audio/18%20section1-part4.mp3',
+    4, true
+  ) RETURNING id INTO audio_id;
+
+  INSERT INTO public.placement_listening_questions
+    (audio_id, question_number, question_text, question_type, options, correct_answer, context_text, display_order)
+  VALUES
+    (audio_id, 31, 'Problems caused: damage to _____ in the park',                                       'fill_blank', NULL, 'vegetation',  'Complete the notes. Write ONE WORD ONLY for each answer.', 1),
+    (audio_id, 32, 'A suitable group of elephants from the same _____ was selected',                     'fill_blank', NULL, 'family',      NULL, 2),
+    (audio_id, 33, 'Vets and park staff made use of _____ to guide the elephants into an open plain',    'fill_blank', NULL, 'helicopters', NULL, 3),
+    (audio_id, 34, 'Immobilisation had to be completed quickly to reduce _____',                         'fill_blank', NULL, 'stress',      NULL, 4),
+    (audio_id, 35, 'Elephants had to be turned on their _____ to avoid damage to their lungs',          'fill_blank', NULL, 'sides',       NULL, 5),
+    (audio_id, 36, 'Elephants'' _____ had to be monitored constantly',                                  'fill_blank', NULL, 'breathing',   NULL, 6),
+    (audio_id, 37, 'Data including the size of their tusks and _____ was taken',                        'fill_blank', NULL, 'weight',      NULL, 7),
+    (audio_id, 38, 'Advantages at Nkhotakota: _____ opportunities',                                     'fill_blank', NULL, 'ecotourism',  NULL, 8),
+    (audio_id, 39, 'Advantages at Nkhotakota: a reduction in the number of poachers and _____',        'fill_blank', NULL, 'crime',       NULL, 9),
+    (audio_id, 40, 'Advantages at Nkhotakota: an increase in _____ as a contributor to GDP',           'fill_blank', NULL, 'revenue',     NULL, 10);
 
   -- ── WRITING – Task 2  ────────────────────────────────────────────────────────
   INSERT INTO public.placement_writing_tasks
