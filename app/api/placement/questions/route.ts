@@ -64,27 +64,39 @@ export async function GET() {
     .eq("is_active", true)
     .order("display_order", { ascending: true });
 
-  // Group: the first row gives us the passage; all rows are questions
-  let reading = null;
-  if (readingRows && readingRows.length > 0) {
-    const first = readingRows[0];
-    reading = {
-      passage_title: first.passage_title,
-      passage_text: first.passage_text,
-      part_number: first.part_number,
-      questions: readingRows.map((r: Record<string, unknown>) => ({
-        id: r.id as string,
-        question_number: r.question_number as number,
-        question_text: r.question_text as string,
-        question_type: r.question_type as string,
-        options: r.options
-          ? typeof r.options === "string"
-            ? JSON.parse(r.options)
-            : r.options
-          : null,
-      })),
-    };
+  // Group rows by part_number → one passage object per part
+  const passageMap = new Map<
+    number,
+    { passage_title: string; passage_text: string; part_number: number; questions: unknown[] }
+  >();
+
+  for (const r of readingRows ?? []) {
+    const key = r.part_number as number;
+    if (!passageMap.has(key)) {
+      passageMap.set(key, {
+        passage_title: r.passage_title as string,
+        passage_text: r.passage_text as string,
+        part_number: key,
+        questions: [],
+      });
+    }
+    passageMap.get(key)!.questions.push({
+      id: r.id as string,
+      question_number: r.question_number as number,
+      question_text: r.question_text as string,
+      question_type: r.question_type as string,
+      options: r.options
+        ? typeof r.options === "string"
+          ? JSON.parse(r.options)
+          : r.options
+        : null,
+    });
   }
+
+  // Sort by part_number so passages arrive in order 1 → 2 → 3
+  const readingPassages = Array.from(passageMap.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([, passage]) => passage);
 
   // ── Listening: fetch ALL active audio parts ordered by part_number ──────────
   const { data: audioParts } = await service
@@ -148,7 +160,7 @@ export async function GET() {
 
   return NextResponse.json({
     testId,
-    reading,
+    readingPassages,
     listeningParts,
     writingTask,
   });

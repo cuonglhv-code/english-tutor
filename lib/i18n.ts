@@ -212,6 +212,7 @@ const translations = {
     listeningTitle: { en: "Listening", vi: "Listening" },
     writingTitle:   { en: "Writing",   vi: "Writing" },
     partLabel:      { en: "Part",      vi: "Phần" },
+    passageLabel:   { en: "Passage",   vi: "Đoạn" },
 
     // Reading
     readingInstruction: { en: "Read the passage and answer the questions.", vi: "Đọc bài văn và trả lời các câu hỏi." },

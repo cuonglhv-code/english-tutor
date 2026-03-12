@@ -27,7 +27,7 @@ type Section = "reading" | "listening" | "writing";
 
 interface QuestionsPayload {
   testId: string;
-  reading: ReadingPassage | null;
+  readingPassages: ReadingPassage[];
   listeningParts: ListeningPart[];
   writingTask: WritingTask | null;
 }
@@ -56,6 +56,7 @@ export default function PlacementTestPage() {
   const [data, setData] = useState<QuestionsPayload | null>(null);
 
   const [currentSection, setCurrentSection] = useState<Section>("reading");
+  const [currentPassageIndex, setCurrentPassageIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [essay, setEssay] = useState("");
   const [showTimeUp, setShowTimeUp] = useState(false);
@@ -270,13 +271,33 @@ export default function PlacementTestPage() {
 
       {/* ── Section content ── */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        {currentSection === "reading" && data.reading ? (
-          <ReadingSection
-            lang={lang}
-            passage={data.reading}
-            answers={answers}
-            onAnswer={(qn, v) => handleAnswer("reading", qn, v)}
-          />
+        {currentSection === "reading" && data.readingPassages.length > 0 ? (
+          <div className="flex flex-col flex-1 overflow-hidden">
+            {/* Passage tabs */}
+            {data.readingPassages.length > 1 && (
+              <div className="flex gap-1 px-4 pt-2 pb-0 bg-white border-b border-slate-200 shrink-0">
+                {data.readingPassages.map((p, i) => (
+                  <button
+                    key={p.part_number}
+                    onClick={() => setCurrentPassageIndex(i)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-t border border-b-0 transition-colors ${
+                      i === currentPassageIndex
+                        ? "bg-white border-slate-200 text-blue-700"
+                        : "bg-slate-50 border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    {t("placement", "passageLabel", lang)} {p.part_number}
+                  </button>
+                ))}
+              </div>
+            )}
+            <ReadingSection
+              lang={lang}
+              passage={data.readingPassages[currentPassageIndex]}
+              answers={answers}
+              onAnswer={(qn, v) => handleAnswer("reading", qn, v)}
+            />
+          </div>
         ) : currentSection === "listening" ? (
           <ListeningSection
             lang={lang}
