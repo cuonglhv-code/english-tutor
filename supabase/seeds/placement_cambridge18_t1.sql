@@ -235,11 +235,11 @@ BEGIN
   --       public_url in placement_listening_audio to the Supabase Storage URL.
 
   INSERT INTO public.placement_listening_audio
-    (title, description, public_url, part_number, is_active)
+    (title, storage_path, public_url, part_number, is_active)
   VALUES
     (
       'Cambridge IELTS 18 Test 1 – Part 1: Transport survey',
-      'A conversation between a transport survey interviewer and Sadie Jones (born 1991). She describes her bus journey, car trips and cycling habits.',
+      '',   -- ← set to Supabase Storage path after uploading audio
       '',   -- ← paste Supabase Storage public URL here after uploading
       1,
       true
