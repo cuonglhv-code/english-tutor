@@ -4,6 +4,7 @@ import { LayoutDashboard, RefreshCcw } from "lucide-react";
 import { createClient, createServiceClient } from "@/lib/supabase-server";
 import { Button } from "@/components/ui/button";
 import { ResultsClient } from "@/components/placement/ResultsClient";
+import { AnswerReview } from "@/components/placement/AnswerReview";
 import { ENTRY_BAND_RANGE_LABELS } from "@/lib/placementBands";
 import type { EntryBandRange } from "@/lib/studyPlanConfig";
 
@@ -109,6 +110,17 @@ export default async function PlacementResultsPage({ searchParams }: PageProps) 
             programme.
           </p>
           <ResultsClient testId={testId} entryBandRange={entryRange} />
+        </div>
+
+        {/* Answer Review */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-xl font-bold text-slate-800 mb-1">
+            Answer Review
+          </h2>
+          <p className="text-sm text-slate-500 mb-6">
+            Xem chi tiết đáp án — see which answers were correct, what the right answers were, and detailed writing feedback.
+          </p>
+          <AnswerReview testId={testId} />
         </div>
 
         {/* Actions */}
