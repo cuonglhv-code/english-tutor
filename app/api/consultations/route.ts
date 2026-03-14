@@ -297,7 +297,10 @@ export async function POST(req: NextRequest) {
     try {
       const { Resend } = await import("resend");
       const resend = new Resend(resendKey);
-      const fromAddress = "onboarding@resend.dev";
+      // RESEND_FROM_EMAIL must be an address from a verified Resend domain.
+      // e.g. "noreply@jaxtina.com" after verifying jaxtina.com in Resend dashboard.
+      // If not set, fall back to Resend sandbox (can only deliver to account owner).
+      const fromAddress = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
       const studentSubject = "Xác nhận đặt lịch tư vấn IELTS / Consultation Booking Confirmed";
       const studentBody = buildStudentEmailBody({

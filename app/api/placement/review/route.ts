@@ -112,11 +112,17 @@ export async function GET(req: NextRequest) {
   });
 
   // ── Writing evaluations — fetch ALL rows (one per task) ──────────────────
-  const { data: writingEvals } = await service
+  // NOTE: order by created_at (not task_type) so this works even if migration
+  // 010 (which adds task_type column) hasn't been applied yet.
+  const { data: writingEvals, error: evalError } = await service
     .from("placement_writing_evaluations")
     .select("*")
     .eq("test_id", testId)
-    .order("task_type", { ascending: true }); // task1 before task2
+    .order("created_at", { ascending: true });
+
+  if (evalError) {
+    console.error("[review] writing eval fetch error:", evalError.message);
+  }
 
   function mapWritingRow(row: Record<string, unknown> | undefined) {
     if (!row) return null;
