@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
     LayoutDashboard, Users, BookOpen, MessageSquare,
     Download, ClipboardList, LogOut, Menu, X, ChevronRight,
-    GraduationCap,
+    GraduationCap, PhoneCall,
 } from "lucide-react";
 
 const NAV = [
@@ -14,6 +14,7 @@ const NAV = [
     { label: "Students", href: "/admin/students", icon: Users },
     { label: "Questions", href: "/admin/questions", icon: BookOpen },
     { label: "Messages", href: "/admin/messages", icon: MessageSquare },
+    { label: "Consultations", href: "/admin/consultations", icon: PhoneCall },
     { label: "Export", href: "/admin/export", icon: Download },
     { label: "Audit Log", href: "/admin/audit", icon: ClipboardList },
 ];

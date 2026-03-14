@@ -44,16 +44,22 @@ export default async function PlacementResultsPage({ searchParams }: PageProps) 
   const entryRange: EntryBandRange =
     (test.estimated_entry_band_range as EntryBandRange) ?? "3.5-4.0";
 
-  // Fetch writing evaluation for study plan context
-  const { data: writingEval } = await service
+  // Fetch writing evaluations — prefer Task 2 for the study plan context
+  // (fall back to Task 1 if Task 2 is absent, or to most recent row for legacy data)
+  const { data: writingEvals } = await service
     .from("placement_writing_evaluations")
     .select(
-      "overall_band, task_achievement_band, coherence_cohesion_band, lexical_resource_band, grammatical_range_accuracy_band, feedback_json, word_count"
+      "task_type, overall_band, task_achievement_band, coherence_cohesion_band, lexical_resource_band, grammatical_range_accuracy_band, feedback_json, word_count"
     )
     .eq("test_id", testId)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
+    .order("task_type", { ascending: true }); // task1 before task2
+
+  // Prefer task2 for study plan summary; fall back to task1 or the last row
+  const writingEval =
+    (writingEvals ?? []).find((r) => r.task_type === "task2") ??
+    (writingEvals ?? []).find((r) => r.task_type === "task1") ??
+    (writingEvals ?? [])[0] ??
+    null;
 
   type FeedbackJson = {
     priority_actions?: string[];

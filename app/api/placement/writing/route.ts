@@ -17,8 +17,17 @@ Assessment rules:
 
 You MUST return ONLY a valid JSON object — no markdown, no commentary, no extra text.`;
 
-function buildPrompt(essay: string, promptText: string, wordCount: number): string {
-  return `TASK TYPE: IELTS Writing Task 1 (Academic)
+function buildPrompt(
+  essay: string,
+  promptText: string,
+  wordCount: number,
+  taskType: "task1" | "task2" = "task2"
+): string {
+  const taskLabel =
+    taskType === "task1"
+      ? "IELTS Writing Task 1 (Academic) — describe / summarise visual data"
+      : "IELTS Writing Task 2 — argument essay";
+  return `TASK TYPE: ${taskLabel}
 TASK PROMPT: ${promptText}
 WORD COUNT: ${wordCount}
 
@@ -112,9 +121,10 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { essay, promptText } = body as {
+  const { essay, promptText, taskType = "task2" } = body as {
     essay: string;
     promptText: string;
+    taskType?: "task1" | "task2";
   };
 
   if (!essay || !promptText) {
@@ -142,7 +152,7 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: "user",
-            content: buildPrompt(essay, promptText, wordCount),
+            content: buildPrompt(essay, promptText, wordCount, taskType),
           },
         ],
       },

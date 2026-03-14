@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { redirect, notFound } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase-server";
 import { PrintButton } from "./PrintButton";
+import ConsultCTA from "./ConsultCTA";
 import {
   CheckCircle2, Target, BookOpen, TrendingUp, AlertCircle,
   Calendar, User, Award, BarChart3,
@@ -57,7 +58,7 @@ export default async function StudyPlanViewPage({ params }: PageProps) {
   // Student profile
   const { data: profile } = await service
     .from("profiles")
-    .select("full_name, email")
+    .select("full_name, email, phone, nearest_center")
     .eq("id", user.id)
     .single();
 
@@ -350,12 +351,12 @@ export default async function StudyPlanViewPage({ params }: PageProps) {
                 Band {plan.goal_band as string}.
               </p>
               <div className="mt-4 no-print">
-                <a
-                  href="mailto:cuonglhv@jaxtina.com?subject=IELTS%20Study%20Plan%20Consultation"
-                  className="inline-flex items-center gap-2 bg-indigo-600 text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-indigo-700 transition-colors"
-                >
-                  Book a Free Consultation
-                </a>
+                <ConsultCTA
+                  defaultName={studentName !== "Student" ? studentName : ""}
+                  defaultEmail={(profile?.email as string | null) ?? user.email ?? ""}
+                  defaultPhone={(profile?.phone as string | null) ?? ""}
+                  defaultCenter={(profile?.nearest_center as string | null) ?? ""}
+                />
               </div>
               {/* Print version — static contact info */}
               <div className="hidden print:block mt-4 text-xs text-slate-500">

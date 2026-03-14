@@ -3,20 +3,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  CheckCircle2, Loader2, BookOpen, Target,
+  CheckCircle2, Loader2, BookOpen,
   ChevronDown, ChevronUp, ExternalLink, FileText,
-  AlertCircle, TrendingUp,
+  AlertCircle, TrendingUp, ArrowRight, Clock, Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { t } from "@/lib/i18n";
 import type { Lang } from "@/lib/i18n";
 import {
-  STUDY_PLAN_CONFIG,
-  ENTRY_BAND_RANGES,
-  GOAL_BANDS,
-  getAvailableGoals,
+  getCoursesFromEntry,
+  coursesToPlan,
   type EntryBandRange,
-  type GoalBand,
+  type Course,
 } from "@/lib/studyPlanConfig";
 import { ENTRY_BAND_RANGE_LABELS } from "@/lib/placementBands";
 
@@ -138,6 +136,69 @@ function WritingFeedbackPanel({ ws }: { ws: WritingSummary }) {
   );
 }
 
+// ─── Course card ──────────────────────────────────────────────────────────────
+function CourseCard({
+  course,
+  index,
+  isFirst,
+}: {
+  course: Course;
+  index: number;
+  isFirst: boolean;
+}) {
+  return (
+    <div
+      className={`relative rounded-xl border p-5 transition-shadow ${
+        isFirst
+          ? "border-blue-400 bg-blue-50/40 shadow-md shadow-blue-100"
+          : "border-slate-200 bg-white hover:shadow-sm"
+      }`}
+    >
+      {/* Step number + "Start here" badge */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${
+              isFirst
+                ? "bg-blue-600 text-white"
+                : "bg-slate-200 text-slate-600"
+            }`}
+          >
+            {index + 1}
+          </div>
+          <h3 className="text-sm font-bold text-slate-900">{course.name}</h3>
+        </div>
+
+        {isFirst && (
+          <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-blue-600 text-white">
+            Bắt đầu ngay
+          </span>
+        )}
+      </div>
+
+      {/* Band + duration pills */}
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
+          {course.inputBandLabel}
+          <ArrowRight className="h-3 w-3" />
+          <span className="text-blue-700">{course.outputBandLabel}</span>
+        </span>
+        <span className="flex items-center gap-1 text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
+          <Clock className="h-3 w-3" />
+          {course.months} tháng
+        </span>
+        <span className="flex items-center gap-1 text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
+          <Users className="h-3 w-3" />
+          {course.sessions} buổi
+        </span>
+      </div>
+
+      {/* Vietnamese description */}
+      <p className="text-xs text-slate-600 leading-relaxed">{course.description}</p>
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 export function StudyPlanSuggestion({
   lang,
@@ -149,18 +210,15 @@ export function StudyPlanSuggestion({
   overallAverage,
   writingSummary,
 }: Props) {
-  const [selectedEntry, setSelectedEntry] = useState<EntryBandRange>(entryBandRange);
-  const [selectedGoal, setSelectedGoal] = useState<GoalBand | "">("");
   const [saving, setSaving] = useState(false);
   const [savedPlanId, setSavedPlanId] = useState<string | null>(null);
 
-  const availableGoals = getAvailableGoals(selectedEntry);
-  const plan = selectedGoal
-    ? STUDY_PLAN_CONFIG[selectedEntry]?.[selectedGoal as GoalBand]
-    : null;
+  // Derive the recommended pathway automatically from entry band
+  const courses = getCoursesFromEntry(entryBandRange);
+  const plan = coursesToPlan(courses);
+  const goalBand = courses.at(-1)?.outputBandLabel ?? "7.0+";
 
   const handleSave = async () => {
-    if (!plan || !selectedGoal) return;
     setSaving(true);
     try {
       const res = await fetch("/api/placement/save-plan", {
@@ -168,8 +226,8 @@ export function StudyPlanSuggestion({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           testId,
-          entryBandRange: selectedEntry,
-          goalBand: selectedGoal,
+          entryBandRange,
+          goalBand,
           planName: plan.planName,
           stagesJson: plan.stages,
           totalMonths: plan.totalMonths,
@@ -196,130 +254,64 @@ export function StudyPlanSuggestion({
       {/* Writing feedback panel */}
       {writingSummary && <WritingFeedbackPanel ws={writingSummary} />}
 
-      {/* Selectors row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Pathway header */}
+      <div className="flex items-center gap-3 py-1">
+        <BookOpen className="h-5 w-5 text-blue-600 shrink-0" />
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            {t("placement", "yourLevel", lang)}
-          </label>
-          <select
-            value={selectedEntry}
-            onChange={(e) => {
-              setSelectedEntry(e.target.value as EntryBandRange);
-              setSelectedGoal("");
-              setSavedPlanId(null);
-            }}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {ENTRY_BAND_RANGES.map((r) => (
-              <option key={r} value={r}>{ENTRY_BAND_RANGE_LABELS[r]}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            {t("placement", "yourGoal", lang)}
-          </label>
-          <select
-            value={selectedGoal}
-            onChange={(e) => {
-              setSelectedGoal(e.target.value as GoalBand);
-              setSavedPlanId(null);
-            }}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">{t("placement", "selectGoal", lang)}</option>
-            {GOAL_BANDS.map((g) => (
-              <option key={g} value={g} disabled={!availableGoals.includes(g)}>{g}</option>
-            ))}
-          </select>
+          <p className="text-sm font-semibold text-slate-800">
+            Lộ trình học đề xuất
+          </p>
+          <p className="text-xs text-slate-500">
+            Trình độ hiện tại:{" "}
+            <span className="font-medium text-slate-700">
+              {ENTRY_BAND_RANGE_LABELS[entryBandRange]}
+            </span>
+            {" · "}
+            {plan.totalMonths} tháng · {plan.stages.reduce((s, st) => s + (st.sessions ?? 0), 0)} buổi
+          </p>
         </div>
       </div>
 
-      {/* Plan display */}
-      {plan ? (
-        <div className="space-y-4">
-          {/* Plan header */}
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div>
-              <h3 className="text-base font-semibold text-slate-800 flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-blue-600" />
-                {plan.planName}
-              </h3>
-              <p className="text-sm text-slate-500 mt-0.5">
-                {t("placement", "totalDuration", lang)}:{" "}
-                <strong>{plan.totalMonths} {t("placement", "months", lang)}</strong>
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-blue-700 font-semibold bg-blue-50 px-3 py-1.5 rounded-full">
-              <Target className="h-4 w-4" />
-              {selectedGoal}
-            </div>
-          </div>
+      {/* Course cards */}
+      <div className="space-y-3">
+        {courses.map((course, i) => (
+          <CourseCard
+            key={course.key}
+            course={course}
+            index={i}
+            isFirst={i === 0}
+          />
+        ))}
+      </div>
 
-          {/* Stages timeline */}
-          <ol className="relative border-l-2 border-blue-200 pl-5 space-y-5">
-            {plan.stages.map((stage, i) => (
-              <li key={i} className="relative">
-                <div className="absolute -left-[1.35rem] top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow" />
-                <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-slate-800">{stage.name}</span>
-                    <span className="text-xs bg-slate-100 text-slate-600 rounded-full px-2 py-0.5">
-                      {stage.months} {t("placement", "months", lang)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-500 font-medium mb-1">
-                    {t("placement", "stageFocus", lang)}:
-                  </p>
-                  <ul className="space-y-0.5">
-                    {stage.focus.map((f, j) => (
-                      <li key={j} className="text-xs text-slate-600 flex items-start gap-1.5">
-                        <span className="text-blue-400 mt-0.5">•</span>
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </li>
-            ))}
-          </ol>
-
-          {/* Save / View buttons */}
-          <div className="flex flex-wrap gap-3 items-center">
-            {!savedPlanId ? (
-              <Button onClick={handleSave} disabled={saving}>
-                {saving ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    {t("placement", "planSaving", lang)}
-                  </>
-                ) : (
-                  t("placement", "savePlan", lang)
-                )}
-              </Button>
-            ) : (
+      {/* Save / View buttons */}
+      <div className="flex flex-wrap gap-3 items-center pt-1">
+        {!savedPlanId ? (
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? (
               <>
-                <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700 bg-emerald-50 px-4 py-2 rounded-lg border border-emerald-200">
-                  <CheckCircle2 className="h-4 w-4" />
-                  {t("placement", "planSaved", lang)}
-                </div>
-                <Button asChild variant="outline">
-                  <Link href={`/placement/study-plan/${savedPlanId}`} target="_blank">
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    View &amp; Download PDF
-                  </Link>
-                </Button>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                {t("placement", "planSaving", lang)}
               </>
+            ) : (
+              t("placement", "savePlan", lang)
             )}
-          </div>
-        </div>
-      ) : selectedGoal && !plan ? (
-        <p className="text-sm text-slate-500 italic">
-          {t("placement", "noGoalAvailable", lang)}
-        </p>
-      ) : null}
+          </Button>
+        ) : (
+          <>
+            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700 bg-emerald-50 px-4 py-2 rounded-lg border border-emerald-200">
+              <CheckCircle2 className="h-4 w-4" />
+              {t("placement", "planSaved", lang)}
+            </div>
+            <Button asChild variant="outline">
+              <Link href={`/placement/study-plan/${savedPlanId}`} target="_blank">
+                <ExternalLink className="h-4 w-4 mr-2" />
+                View &amp; Download PDF
+              </Link>
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   );
 }

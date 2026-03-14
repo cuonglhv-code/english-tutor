@@ -68,9 +68,12 @@ export async function POST(req: NextRequest) {
   const listeningAnswers = (answers ?? []).filter(
     (a: { section: string }) => a.section === "listening"
   );
-  // Writing Task 2 essay is stored as section='writing', question_number=2
-  // (Task 1 = question_number=1; legacy single-task = question_number=0)
-  const writingAnswer =
+  // Task 1 essay = question_number=1, Task 2 = question_number=2 (or 0 legacy)
+  const task1Answer = (answers ?? []).find(
+    (a: { section: string; question_number: number }) =>
+      a.section === "writing" && a.question_number === 1
+  );
+  const task2Answer =
     (answers ?? []).find(
       (a: { section: string; question_number: number }) =>
         a.section === "writing" && a.question_number === 2
@@ -124,56 +127,86 @@ export async function POST(req: NextRequest) {
   const listeningTotal = listeningQuestions?.length ?? 0;
   const listeningBand = rawScoreToBand(listeningCorrect, "listening");
 
-  // ── Score Writing via Claude ───────────────────────────────────────────────
-  let writingBand = 0;
-  let writingEval: PlacementWritingResult | null = null;
+  // ── Score Writing via Claude — evaluate BOTH Task 1 and Task 2 ───────────
+  let task1Eval: PlacementWritingResult | null = null;
+  let task2Eval: PlacementWritingResult | null = null;
 
-  const essayText = writingAnswer?.answer_text ?? "";
+  // Helper: call Claude writing scorer for one task
+  async function scoreEssay(
+    essayText: string,
+    promptText: string,
+    taskType: "task1" | "task2"
+  ): Promise<PlacementWritingResult | null> {
+    if (essayText.trim().length <= 20) return null;
+    try {
+      const res = await fetch(`${INTERNAL_ORIGIN}/api/placement/writing`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          cookie: req.headers.get("cookie") ?? "",
+        },
+        body: JSON.stringify({ essay: essayText, promptText, taskType }),
+      });
+      return res.ok ? (await res.json()) as PlacementWritingResult : null;
+    } catch (e) {
+      console.error(`[placement/submit] ${taskType} eval failed:`, e);
+      return null;
+    }
+  }
 
-  if (essayText.trim().length > 20) {
-    // Fetch Task 2 prompt for scoring
-    const { data: writingTask } = await service
+  // Fetch both task prompts in parallel
+  const [{ data: task1Prompt }, { data: task2Prompt }] = await Promise.all([
+    service
+      .from("placement_writing_tasks")
+      .select("prompt_text")
+      .eq("is_active", true)
+      .eq("task_type", "task1")
+      .limit(1)
+      .single(),
+    service
       .from("placement_writing_tasks")
       .select("prompt_text")
       .eq("is_active", true)
       .eq("task_type", "task2")
       .limit(1)
-      .single();
+      .single(),
+  ]);
 
-    try {
-      const writingRes = await fetch(
-        `${INTERNAL_ORIGIN}/api/placement/writing`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Pass auth cookie header for server-to-server call
-            cookie: req.headers.get("cookie") ?? "",
-          },
-          body: JSON.stringify({
-            essay: essayText,
-            promptText: writingTask?.prompt_text ?? "Describe the visual.",
-          }),
-        }
-      );
+  // Score both essays in parallel
+  [task1Eval, task2Eval] = await Promise.all([
+    scoreEssay(
+      task1Answer?.answer_text ?? "",
+      task1Prompt?.prompt_text ?? "Summarise and describe the visual data.",
+      "task1"
+    ),
+    scoreEssay(
+      task2Answer?.answer_text ?? "",
+      task2Prompt?.prompt_text ?? "Present a well-structured argument.",
+      "task2"
+    ),
+  ]);
 
-      if (writingRes.ok) {
-        writingEval = await writingRes.json();
-        writingBand = writingEval?.overall_band ?? 0;
-      }
-    } catch (e) {
-      console.error("[placement/submit] Writing eval failed:", e);
-      // Fallback: estimate band from word count
-      const wc = essayText.trim().split(/\s+/).length;
-      writingBand = wc >= 250 ? 5.0 : wc >= 150 ? 4.0 : 3.0;
-    }
+  // Writing band = average of available task bands, or fallback from word count
+  const availableBands = [task1Eval?.overall_band, task2Eval?.overall_band].filter(
+    (b): b is number => typeof b === "number" && b > 0
+  );
+  let writingBand =
+    availableBands.length > 0
+      ? Math.round((availableBands.reduce((a, b) => a + b, 0) / availableBands.length) * 2) / 2
+      : 0;
+  // Fallback: estimate from essay length if Claude scored nothing
+  if (writingBand === 0) {
+    const wc = (task2Answer?.answer_text ?? task1Answer?.answer_text ?? "")
+      .trim()
+      .split(/\s+/).length;
+    writingBand = wc >= 250 ? 5.0 : wc >= 150 ? 4.0 : 3.0;
   }
 
   // ── Compute entry band range ───────────────────────────────────────────────
   const estimatedRange = estimateEntryBandRange(
     readingBand,
     listeningBand,
-    writingBand > 0 ? writingBand : readingBand // fallback if no essay
+    writingBand > 0 ? writingBand : readingBand
   );
 
   // ── Update placement_tests ─────────────────────────────────────────────────
@@ -191,20 +224,38 @@ export async function POST(req: NextRequest) {
     })
     .eq("id", testId);
 
-  // ── Insert writing evaluation ──────────────────────────────────────────────
-  if (writingEval) {
-    await service.from("placement_writing_evaluations").insert({
+  // ── Insert one evaluation row per task (only if essay was scored) ──────────
+  const evalInserts = [];
+  if (task1Eval) {
+    evalInserts.push({
       test_id: testId,
-      essay_text: essayText,
-      word_count: writingEval.word_count,
-      task_achievement_band: writingEval.task_achievement_band,
-      coherence_cohesion_band: writingEval.coherence_cohesion_band,
-      lexical_resource_band: writingEval.lexical_resource_band,
-      grammatical_range_accuracy_band:
-        writingEval.grammatical_range_accuracy_band,
-      overall_band: writingEval.overall_band,
-      feedback_json: writingEval.feedback_json,
+      task_type: "task1",
+      essay_text: task1Answer?.answer_text ?? "",
+      word_count: task1Eval.word_count,
+      task_achievement_band: task1Eval.task_achievement_band,
+      coherence_cohesion_band: task1Eval.coherence_cohesion_band,
+      lexical_resource_band: task1Eval.lexical_resource_band,
+      grammatical_range_accuracy_band: task1Eval.grammatical_range_accuracy_band,
+      overall_band: task1Eval.overall_band,
+      feedback_json: task1Eval.feedback_json,
     });
+  }
+  if (task2Eval) {
+    evalInserts.push({
+      test_id: testId,
+      task_type: "task2",
+      essay_text: task2Answer?.answer_text ?? "",
+      word_count: task2Eval.word_count,
+      task_achievement_band: task2Eval.task_achievement_band,
+      coherence_cohesion_band: task2Eval.coherence_cohesion_band,
+      lexical_resource_band: task2Eval.lexical_resource_band,
+      grammatical_range_accuracy_band: task2Eval.grammatical_range_accuracy_band,
+      overall_band: task2Eval.overall_band,
+      feedback_json: task2Eval.feedback_json,
+    });
+  }
+  if (evalInserts.length > 0) {
+    await service.from("placement_writing_evaluations").insert(evalInserts);
   }
 
   return NextResponse.json({

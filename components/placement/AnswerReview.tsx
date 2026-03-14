@@ -55,7 +55,10 @@ interface WritingReview {
 interface ReviewData {
   reading: ReviewQuestion[];
   listening: ReviewQuestion[];
-  writing: WritingReview | null;
+  writing: {
+    task1: WritingReview | null;
+    task2: WritingReview | null;
+  };
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -296,7 +299,13 @@ function CollapsibleGroup({
 }
 
 // ─── Writing tab ──────────────────────────────────────────────────────────────
-function WritingTab({ writing }: { writing: WritingReview }) {
+function WritingTab({
+  writing,
+  taskLabel = "Writing",
+}: {
+  writing: WritingReview;
+  taskLabel?: string;
+}) {
   const criteria = [
     {
       key: "task_achievement" as const,
@@ -333,7 +342,7 @@ function WritingTab({ writing }: { writing: WritingReview }) {
           </div>
         </div>
         <div className="flex-1 text-sm text-amber-800">
-          <p className="font-semibold mb-0.5">Writing Band Score</p>
+          <p className="font-semibold mb-0.5">{taskLabel} Band Score</p>
           <p className="text-xs text-amber-700">
             {writing.word_count} words written
             {writing.word_count < 250
@@ -491,6 +500,89 @@ function FeedbackBlock({
   );
 }
 
+// ─── Writing dual-task container ──────────────────────────────────────────────
+function WritingDualTab({
+  task1,
+  task2,
+}: {
+  task1: WritingReview | null;
+  task2: WritingReview | null;
+}) {
+  const [activeTask, setActiveTask] = useState<"task1" | "task2">("task2");
+
+  const hasTask1 = !!task1;
+  const hasTask2 = !!task2;
+  const hasAny   = hasTask1 || hasTask2;
+
+  if (!hasAny) {
+    return (
+      <p className="text-sm text-slate-500 italic text-center py-8">
+        No writing evaluation available. The essays may not have been submitted.
+      </p>
+    );
+  }
+
+  return (
+    <div>
+      {/* Task sub-tabs */}
+      <div className="flex gap-1 mb-5 border-b border-slate-200">
+        {(["task1", "task2"] as const).map((t) => {
+          const label = t === "task1" ? "Task 1" : "Task 2";
+          const ev    = t === "task1" ? task1 : task2;
+          const isActive = activeTask === t;
+          return (
+            <button
+              key={t}
+              onClick={() => setActiveTask(t)}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+                isActive
+                  ? "border-amber-500 text-amber-700"
+                  : "border-transparent text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              {label}
+              {ev && (
+                <span
+                  className={`text-[11px] px-1.5 py-0.5 rounded-full font-semibold ${
+                    isActive ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-500"
+                  }`}
+                >
+                  Band {ev.overall_band.toFixed(1)}
+                </span>
+              )}
+              {!ev && (
+                <span className="text-[11px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-400 font-medium">
+                  Not submitted
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Active task panel */}
+      {activeTask === "task1" && (
+        hasTask1 ? (
+          <WritingTab writing={task1!} taskLabel="Task 1 — Describe the visual" />
+        ) : (
+          <p className="text-sm text-slate-500 italic text-center py-8">
+            Task 1 was not submitted or could not be evaluated.
+          </p>
+        )
+      )}
+      {activeTask === "task2" && (
+        hasTask2 ? (
+          <WritingTab writing={task2!} taskLabel="Task 2 — Essay" />
+        ) : (
+          <p className="text-sm text-slate-500 italic text-center py-8">
+            Task 2 was not submitted or could not be evaluated.
+          </p>
+        )
+      )}
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 type Tab = "reading" | "listening" | "writing";
 
@@ -544,7 +636,16 @@ export function AnswerReview({ testId }: { testId: string }) {
       key: "writing",
       icon: <PenLine className="h-4 w-4" />,
       label: "Writing",
-      badge: data.writing ? `Band ${data.writing.overall_band.toFixed(1)}` : undefined,
+      badge: (data.writing.task1 || data.writing.task2)
+        ? (() => {
+            const bands = [data.writing.task1?.overall_band, data.writing.task2?.overall_band]
+              .filter((b): b is number => typeof b === "number");
+            const avg = bands.length > 0
+              ? Math.round((bands.reduce((a, b) => a + b, 0) / bands.length) * 2) / 2
+              : 0;
+            return `Band ${avg.toFixed(1)}`;
+          })()
+        : undefined,
     },
   ];
 
@@ -587,13 +688,7 @@ export function AnswerReview({ testId }: { testId: string }) {
         <RLTab questions={data.listening} section="listening" />
       )}
       {activeTab === "writing" && (
-        data.writing ? (
-          <WritingTab writing={data.writing} />
-        ) : (
-          <p className="text-sm text-slate-500 italic text-center py-8">
-            No writing evaluation available. The essay may not have been submitted.
-          </p>
-        )
+        <WritingDualTab task1={data.writing.task1} task2={data.writing.task2} />
       )}
     </div>
   );

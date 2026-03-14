@@ -111,28 +111,36 @@ export async function GET(req: NextRequest) {
     };
   });
 
-  // ── Writing evaluation ────────────────────────────────────────────────────
-  const { data: writingEval } = await service
+  // ── Writing evaluations — fetch ALL rows (one per task) ──────────────────
+  const { data: writingEvals } = await service
     .from("placement_writing_evaluations")
     .select("*")
     .eq("test_id", testId)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
+    .order("task_type", { ascending: true }); // task1 before task2
 
-  const writing = writingEval
-    ? {
-        essay_text: writingEval.essay_text as string,
-        word_count: writingEval.word_count as number,
-        task_achievement_band: writingEval.task_achievement_band as number,
-        coherence_cohesion_band: writingEval.coherence_cohesion_band as number,
-        lexical_resource_band: writingEval.lexical_resource_band as number,
-        grammatical_range_accuracy_band:
-          writingEval.grammatical_range_accuracy_band as number,
-        overall_band: writingEval.overall_band as number,
-        feedback: writingEval.feedback_json as Record<string, unknown>,
-      }
-    : null;
+  function mapWritingRow(row: Record<string, unknown> | undefined) {
+    if (!row) return null;
+    return {
+      essay_text: row.essay_text as string,
+      word_count: row.word_count as number,
+      task_achievement_band: row.task_achievement_band as number,
+      coherence_cohesion_band: row.coherence_cohesion_band as number,
+      lexical_resource_band: row.lexical_resource_band as number,
+      grammatical_range_accuracy_band: row.grammatical_range_accuracy_band as number,
+      overall_band: row.overall_band as number,
+      feedback: row.feedback_json as Record<string, unknown> | null,
+    };
+  }
+
+  // Support both: rows with explicit task_type col (new) and legacy single rows
+  const rows = writingEvals ?? [];
+  const task1Row = rows.find((r) => r.task_type === "task1") as Record<string, unknown> | undefined;
+  const task2Row = (rows.find((r) => r.task_type === "task2") ?? rows[rows.length - 1]) as Record<string, unknown> | undefined;
+
+  const writing = {
+    task1: mapWritingRow(task1Row),
+    task2: mapWritingRow(task2Row),
+  };
 
   return NextResponse.json({ reading, listening, writing });
 }
