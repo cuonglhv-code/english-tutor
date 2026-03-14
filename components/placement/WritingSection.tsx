@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useRef, useState } from "react";
-import { GripVertical, Check, Loader2 } from "lucide-react";
+import { GripVertical, Check, Loader2, ImageOff } from "lucide-react";
 import type { Lang } from "@/lib/i18n";
 
 export interface WritingTask {
@@ -27,6 +27,43 @@ interface Props {
   task1MinWords?: number; // min words required for task 1 badge
   task1WordCount?: number;// current word count of task 1 essay (passed from parent)
   task2WordCount?: number;// current word count of task 2 essay (passed from parent)
+}
+
+// ─── Chart image with loading skeleton + error fallback ───────────────────────
+function ChartImage({ src, alt }: { src: string; alt: string }) {
+  const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading");
+  return (
+    <div className="mt-3 rounded border border-slate-200 overflow-hidden bg-slate-50">
+      {/* Skeleton shown while loading */}
+      {status === "loading" && (
+        <div className="w-full h-52 animate-pulse bg-slate-200 flex items-center justify-center">
+          <span className="text-xs text-slate-400">Loading chart…</span>
+        </div>
+      )}
+
+      {/* Error fallback */}
+      {status === "error" && (
+        <div className="w-full py-10 flex flex-col items-center justify-center gap-2 text-slate-400">
+          <ImageOff className="h-8 w-8" />
+          <span className="text-xs">Chart not available</span>
+          <span className="text-[10px] text-slate-300 font-mono">{src}</span>
+        </div>
+      )}
+
+      {/* Actual image — hidden during loading/error so skeleton shows */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        onLoad={() => setStatus("loaded")}
+        onError={() => setStatus("error")}
+        className={[
+          "w-full object-contain shadow-sm transition-opacity duration-300",
+          status === "loaded" ? "opacity-100" : "opacity-0 absolute",
+        ].join(" ")}
+      />
+    </div>
+  );
 }
 
 export function WritingSection({
@@ -123,11 +160,9 @@ export function WritingSection({
           </p>
 
           {task.image_url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <ChartImage
               src={task.image_url}
-              alt={task.visual_description ?? "Task visual"}
-              className="w-full rounded border border-slate-200 shadow-sm mt-2"
+              alt={task.visual_description ?? "Task 1 chart"}
             />
           )}
 
