@@ -537,6 +537,10 @@ export default function PlacementTestPage() {
             onPartChange={setActiveListeningPart}
             answers={listeningAnswers}
             onAnswer={(qn, v) => handleAnswer("listening", qn, v)}
+            onBack={handleBack}
+            onNext={handleNext}
+            backDisabled={isBackDisabled}
+            isLoading={submitting}
           />
         )}
 
@@ -584,8 +588,8 @@ export default function PlacementTestPage() {
         )}
       </div>
 
-      {/* ── Bottom navigation bar (hidden for reading — ReadingSection has its own) ── */}
-      {currentSection !== "reading" && (
+      {/* ── Bottom navigation bar (hidden for listening+reading — they have their own) ── */}
+      {currentSection !== "reading" && currentSection !== "listening" && (
         <SectionNav
           lang={lang}
           onBack={!isBackDisabled ? handleBack : undefined}
