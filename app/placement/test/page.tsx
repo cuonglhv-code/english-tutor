@@ -14,7 +14,6 @@ import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { CountdownTimer } from "@/components/placement/CountdownTimer";
 import { TimeUpModal } from "@/components/placement/TimeUpModal";
-import { SectionNav } from "@/components/placement/SectionNav";
 import {
   ReadingSection,
   type ReadingPassage,
@@ -565,6 +564,15 @@ export default function PlacementTestPage() {
             task={data.writingTask1}
             essay={essayT1}
             onChange={setEssayT1}
+            onBack={handleBack}
+            onNext={handleNext}
+            backDisabled={false}
+            isLoading={submitting}
+            isLastTask={false}
+            taskIndex={0}
+            task1MinWords={data.writingTask1.min_words}
+            task1WordCount={essayT1.trim() === "" ? 0 : essayT1.trim().split(/\s+/).length}
+            task2WordCount={essayT2.trim() === "" ? 0 : essayT2.trim().split(/\s+/).length}
           />
         )}
 
@@ -575,6 +583,15 @@ export default function PlacementTestPage() {
             task={data.writingTask2}
             essay={essayT2}
             onChange={setEssayT2}
+            onBack={handleBack}
+            onNext={handleSubmit}
+            backDisabled={false}
+            isLoading={submitting}
+            isLastTask={true}
+            taskIndex={1}
+            task1MinWords={data.writingTask1?.min_words ?? 150}
+            task1WordCount={essayT1.trim() === "" ? 0 : essayT1.trim().split(/\s+/).length}
+            task2WordCount={essayT2.trim() === "" ? 0 : essayT2.trim().split(/\s+/).length}
           />
         )}
 
@@ -588,23 +605,9 @@ export default function PlacementTestPage() {
         )}
       </div>
 
-      {/* ── Bottom navigation bar (hidden for listening+reading — they have their own) ── */}
-      {currentSection !== "reading" && currentSection !== "listening" && (
-        <SectionNav
-          lang={lang}
-          onBack={!isBackDisabled ? handleBack : undefined}
-          backDisabled={isBackDisabled}
-          onNext={isLastSection ? handleSubmit : handleNext}
-          nextLabel={
-            isLastSection
-              ? t("placement", "submitTest", lang)
-              : canGoNextWithinSection()
-              ? `Next Part`
-              : `Next Section →`
-          }
-          isLoading={submitting}
-        />
-      )}
+      {/* ── Bottom navigation bar (hidden — each section has its own embedded nav) ── */}
+      {/* SectionNav intentionally removed: Listening, Reading, and Writing all have
+          their own embedded bottom bars with ← → controls */}
 
       {/* ── Time-up modal ── */}
       <TimeUpModal

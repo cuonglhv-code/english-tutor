@@ -93,8 +93,8 @@ export default function OnboardingPage() {
         throw profileErr;
       }
 
-      // Navigate directly — upsert already committed, middleware will allow /dashboard
-      router.push("/dashboard");
+      // Hard-navigate so the middleware re-reads profile_completed from DB (avoids cache race)
+      window.location.href = "/dashboard";
     } catch (err) {
       const msg = (err as { message?: string })?.message || t("common", "error", lang);
       console.error("Onboarding save error:", msg);
