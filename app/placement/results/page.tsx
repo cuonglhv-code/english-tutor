@@ -52,7 +52,7 @@ export default async function PlacementResultsPage({ searchParams }: PageProps) 
       "task_type, overall_band, task_achievement_band, coherence_cohesion_band, lexical_resource_band, grammatical_range_accuracy_band, feedback_json, word_count"
     )
     .eq("test_id", testId)
-    .order("task_type", { ascending: true }); // task1 before task2
+    .order("created_at", { ascending: true }); // safe: works even before migration 010
 
   // Prefer task2 for study plan summary; fall back to task1 or the last row
   const writingEval =
