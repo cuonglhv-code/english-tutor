@@ -44,6 +44,40 @@ export default async function PlacementResultsPage({ searchParams }: PageProps) 
   const entryRange: EntryBandRange =
     (test.estimated_entry_band_range as EntryBandRange) ?? "3.5-4.0";
 
+  // Fetch writing evaluation for study plan context
+  const { data: writingEval } = await service
+    .from("placement_writing_evaluations")
+    .select(
+      "overall_band, task_achievement_band, coherence_cohesion_band, lexical_resource_band, grammatical_range_accuracy_band, feedback_json, word_count"
+    )
+    .eq("test_id", testId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  type FeedbackJson = {
+    priority_actions?: string[];
+    overall_comment?: string;
+    task_achievement?: { strengths?: string; improvements?: string };
+  };
+  const fb = (writingEval?.feedback_json ?? {}) as FeedbackJson;
+
+  const writingSummary = writingEval
+    ? {
+        overallBand: writingEval.overall_band as number,
+        taskAchievementBand: writingEval.task_achievement_band as number,
+        coherenceCohesionBand: writingEval.coherence_cohesion_band as number,
+        lexicalResourceBand: writingEval.lexical_resource_band as number,
+        grammarBand: writingEval.grammatical_range_accuracy_band as number,
+        wordCount: (writingEval.word_count ?? 0) as number,
+        priorityActions: (fb.priority_actions ?? []) as string[],
+        overallComment: (fb.overall_comment ?? "") as string,
+        strengths: (fb.task_achievement?.strengths ?? "") as string,
+        improvements: (fb.task_achievement?.improvements ?? "") as string,
+        feedbackJson: writingEval.feedback_json as Record<string, unknown>,
+      }
+    : null;
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-12 px-4">
       <div className="max-w-3xl mx-auto space-y-10">
@@ -109,7 +143,15 @@ export default async function PlacementResultsPage({ searchParams }: PageProps) 
             Lộ trình học gợi ý — select your target band to see the recommended
             programme.
           </p>
-          <ResultsClient testId={testId} entryBandRange={entryRange} />
+          <ResultsClient
+            testId={testId}
+            entryBandRange={entryRange}
+            readingBand={readingBand}
+            listeningBand={listeningBand}
+            writingBand={writingBand}
+            overallAverage={parseFloat(avg)}
+            writingSummary={writingSummary}
+          />
         </div>
 
         {/* Answer Review */}

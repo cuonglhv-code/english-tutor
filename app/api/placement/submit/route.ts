@@ -68,10 +68,17 @@ export async function POST(req: NextRequest) {
   const listeningAnswers = (answers ?? []).filter(
     (a: { section: string }) => a.section === "listening"
   );
-  const writingAnswer = (answers ?? []).find(
-    (a: { section: string; question_number: number }) =>
-      a.section === "writing" && a.question_number === 0
-  );
+  // Writing Task 2 essay is stored as section='writing', question_number=2
+  // (Task 1 = question_number=1; legacy single-task = question_number=0)
+  const writingAnswer =
+    (answers ?? []).find(
+      (a: { section: string; question_number: number }) =>
+        a.section === "writing" && a.question_number === 2
+    ) ??
+    (answers ?? []).find(
+      (a: { section: string; question_number: number }) =>
+        a.section === "writing" && a.question_number === 0
+    );
 
   // ── Score Reading ──────────────────────────────────────────────────────────
   const { data: readingQuestions } = await service
@@ -124,12 +131,12 @@ export async function POST(req: NextRequest) {
   const essayText = writingAnswer?.answer_text ?? "";
 
   if (essayText.trim().length > 20) {
-    // Fetch writing task prompt
+    // Fetch Task 2 prompt for scoring
     const { data: writingTask } = await service
       .from("placement_writing_tasks")
       .select("prompt_text")
       .eq("is_active", true)
-      .order("created_at", { ascending: false })
+      .eq("task_type", "task2")
       .limit(1)
       .single();
 

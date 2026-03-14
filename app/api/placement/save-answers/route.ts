@@ -8,9 +8,12 @@ interface AnswerItem {
   answerText: string;
 }
 
+type SectionInput = "reading" | "listening" | "writing" | "writing_t1" | "writing_t2";
+type DBSection = "reading" | "listening" | "writing";
+
 interface RequestBody {
   testId: string;
-  section: "reading" | "listening" | "writing";
+  section: SectionInput;
   answers: AnswerItem[];
 }
 
@@ -32,11 +35,17 @@ export async function POST(req: NextRequest) {
   }
 
   const body: RequestBody = await req.json();
-  const { testId, section, answers } = body;
+  const { testId, answers } = body;
+  let { section } = body;
 
   if (!testId || !section || !Array.isArray(answers)) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
+
+  // Map writing_t1 / writing_t2 → "writing" for DB (question_number disambiguates)
+  const dbSection: DBSection =
+    section === "writing_t1" || section === "writing_t2" ? "writing" : (section as DBSection);
+  section = dbSection;
 
   const service = createServiceClient();
 
@@ -55,7 +64,7 @@ export async function POST(req: NextRequest) {
   // Upsert each answer
   const rows = answers.map((a) => ({
     test_id: testId,
-    section,
+    section: dbSection,
     question_number: a.questionNumber,
     answer_text: a.answerText ?? "",
   }));

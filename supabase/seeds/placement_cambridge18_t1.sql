@@ -109,7 +109,7 @@ BEGIN
      'fill_blank', NULL, 'journeys', 5),
     (p1_title, p1_text, 1, 6,
      'Intensive farming: _____ receive very little of the overall income from sales.',
-     'fill_blank', NULL, 'wholesalers', 6),
+     'fill_blank', NULL, 'producers', 6),
     (p1_title, p1_text, 1, 7,
      'Aeroponic urban farming: produce is chosen because of its _____.',
      'fill_blank', NULL, 'flavour', 7);
@@ -243,15 +243,15 @@ BEGIN
   INSERT INTO public.placement_listening_questions
     (audio_id, question_number, question_text, question_type, options, correct_answer, context_text, display_order)
   VALUES
-    (audio_id, 1,  'Postcode: _____',                                                              'fill_blank', NULL, 'NR7 4GH',     'Complete the notes. Write ONE WORD AND/OR A NUMBER for each answer.', 1),
-    (audio_id, 2,  'Date of bus journey: _____',                                                   'fill_blank', NULL, '14th March',  NULL, 2),
+    (audio_id, 1,  'Postcode: _____',                                                              'fill_blank', NULL, 'DW30 7YZ',    'Complete the notes. Write ONE WORD AND/OR A NUMBER for each answer.', 1),
+    (audio_id, 2,  'Date of bus journey: _____',                                                   'fill_blank', NULL, '24 April',   NULL, 2),
     (audio_id, 3,  'Reason for trip: shopping and visit to the _____',                             'fill_blank', NULL, 'dentist',     NULL, 3),
     (audio_id, 4,  'Travelled by bus because cost of _____ too high',                              'fill_blank', NULL, 'parking',     NULL, 4),
-    (audio_id, 5,  'Got on bus at _____ Street',                                                   'fill_blank', NULL, 'Broom',       NULL, 5),
+    (audio_id, 5,  'Got on bus at _____ Street',                                                   'fill_blank', NULL, 'Claxby',      NULL, 5),
     (audio_id, 6,  'Complaint: bus today was _____',                                               'fill_blank', NULL, 'late',        NULL, 6),
     (audio_id, 7,  'Complaint: frequency of buses in the _____',                                   'fill_blank', NULL, 'evening',     NULL, 7),
     (audio_id, 8,  'Goes to the _____ by car',                                                     'fill_blank', NULL, 'supermarket', NULL, 8),
-    (audio_id, 9,  'Dislikes travelling by bike in the city centre because of the _____',          'fill_blank', NULL, 'traffic',     NULL, 9),
+    (audio_id, 9,  'Dislikes travelling by bike in the city centre because of the _____',          'fill_blank', NULL, 'pollution',   NULL, 9),
     (audio_id, 10, 'Does not own a bike because of a lack of _____',                               'fill_blank', NULL, 'storage',     NULL, 10);
 
   -- ── LISTENING – Part 2: Becoming a volunteer for ACE  (Q11–20) ──────────────
@@ -280,23 +280,37 @@ BEGIN
      'multiple_choice',
      '["A: It is continuous.","B: It is conducted by a manager.","C: It takes place online."]',
      'A', NULL, 3),
-    -- Q14–15: Choose TWO (simplified as fill_blank – write both letters)
-    (audio_id, 14, 'Which TWO issues does the speaker ask the audience to consider before applying? (Options: A=financial situation, B=level of commitment, C=work experience, D=ambition, E=availability) — write BOTH letters e.g. B, E',
-     'fill_blank', NULL, 'B, E',
-     'Write TWO letters for questions 14 and 15.', 4),
-    (audio_id, 15, '(second answer for questions 14–15 above)',
-     'fill_blank', NULL, 'B, E', NULL, 5),
+    -- Q14–15: Choose TWO letters (each stored as individual answer)
+    (audio_id, 14, 'Which TWO issues does the speaker ask the audience to consider before applying? — Write one letter (A–E) per box.',
+     'multiple_choice',
+     '["A: financial situation","B: level of commitment","C: work experience","D: ambition","E: availability"]',
+     'B',
+     'Questions 14 and 15 — Choose TWO letters, A–E.', 4),
+    (audio_id, 15, 'Which TWO issues does the speaker ask the audience to consider before applying? — Write the second letter.',
+     'multiple_choice',
+     '["A: financial situation","B: level of commitment","C: work experience","D: ambition","E: availability"]',
+     'E', NULL, 5),
     -- Q16–20: Matching (area of work → helpful attribute A–G)
-    (audio_id, 16, 'Fundraising — which helpful attribute? (A=experience on stage, B=original new ideas, C=parenting skills, D=understanding of food and diet, E=retail experience, F=good memory, G=good level of fitness)',
-     'fill_blank', NULL, 'E', 'What would be helpful for each area of voluntary work? Write the correct letter A–G.', 6),
-    (audio_id, 17, 'Litter collection — which helpful attribute? (A–G as above)',
-     'fill_blank', NULL, 'G', NULL, 7),
-    (audio_id, 18, 'Playmates — which helpful attribute? (A–G as above)',
-     'fill_blank', NULL, 'C', NULL, 8),
-    (audio_id, 19, 'Story club — which helpful attribute? (A–G as above)',
-     'fill_blank', NULL, 'F', NULL, 9),
-    (audio_id, 20, 'First aid — which helpful attribute? (A–G as above)',
-     'fill_blank', NULL, 'D', NULL, 10);
+    (audio_id, 16, 'Fundraising',
+     'multiple_choice',
+     '["A: experience on stage","B: original new ideas","C: parenting skills","D: understanding of food and diet","E: retail experience","F: good memory","G: good level of fitness"]',
+     'B', 'What would be helpful for each area of voluntary work? Write the correct letter, A–G.', 6),
+    (audio_id, 17, 'Litter collection',
+     'multiple_choice',
+     '["A: experience on stage","B: original new ideas","C: parenting skills","D: understanding of food and diet","E: retail experience","F: good memory","G: good level of fitness"]',
+     'G', NULL, 7),
+    (audio_id, 18, 'Playmates',
+     'multiple_choice',
+     '["A: experience on stage","B: original new ideas","C: parenting skills","D: understanding of food and diet","E: retail experience","F: good memory","G: good level of fitness"]',
+     'D', NULL, 8),
+    (audio_id, 19, 'Story club',
+     'multiple_choice',
+     '["A: experience on stage","B: original new ideas","C: parenting skills","D: understanding of food and diet","E: retail experience","F: good memory","G: good level of fitness"]',
+     'A', NULL, 9),
+    (audio_id, 20, 'First aid',
+     'multiple_choice',
+     '["A: experience on stage","B: original new ideas","C: parenting skills","D: understanding of food and diet","E: retail experience","F: good memory","G: good level of fitness"]',
+     'F', NULL, 10);
 
   -- ── LISTENING – Part 3: Talk on jobs in fashion design  (Q21–30) ────────────
   INSERT INTO public.placement_listening_audio
@@ -336,15 +350,23 @@ BEGIN
      '["A: He is realistic about the practice.","B: He feels the practice is dishonest.","C: He thinks others want to change the practice."]',
      'A', NULL, 6),
     -- Q27–28: Choose TWO mistakes the speaker admitted (A–E)
-    (audio_id, 27, 'Which TWO mistakes did the speaker admit she made in her first job? (A=being dishonest to employer, B=paying too much attention to how she looked, C=expecting to become well known, D=trying to earn a lot of money, E=openly disliking her client) — write BOTH letters',
-     'fill_blank', NULL, 'B, D', 'Write TWO letters for questions 27 and 28.', 7),
-    (audio_id, 28, '(second answer for questions 27–28 above)',
-     'fill_blank', NULL, 'B, D', NULL, 8),
+    (audio_id, 27, 'Which TWO mistakes did the speaker admit she made in her first job? — Write one letter per box.',
+     'multiple_choice',
+     '["A: being dishonest to employer","B: paying too much attention to how she looked","C: expecting to become well known","D: trying to earn a lot of money","E: openly disliking her client"]',
+     'B', 'Questions 27 and 28 — Choose TWO letters, A–E.', 7),
+    (audio_id, 28, 'Which TWO mistakes did the speaker admit she made in her first job? — Write the second letter.',
+     'multiple_choice',
+     '["A: being dishonest to employer","B: paying too much attention to how she looked","C: expecting to become well known","D: trying to earn a lot of money","E: openly disliking her client"]',
+     'E', NULL, 8),
     -- Q29–30: Choose TWO pieces of retail info (A–E)
-    (audio_id, 29, 'Which TWO pieces of retail information do Hugo and Chantal agree would be useful? (A=reasons people return fashion items, B=how much time people have to shop, C=fashion designs people want but can''t find, D=best time of year for fashion buying, E=most popular fashion sizes) — write BOTH letters',
-     'fill_blank', NULL, 'C, E', 'Write TWO letters for questions 29 and 30.', 9),
-    (audio_id, 30, '(second answer for questions 29–30 above)',
-     'fill_blank', NULL, 'C, E', NULL, 10);
+    (audio_id, 29, 'Which TWO pieces of retail information do Hugo and Chantal agree would be useful? — Write one letter per box.',
+     'multiple_choice',
+     '["A: reasons people return fashion items","B: how much time people have to shop","C: fashion designs people want but can''t find","D: best time of year for fashion buying","E: most popular fashion sizes"]',
+     'A', 'Questions 29 and 30 — Choose TWO letters, A–E.', 9),
+    (audio_id, 30, 'Which TWO pieces of retail information do Hugo and Chantal agree would be useful? — Write the second letter.',
+     'multiple_choice',
+     '["A: reasons people return fashion items","B: how much time people have to shop","C: fashion designs people want but can''t find","D: best time of year for fashion buying","E: most popular fashion sizes"]',
+     'C', NULL, 10);
 
   -- ── LISTENING – Part 4: Elephant translocation  (Q31–40) ────────────────────
   INSERT INTO public.placement_listening_audio
@@ -365,18 +387,39 @@ BEGIN
     (audio_id, 34, 'Immobilisation had to be completed quickly to reduce _____',                         'fill_blank', NULL, 'stress',      NULL, 4),
     (audio_id, 35, 'Elephants had to be turned on their _____ to avoid damage to their lungs',          'fill_blank', NULL, 'sides',       NULL, 5),
     (audio_id, 36, 'Elephants'' _____ had to be monitored constantly',                                  'fill_blank', NULL, 'breathing',   NULL, 6),
-    (audio_id, 37, 'Data including the size of their tusks and _____ was taken',                        'fill_blank', NULL, 'weight',      NULL, 7),
-    (audio_id, 38, 'Advantages at Nkhotakota: _____ opportunities',                                     'fill_blank', NULL, 'ecotourism',  NULL, 8),
-    (audio_id, 39, 'Advantages at Nkhotakota: a reduction in the number of poachers and _____',        'fill_blank', NULL, 'crime',       NULL, 9),
-    (audio_id, 40, 'Advantages at Nkhotakota: an increase in _____ as a contributor to GDP',           'fill_blank', NULL, 'revenue',     NULL, 10);
+    (audio_id, 37, 'Data including the size of their tusks and _____ was taken',                        'fill_blank', NULL, 'Feet',        NULL, 7),
+    (audio_id, 38, 'Advantages at Nkhotakota: _____ opportunities',                                     'fill_blank', NULL, 'Employment',  NULL, 8),
+    (audio_id, 39, 'Advantages at Nkhotakota: a reduction in the number of poachers and _____',        'fill_blank', NULL, 'Weapons',     NULL, 9),
+    (audio_id, 40, 'Advantages at Nkhotakota: an increase in _____ as a contributor to GDP',           'fill_blank', NULL, 'tourism',     NULL, 10);
+
+  -- ── WRITING – Task 1 (line graph)  ──────────────────────────────────────────
+  INSERT INTO public.placement_writing_tasks
+    (task_type, prompt_text, visual_description, min_words, recommended_minutes, is_active)
+  VALUES
+    (
+      'task1',
+      'You should spend about 20 minutes on this task.
+
+The graph below shows the percentage of urban population in five Asian countries in 1970 and 2000, with projections for 2030.
+
+Summarise the information by selecting and reporting the main features, and make comparisons where relevant.
+
+Write at least 150 words.',
+      'Line graph: Percentage of urban population in five Asian countries (Philippines, Malaysia, Thailand, Indonesia, and India) across three time periods: 1970, 2000, and projected 2030. All countries show an upward trend. Malaysia starts highest (~25% in 1970) and reaches ~75% by 2030. Philippines starts ~30% and rises to ~65%. Thailand starts ~15% and climbs to ~55%. Indonesia starts ~15% and reaches ~55%. India starts lowest (~10%) and rises to ~45% by 2030.',
+      150,
+      20,
+      true
+    );
 
   -- ── WRITING – Task 2  ────────────────────────────────────────────────────────
   INSERT INTO public.placement_writing_tasks
-    (task_type, prompt_text, visual_description, min_words, recommended_minutes)
+    (task_type, prompt_text, visual_description, min_words, recommended_minutes, is_active)
   VALUES
     (
       'task2',
-      'Write about the following topic:
+      'You should spend about 40 minutes on this task.
+
+Write about the following topic:
 
 The most important aim of science should be to improve people''s lives.
 
@@ -387,7 +430,8 @@ Give reasons for your answer and include any relevant examples from your own kno
 Write at least 250 words.',
       NULL,
       250,
-      40
+      40,
+      true
     );
 
   RAISE NOTICE 'Seed complete — reading: % questions, listening: % questions, writing tasks: %',

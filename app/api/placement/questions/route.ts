@@ -137,31 +137,38 @@ export async function GET() {
     })
   );
 
-  // ── Writing: fetch the active writing task ───────────────────────────────────
-  const { data: writingRow } = await service
+  // ── Writing: fetch both active writing tasks (task1 and task2) ──────────────
+  const { data: writingRows } = await service
     .from("placement_writing_tasks")
     .select("*")
     .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
+    .order("task_type", { ascending: true }); // "task1" sorts before "task2"
 
-  const writingTask = writingRow
-    ? {
-        id: writingRow.id as string,
-        task_type: writingRow.task_type as string,
-        prompt_text: writingRow.prompt_text as string,
-        image_url: (writingRow.image_url as string) ?? null,
-        visual_description: (writingRow.visual_description as string) ?? null,
-        min_words: writingRow.min_words as number,
-        recommended_minutes: writingRow.recommended_minutes as number,
-      }
-    : null;
+  function toWritingTask(row: Record<string, unknown> | undefined) {
+    if (!row) return null;
+    return {
+      id: row.id as string,
+      task_type: row.task_type as string,
+      prompt_text: row.prompt_text as string,
+      image_url: (row.image_url as string) ?? null,
+      visual_description: (row.visual_description as string) ?? null,
+      min_words: row.min_words as number,
+      recommended_minutes: row.recommended_minutes as number,
+    };
+  }
+
+  const writingTask1 = toWritingTask(
+    (writingRows ?? []).find((r) => r.task_type === "task1") as Record<string, unknown> | undefined
+  );
+  const writingTask2 = toWritingTask(
+    (writingRows ?? []).find((r) => r.task_type === "task2") as Record<string, unknown> | undefined
+  );
 
   return NextResponse.json({
     testId,
     readingPassages,
     listeningParts,
-    writingTask,
+    writingTask1,
+    writingTask2,
   });
 }

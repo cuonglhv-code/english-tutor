@@ -10,11 +10,18 @@ interface RequestBody {
   planName: string;
   stagesJson: unknown[];
   totalMonths: number;
+  // Enhanced fields (optional for backward compat)
+  readingBand?: number;
+  listeningBand?: number;
+  writingBand?: number;
+  overallAverage?: number;
+  writingFeedbackJson?: Record<string, unknown> | null;
 }
 
 /**
  * POST /api/placement/save-plan
  * Saves a user's selected study plan to user_study_plans.
+ * Returns the new plan ID so the client can navigate to the plan view page.
  */
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
@@ -28,7 +35,19 @@ export async function POST(req: NextRequest) {
   }
 
   const body: RequestBody = await req.json();
-  const { testId, entryBandRange, goalBand, planName, stagesJson, totalMonths } = body;
+  const {
+    testId,
+    entryBandRange,
+    goalBand,
+    planName,
+    stagesJson,
+    totalMonths,
+    readingBand,
+    listeningBand,
+    writingBand,
+    overallAverage,
+    writingFeedbackJson,
+  } = body;
 
   if (!entryBandRange || !goalBand || !planName || !stagesJson) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -46,6 +65,11 @@ export async function POST(req: NextRequest) {
       plan_name: planName,
       stages_json: stagesJson,
       total_months: totalMonths,
+      reading_band: readingBand ?? null,
+      listening_band: listeningBand ?? null,
+      writing_band: writingBand ?? null,
+      overall_average: overallAverage ?? null,
+      writing_feedback_json: writingFeedbackJson ?? null,
     })
     .select("id")
     .single();

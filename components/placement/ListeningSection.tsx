@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { Headphones, Volume2 } from "lucide-react";
 import { t } from "@/lib/i18n";
 import type { Lang } from "@/lib/i18n";
@@ -29,6 +28,8 @@ export interface ListeningPart {
 interface Props {
   lang: Lang;
   parts: ListeningPart[];
+  activePart: number;
+  onPartChange: (index: number) => void;
   answers: Record<string, string>; // keyed by bare question number string
   onAnswer: (questionNumber: number, value: string) => void;
 }
@@ -106,9 +107,7 @@ function MCQInput({
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export function ListeningSection({ lang, parts, answers, onAnswer }: Props) {
-  const [activePart, setActivePart] = useState(0);
-
+export function ListeningSection({ lang, parts, activePart, onPartChange, answers, onAnswer }: Props) {
   if (!parts.length) {
     return (
       <div className="flex flex-1 items-center justify-center text-sm text-slate-500 italic">
@@ -137,7 +136,7 @@ export function ListeningSection({ lang, parts, answers, onAnswer }: Props) {
         {parts.map((p, i) => (
           <button
             key={p.audio.id}
-            onClick={() => setActivePart(i)}
+            onClick={() => onPartChange(i)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
               i === activePart
                 ? "bg-teal-600 text-white shadow-sm"
@@ -255,7 +254,7 @@ export function ListeningSection({ lang, parts, answers, onAnswer }: Props) {
               return (
                 <div key={p.audio.id} className="flex items-center justify-between text-xs mb-1.5">
                   <button
-                    onClick={() => setActivePart(i)}
+                    onClick={() => onPartChange(i)}
                     className={`font-medium transition-colors ${
                       i === activePart ? "text-teal-700" : "text-slate-500 hover:text-teal-600"
                     }`}

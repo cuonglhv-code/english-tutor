@@ -74,8 +74,13 @@ export function WritingSection({ lang, task, essay, onChange }: Props) {
       {/* Banner */}
       <div className="bg-amber-50 border-b border-amber-100 px-4 py-2 flex items-center gap-2 text-sm text-amber-800 shrink-0">
         <span className="font-semibold">
-          {t("placement", "partLabel", lang)} 1 ·{" "}
-          {task.task_type === "task1" ? "Task 1" : "Task 2"}
+          {task.task_type === "task1" ? "Writing Task 1" : "Writing Task 2"}
+        </span>
+        <span className="text-amber-400">·</span>
+        <span>
+          {task.task_type === "task1"
+            ? `Min ${task.min_words} words · ${task.recommended_minutes} min`
+            : `Min ${task.min_words} words · ${task.recommended_minutes} min`}
         </span>
         <span className="text-amber-400">·</span>
         <span>{t("placement", "writingInstruction", lang)}</span>
