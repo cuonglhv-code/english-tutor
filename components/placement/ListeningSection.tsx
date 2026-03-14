@@ -2,15 +2,18 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Volume2, VolumeX, Play, Pause } from "lucide-react";
 import type { Lang } from "@/lib/i18n";
+import { NotesCard, type NotesCardData } from "@/components/placement/NotesCard";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 export interface ListeningQuestion {
   id: string;
   question_number: number;
   question_text: string;
-  question_type: "fill_blank" | "multiple_choice" | "matching";
+  question_type: "fill_blank" | "multiple_choice" | "matching" | "notes_completion";
   options?: string[] | null;
   context_text?: string | null;
+  before_text?: string | null;   // text before the gap (notes_completion)
+  after_text?: string | null;    // text after the gap (notes_completion)
 }
 
 export interface ListeningAudio {
@@ -18,6 +21,7 @@ export interface ListeningAudio {
   title: string;
   public_url: string;
   part_number: number;
+  notes_layout_json?: string | null;  // JSON string → NotesCardData
 }
 
 export interface ListeningPart {
@@ -234,37 +238,32 @@ export function ListeningSection({
   isLoading = false,
 }: Props) {
   // ── Audio ──────────────────────────────────────────────────────────────────
+  // One single audio file covers all 4 parts — loaded ONCE on mount, never
+  // reloaded when the user navigates between parts.
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [audioStatus, setAudioStatus] = useState<"idle" | "playing" | "paused" | "ended">("idle");
+  const [started, setStarted] = useState(false); // false until user clicks "Start Listening"
 
-  // Create Audio element once on mount
+  // Create & load the single audio on mount
   useEffect(() => {
     const audio = new Audio();
-    audio.addEventListener("play", () => setAudioStatus("playing"));
+    audio.addEventListener("play",  () => setAudioStatus("playing"));
     audio.addEventListener("pause", () => setAudioStatus((s) => s !== "ended" ? "paused" : "ended"));
     audio.addEventListener("ended", () => setAudioStatus("ended"));
+    // Load from Part 1's URL — the one file covers the whole test
+    const url = parts[0]?.audio.public_url;
+    if (url) { audio.src = url; audio.load(); }
     audioRef.current = audio;
-    return () => {
-      audio.pause();
-      audio.src = "";
-    };
-  }, []);
+    return () => { audio.pause(); audio.src = ""; };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Load audio when activePart changes
-  useEffect(() => {
+  // "Start Listening" button handler — satisfies browser autoplay policy
+  const handleStart = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    const url = parts[activePart]?.audio.public_url;
-    if (!url) return;
-    const wasPlaying = !audio.paused && audio.currentTime > 0;
-    audio.src = url;
-    audio.load();
-    if (wasPlaying) {
-      audio.play().catch(() => setAudioStatus("idle"));
-    } else {
-      setAudioStatus("idle");
-    }
-  }, [activePart, parts]);
+    audio.play().catch(() => {});
+    setStarted(true);
+  }, []);
 
   const handleAudioToggle = useCallback(() => {
     const audio = audioRef.current;
@@ -304,7 +303,33 @@ export function ListeningSection({
   );
 
   return (
-    <div className="flex flex-col flex-1 overflow-hidden">
+    <div className="flex flex-col flex-1 overflow-hidden relative">
+
+      {/* ── "Ready to start?" overlay — shown until user clicks Start ── */}
+      {!started && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-slate-900/75 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 p-8 text-center animate-in fade-in zoom-in-95 duration-200">
+            {/* Icon */}
+            <div className="w-16 h-16 bg-blue-50 border-2 border-blue-200 rounded-full flex items-center justify-center mx-auto mb-5">
+              <Volume2 className="h-8 w-8 text-blue-500" />
+            </div>
+            <h2 className="text-xl font-black text-slate-900 mb-2">Listening Test</h2>
+            <p className="text-sm text-slate-500 leading-relaxed mb-1">
+              A single audio recording plays continuously for all 4 parts.
+            </p>
+            <p className="text-sm text-slate-500 leading-relaxed mb-7">
+              You can freely navigate between parts while the audio plays. Answer as you listen.
+            </p>
+            <button
+              onClick={handleStart}
+              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl px-6 py-3.5 font-bold text-base transition-colors flex items-center justify-center gap-2 shadow-md"
+            >
+              <Play className="h-5 w-5 fill-white" />
+              Start Listening
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── Part header bar ── */}
       <div className="shrink-0 bg-[#f4f4f4] border-b border-slate-200 px-6 py-3 flex items-center justify-between gap-4">
@@ -329,7 +354,30 @@ export function ListeningSection({
       <div className="flex flex-1 overflow-hidden relative">
         <div className="flex-1 overflow-y-auto bg-white">
           <div className="px-8 py-7 max-w-3xl pb-24">
-            {groups.map((group, gi) => (
+            {groups.map((group, gi) => {
+              // ── Notes-completion: render the entire group as a single NotesCard ──
+              const isNotesGroup = group.items[0]?.question_type === "notes_completion";
+              if (isNotesGroup && currentPart.audio.notes_layout_json) {
+                let notesData: NotesCardData | null = null;
+                try {
+                  notesData = JSON.parse(currentPart.audio.notes_layout_json) as NotesCardData;
+                } catch { /* ignore parse errors */ }
+
+                if (notesData) {
+                  return (
+                    <div key={gi} className="px-4 py-4">
+                      <NotesCard
+                        data={notesData}
+                        answers={answers}
+                        onAnswer={onAnswer}
+                        answeredNums={answeredNums}
+                      />
+                    </div>
+                  );
+                }
+              }
+
+              return (
               <div key={gi} className="mb-10">
 
                 {/* Group context / instruction */}
@@ -397,7 +445,8 @@ export function ListeningSection({
                   })}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

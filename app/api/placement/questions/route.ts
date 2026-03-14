@@ -120,6 +120,7 @@ export async function GET() {
           title: audioRow.title as string,
           public_url: audioRow.public_url as string,
           part_number: audioRow.part_number as number,
+          notes_layout_json: (audioRow.notes_layout_json as string) ?? null,
         },
         questions: (lqs ?? []).map((q: Record<string, unknown>) => ({
           id: q.id as string,
@@ -132,6 +133,8 @@ export async function GET() {
               : q.options
             : null,
           context_text: (q.context_text as string) ?? null,
+          before_text: (q.before_text as string) ?? null,
+          after_text: (q.after_text as string) ?? null,
         })),
       };
     })
