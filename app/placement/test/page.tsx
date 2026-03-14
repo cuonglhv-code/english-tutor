@@ -162,6 +162,21 @@ export default function PlacementTestPage() {
     [answers]
   );
 
+  // ── Wipe stale timer state BEFORE hooks read localStorage ─────────────────
+  // useCountdownTimer reads localStorage in its useState lazy initialiser, so we
+  // must clear storage synchronously on the very first render — before those hooks
+  // are called — otherwise a leftover "remaining=0" causes the Time-Up modal to
+  // appear immediately every time the user loads/refreshes the page.
+  const _timersWiped = useRef(false);
+  if (!_timersWiped.current) {
+    _timersWiped.current = true;
+    if (typeof window !== "undefined") {
+      Object.values(TIMER_KEYS).forEach((key) => {
+        try { localStorage.removeItem(key); } catch { /* ignore */ }
+      });
+    }
+  }
+
   // ── Four independent countdown timers ─────────────────────────────────────
   const listeningTimer  = useCountdownTimer(TIMER_DURATIONS.listening,  TIMER_KEYS.listening);
   const readingTimer    = useCountdownTimer(TIMER_DURATIONS.reading,     TIMER_KEYS.reading);

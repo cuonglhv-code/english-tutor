@@ -93,8 +93,7 @@ export default function OnboardingPage() {
         throw profileErr;
       }
 
-      // Middleware now checks profiles.profile_completed directly
-      router.refresh();
+      // Navigate directly — upsert already committed, middleware will allow /dashboard
       router.push("/dashboard");
     } catch (err) {
       const msg = (err as { message?: string })?.message || t("common", "error", lang);
