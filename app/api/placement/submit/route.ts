@@ -266,7 +266,6 @@ export async function POST(req: NextRequest) {
       const bestEval =
         evalInserts.find((e) => e.task_type === "task2") ?? evalInserts[0];
       if (bestEval) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { task_type: _drop, ...legacyRow } = bestEval;
         const { error: fallbackErr } = await service
           .from("placement_writing_evaluations")
