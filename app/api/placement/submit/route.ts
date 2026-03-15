@@ -255,7 +255,27 @@ export async function POST(req: NextRequest) {
     });
   }
   if (evalInserts.length > 0) {
-    await service.from("placement_writing_evaluations").insert(evalInserts);
+    const { error: evalInsertError } = await service
+      .from("placement_writing_evaluations")
+      .insert(evalInserts);
+
+    if (evalInsertError) {
+      console.error("[placement/submit] Eval insert failed:", evalInsertError.message);
+      // Fallback: task_type column may not exist yet (migration 010 not applied).
+      // Insert the best available eval WITHOUT the task_type field.
+      const bestEval =
+        evalInserts.find((e) => e.task_type === "task2") ?? evalInserts[0];
+      if (bestEval) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { task_type: _drop, ...legacyRow } = bestEval;
+        const { error: fallbackErr } = await service
+          .from("placement_writing_evaluations")
+          .insert([legacyRow]);
+        if (fallbackErr) {
+          console.error("[placement/submit] Fallback eval insert failed:", fallbackErr.message);
+        }
+      }
+    }
   }
 
   return NextResponse.json({

@@ -10,6 +10,7 @@ import {
   Headphones,
   PenLine,
   Loader2,
+  RefreshCw,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -504,21 +505,82 @@ function FeedbackBlock({
 function WritingDualTab({
   task1,
   task2,
+  testId,
+  onRescoreSuccess,
 }: {
   task1: WritingReview | null;
   task2: WritingReview | null;
+  testId: string;
+  onRescoreSuccess: () => void;
 }) {
   const [activeTask, setActiveTask] = useState<"task1" | "task2">("task2");
+  const [rescoring, setRescoring] = useState(false);
+  const [rescoreError, setRescoreError] = useState<string | null>(null);
 
   const hasTask1 = !!task1;
   const hasTask2 = !!task2;
   const hasAny   = hasTask1 || hasTask2;
 
+  async function handleRescore() {
+    setRescoring(true);
+    setRescoreError(null);
+    try {
+      const res = await fetch("/api/placement/rescore-writing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ testId }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setRescoreError(json.error ?? "Re-evaluation failed. Please try again.");
+      } else {
+        // Reload to show new evaluations
+        onRescoreSuccess();
+      }
+    } catch {
+      setRescoreError("Network error. Please try again.");
+    } finally {
+      setRescoring(false);
+    }
+  }
+
   if (!hasAny) {
     return (
-      <p className="text-sm text-slate-500 italic text-center py-8">
-        No writing evaluation available. The essays may not have been submitted.
-      </p>
+      <div className="py-10 flex flex-col items-center gap-4 text-center">
+        <div className="w-14 h-14 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
+          <PenLine className="h-6 w-6 text-amber-500" />
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-slate-700 mb-1">
+            Writing feedback not yet generated
+          </p>
+          <p className="text-xs text-slate-400 max-w-xs">
+            Your essays were saved but not evaluated. Click below to score them with AI now.
+          </p>
+        </div>
+        {rescoreError && (
+          <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2 max-w-sm">
+            {rescoreError}
+          </p>
+        )}
+        <button
+          onClick={handleRescore}
+          disabled={rescoring}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-60 transition-colors shadow-sm"
+        >
+          {rescoring ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Evaluating with AI… this may take 30–60 seconds
+            </>
+          ) : (
+            <>
+              <RefreshCw className="h-4 w-4" />
+              Generate Writing Feedback
+            </>
+          )}
+        </button>
+      </div>
     );
   }
 
@@ -591,12 +653,18 @@ export function AnswerReview({ testId }: { testId: string }) {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("reading");
 
-  useEffect(() => {
+  function fetchReview() {
+    setLoading(true);
     fetch(`/api/placement/review?testId=${testId}`)
       .then((r) => r.json())
       .then((d) => setData(d))
       .catch(() => {})
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    fetchReview();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testId]);
 
   if (loading) {
@@ -688,7 +756,12 @@ export function AnswerReview({ testId }: { testId: string }) {
         <RLTab questions={data.listening} section="listening" />
       )}
       {activeTab === "writing" && (
-        <WritingDualTab task1={data.writing.task1} task2={data.writing.task2} />
+        <WritingDualTab
+          task1={data.writing.task1}
+          task2={data.writing.task2}
+          testId={testId}
+          onRescoreSuccess={fetchReview}
+        />
       )}
     </div>
   );
