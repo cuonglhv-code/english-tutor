@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Send, BookOpen, Target, TrendingUp,
   MessageSquare, CheckCircle, BarChart3,
-  Star, ArrowLeft, Trash2,
+  Star, ArrowLeft, Trash2, ChevronDown, ChevronUp,
 } from 'lucide-react'
 import { createBrowserClient } from '@/lib/supabase'
 import { useFavourites } from '@/lib/tutor/useFavourites'
@@ -19,15 +19,150 @@ import type {
   TutorChatResponse, LearningGoal,
 } from '@/lib/tutor/types'
 
-export default function TutorSessionClient() {
-  const router      = useRouter()
-  const params      = useSearchParams()
-  const supabase    = createBrowserClient()
+// ── Bilingual tutor bubble ──────────────────────────────────────────────────
 
-  // ── Session config from URL params ────────────────────────────────────────
+interface TutorBubbleProps {
+  msg: TutorMessage
+  onStar: () => void
+  isStarred: boolean
+}
+
+function TutorBubble({ msg, onStar, isStarred }: TutorBubbleProps) {
+  const [viCollapsed, setViCollapsed] = useState(false)
+
+  return (
+    <div className="flex justify-start group">
+      {/* Avatar */}
+      <div className="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold mr-2 mt-1 shadow-sm">
+        J
+      </div>
+
+      <div className="max-w-sm lg:max-w-lg flex-1">
+        {/* English section */}
+        <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-sm shadow-sm overflow-hidden">
+          <div className="px-4 pt-3 pb-2">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="text-base leading-none">🇬🇧</span>
+              <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider">English</span>
+            </div>
+            <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+          </div>
+
+          {/* Vietnamese section */}
+          {msg.vietnameseNote && (
+            <>
+              <div className="border-t border-dashed border-gray-200 mx-3" />
+              <div className="bg-gradient-to-r from-red-50 to-amber-50">
+                <button
+                  onClick={() => setViCollapsed(v => !v)}
+                  className="w-full px-4 pt-2 pb-1 flex items-center gap-1.5 text-left"
+                >
+                  <span className="text-base leading-none">🇻🇳</span>
+                  <span className="text-[10px] font-semibold text-red-500 uppercase tracking-wider flex-1">
+                    Tiếng Việt
+                  </span>
+                  {viCollapsed
+                    ? <ChevronDown className="h-3 w-3 text-red-400" />
+                    : <ChevronUp className="h-3 w-3 text-red-400" />}
+                </button>
+                {!viCollapsed && (
+                  <p className="px-4 pb-3 text-sm text-red-900 leading-relaxed">
+                    {msg.vietnameseNote}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* Footer */}
+          <div className="px-4 py-1.5 flex items-center justify-between border-t border-gray-50">
+            <p className="text-[10px] text-gray-400">
+              {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </p>
+            <button
+              onClick={onStar}
+              title={isStarred ? 'Remove from favourites' : 'Save to favourites'}
+              className={`opacity-0 group-hover:opacity-100 transition-all ${
+                isStarred ? 'opacity-100 text-yellow-400' : 'text-gray-300 hover:text-yellow-400'
+              }`}
+            >
+              <Star className="h-3.5 w-3.5" fill={isStarred ? 'currentColor' : 'none'} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── User bubble ─────────────────────────────────────────────────────────────
+
+interface UserBubbleProps {
+  msg: TutorMessage
+  onStar: () => void
+  isStarred: boolean
+}
+
+function UserBubble({ msg, onStar, isStarred }: UserBubbleProps) {
+  return (
+    <div className="flex justify-end group">
+      <div className="max-w-sm lg:max-w-md">
+        <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white px-4 py-3 rounded-2xl rounded-br-sm shadow-sm">
+          <p className="text-sm leading-relaxed">{msg.text}</p>
+          <div className="flex items-center justify-between mt-1.5">
+            <p className="text-[10px] text-blue-200">
+              {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </p>
+            <button
+              onClick={onStar}
+              title={isStarred ? 'Remove from favourites' : 'Save to favourites'}
+              className={`opacity-0 group-hover:opacity-100 transition-all ${
+                isStarred ? 'opacity-100 text-yellow-300' : 'text-blue-300 hover:text-yellow-300'
+              }`}
+            >
+              <Star className="h-3.5 w-3.5" fill={isStarred ? 'currentColor' : 'none'} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Typing indicator ────────────────────────────────────────────────────────
+
+function TypingIndicator() {
+  return (
+    <div className="flex justify-start items-end gap-2">
+      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+        J
+      </div>
+      <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+        <div className="flex items-center gap-1.5">
+          {[0, 0.15, 0.3].map((d, i) => (
+            <div
+              key={i}
+              className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+              style={{ animationDelay: `${d}s` }}
+            />
+          ))}
+          <span className="text-xs text-gray-400 ml-1">Jaxtina đang trả lời…</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Main component ──────────────────────────────────────────────────────────
+
+export default function TutorSessionClient() {
+  const router   = useRouter()
+  const params   = useSearchParams()
+  const supabase = createBrowserClient()
+
+  // ── Session config ─────────────────────────────────────────────────────────
   const [level,     setLevel]     = useState<ProficiencyLevel>((params.get('level') as ProficiencyLevel) ?? 'Pre-Intermediate')
   const [skillArea, setSkillArea] = useState<SkillArea>((params.get('skill') as SkillArea) ?? 'Free Conversation')
-  const [language,  setLanguage]  = useState<'en' | 'vi'>('en')
 
   // ── Auth ───────────────────────────────────────────────────────────────────
   const [userId, setUserId] = useState<string>('')
@@ -42,18 +177,17 @@ export default function TutorSessionClient() {
   const { favourites, toggle: toggleFav, remove: removeFav, isFavourited } = useFavourites(userId)
 
   // ── Chat state ─────────────────────────────────────────────────────────────
-  const [messages,     setMessages]     = useState<TutorMessage[]>([])
-  const [input,        setInput]        = useState(params.get('prefill') ?? '')
-  const [isLoading,    setIsLoading]    = useState(false)
-  const [feedback,     setFeedback]     = useState<TutorFeedback | null>(null)
-  const [goals,        setGoals]        = useState<LearningGoal[]>(INITIAL_GOALS[level])
-  const [showVI,       setShowVI]       = useState<Set<string>>(new Set())
-  const [stats,        setStats]        = useState({ messages: 0, vocabCount: 0, accuracy: 0 })
+  const [messages,  setMessages]  = useState<TutorMessage[]>([])
+  const [input,     setInput]     = useState(params.get('prefill') ?? '')
+  const [isLoading, setIsLoading] = useState(false)
+  const [feedback,  setFeedback]  = useState<TutorFeedback | null>(null)
+  const [goals,     setGoals]     = useState<LearningGoal[]>(INITIAL_GOALS[level])
+  const [stats,     setStats]     = useState({ messages: 0, vocabCount: 0, accuracy: 0 })
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
 
-  // ── Send message ───────────────────────────────────────────────────────────
+  // ── Send ───────────────────────────────────────────────────────────────────
   const send = useCallback(async (overrideText?: string) => {
     const text = (overrideText ?? input).trim()
     if (!text || isLoading) return
@@ -79,7 +213,6 @@ export default function TutorSessionClient() {
           history: [...messages, userMsg].slice(-8).map(m => ({ sender: m.sender, text: m.text })),
           level,
           skillArea,
-          language,
         }),
       })
 
@@ -111,16 +244,14 @@ export default function TutorSessionClient() {
       setMessages(prev => [...prev, {
         id: crypto.randomUUID(),
         text: "I'm having a little trouble — please try again!",
+        vietnameseNote: 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại!',
         sender: 'tutor',
         timestamp: new Date().toISOString(),
       }])
     } finally {
       setIsLoading(false)
     }
-  }, [input, isLoading, messages, level, skillArea, language])
-
-  const toggleVI = (id: string) =>
-    setShowVI(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s })
+  }, [input, isLoading, messages, level, skillArea])
 
   const toggleGoal = (id: number) =>
     setGoals(prev => prev.map(g =>
@@ -128,16 +259,10 @@ export default function TutorSessionClient() {
     ))
 
   const handleLevelChange = (l: ProficiencyLevel) => {
-    setLevel(l)
-    setGoals(INITIAL_GOALS[l])
-    setMessages([])
-    setFeedback(null)
+    setLevel(l); setGoals(INITIAL_GOALS[l]); setMessages([]); setFeedback(null)
   }
-
   const handleSkillChange = (s: SkillArea) => {
-    setSkillArea(s)
-    setMessages([])
-    setFeedback(null)
+    setSkillArea(s); setMessages([]); setFeedback(null)
   }
 
   const currentPrompts = STARTER_PROMPTS[skillArea]?.[level] ?? []
@@ -145,11 +270,11 @@ export default function TutorSessionClient() {
   return (
     <div className="flex h-screen bg-gray-50">
 
-      {/* ── Chat area ─────────────────────────────────────────────────────── */}
+      {/* ── Chat column ───────────────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center flex-wrap gap-3">
+        <div className="bg-white border-b border-gray-200 px-4 py-2.5 flex items-center flex-wrap gap-3 shadow-sm">
           <button
             onClick={() => router.push('/tutor')}
             className="flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium"
@@ -157,73 +282,80 @@ export default function TutorSessionClient() {
             <ArrowLeft className="h-4 w-4" /> Home
           </button>
           <div className="w-px h-5 bg-gray-200" />
-          <BookOpen className="h-5 w-5 text-blue-600" />
-          <span className="font-bold text-gray-800 text-sm hidden sm:inline">Jaxtina English Tutor</span>
 
-          <select
-            value={level}
-            onChange={e => handleLevelChange(e.target.value as ProficiencyLevel)}
-            className="px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-          >
-            {LEVELS.map(l => <option key={l}>{l}</option>)}
-          </select>
+          <div className="flex items-center gap-1.5">
+            <BookOpen className="h-4 w-4 text-blue-600" />
+            <span className="font-bold text-gray-800 text-sm hidden sm:inline">Jaxtina AI Tutor</span>
+            <span className="hidden sm:inline text-gray-300">·</span>
+            <span className="hidden sm:inline text-xs text-gray-400">🇬🇧 + 🇻🇳 Bilingual</span>
+          </div>
 
-          <select
-            value={skillArea}
-            onChange={e => handleSkillChange(e.target.value as SkillArea)}
-            className="px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-          >
-            {SKILL_AREAS.map(s => <option key={s}>{s}</option>)}
-          </select>
-
-          {/* EN / VI toggle */}
-          <button
-            onClick={() => setLanguage(l => l === 'en' ? 'vi' : 'en')}
-            className={`px-2 py-1 text-xs font-semibold rounded-md border transition-colors ${
-              language === 'vi'
-                ? 'bg-red-50 border-red-300 text-red-700'
-                : 'bg-gray-50 border-gray-300 text-gray-600'
-            }`}
-          >
-            {language === 'en' ? 'EN' : 'VI'}
-          </button>
-
-          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${LEVEL_COLORS[level]}`}>
-            {level}
-          </span>
+          <div className="flex items-center gap-2 ml-auto">
+            <select
+              value={level}
+              onChange={e => handleLevelChange(e.target.value as ProficiencyLevel)}
+              className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 bg-white"
+            >
+              {LEVELS.map(l => <option key={l}>{l}</option>)}
+            </select>
+            <select
+              value={skillArea}
+              onChange={e => handleSkillChange(e.target.value as SkillArea)}
+              className="px-2 py-1 text-xs border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 bg-white"
+            >
+              {SKILL_AREAS.map(s => <option key={s}>{s}</option>)}
+            </select>
+            <span className={`px-2 py-1 rounded-full text-[10px] font-semibold ${LEVEL_COLORS[level]}`}>
+              {level}
+            </span>
+          </div>
         </div>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {/* Messages area */}
+        <div className="flex-1 overflow-y-auto px-4 py-5 space-y-4">
+
+          {/* Welcome / starter prompts */}
           {messages.length === 0 && (
-            <div className="py-4 max-w-lg mx-auto">
-              <div className="text-center mb-5">
-                <div className="text-4xl mb-2">{SKILL_ICONS[skillArea]}</div>
-                <h2 className="text-base font-semibold text-gray-700 mb-1">
-                  {skillArea} · {level}
-                </h2>
-                <p className="text-gray-400 text-xs">
-                  Click a tutor reply to see its Vietnamese note. Star prompts to save them.
-                </p>
+            <div className="max-w-lg mx-auto">
+              {/* Bilingual welcome card */}
+              <div className="bg-white border border-blue-100 rounded-2xl shadow-sm overflow-hidden mb-6">
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-4 text-white">
+                  <div className="text-3xl mb-1">{SKILL_ICONS[skillArea]}</div>
+                  <h2 className="font-bold text-base">{skillArea}</h2>
+                  <p className="text-blue-100 text-xs mt-0.5">{level} level</p>
+                </div>
+                <div className="px-5 py-4 space-y-2">
+                  <div className="flex items-start gap-2 text-sm text-gray-700">
+                    <span>🇬🇧</span>
+                    <p>Hi! I'm Jaxtina, your bilingual English tutor. Every reply will include English and Vietnamese so you can understand clearly.</p>
+                  </div>
+                  <div className="flex items-start gap-2 text-sm text-red-800">
+                    <span>🇻🇳</span>
+                    <p>Xin chào! Mình là Jaxtina. Mỗi câu trả lời đều có cả tiếng Anh lẫn tiếng Việt để bạn dễ hiểu hơn. Bắt đầu thôi!</p>
+                  </div>
+                </div>
               </div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 text-center">
-                💡 Starter prompts
+
+              {/* Starter prompts */}
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3 text-center">
+                💡 Chọn một câu hỏi để bắt đầu / Pick a starter
               </p>
               <div className="grid gap-2">
                 {currentPrompts.map((p, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 bg-white border border-blue-100 hover:border-blue-300 rounded-xl px-3 py-2.5 shadow-sm group transition-colors"
+                    className="flex items-center gap-2 bg-white border border-gray-100 hover:border-blue-300 hover:shadow-sm rounded-xl px-4 py-3 group transition-all cursor-pointer"
+                    onClick={() => send(p)}
                   >
-                    <button onClick={() => setInput(p)} className="flex-1 text-left text-sm text-gray-700">
-                      {p}
-                    </button>
+                    <span className="text-blue-400 text-xs font-bold shrink-0">{i + 1}</span>
+                    <p className="flex-1 text-sm text-gray-700">{p}</p>
                     <button
-                      onClick={() => toggleFav({ text: p, skill: skillArea, level, savedAt: new Date().toISOString() })}
+                      onClick={e => {
+                        e.stopPropagation()
+                        toggleFav({ text: p, skill: skillArea, level, savedAt: new Date().toISOString() })
+                      }}
                       title={isFavourited(p) ? 'Remove favourite' : 'Save favourite'}
-                      className={`shrink-0 transition-colors ${
-                        isFavourited(p) ? 'text-yellow-400' : 'text-gray-300 group-hover:text-yellow-300'
-                      }`}
+                      className={`shrink-0 transition-colors ${isFavourited(p) ? 'text-yellow-400' : 'text-gray-300 group-hover:text-yellow-300'}`}
                     >
                       <Star className="h-4 w-4" fill={isFavourited(p) ? 'currentColor' : 'none'} />
                     </button>
@@ -233,122 +365,111 @@ export default function TutorSessionClient() {
             </div>
           )}
 
-          {messages.map(msg => (
-            <div
-              key={msg.id}
-              className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} group`}
-            >
-              <div className="flex items-end gap-1.5">
-                {msg.sender === 'user' && (
-                  <button
-                    onClick={() => toggleFav({ text: msg.text, skill: skillArea, level, savedAt: new Date().toISOString() })}
-                    className={`mb-1 opacity-0 group-hover:opacity-100 transition-colors ${
-                      isFavourited(msg.text) ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-400'
-                    }`}
-                  >
-                    <Star className="h-3.5 w-3.5" fill={isFavourited(msg.text) ? 'currentColor' : 'none'} />
-                  </button>
-                )}
-                <div
-                  onClick={msg.sender === 'tutor' ? () => toggleVI(msg.id) : undefined}
-                  className={`max-w-sm lg:max-w-md px-4 py-3 rounded-2xl text-sm leading-relaxed
-                    ${msg.sender === 'user'
-                      ? 'bg-blue-600 text-white rounded-br-sm'
-                      : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm cursor-pointer hover:border-blue-300 transition-colors'
-                    }`}
-                >
-                  <p>{msg.text}</p>
-                  {msg.sender === 'tutor' && showVI.has(msg.id) && msg.vietnameseNote && (
-                    <p className="mt-2 pt-2 border-t border-gray-100 text-xs text-blue-600 italic">
-                      🇻🇳 {msg.vietnameseNote}
-                    </p>
-                  )}
-                  <p className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-blue-200' : 'text-gray-400'}`}>
-                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-4 py-3 flex items-center space-x-2">
-                {[0, 0.15, 0.3].map((d, i) => (
-                  <div key={i} className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: `${d}s` }} />
-                ))}
-                <span className="text-xs text-gray-400 ml-1">Tutor is thinking…</span>
-              </div>
-            </div>
+          {/* Message thread */}
+          {messages.map(msg =>
+            msg.sender === 'tutor' ? (
+              <TutorBubble
+                key={msg.id}
+                msg={msg}
+                isStarred={isFavourited(msg.text)}
+                onStar={() => toggleFav({ text: msg.text, skill: skillArea, level, savedAt: new Date().toISOString() })}
+              />
+            ) : (
+              <UserBubble
+                key={msg.id}
+                msg={msg}
+                isStarred={isFavourited(msg.text)}
+                onStar={() => toggleFav({ text: msg.text, skill: skillArea, level, savedAt: new Date().toISOString() })}
+              />
+            )
           )}
+
+          {isLoading && <TypingIndicator />}
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
-        <div className="bg-white border-t border-gray-200 px-4 py-3 flex space-x-2">
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
-            placeholder="Type in English… (Enter to send)"
-            disabled={isLoading}
-            className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 outline-none"
-          />
-          <button
-            onClick={() => send()}
-            disabled={isLoading || !input.trim()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-40 transition-colors"
-          >
-            <Send className="h-4 w-4" />
-          </button>
+        {/* Input bar */}
+        <div className="bg-white border-t border-gray-200 px-4 py-3">
+          <div className="flex gap-2 items-end">
+            <div className="flex-1 relative">
+              <input
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
+                placeholder="Type in English… nhấn Enter để gửi"
+                disabled={isLoading}
+                className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 focus:bg-white transition-colors"
+              />
+            </div>
+            <button
+              onClick={() => send()}
+              disabled={isLoading || !input.trim()}
+              className="shrink-0 w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-full flex items-center justify-center hover:opacity-90 disabled:opacity-40 transition-all shadow-sm"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+          </div>
+          <p className="text-center text-[10px] text-gray-400 mt-1.5">
+            Jaxtina AI · 🇬🇧 English + 🇻🇳 Tiếng Việt · Phản hồi song ngữ
+          </p>
         </div>
       </div>
 
       {/* ── Sidebar ───────────────────────────────────────────────────────── */}
-      <div className="w-72 bg-white border-l border-gray-200 flex flex-col overflow-y-auto">
+      <div className="w-72 bg-white border-l border-gray-200 flex flex-col overflow-y-auto hidden lg:flex">
 
-        {/* Stats */}
+        {/* Progress */}
         <div className="p-4 border-b border-gray-100">
-          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1">
-            <TrendingUp className="h-4 w-4" /> Progress
+          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1.5">
+            <TrendingUp className="h-4 w-4 text-blue-500" /> Tiến trình / Progress
           </h3>
           <div className="space-y-2 text-sm">
-            {([['Messages sent', stats.messages], ['New vocab learned', stats.vocabCount], ['Accuracy', `${stats.accuracy}%`]] as const).map(([label, val]) => (
-              <div key={label} className="flex justify-between">
-                <span className="text-gray-500">{label}</span>
-                <span className="font-semibold text-gray-800">{val}</span>
+            {([
+              ['Messages sent', stats.messages],
+              ['Vocab learned', stats.vocabCount],
+              ['Accuracy', `${stats.accuracy}%`],
+            ] as const).map(([label, val]) => (
+              <div key={label} className="flex justify-between items-center">
+                <span className="text-gray-500 text-xs">{label}</span>
+                <span className="font-semibold text-gray-800 text-sm">{val}</span>
               </div>
             ))}
           </div>
           {stats.accuracy > 0 && (
             <div className="mt-3">
+              <div className="flex justify-between text-[10px] text-gray-400 mb-1">
+                <span>Accuracy</span><span>{stats.accuracy}%</span>
+              </div>
               <div className="w-full bg-gray-100 rounded-full h-2">
-                <div className="bg-blue-500 h-2 rounded-full transition-all" style={{ width: `${stats.accuracy}%` }} />
+                <div
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full transition-all"
+                  style={{ width: `${stats.accuracy}%` }}
+                />
               </div>
             </div>
           )}
         </div>
 
-        {/* Saved favourites (quick access) */}
+        {/* Saved favourites */}
         <div className="p-4 border-b border-gray-100">
-          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1">
-            <Star className="h-4 w-4 text-yellow-400" /> Saved Prompts
+          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1.5">
+            <Star className="h-4 w-4 text-yellow-400" /> Câu hỏi đã lưu
           </h3>
           {favourites.length === 0 ? (
-            <p className="text-xs text-gray-400">Star a prompt to save it.</p>
+            <p className="text-xs text-gray-400">Nhấn ⭐ để lưu câu hỏi yêu thích.</p>
           ) : (
-            <div className="space-y-1.5 max-h-36 overflow-y-auto">
+            <div className="space-y-1.5 max-h-40 overflow-y-auto">
               {favourites.map((f, i) => (
                 <div key={i} className="flex items-start gap-1.5 group">
                   <button
                     onClick={() => setInput(f.text)}
-                    className="flex-1 text-left text-xs text-gray-600 bg-yellow-50 rounded-lg px-2 py-1.5 hover:bg-yellow-100 transition-colors leading-snug"
+                    className="flex-1 text-left text-xs text-gray-600 bg-yellow-50 border border-yellow-100 rounded-lg px-2 py-1.5 hover:bg-yellow-100 transition-colors leading-snug"
                   >
                     {f.text}
                   </button>
                   <button
                     onClick={() => removeFav(i)}
-                    className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-400 transition-colors mt-1"
+                    className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-400 transition-colors mt-1 shrink-0"
                   >
                     <Trash2 className="h-3 w-3" />
                   </button>
@@ -360,25 +481,28 @@ export default function TutorSessionClient() {
 
         {/* Learning goals */}
         <div className="p-4 border-b border-gray-100">
-          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1">
-            <Target className="h-4 w-4" /> Learning Goals
+          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1.5">
+            <Target className="h-4 w-4 text-green-500" /> Mục tiêu học tập
           </h3>
           <div className="space-y-3">
             {goals.map(g => (
-              <div key={g.id} className="text-sm">
+              <div key={g.id}>
                 <div className="flex items-start gap-2">
                   <button onClick={() => toggleGoal(g.id)} className="mt-0.5 shrink-0">
                     {g.completed
                       ? <CheckCircle className="h-4 w-4 text-green-500" />
                       : <div className="h-4 w-4 border-2 border-gray-300 rounded-full" />}
                   </button>
-                  <span className={g.completed ? 'line-through text-gray-400 text-xs' : 'text-gray-700 text-xs'}>
+                  <span className={`text-xs leading-snug ${g.completed ? 'line-through text-gray-400' : 'text-gray-700'}`}>
                     {g.text}
                   </span>
                 </div>
-                <div className="ml-6 mt-1">
+                <div className="ml-6 mt-1.5">
                   <div className="w-full bg-gray-100 rounded-full h-1.5">
-                    <div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${g.progress}%` }} />
+                    <div
+                      className="bg-green-400 h-1.5 rounded-full transition-all"
+                      style={{ width: `${g.progress}%` }}
+                    />
                   </div>
                 </div>
               </div>
@@ -389,41 +513,48 @@ export default function TutorSessionClient() {
         {/* Last feedback */}
         {feedback && (
           <div className="p-4 border-b border-gray-100">
-            <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1">
-              <MessageSquare className="h-4 w-4" /> Last Feedback
+            <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1.5">
+              <MessageSquare className="h-4 w-4 text-purple-500" /> Nhận xét gần nhất
             </h3>
             <div className="space-y-2 text-xs">
               {feedback.positive?.map((p, i) => (
-                <div key={i} className="bg-green-50 text-green-700 rounded-lg px-3 py-2">✅ {p}</div>
+                <div key={i} className="bg-green-50 text-green-800 border border-green-100 rounded-lg px-3 py-2 leading-snug">
+                  ✅ {p}
+                </div>
               ))}
               {feedback.corrections?.map((c, i) => (
-                <div key={i} className="bg-orange-50 text-orange-700 rounded-lg px-3 py-2">✏️ {c}</div>
+                <div key={i} className="bg-orange-50 text-orange-800 border border-orange-100 rounded-lg px-3 py-2 leading-snug">
+                  ✏️ {c}
+                </div>
               ))}
               {feedback.suggestions?.map((s, i) => (
-                <div key={i} className="bg-blue-50 text-blue-700 rounded-lg px-3 py-2">💡 {s}</div>
+                <div key={i} className="bg-blue-50 text-blue-800 border border-blue-100 rounded-lg px-3 py-2 leading-snug">
+                  💡 {s}
+                </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Skill area bar chart */}
+        {/* Skill area switcher */}
         <div className="p-4">
-          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1">
-            <BarChart3 className="h-4 w-4" /> Skill Areas
+          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1.5">
+            <BarChart3 className="h-4 w-4 text-indigo-500" /> Kỹ năng
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {SKILL_AREAS.map(s => (
-              <div key={s} className="flex items-center gap-2 text-xs">
-                <span className={`w-32 truncate ${s === skillArea ? 'text-blue-600 font-semibold' : 'text-gray-500'}`}>
-                  {s}
-                </span>
-                <div className="flex-1 bg-gray-100 rounded-full h-1.5">
-                  <div
-                    className={`h-1.5 rounded-full ${s === skillArea ? 'bg-blue-500' : 'bg-gray-200'}`}
-                    style={{ width: s === skillArea ? '70%' : '20%' }}
-                  />
-                </div>
-              </div>
+              <button
+                key={s}
+                onClick={() => handleSkillChange(s)}
+                className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs transition-colors text-left ${
+                  s === skillArea
+                    ? 'bg-blue-50 text-blue-700 font-semibold border border-blue-200'
+                    : 'text-gray-500 hover:bg-gray-50'
+                }`}
+              >
+                <span>{SKILL_ICONS[s]}</span>
+                {s}
+              </button>
             ))}
           </div>
         </div>
@@ -431,4 +562,3 @@ export default function TutorSessionClient() {
     </div>
   )
 }
-

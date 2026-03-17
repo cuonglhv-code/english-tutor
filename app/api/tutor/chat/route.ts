@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { message, history = [], level, skillArea, language = 'en' } = body
+  const { message, history = [], level, skillArea } = body
 
   if (!message?.trim() || !level || !skillArea) {
     return NextResponse.json(
@@ -37,13 +37,14 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 3. Build conversation for Claude ──────────────────────────────────────
-  // Keep last 8 turns (4 exchanges) so the context window stays small for Haiku
+  // Keep last 8 turns (4 exchanges) so the context window stays small
   const recentHistory = history.slice(-8).map((m) => ({
     role: m.sender === 'user' ? ('user' as const) : ('assistant' as const),
     content: m.text,
   }))
 
-  const systemPrompt = buildSystemPrompt(level, skillArea, language)
+  // Always bilingual — language parameter is no longer needed
+  const systemPrompt = buildSystemPrompt(level, skillArea)
 
   // ── 4. Call Claude Haiku ───────────────────────────────────────────────────
   let raw: string

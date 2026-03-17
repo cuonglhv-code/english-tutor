@@ -50,21 +50,19 @@ export function LoginPageContent() {
 
                     if (profile?.role === "admin" && (targetUrl === "/" || targetUrl === "/tutor")) {
                         targetUrl = "/admin/dashboard";
-                    } else if (profile?.profile_completed !== true) {
-                        targetUrl = "/personal-details";
                     }
                 }
 
                 toast.success(lang === "vi" ? "Đăng nhập thành công!" : "Logged in successfully!");
-                // Avoid calling router.refresh() before navigation; it can interrupt router.push/replace.
-                router.replace(targetUrl);
+                // Hard-navigate to avoid App Router transition/session timing issues.
+                window.location.href = targetUrl;
             } else {
                 if (password.length < 8) {
                     toast.error(lang === "vi" ? "Mật khẩu phải từ 8 ký tự." : "Password must be at least 8 chars.");
                     setLoading(false);
                     return;
                 }
-                const { error } = await supabase.auth.signUp({
+                const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
                     options: { data: { display_name: displayName || email.split("@")[0] } },
@@ -74,8 +72,15 @@ export function LoginPageContent() {
                     return;
                 }
                 toast.success(t("auth", "successRegister", lang));
-                // Send new users directly to the profile completion screen
-                router.replace("/personal-details");
+
+                // If email confirmation is enabled, there may be no session yet.
+                // Still direct users toward Tutor; if not authenticated they will be prompted accordingly.
+                const targetUrl = "/tutor";
+                if (data?.user && (data as any)?.session) {
+                    window.location.href = targetUrl;
+                } else {
+                    window.location.href = targetUrl;
+                }
             }
         } catch {
             toast.error(t("auth", "errorGeneric", lang));
