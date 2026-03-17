@@ -23,7 +23,9 @@ export function LoginPageContent() {
     const [displayName, setDisplayName] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const nextUrl = searchParams.get("next") || "/";
+    // Default landing after login should be Tutor.
+    // If a protected page redirected here, it will pass `?next=...` and we honor it.
+    const nextUrl = searchParams.get("next") || "/tutor";
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -46,7 +48,7 @@ export function LoginPageContent() {
                         .eq("id", authData.user.id)
                         .single();
 
-                    if (profile?.role === "admin" && targetUrl === "/") {
+                    if (profile?.role === "admin" && (targetUrl === "/" || targetUrl === "/tutor")) {
                         targetUrl = "/admin/dashboard";
                     } else if (profile?.profile_completed !== true) {
                         targetUrl = "/personal-details";
@@ -54,8 +56,8 @@ export function LoginPageContent() {
                 }
 
                 toast.success(lang === "vi" ? "Đăng nhập thành công!" : "Logged in successfully!");
-                router.refresh();
-                router.push(targetUrl);
+                // Avoid calling router.refresh() before navigation; it can interrupt router.push/replace.
+                router.replace(targetUrl);
             } else {
                 if (password.length < 8) {
                     toast.error(lang === "vi" ? "Mật khẩu phải từ 8 ký tự." : "Password must be at least 8 chars.");
@@ -72,9 +74,8 @@ export function LoginPageContent() {
                     return;
                 }
                 toast.success(t("auth", "successRegister", lang));
-                router.refresh();
                 // Send new users directly to the profile completion screen
-                router.push("/personal-details");
+                router.replace("/personal-details");
             }
         } catch {
             toast.error(t("auth", "errorGeneric", lang));

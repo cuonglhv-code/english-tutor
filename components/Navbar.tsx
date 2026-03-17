@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare, User as UserIcon } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -51,6 +51,11 @@ export function Navbar() {
   const router = useRouter();
   const [unread, setUnread] = useState(0);
   const channelRef = useRef<any>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement | null>(null);
+  const [displayName, setDisplayName] = useState<string | null>(null);
+  const [practiceOpen, setPracticeOpen] = useState(false);
+  const practiceRef = useRef<HTMLDivElement | null>(null);
 
   // Fetch unread count and subscribe to new messages
   useEffect(() => {
@@ -80,6 +85,69 @@ export function Navbar() {
     return () => { supabase.removeChannel(channel); };
   }, [user]);
 
+  // Fetch basic student details for profile panel
+  useEffect(() => {
+    let cancelled = false;
+    if (!user) {
+      setDisplayName(null);
+      return;
+    }
+    const supabase = createBrowserClient();
+    (async () => {
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("display_name")
+          .eq("id", user.id)
+          .single();
+        if (cancelled) return;
+        setDisplayName((data as any)?.display_name ?? null);
+      } catch {
+        if (cancelled) return;
+        setDisplayName(null);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
+
+  // Close profile panel on outside click / Escape
+  useEffect(() => {
+    if (!profileOpen) return;
+    const onDown = (e: MouseEvent) => {
+      const el = profileRef.current;
+      if (!el) return;
+      if (e.target instanceof Node && !el.contains(e.target)) setProfileOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setProfileOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [profileOpen]);
+
+  // Close practice panel on outside click / Escape
+  useEffect(() => {
+    if (!practiceOpen) return;
+    const onDown = (e: MouseEvent) => {
+      const el = practiceRef.current;
+      if (!el) return;
+      if (e.target instanceof Node && !el.contains(e.target)) setPracticeOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPracticeOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [practiceOpen]);
+
   const handleLogout = async () => {
     const supabase = createBrowserClient();
     await supabase.auth.signOut();
@@ -108,19 +176,42 @@ export function Navbar() {
         <div className="flex items-center gap-1">
           {role !== "admin" && (
             <>
-              <Link
-                href="/"
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
-              >
-                <PenLine className="h-4 w-4" /> {t("nav", "practice", lang)}
-              </Link>
-              <Link
-                href="/practice"
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
-              >
-                <Library className="h-4 w-4" />
-                <span className="hidden sm:inline">{lang === "vi" ? "Thư viện" : "Library"}</span>
-              </Link>
+              <div className="relative" ref={practiceRef}>
+                <button
+                  onClick={() => setPracticeOpen(o => !o)}
+                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                  aria-haspopup="menu"
+                  aria-expanded={practiceOpen}
+                >
+                  <PenLine className="h-4 w-4" /> {t("nav", "practice", lang)}
+                </button>
+
+                {practiceOpen && (
+                  <div
+                    role="menu"
+                    className="absolute left-0 mt-2 w-56 rounded-xl border bg-card shadow-lg p-2"
+                  >
+                    <Link
+                      href="/"
+                      onClick={() => setPracticeOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      role="menuitem"
+                    >
+                      <PenLine className="h-4 w-4" />
+                      {t("nav", "practice", lang)}
+                    </Link>
+                    <Link
+                      href="/practice"
+                      onClick={() => setPracticeOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      role="menuitem"
+                    >
+                      <Library className="h-4 w-4" />
+                      <span>{lang === "vi" ? "Thư viện" : "Library"}</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
               <Link
                 href="/writing-101"
                 className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
@@ -154,13 +245,6 @@ export function Navbar() {
           </Link>
           {user ? (
             <>
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                <span className="hidden sm:inline">{t("nav", "dashboard", lang)}</span>
-              </Link>
               {role === "admin" && (
                 <Link
                   href="/admin/dashboard"
@@ -170,24 +254,90 @@ export function Navbar() {
                   <span className="hidden sm:inline">Admin</span>
                 </Link>
               )}
-              <Link
-                href="/inbox"
-                onClick={() => setUnread(0)}
-                className="relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
-                aria-label="Inbox"
-              >
-                <Mail className="h-4 w-4" />
-                <span className="hidden sm:inline">{lang === "vi" ? "Hộp thư" : "Inbox"}</span>
-                {unread > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-jaxtina-red text-white text-[9px] font-black flex items-center justify-center">
-                    {unread > 99 ? "99+" : unread}
+
+              {/* Student Profile sub-panel */}
+              <div className="relative" ref={profileRef}>
+                <button
+                  onClick={() => setProfileOpen(o => !o)}
+                  className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                  aria-haspopup="menu"
+                  aria-expanded={profileOpen}
+                >
+                  <UserIcon className="h-4 w-4" />
+                  <span className="hidden sm:inline">
+                    {displayName || user.email?.split("@")[0] || (lang === "vi" ? "Hồ sơ" : "Profile")}
                   </span>
+                </button>
+
+                {profileOpen && (
+                  <div
+                    role="menu"
+                    className="absolute right-0 mt-2 w-72 rounded-xl border bg-card shadow-lg p-2"
+                  >
+                    <div className="px-3 py-2">
+                      <div className="text-xs font-semibold text-muted-foreground">
+                        {lang === "vi" ? "HỒ SƠ HỌC VIÊN" : "STUDENT PROFILE"}
+                      </div>
+                      <div className="mt-1 text-sm font-bold text-foreground truncate">
+                        {displayName || user.email || user.id}
+                      </div>
+                      {user.email && (
+                        <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                      )}
+                    </div>
+
+                    <div className="my-2 h-px bg-border" />
+
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      role="menuitem"
+                    >
+                      <LayoutDashboard className="h-4 w-4" />
+                      {t("nav", "dashboard", lang)}
+                    </Link>
+
+                    <Link
+                      href="/inbox"
+                      onClick={() => { setUnread(0); setProfileOpen(false); }}
+                      className="flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      role="menuitem"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Mail className="h-4 w-4" />
+                        {lang === "vi" ? "Hộp thư" : "Inbox"}
+                      </span>
+                      {unread > 0 && (
+                        <span className="min-w-[18px] h-5 px-1.5 rounded-full bg-jaxtina-red text-white text-[10px] font-black flex items-center justify-center">
+                          {unread > 99 ? "99+" : unread}
+                        </span>
+                      )}
+                    </Link>
+
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setProfileOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      role="menuitem"
+                    >
+                      <BookOpen className="h-4 w-4" />
+                      {lang === "vi" ? "Thông tin học viên" : "Student details"}
+                    </Link>
+
+                    <div className="my-2 h-px bg-border" />
+
+                    <button
+                      onClick={() => { setProfileOpen(false); handleLogout(); }}
+                      className="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-left hover:bg-muted transition-colors"
+                      role="menuitem"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      {t("nav", "logout", lang)}
+                    </button>
+                  </div>
                 )}
-              </Link>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5">
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">{t("nav", "logout", lang)}</span>
-              </Button>
+              </div>
             </>
           ) : (
             <Link
