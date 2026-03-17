@@ -1,253 +1,420 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, createServiceClient } from "@/lib/supabase-server";
+import { createClient } from "@/lib/supabase-server";
 import Anthropic from "@anthropic-ai/sdk";
 
 export const runtime = "nodejs";
 
-const SCORING_SYSTEM = `You are a senior IELTS examiner assessing a Writing Task 1 response. You receive a 
-confirmed visual description and a candidate essay.
+const EXTRACTION_SYSTEM = `You are an expert IELTS examiner specialising in 
+Writing Task 1 visual analysis. Your output will be used directly by a marking 
+system to assess candidate essays — accuracy and completeness of extraction 
+are therefore critical to fair scoring.
 
-Apply the official IELTS Writing Band Descriptors (Updated May 2023) using the 
-Best Fit principle: award the band that most accurately reflects the student's 
-demonstrated competence across the criterion as a whole. Where a script shows 
-features of two adjacent bands, award the higher band when its positive features 
-are clearly present, even if some lower-band features also appear. Reserve the 
-lower band for scripts where limiting features are frequent and clearly dominant.
+Analyse the uploaded image carefully. Identify the visual type first, then apply 
+the appropriate extraction schema below.
 
-On borderline Task Achievement scripts: selective coverage of key features is 
-legitimate Task 1 strategy. Penalise omissions only when they represent trends 
-or comparisons central to the visual — not incidental detail. Credit overview 
-attempts even when imperfectly executed, provided the communicative intent is clear.
+Return a JSON object ONLY — no markdown fences, no preamble.
 
-Return JSON ONLY — no markdown fences:
+---
+
+STEP 1 — IDENTIFY VISUAL TYPE
+
+Classify the image as one of:
+  "statistical_chart"   (bar chart, line graph, pie chart, table, scatter plot)
+  "process_diagram"     (flowchart, cycle diagram, linear process with stages)
+  "map"                 (geographical map showing change over time or comparison)
+  "mixed"               (e.g. bar chart + line graph on shared axes)
+
+This classification determines which schema to apply in Step 2.
+
+---
+
+STEP 2 — EXTRACT USING THE APPROPRIATE SCHEMA
+
+[A] FOR statistical_chart:
 
 {
-  "band_scores": {
-    "task_achievement": number,
-    "coherence_cohesion": number,
-    "lexical_resource": number,
-    "grammatical_range_accuracy": number,
-    "overall": number
+  "visual_type": "string — specific type, e.g. 'grouped bar chart', 'multi-line graph', 
+                  'pie chart', 'table'",
+  "title": "string — exact title as written on the visual",
+  "subject": "string — one sentence: what is measured, the population or context, 
+               and the time period if stated",
+  "units": "string — the unit of measurement (e.g. '% of respondents', 
+             'millions of tonnes', 'USD billions') or 'N/A'",
+  "axes_and_legend": {
+    "x_axis": "string — label and range or categories",
+    "y_axis": "string — label and scale range",
+    "legend_items": ["array — all series, categories, or segments with their labels"]
   },
-  "feedback": {
-    "task_achievement": {
-      "strengths": ["array — specific features or trends the student identified accurately"],
-      "development_gaps": ["array — key features omitted or misreported; note only those 
-                           central to the visual, not peripheral detail"],
-      "next_step": "string — one concrete action to strengthen Task Achievement at this 
-                   student's level"
-    },
-    "coherence_cohesion": {
-      "strengths": ["array — specific examples of effective organisation or cohesion"],
-      "development_gaps": ["array — localised cohesion issues with brief explanation"],
-      "next_step": "string — one concrete action to improve cohesion or progression"
-    },
-    "lexical_resource": {
-      "strengths": ["array — vocabulary choices that demonstrate range or precision"],
-      "development_gaps": ["array — imprecise, repeated, or inappropriate items"],
-      "suggestions": ["array — specific upgrade examples in the format: 
-                      'used: [word/phrase] → consider: [alternative] in context: [brief example]'"],
-      "next_step": "string — one concrete vocabulary strategy for this student's level"
-    },
-    "grammatical_range_accuracy": {
-      "strengths": ["array — structures used accurately or with good range"],
-      "errors": ["array — format: 'Error: [quoted text] → Correction: [revised text] 
-                 — Note: [brief explanation of the rule or pattern]'"],
-      "range_comment": "string — assessment of structural variety; note whether complexity 
-                       attempts are present even if imperfectly executed",
-      "next_step": "string — one grammar focus area with highest impact for this student"
-    }
+  "critical_data_points": {
+    "highest_values": ["array — the peak value(s) with category and time reference, 
+                        e.g. 'Japan: 78% in 2010 (highest overall)'"],
+    "lowest_values": ["array — the lowest value(s) with category and time reference"],
+    "notable_crossovers_or_intersections": ["array — where series converge or overtake 
+                                             each other, if applicable; 'N/A' if none"],
+    "start_and_end_values": ["array — for time-series data, the opening and closing 
+                              values per series, e.g. 'UK: 30% (2000) → 52% (2020)'"],
+    "approximate_values": ["array — values estimated from the chart due to absent 
+                            gridlines or ambiguous scaling; prefix with '~'"]
   },
-  "model_overview": {
-    "text": "string — a model overview paragraph demonstrating strong Band 7 writing 
-             for this specific visual; target the band just above the student's 
-             current Task Achievement score, not an abstract ideal",
-    "annotation": "string — 2–3 sentences explaining what the model paragraph does 
-                  well, so the student can learn from it actively"
+  "comparative_relationships": ["array — explicit relational observations, e.g. 
+                                  'Germany consistently outperformed France throughout'"],
+  "overall_trends": ["array — dominant directional movement per series with magnitude"],
+  "examiner_critical_features": {
+    "mandatory_overview_content": ["array — 2–3 macro-level features a Band 7+ overview 
+                                    MUST capture"],
+    "essential_body_detail": ["array — specific data points or comparisons central to 
+                               Task Achievement"],
+    "peripheral_detail": ["array — data a well-organised essay may legitimately omit"]
   },
-  "examiner_summary": "string — 3–4 sentences: open with the student's most significant 
-                      strength, diagnose the primary limiting factor, and close with 
-                      a specific and encouraging statement about what improved 
-                      performance looks like for this student"
+  "potential_candidate_errors": ["array — values or trends easily misread or misreported"]
 }
 
-Half-bands permitted (e.g. 6.5). Overall = mean of four criteria rounded to nearest 0.5.
+---
 
-Band threshold reference (apply with Best Fit judgement — these are guides, not 
-mechanical rules):
-- TA Band 6: Key features are covered but the overview may be missing or underdeveloped; 
-  some data may be inaccurate or over-detailed.
-- TA Band 7: Key features are clearly covered with a well-developed overview; 
-  award this when coverage is substantively accurate even if minor omissions exist.
-- TA Band 8: Fully representative coverage with well-selected supporting detail; 
-  overview is prominent and precise.
-- CC Band 6–7 threshold: Cohesive devices are present but mechanical or faulty in 
-  places (Band 6); logical progression is clear throughout with only localised lapses (Band 7).
-- LR Band 6–7 threshold: Vocabulary is generally adequate (Band 6); some less common 
-  or precise items are attempted, even if not always successfully (Band 7).
-- GRA Band 6–7 threshold: Mix of simple and complex structures with limited flexibility 
-  (Band 6); complex structures are frequent and mostly accurate, with grammar generally 
-  well controlled (Band 7). Do not penalise Band 7 for isolated errors within otherwise 
-  well-controlled writing.`;
+[B] FOR process_diagram:
+
+{
+  "visual_type": "string — e.g. 'linear process diagram', 'cyclical process diagram'",
+  "title": "string — exact title as written",
+  "subject": "string — one sentence: what process is depicted and its context",
+  "process_structure": "string — 'linear' or 'cyclical'",
+  "total_stages": "number — count of distinct stages",
+  "stages": [
+    {
+      "stage_number": "number",
+      "label": "string — the stage name or action as written on the diagram",
+      "description": "string — what occurs at this stage, including materials, 
+                      agents, or transformations shown",
+      "inputs": ["array — materials or elements entering this stage, or 'N/A'"],
+      "outputs": ["array — materials or elements leaving this stage, or 'N/A'"]
+    }
+  ],
+  "key_transformations": ["array — most significant changes of state or form"],
+  "examiner_critical_features": {
+    "mandatory_overview_content": ["array — total stages, start/end points, 
+                                    linear or cyclical, what is produced"],
+    "essential_body_detail": ["array — specific stages or transformations required 
+                               for full Task Achievement"],
+    "peripheral_detail": ["array — minor sub-steps that may be omitted without penalty"]
+  },
+  "potential_candidate_errors": ["array — stages likely to be misread or conflated"]
+}
+
+---
+
+[C] FOR map:
+
+{
+  "visual_type": "string — e.g. 'town plan comparison map'",
+  "title": "string — exact title as written",
+  "subject": "string — location, aspect depicted, and time period(s) if stated",
+  "time_points": ["array — dates or periods shown, e.g. ['1990', '2020']"],
+  "map_features": {
+    "regions_or_zones": ["array — named areas or districts marked on the map"],
+    "key_symbols_or_legend_items": ["array — all symbols or legend entries with meanings"]
+  },
+  "changes_or_contrasts": ["array — explicit spatial changes between time points"],
+  "what_remained_unchanged": ["array — features stable across time points, or 'N/A'"],
+  "examiner_critical_features": {
+    "mandatory_overview_content": ["array — 2–3 most striking macro-level changes"],
+    "essential_body_detail": ["array — specific spatial changes central to Task Achievement"],
+    "peripheral_detail": ["array — minor features that may be omitted without penalty"]
+  },
+  "potential_candidate_errors": ["array — features easily misread due to complexity"]
+}
+
+---
+
+[D] FOR mixed (e.g. bar + line on shared axes):
+
+Apply schema [A] for the primary chart type, then add:
+
+"secondary_visual": {
+  "type": "string — the secondary chart type",
+  "series": ["array — data series belonging to the secondary visual"],
+  "relationship_to_primary": "string — what comparing the two visuals reveals"
+}
+
+---
+
+STEP 3 — VALIDITY CHECK
+
+If the image is not a recognisable IELTS Writing Task 1 visual prompt, return:
+{ "error": "Not a recognisable IELTS Task 1 visual prompt" }
+
+If valid but partially illegible, extract what is visible, prefix uncertain values 
+with '~', and add:
+"legibility_warnings": ["array — elements that could not be read reliably and why"]`;
+
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+const ALLOWED_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"] as const;
+type AllowedMimeType = typeof ALLOWED_MIME_TYPES[number];
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+// Increased substantially from 1000 to handle the full typed schema output.
+// A populated statistical_chart JSON with multiple series routinely exceeds
+// 1200 tokens; process diagrams with 8+ stages can reach 1800+.
+const MAX_TOKENS = 4000;
+
+// ─── Schema validation ────────────────────────────────────────────────────────
+
+const REQUIRED_FIELDS = ["visual_type"] as const;
+const VALID_VISUAL_TYPES = [
+    "statistical_chart",
+    "process_diagram",
+    "map",
+    "mixed",
+] as const;
+
+function validateExtractionResult(data: unknown): {
+    valid: boolean;
+    warnings: string[];
+} {
+    const warnings: string[] = [];
+
+    if (typeof data !== "object" || data === null) {
+        return { valid: false, warnings: ["Response is not a JSON object"] };
+    }
+
+    const obj = data as Record<string, unknown>;
+
+    for (const field of REQUIRED_FIELDS) {
+        if (!(field in obj)) {
+            warnings.push(`Missing required field: ${field}`);
+        }
+    }
+
+    if (
+        obj.visual_type &&
+        !VALID_VISUAL_TYPES.includes(obj.visual_type as any)
+    ) {
+        warnings.push(
+            `Unrecognised visual_type: "${obj.visual_type}". ` +
+            `Expected one of: ${VALID_VISUAL_TYPES.join(", ")}`
+        );
+    }
+
+    // Warn if examiner_critical_features is absent — the marking step depends on it
+    if (!obj.examiner_critical_features) {
+        warnings.push(
+            "examiner_critical_features is absent — marking quality will be degraded"
+        );
+    }
+
+    return { valid: warnings.length === 0, warnings };
+}
+
+// ─── Robust JSON extraction ───────────────────────────────────────────────────
+
+function extractJSON(raw: string): unknown {
+    // Strip markdown fences if present
+    const stripped = raw
+        .replace(/^```(?:json)?\s*/i, "")
+        .replace(/\s*```$/, "")
+        .trim();
+
+    // Attempt direct parse first
+    try {
+        return JSON.parse(stripped);
+    } catch {
+        // Fall back: find the outermost JSON object
+        const start = stripped.indexOf("{");
+        const end = stripped.lastIndexOf("}");
+        if (start !== -1 && end !== -1 && end > start) {
+            try {
+                return JSON.parse(stripped.slice(start, end + 1));
+            } catch {
+                throw new Error(
+                    "AI response could not be parsed as JSON. " +
+                    "The response may have been truncated — check MAX_TOKENS."
+                );
+            }
+        }
+        throw new Error("No JSON object found in AI response.");
+    }
+}
+
+// ─── Storage cleanup helper ───────────────────────────────────────────────────
+
+async function removeOrphanedUpload(
+    supabase: Awaited<ReturnType<typeof createClient>>,
+    storagePath: string
+): Promise<void> {
+    try {
+        await supabase.storage.from("task1-images").remove([storagePath]);
+    } catch (cleanupError) {
+        // Log but do not re-throw — we are already in an error path
+        console.warn("Failed to remove orphaned upload:", storagePath, cleanupError);
+    }
+}
+
+// ─── Route handler ────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+    let storagePath: string | null = null;
+
     try {
         // 1. Auth check
         const supabase = await createClient();
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        const {
+            data: { user },
+            error: authError,
+        } = await supabase.auth.getUser();
 
         if (authError || !user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // 2. Parse request body
-        // chartData  — set when student uploaded an image and confirmed extraction
-        // questionId — set when student picked a question from the bank (no image)
-        // imagePath  — Supabase storage path from the extract step (optional)
-        // submissionId — if the submission was already created upstream (optional)
-        const { essay, chartData: rawChartData, questionId, submissionId, imagePath } = await req.json();
+        // 2. Parse and validate multipart data
+        const formData = await req.formData();
+        const file = formData.get("image") as File | null;
 
-        if (!essay) {
-            return NextResponse.json({ error: "Missing essay text" }, { status: 400 });
+        if (!file) {
+            return NextResponse.json({ error: "No image provided" }, { status: 400 });
         }
 
-        if (essay.length < 50) {
-            return NextResponse.json({ error: "Essay must be at least 50 characters" }, { status: 400 });
-        }
-
-        // 3. Resolve the visual description
-        // Priority: chartData (image upload path) → visual_description_json from DB (question bank path)
-        let resolvedChartData = rawChartData ?? null;
-        let resolvedImagePath = imagePath ?? null;
-        let questionTitle = "IELTS Writing Task 1";
-
-        if (!resolvedChartData && questionId) {
-            // Fetch the question row from the 'questions' table
-            const serviceClient = createServiceClient();
-            const { data: qRow, error: qErr } = await serviceClient
-                .from("questions")
-                .select("visual_description_json, title, image_url")
-                .eq("id", questionId)
-                .single();
-
-            if (qErr || !qRow) {
-                return NextResponse.json(
-                    { error: "Question not found or has no visual description." },
-                    { status: 404 }
-                );
-            }
-
-            resolvedChartData = qRow.visual_description_json;
-            questionTitle = qRow.title ?? questionTitle;
-            // No image path for question-bank path — image is already shown to student via imageUrl
-        }
-
-        if (!resolvedChartData) {
+        if (!ALLOWED_MIME_TYPES.includes(file.type as AllowedMimeType)) {
             return NextResponse.json(
-                { error: "No visual description available for scoring. Please upload an image or select a question from the bank." },
+                { error: "Invalid file type. Accepted formats: PNG, JPEG, WEBP." },
                 { status: 400 }
             );
         }
 
-        // 4. Call Anthropic API
+        if (file.size > MAX_FILE_SIZE) {
+            return NextResponse.json(
+                { error: "File too large. Maximum size is 5 MB." },
+                { status: 400 }
+            );
+        }
+
+        // 3. Read buffer once; reuse for both upload and base64
+        const buffer = await file.arrayBuffer();
+        const timestamp = Date.now();
+        const safeFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+        storagePath = `${user.id}/${timestamp}-${safeFilename}`;
+
+        // 4. Upload to Supabase Storage
+        const { error: uploadError } = await supabase.storage
+            .from("task1-images")
+            .upload(storagePath, buffer, {
+                contentType: file.type,
+                upsert: false,
+            });
+
+        if (uploadError) {
+            console.error("Storage upload error:", uploadError);
+            storagePath = null; // Nothing to clean up — upload failed
+            return NextResponse.json(
+                { error: "Failed to upload image to storage." },
+                { status: 500 }
+            );
+        }
+
+        // 5. Call Anthropic Vision API
         const apiKey = process.env.ANTHROPIC_API_KEY;
         if (!apiKey) {
-            return NextResponse.json({ error: "AI service configuration missing" }, { status: 500 });
+            await removeOrphanedUpload(supabase, storagePath);
+            return NextResponse.json(
+                { error: "AI service configuration missing." },
+                { status: 500 }
+            );
         }
 
         const anthropic = new Anthropic({ apiKey });
-        const userMessage = `CONFIRMED VISUAL DESCRIPTION:\n${JSON.stringify(resolvedChartData)}\n\nCANDIDATE ESSAY:\n${essay}`;
+        const base64Image = Buffer.from(buffer).toString("base64");
 
         const message = await anthropic.messages.create({
             model: "claude-3-5-sonnet-20241022",
-            max_tokens: 1500,
-            system: SCORING_SYSTEM,
+            max_tokens: MAX_TOKENS,
+            system: EXTRACTION_SYSTEM,
             messages: [
-                { role: "user", content: userMessage }
+                {
+                    role: "user",
+                    content: [
+                        {
+                            type: "image",
+                            source: {
+                                type: "base64",
+                                // Safe cast: file.type is already validated against ALLOWED_MIME_TYPES
+                                media_type: file.type as AllowedMimeType,
+                                data: base64Image,
+                            },
+                        },
+                        {
+                            type: "text",
+                            // More directive user turn: reinforces the three-step workflow
+                            // defined in the system prompt without duplicating schema detail
+                            text: `Analyse this IELTS Writing Task 1 image. 
+Follow the three steps in your instructions exactly:
+1. Classify the visual type.
+2. Apply the corresponding schema for that type.
+3. Return the completed JSON object only — no preamble, no markdown fences.`,
+                        },
+                    ],
+                },
             ],
         });
 
+        // 6. Parse and validate response
         const content = message.content[0];
-        if (content.type !== "text") {
-            throw new Error("Unexpected response type from AI");
+        if (!content || content.type !== "text") {
+            await removeOrphanedUpload(supabase, storagePath);
+            throw new Error("Unexpected response structure from AI service.");
         }
 
-        const jsonMatch = content.text.replace(/```json/g, "").replace(/```/g, "").trim();
-        const result = JSON.parse(jsonMatch);
-
-        // 5. Persistence
-        const serviceClient = createServiceClient();
-        let currentSubmissionId = submissionId;
-
-        const promptTitle = (resolvedChartData?.title || questionTitle || "IELTS Writing Task 1").slice(0, 512);
-
-        if (!currentSubmissionId) {
-            // Auto-create a submission record for Task 1
-            const { data: newSub, error: createError } = await serviceClient
-                .from("essay_submissions")
-                .insert({
-                    user_id: user.id,
-                    task_type: "task1",
-                    prompt_text: promptTitle,
-                    essay_text: essay,
-                    image_path: resolvedImagePath || null,
-                    chart_data: resolvedChartData,
-                    word_count: essay.trim().split(/\s+/).length,
-                    scoring_method: "ai_examiner"
-                })
-                .select("id")
-                .single();
-
-            if (createError) {
-                console.error("Task 1 Submission creation error:", createError);
-            } else {
-                currentSubmissionId = newSub.id;
-            }
-        } else {
-            // Update an existing submission
-            const { error: updateError } = await serviceClient
-                .from("essay_submissions")
-                .update({
-                    chart_data: resolvedChartData,
-                    essay_text: essay,
-                    word_count: essay.trim().split(/\s+/).length
-                })
-                .eq("id", currentSubmissionId);
-
-            if (updateError) {
-                console.error("Submission update error:", updateError);
-            }
+        let chartData: unknown;
+        try {
+            chartData = extractJSON(content.text);
+        } catch (parseError: any) {
+            await removeOrphanedUpload(supabase, storagePath);
+            console.error("JSON parse failure:", parseError.message);
+            console.error("Raw AI response:", content.text);
+            return NextResponse.json(
+                {
+                    error: "AI response could not be parsed. " +
+                        "If this persists, the visual may be too complex — try a clearer image.",
+                },
+                { status: 422 }
+            );
         }
 
-        if (currentSubmissionId) {
-            const { error: fbError } = await serviceClient
-                .from("feedback_results")
-                .insert({
-                    submission_id: currentSubmissionId,
-                    overall_band: result.band_scores.overall,
-                    task_achievement_band: result.band_scores.task_achievement,
-                    coherence_cohesion_band: result.band_scores.coherence_cohesion,
-                    lexical_resource_band: result.band_scores.lexical_resource,
-                    grammatical_range_accuracy_band: result.band_scores.grammatical_range_accuracy,
-                    feedback_json: {
-                        feedback: result.feedback,
-                        improved_sample: result.improved_sample,
-                        examiner_summary: result.examiner_summary,
-                        bands: result.band_scores
-                    }
-                });
-
-            if (fbError) {
-                console.error("Feedback insert error:", fbError);
-            }
-
-            result.submissionId = currentSubmissionId;
+        // Handle model-reported errors (e.g., unrecognised visual)
+        if (
+            typeof chartData === "object" &&
+            chartData !== null &&
+            "error" in chartData
+        ) {
+            await removeOrphanedUpload(supabase, storagePath);
+            return NextResponse.json(
+                { error: (chartData as { error: string }).error },
+                { status: 422 }
+            );
         }
 
-        return NextResponse.json(result);
+        // Validate schema completeness; surface warnings but do not block
+        const { valid, warnings } = validateExtractionResult(chartData);
+        if (!valid || warnings.length > 0) {
+            console.warn("Extraction schema warnings:", warnings);
+        }
+
+        return NextResponse.json({
+            imagePath: storagePath,
+            chartData,
+            ...(warnings.length > 0 && { extractionWarnings: warnings }),
+        });
 
     } catch (error: any) {
-        console.error("Task 1 scoring error:", error);
-        return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
+        // If a storagePath was set, the upload succeeded — clean it up
+        if (storagePath) {
+            const supabase = await createClient();
+            await removeOrphanedUpload(supabase, storagePath);
+        }
+        console.error("Task 1 extraction error:", error);
+        return NextResponse.json(
+            { error: error.message || "Internal server error." },
+            { status: 500 }
+        );
     }
 }
