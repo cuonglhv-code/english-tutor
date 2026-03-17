@@ -1,0 +1,30 @@
+-- Trivia leaderboard storage (Supabase Postgres)
+
+create table if not exists public.trivia_leaderboard (
+  id             uuid        primary key default gen_random_uuid(),
+  user_id        uuid        references auth.users(id) on delete set null,
+  name           text        not null,
+  score          int         not null check (score >= 0),
+  total          int         not null check (total > 0),
+  time_seconds   int         not null check (time_seconds >= 0),
+  question_count int         not null check (question_count > 0),
+  played_at      timestamptz not null default now()
+);
+
+create index if not exists idx_trivia_leaderboard_played_at on public.trivia_leaderboard (played_at desc);
+create index if not exists idx_trivia_leaderboard_qcount on public.trivia_leaderboard (question_count);
+create index if not exists idx_trivia_leaderboard_score_time on public.trivia_leaderboard (question_count, score desc, time_seconds asc, played_at desc);
+
+alter table public.trivia_leaderboard enable row level security;
+
+-- Anyone (even anon) can read the leaderboard. Writes are allowed for authenticated users.
+drop policy if exists "Trivia leaderboard read" on public.trivia_leaderboard;
+create policy "Trivia leaderboard read"
+  on public.trivia_leaderboard for select
+  using (true);
+
+drop policy if exists "Trivia leaderboard insert" on public.trivia_leaderboard;
+create policy "Trivia leaderboard insert"
+  on public.trivia_leaderboard for insert
+  with check (auth.uid() is not null);
+

@@ -79,7 +79,6 @@ export default function StudentDetailsPage() {
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [age, setAge] = useState("");
-  const [dob, setDob] = useState("");
   const [nearestCenter, setNearestCenter] = useState("");
 
   // auth guard
@@ -109,7 +108,6 @@ export default function StudentDetailsPage() {
         setPhone(p.phone ?? "");
         setCity(p.city ?? "");
         setAge(p.age != null ? String(p.age) : "");
-        setDob(p.date_of_birth ?? "");
         setNearestCenter(p.nearest_center ?? "");
       } catch (err: any) {
         console.error("[student] load error:", err?.message);
@@ -140,7 +138,6 @@ export default function StudentDetailsPage() {
         phone: phone.trim() || null,
         city: city.trim() || null,
         age: ageNum,
-        date_of_birth: dob || null,
         nearest_center: nearestCenter || null,
         profile_completed: true,
       };
@@ -233,10 +230,6 @@ export default function StudentDetailsPage() {
             <div className="space-y-1">
               <Label>{lang === "vi" ? "Tuổi" : "Age"}</Label>
               <Input type="number" value={age} onChange={(e) => setAge(e.target.value)} />
-            </div>
-            <div className="space-y-1">
-              <Label>{lang === "vi" ? "Ngày sinh" : "Date of birth"}</Label>
-              <Input type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
             </div>
             <div className="space-y-1 sm:col-span-2">
               <Label>{lang === "vi" ? "Cơ sở gần nhất" : "Nearest center"}</Label>
