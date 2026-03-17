@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -144,6 +144,14 @@ export function Navbar() {
               </Link>
             </>
           )}
+
+          <Link
+            href="/tutor"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden sm:inline">{lang === "vi" ? "Gia sư" : "Tutor"}</span>
+          </Link>
           {user ? (
             <>
               <Link
