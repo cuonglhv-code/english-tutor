@@ -1,5 +1,4 @@
 import { createServiceClient } from "@/lib/supabase-server";
-import prisma from "@/lib/prisma";
 import OverviewClient from "@/components/admin/OverviewClient";
 
 export const dynamic = "force-dynamic";
@@ -13,40 +12,48 @@ async function fetchStats() {
 
     const [
         statsRes,
-        totalCount,
-        todayCount,
-        weekCount,
-        monthCount,
-        taskRows,
-        bandsData,
-        byDayData,
-        byMonthData
+        totalCountRes,
+        todayCountRes,
+        weekCountRes,
+        monthCountRes,
+        taskRowsRes,
+        bandsDataRes,
+        byDayRes,
+        byMonthRes
     ] = await Promise.all([
         service.from("admin_student_stats").select("*").single(),
-        prisma.essaySubmission.count(),
-        prisma.essaySubmission.count({ where: { submitted_at: { gte: todayStart } } }),
-        prisma.essaySubmission.count({ where: { submitted_at: { gte: weekStart } } }),
-        prisma.essaySubmission.count({ where: { submitted_at: { gte: monthStart } } }),
-        prisma.essaySubmission.findMany({ select: { task_type: true } }),
-        prisma.feedbackResult.findMany({ select: { overall_band: true } }),
-        prisma.essaySubmission.findMany({
-            where: { submitted_at: { gte: new Date(now.getTime() - 30 * 86400000) } },
-            select: { submitted_at: true, task_type: true, feedback_results: { select: { overall_band: true } } },
-            orderBy: { submitted_at: "asc" }
-        }),
-        prisma.essaySubmission.findMany({
-            where: { submitted_at: { gte: new Date(now.getFullYear() - 1, now.getMonth(), 1) } },
-            select: { submitted_at: true, task_type: true, feedback_results: { select: { overall_band: true } } },
-            orderBy: { submitted_at: "asc" }
-        }),
+        service.from("essay_submissions").select("*", { count: "exact", head: true }),
+        service.from("essay_submissions").select("*", { count: "exact", head: true }).gte("submitted_at", todayStart.toISOString()),
+        service.from("essay_submissions").select("*", { count: "exact", head: true }).gte("submitted_at", weekStart.toISOString()),
+        service.from("essay_submissions").select("*", { count: "exact", head: true }).gte("submitted_at", monthStart.toISOString()),
+        service.from("essay_submissions").select("task_type"),
+        service.from("feedback_results").select("overall_band"),
+        service
+            .from("essay_submissions")
+            .select("submitted_at, task_type, feedback_results(overall_band)")
+            .gte("submitted_at", new Date(now.getTime() - 30 * 86400000).toISOString())
+            .order("submitted_at", { ascending: true }),
+        service
+            .from("essay_submissions")
+            .select("submitted_at, task_type, feedback_results(overall_band)")
+            .gte("submitted_at", new Date(now.getFullYear() - 1, now.getMonth(), 1).toISOString())
+            .order("submitted_at", { ascending: true }),
     ]);
 
     const sv = statsRes.data ?? {};
+    const totalCount = totalCountRes.count ?? 0;
+    const todayCount = todayCountRes.count ?? 0;
+    const weekCount = weekCountRes.count ?? 0;
+    const monthCount = monthCountRes.count ?? 0;
+    const taskRows = taskRowsRes.data ?? [];
+    const bandsData = bandsDataRes.data ?? [];
+    const byDayData = byDayRes.data ?? [];
+    const byMonthData = byMonthRes.data ?? [];
 
     // by_day
     const dayMap = new Map<string, { count: number; bands: number[]; t1: number; t2: number }>();
     for (const r of byDayData) {
-        const day = r.submitted_at.toISOString().slice(0, 10);
+        const day = new Date(r.submitted_at).toISOString().slice(0, 10);
         if (!dayMap.has(day)) dayMap.set(day, { count: 0, bands: [], t1: 0, t2: 0 });
         const e = dayMap.get(day)!;
         e.count++;
@@ -63,7 +70,7 @@ async function fetchStats() {
     // by_month
     const monthMap = new Map<string, { t1: number; t2: number; bands: number[] }>();
     for (const r of byMonthData) {
-        const m = r.submitted_at.toISOString().slice(0, 7);
+        const m = new Date(r.submitted_at).toISOString().slice(0, 7);
         if (!monthMap.has(m)) monthMap.set(m, { t1: 0, t2: 0, bands: [] });
         const e = monthMap.get(m)!;
         if (r.task_type === "task1") e.t1++; else e.t2++;

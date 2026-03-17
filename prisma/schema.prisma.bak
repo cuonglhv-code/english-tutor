@@ -53,3 +53,4 @@ model Question {
   
   @@map("questions")
 }
+

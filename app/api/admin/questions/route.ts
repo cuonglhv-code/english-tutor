@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin, writeAuditLog } from "@/lib/admin-auth";
-import prisma from "@/lib/prisma";
+import { createServiceClient } from "@/lib/supabase-server";
+import {
+    adminCreateQuestion,
+    adminDeleteQuestion,
+    adminListQuestions,
+    adminUpdateQuestion,
+} from "@/lib/supabase/questions";
 
 export const runtime = "nodejs";
 
@@ -14,13 +20,9 @@ export async function GET(req: NextRequest) {
     const questionType = searchParams.get("question_type") ?? "";
 
     try {
-        const whereClause: any = {};
-        if (taskType) whereClause.task_type = taskType;
-        if (questionType) whereClause.question_type = { contains: questionType, mode: "insensitive" };
-
-        const questions = await prisma.question.findMany({
-            where: whereClause,
-            orderBy: { created_at: "desc" },
+        const questions = await adminListQuestions({
+            taskType: taskType || undefined,
+            questionTypeContains: questionType || undefined,
         });
 
         const mappedQuestions = questions.map((q) => ({
@@ -28,11 +30,11 @@ export async function GET(req: NextRequest) {
             title: q.title,
             task_type: q.task_type,
             question_type: q.question_type,
-            description: q.prompt_text,
+            description: q.body_text,
             visual_description: q.visual_description,
             visual_description_json: q.visual_description_json,
             is_published: q.is_published,
-            created_at: q.created_at.toISOString(),
+            created_at: q.created_at,
         }));
 
         return NextResponse.json({ questions: mappedQuestions, total: mappedQuestions.length });
@@ -68,16 +70,14 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const newQuestion = await prisma.question.create({
-            data: {
-                title: topic,
-                task_type,
-                question_type: type || question_type || null,
-                prompt_text: prompt || "",
-                visual_description: visual_description ?? null,
-                visual_description_json: visual_description_json ?? null,
-                is_published: true,
-            }
+        const newQuestion = await adminCreateQuestion({
+            title: topic,
+            task_type,
+            question_type: type || question_type || null,
+            body_text: prompt || "",
+            visual_description: visual_description ?? null,
+            visual_description_json: visual_description_json ?? null,
+            is_published: true,
         });
 
         await writeAuditLog(service, admin.id, "ADD_QUESTION", {
@@ -110,8 +110,8 @@ export async function PATCH(req: NextRequest) {
     if ("title" in fields) updates.title = fields.title;
     if ("task_type" in fields) updates.task_type = fields.task_type;
     if ("question_type" in fields) updates.question_type = fields.question_type;
-    if ("description" in fields) updates.prompt_text = fields.description;
-    if ("prompt" in fields) updates.prompt_text = fields.prompt;
+    if ("description" in fields) updates.body_text = fields.description;
+    if ("prompt" in fields) updates.body_text = fields.prompt;
     if ("image_url" in fields) updates.image_url = fields.image_url;
     if ("visual_description" in fields) updates.visual_description = fields.visual_description;
     if ("visual_description_json" in fields) updates.visual_description_json = fields.visual_description_json;
@@ -122,10 +122,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     try {
-        const updatedQuestion = await prisma.question.update({
-            where: { id },
-            data: updates,
-        });
+        const updatedQuestion = await adminUpdateQuestion(id, updates);
 
         await writeAuditLog(service, admin.id, "EDIT_QUESTION", {
             target_table: "questions",
@@ -154,18 +151,23 @@ export async function DELETE(req: NextRequest) {
     }
 
     try {
-        const qRow = await prisma.question.findUnique({
-            where: { id },
-            select: { title: true, prompt_text: true }
-        });
+        const svc = createServiceClient();
+        const { data: qRow, error: qErr } = await svc
+            .from("questions")
+            .select("title, body_text")
+            .eq("id", id)
+            .single();
+        if (qErr) throw qErr;
 
-        const questionPrompt = qRow?.prompt_text || qRow?.title || "";
+        const questionPrompt = qRow?.body_text || qRow?.title || "";
         if (questionPrompt) {
-            const count = await prisma.essaySubmission.count({
-                where: { prompt_text: questionPrompt }
-            });
+            const { count, error: cErr } = await svc
+                .from("essay_submissions")
+                .select("*", { count: "exact", head: true })
+                .eq("prompt_text", questionPrompt);
+            if (cErr) throw cErr;
 
-            if (count > 0) {
+            if ((count ?? 0) > 0) {
                 return NextResponse.json(
                     {
                         error: `Cannot delete — this question has ${count} associated submission(s). Unpublish it instead.`,
@@ -176,7 +178,7 @@ export async function DELETE(req: NextRequest) {
             }
         }
 
-        await prisma.question.delete({ where: { id } });
+        await adminDeleteQuestion(id);
 
         await writeAuditLog(service, admin.id, "DELETE_QUESTION", {
             target_table: "questions",

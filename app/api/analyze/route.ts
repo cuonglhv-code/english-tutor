@@ -3,7 +3,6 @@ import Anthropic from "@anthropic-ai/sdk";
 import { analyzeEssay } from "@/lib/analyze";
 import { appendToSheet } from "@/lib/sheets";
 import { createServiceClient } from "@/lib/supabase-server";
-import prisma from "@/lib/prisma";
 import { getDescriptor, getNextDescriptor } from "@/lib/descriptors";
 import { roundToHalfBand } from "@/lib/utils";
 import type {
@@ -276,48 +275,6 @@ async function persistToSupabase(
   }
 }
 
-async function persistToPrisma(
-  data: any,
-  result: AnalysisResult,
-  rawFeedback: any
-): Promise<void> {
-  try {
-    const taskType = data.taskNumber === "1" ? "task1" : "task2";
-
-    const enrichedFeedbackJson = {
-      ...rawFeedback,
-      overall_comment_vi: result.overallComment_vi,
-      priority_actions_vi: result.priorityActions_vi,
-      _full_result: result,
-    };
-
-    await prisma.essaySubmission.create({
-      data: {
-        id: undefined, // Let DB generate UUID if it wants, or we can use Supabase ID if we had it
-        user_id: data.user_id || undefined,
-        task_type: taskType,
-        prompt_text: data.question || "",
-        essay_text: data.essay,
-        word_count: result.wordCount,
-        language: data.language || "en",
-        scoring_method: result.scoring_method || "rule_based_fallback",
-        feedback_results: {
-          create: {
-            overall_band: result.bands.overall,
-            task_achievement_band: result.bands.ta,
-            coherence_cohesion_band: result.bands.cc,
-            lexical_resource_band: result.bands.lr,
-            grammatical_range_accuracy_band: result.bands.gra,
-            feedback_json: enrichedFeedbackJson,
-          },
-        },
-      },
-    });
-  } catch (err) {
-    console.error("Prisma persist error:", err);
-  }
-}
-
 // ─── Main handler ─────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   try {
@@ -431,7 +388,6 @@ export async function POST(req: NextRequest) {
 
     await Promise.allSettled([
       persistToSupabase(data, result, feedbackToStore),
-      persistToPrisma(data, result, feedbackToStore),
       appendToSheet({
         name: data.name || "",
         age: data.age || "",
