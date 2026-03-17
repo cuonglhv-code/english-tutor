@@ -327,7 +327,7 @@ export default function TutorSessionClient() {
                 <div className="px-5 py-4 space-y-2">
                   <div className="flex items-start gap-2 text-sm text-gray-700">
                     <span>🇬🇧</span>
-                    <p>Hi! I'm Jaxtina, your bilingual English tutor. Every reply will include English and Vietnamese so you can understand clearly.</p>
+                    <p>Hi! I&apos;m Jaxtina, your bilingual English tutor. Every reply will include English and Vietnamese so you can understand clearly.</p>
                   </div>
                   <div className="flex items-start gap-2 text-sm text-red-800">
                     <span>🇻🇳</span>
