@@ -136,7 +136,9 @@ export default function HomeScreenClient({ userId }: Props) {
                   key={i}
                   className="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded-lg px-3 py-2 group"
                 >
-                  <p className="flex-1 text-xs text-gray-500 truncate">"{p}"</p>
+                  <p className="flex-1 text-xs text-gray-500 truncate">
+                    &quot;{p}&quot;
+                  </p>
                   <button
                     onClick={() => toggle({ text: p, skill, level, savedAt: new Date().toISOString() })}
                     title={isFavourited(p) ? 'Remove from favourites' : 'Save to favourites'}
