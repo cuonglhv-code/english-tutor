@@ -3,9 +3,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Star, Trash2, Gamepad2 } from 'lucide-react'
+import { Star, Trash2 } from 'lucide-react'
 import { useFavourites } from '@/lib/tutor/useFavourites'
-import TriviaGameClient from './TriviaGameClient'
 import {
   LEVELS,
   SKILL_AREAS,
@@ -25,7 +24,7 @@ export default function HomeScreenClient({ userId }: Props) {
 
   const [level, setLevel] = useState<ProficiencyLevel>('Pre-Intermediate')
   const [skill, setSkill] = useState<SkillArea>('Free Conversation')
-  const [tab, setTab] = useState<'start' | 'favourites' | 'trivia'>('start')
+  const [tab, setTab] = useState<'start' | 'favourites'>('start')
 
   const handleStart = (prefill = '') => {
     const params = new URLSearchParams({ level, skill })
@@ -74,15 +73,6 @@ export default function HomeScreenClient({ userId }: Props) {
               {favourites.length}
             </span>
           )}
-        </button>
-        <button
-          onClick={() => setTab('trivia')}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-1 ${
-            tab === 'trivia' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          <Gamepad2 className="h-3.5 w-3.5" />
-          Trivia
         </button>
       </div>
 
@@ -172,7 +162,7 @@ export default function HomeScreenClient({ userId }: Props) {
             Start Practising →
           </button>
         </div>
-      ) : tab === 'favourites' ? (
+      ) : (
         <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md">
           <h2 className="font-semibold text-gray-700 mb-1">Saved Favourite Prompts</h2>
           <p className="text-xs text-gray-400 mb-4">
@@ -218,10 +208,6 @@ export default function HomeScreenClient({ userId }: Props) {
               ))}
             </div>
           )}
-        </div>
-      ) : (
-        <div className="w-full max-w-3xl">
-          <TriviaGameClient />
         </div>
       )}
     </div>

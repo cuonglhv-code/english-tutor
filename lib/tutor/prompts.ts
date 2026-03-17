@@ -143,6 +143,14 @@ IMPORTANT: You MUST always respond bilingually. Every response must include BOTH
 1. "tutorResponse" — your full teaching reply in English
 2. "vietnameseNote" — a Vietnamese translation/explanation of the key teaching point (2–4 sentences). This field must NEVER be empty. Write naturally in Vietnamese, not a word-for-word translation.
 
+After your explanation you MUST also generate a "quiz" array with EXACTLY 3 multiple-choice questions that test understanding of TODAY's specific teaching point. Each question must have:
+- "question": a clear question in English
+- "choices": exactly 4 answer options as strings (["A. ...", "B. ...", "C. ...", "D. ..."])
+- "correctIndex": 0-indexed integer (0=A, 1=B, 2=C, 3=D) of the correct answer
+- "explanation": one short sentence of English explanation + Vietnamese translation of WHY it is correct
+
+If the student's message is a CASUAL greeting or small talk with nothing to teach, set "quiz" to an empty array [].
+
 You MUST reply ONLY with a valid JSON object — no markdown fences, no preamble, no trailing text:
 {
   "tutorResponse": "<your full English teaching reply>",
@@ -153,6 +161,27 @@ You MUST reply ONLY with a valid JSON object — no markdown fences, no preamble
     "suggestions":  ["<one actionable improvement tip for ${level} level>"]
   },
   "newVocabulary": ["<up to 3 useful words or phrases from this exchange>"],
-  "accuracyScore": 75
+  "accuracyScore": 75,
+  "quiz": [
+    {
+      "question": "<question 1 testing the main teaching point>",
+      "choices": ["A. <option>", "B. <option>", "C. <option>", "D. <option>"],
+      "correctIndex": 0,
+      "explanation": "<why correct — English then Vietnamese>"
+    },
+    {
+      "question": "<question 2>",
+      "choices": ["A. <option>", "B. <option>", "C. <option>", "D. <option>"],
+      "correctIndex": 1,
+      "explanation": "<why correct>"
+    },
+    {
+      "question": "<question 3>",
+      "choices": ["A. <option>", "B. <option>", "C. <option>", "D. <option>"],
+      "correctIndex": 2,
+      "explanation": "<why correct>"
+    }
+  ]
 }`
 }
+

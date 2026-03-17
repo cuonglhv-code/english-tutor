@@ -36,6 +36,15 @@ export interface TutorFeedback {
   suggestions: string[]
 }
 
+// ── Quiz ───────────────────────────────────────────────────────────────────────
+
+export interface QuizQuestion {
+  question: string
+  choices: [string, string, string, string] // exactly 4 options A–D
+  correctIndex: 0 | 1 | 2 | 3             // index into choices
+  explanation: string                       // brief English + Vietnamese note
+}
+
 // ── API shapes ─────────────────────────────────────────────────────────────────
 
 /** Body sent from the client to POST /api/tutor/chat */
@@ -54,6 +63,7 @@ export interface TutorChatResponse {
   feedback: TutorFeedback
   newVocabulary: string[]
   accuracyScore: number
+  quiz?: QuizQuestion[]  // 3 MCQs to test comprehension (optional but usually present)
 }
 
 // ── Favourites ─────────────────────────────────────────────────────────────────
