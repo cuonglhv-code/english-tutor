@@ -1,20 +1,30 @@
 // app/tutor/page.tsx
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase-server'
-import HomeScreenClient from './HomeScreenClient'
+"use client";
 
-/**
- * Server component — validates auth then hands off to the client shell.
- * Middleware already redirects unauthenticated users, but this double-check
- * keeps the pattern consistent with /dashboard etc.
- */
-export default async function TutorHomePage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { useUser } from "@/hooks/useUser";
+import HomeScreenClient from "./HomeScreenClient";
 
-  if (!user) redirect('/login?next=/tutor')
+export default function TutorHomePage() {
+  const router = useRouter();
+  const { user, loading } = useUser();
 
-  return <HomeScreenClient userId={user.id} />
+  useEffect(() => {
+    if (loading) return;
+    if (!user) router.replace("/login?next=/tutor");
+  }, [loading, user, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-jaxtina-red" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
+  return <HomeScreenClient userId={user.id} />;
 }

@@ -83,7 +83,10 @@ export default function TutorSessionClient() {
         }),
       })
 
-      if (!res.ok) throw new Error(`API ${res.status}`)
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => '(no body)')
+        throw new Error(`API ${res.status}: ${errBody}`)
+      }
 
       const data: TutorChatResponse = await res.json()
 
