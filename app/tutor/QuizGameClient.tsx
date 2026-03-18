@@ -110,7 +110,7 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
       await Promise.all(
         [5, 10, 15, 20].map(async (n) => {
           try {
-            const res = await fetch(`/api/leaderboard?n=${n}`);
+            const res = await fetch(`/api/quiz/leaderboard?n=${n}`);
             d[n] = await res.json();
           } catch {
             d[n] = [];
@@ -319,7 +319,7 @@ export default function QuizGameClient() {
         chosen: h.chosen,
         correct: h.correct,
       }));
-      fetch("/api/leaderboard", {
+      fetch("/api/quiz/leaderboard", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -345,39 +345,15 @@ export default function QuizGameClient() {
     }
     setPhase("loading");
     try {
-      const prompt = `You are generating quiz questions for Vietnamese students in Grades 6–11 (ages 11–16).
-Rules:
-- Engaging and appropriate for Vietnamese secondary school students
-- Include Vietnamese context where relevant
-- Language: English
-- Difficulty: ${diff}
-- Categories: ${cats.join(", ")}
-- Generate exactly ${numQ} questions
-Respond ONLY with valid JSON, no markdown:
-{
-  "questions": [{
-    "question": "...",
-    "options": ["A","B","C","D"],
-    "correctAnswer": 0,
-    "category": "...",
-    "funFact": "one short interesting fun fact about the answer (max 20 words)",
-    "source": "a credible source verifying the correct answer e.g. 'NASA.gov', 'National Geographic', 'BBC Science', 'Khan Academy', 'Vietnam Ministry of Education'. Include article/page name where possible."
-  }]
-}`;
-
-      const res = await fetch("/api/quiz", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          messages: [{ role: "user", content: prompt }],
-        }),
+      const qs = new URLSearchParams({
+        categories: cats.join(","),
+        difficulty: diff,
+        count: numQ.toString()
       });
+      const res = await fetch(`/api/quiz/questions?${qs.toString()}`);
+      if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
-      const raw = data.content?.find((b: { type: string }) => b.type === "text")?.text || "";
-      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setQuestions(parsed.questions);
+      setQuestions(data.questions);
       setQIdx(0);
       setScore(0);
       setStreak(0);
@@ -447,8 +423,8 @@ Respond ONLY with valid JSON, no markdown:
         <div className="max-w-2xl mx-auto">
           <div className="text-center py-6">
             <div className="text-5xl mb-1">🧠✨</div>
-            <h1 className="text-5xl font-black text-white drop-shadow-lg">Brain Blast!</h1>
-            <p className="text-white/80 mt-1">Quiz challenge for super-smart students 🎓</p>
+            <h1 className="text-5xl font-black text-white drop-shadow-lg">Jaxtina Quiz</h1>
+            <p className="text-white/80 mt-1">Test your knowledge — English, Science, Vietnam & more</p>
           </div>
 
           <button
@@ -533,7 +509,7 @@ Respond ONLY with valid JSON, no markdown:
       <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex flex-col items-center justify-center gap-6 p-10 rounded-3xl">
         <div className="text-7xl animate-bounce">🧠</div>
         <div className="w-16 h-16 border-4 border-yellow-300 border-t-transparent rounded-full animate-spin" />
-        <p className="text-white text-xl font-black animate-pulse">Cooking up questions… 🍳</p>
+        <p className="text-white text-xl font-black animate-pulse">Loading your questions… 📚</p>
       </div>
     );
 

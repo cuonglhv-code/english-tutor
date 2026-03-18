@@ -1,11 +1,11 @@
-// app/tutor/quiz/page.tsx
+// app/quiz/page.tsx
 "use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
-import QuizGameClient from "../QuizGameClient";
+import QuizGameClient from "../tutor/QuizGameClient";
 
 export default function QuizPage() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (loading) return;
-    if (!user) router.replace("/login?next=/tutor/quiz");
+    if (!user) router.replace("/login?next=/quiz");
   }, [loading, user, router]);
 
   if (loading) {
