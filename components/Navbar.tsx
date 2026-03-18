@@ -219,7 +219,7 @@ export function Navbar() {
                       role="menuitem"
                     >
                       <PenLine className="h-4 w-4" />
-                      {t("nav", "practice", lang)}
+                      <span>{lang === "vi" ? "Luyện viết" : "Writing practice"}</span>
                     </Link>
                     <Link
                       href="/practice"
@@ -228,7 +228,7 @@ export function Navbar() {
                       role="menuitem"
                     >
                       <Library className="h-4 w-4" />
-                      <span>{lang === "vi" ? "Thư viện" : "Library"}</span>
+                      <span>{lang === "vi" ? "Thư viện viết" : "Writing library"}</span>
                     </Link>
                     <Link
                       href="/full-test"
@@ -237,7 +237,7 @@ export function Navbar() {
                       role="menuitem"
                     >
                       <FileText className="h-4 w-4" />
-                      <span>{lang === "vi" ? "Thi thử" : "Full test"}</span>
+                      <span>{lang === "vi" ? "Thi thực tế" : "Actual test"}</span>
                     </Link>
                   </div>
                 )}
