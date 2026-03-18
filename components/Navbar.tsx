@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare, User as UserIcon, Gamepad2 } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare, User as UserIcon, Gamepad2, FileText } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -229,6 +229,15 @@ export function Navbar() {
                     >
                       <Library className="h-4 w-4" />
                       <span>{lang === "vi" ? "Thư viện" : "Library"}</span>
+                    </Link>
+                    <Link
+                      href="/full-test"
+                      onClick={() => setPracticeOpen(false)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      role="menuitem"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>{lang === "vi" ? "Thi thử" : "Full test"}</span>
                     </Link>
                   </div>
                 )}

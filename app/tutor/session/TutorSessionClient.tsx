@@ -12,12 +12,12 @@ import { createBrowserClient } from '@/lib/supabase'
 import { useFavourites } from '@/lib/tutor/useFavourites'
 import {
   LEVELS, SKILL_AREAS, SKILL_ICONS, LEVEL_COLORS,
-  INITIAL_GOALS, STARTER_PROMPTS,
+  STARTER_PROMPTS,
 } from '@/lib/tutor/prompts'
 import type {
   ProficiencyLevel, SkillArea,
   TutorMessage, TutorFeedback,
-  TutorChatResponse, LearningGoal, QuizQuestion,
+  TutorChatResponse, QuizQuestion,
 } from '@/lib/tutor/types'
 
 // ── Quiz card ───────────────────────────────────────────────────────────────
@@ -342,7 +342,6 @@ export default function TutorSessionClient() {
   const [input,      setInput]      = useState(params.get('prefill') ?? '')
   const [isLoading,  setIsLoading]  = useState(false)
   const [feedback,   setFeedback]   = useState<TutorFeedback | null>(null)
-  const [goals,      setGoals]      = useState<LearningGoal[]>(INITIAL_GOALS[level])
   const [stats,      setStats]      = useState({ messages: 0, vocabCount: 0, accuracy: 0 })
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -461,13 +460,8 @@ export default function TutorSessionClient() {
     }
   }, [send])
 
-  const toggleGoal = (id: number) =>
-    setGoals(prev => prev.map(g =>
-      g.id === id ? { ...g, completed: !g.completed, progress: g.completed ? g.progress : 100 } : g
-    ))
-
   const handleLevelChange = (l: ProficiencyLevel) => {
-    setLevel(l); setGoals(INITIAL_GOALS[l]); setChatItems([]); setFeedback(null)
+    setLevel(l); setChatItems([]); setFeedback(null)
   }
   const handleSkillChange = (s: SkillArea) => {
     setSkillArea(s); setChatItems([]); setFeedback(null)
@@ -539,7 +533,7 @@ export default function TutorSessionClient() {
                   </div>
                   <div className="flex items-start gap-2 text-sm text-red-800">
                     <span>🇻🇳</span>
-                    <p>Xin chào! Mình là Jaxtina. Sau mỗi bài giảng, mình sẽ đưa ra 3 câu câu hỏi trắc nghiệm để kiểm tra hiểu biết của bạn. Nếu bạn trả lời sai 2/3, mình sẽ giải thích lại chi tiết hơn!</p>
+                    <p>Xin chào bạn, mình là Jaxtina Tutor. Sau mỗi câu trả lời, mình sẽ đặt 3 câu hỏi trắc nghiệm để biết được bạn đã hiểu rõ nội dung hay chưa. Hãy bắt đầu đặt câu hỏi cho mình nhé!</p>
                   </div>
                 </div>
               </div>
@@ -702,36 +696,6 @@ export default function TutorSessionClient() {
           )}
         </div>
 
-        {/* Learning goals */}
-        <div className="p-4 border-b border-gray-100">
-          <h3 className="font-semibold text-gray-700 text-sm mb-3 flex items-center gap-1.5">
-            <Target className="h-4 w-4 text-green-500" /> Mục tiêu học tập
-          </h3>
-          <div className="space-y-3">
-            {goals.map(g => (
-              <div key={g.id}>
-                <div className="flex items-start gap-2">
-                  <button onClick={() => toggleGoal(g.id)} className="mt-0.5 shrink-0">
-                    {g.completed
-                      ? <CheckCircle className="h-4 w-4 text-green-500" />
-                      : <div className="h-4 w-4 border-2 border-gray-300 rounded-full" />}
-                  </button>
-                  <span className={`text-xs leading-snug ${g.completed ? 'line-through text-gray-400' : 'text-gray-700'}`}>
-                    {g.text}
-                  </span>
-                </div>
-                <div className="ml-6 mt-1.5">
-                  <div className="w-full bg-gray-100 rounded-full h-1.5">
-                    <div
-                      className="bg-green-400 h-1.5 rounded-full transition-all"
-                      style={{ width: `${g.progress}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Last feedback */}
         {feedback && (
