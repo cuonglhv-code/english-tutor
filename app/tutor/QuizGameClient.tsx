@@ -345,21 +345,61 @@ export default function QuizGameClient() {
     }
     setPhase("loading");
     try {
+      // ── Try Supabase question bank first ─────────────────────────────
       const qs = new URLSearchParams({
         categories: cats.join(","),
         difficulty: diff,
-        count: numQ.toString()
+        count: numQ.toString(),
       });
       const res = await fetch(`/api/quiz/questions?${qs.toString()}`);
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setQuestions(data.questions);
-      setQIdx(0);
-      setScore(0);
-      setStreak(0);
-      setHistory([]);
-      setChosen(null);
-      setRevealed(false);
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.questions?.length > 0) {
+          setQuestions(data.questions);
+          setQIdx(0); setScore(0); setStreak(0);
+          setHistory([]); setChosen(null); setRevealed(false);
+          setPhase("playing");
+          return;
+        }
+      }
+
+      // ── Fallback: generate via Claude AI ─────────────────────────────
+      const prompt = `You are generating quiz questions for Vietnamese students in Grades 6–11 (ages 11–16).
+Rules:
+- Engaging and appropriate for Vietnamese secondary school students
+- Include Vietnamese context where relevant
+- Language: English
+- Difficulty: ${diff}
+- Categories: ${cats.join(", ")}
+- Generate exactly ${numQ} questions
+Respond ONLY with valid JSON, no markdown:
+{
+  "questions": [{
+    "question": "...",
+    "options": ["A","B","C","D"],
+    "correctAnswer": 0,
+    "category": "...",
+    "funFact": "one short interesting fun fact about the answer (max 20 words)",
+    "source": "a credible source e.g. 'NASA.gov', 'National Geographic', 'BBC Science', 'Khan Academy'"
+  }]
+}`;
+
+      const aiRes = await fetch("/api/tutor/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 2000,
+        }),
+      });
+      if (!aiRes.ok) throw new Error("AI fallback also failed");
+      const aiData = await aiRes.json();
+      const raw = aiData.content?.find((b: { type: string }) => b.type === "text")?.text || "";
+      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+      setQuestions(parsed.questions);
+      setQIdx(0); setScore(0); setStreak(0);
+      setHistory([]); setChosen(null); setRevealed(false);
       setPhase("playing");
     } catch (e) {
       console.error(e);
