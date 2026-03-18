@@ -283,13 +283,13 @@ export function Navbar() {
                   {lang === "vi" ? "Gia sư" : "Tutor"}
                 </Link>
                 <Link
-                  href="/tutor/trivia"
+                  href="/tutor/quiz"
                   onClick={() => setTutorOpen(false)}
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
                   role="menuitem"
                 >
                   <Gamepad2 className="h-4 w-4" />
-                  {lang === "vi" ? "Đố vui" : "Trivia"}
+                  {lang === "vi" ? "Trắc nghiệm" : "Quiz"}
                 </Link>
               </div>
             )}

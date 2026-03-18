@@ -14,11 +14,13 @@ interface Question {
 }
 
 interface LeaderboardEntry {
+  id: string;
   name: string;
   score: number;
   total: number;
   time: number;
   date: string;
+  history: { question: string; options: string[]; correctAnswer: number; chosen: number; correct: boolean }[];
 }
 
 // ─── Constants ────────────────────────────────────────────────────────
@@ -99,6 +101,7 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
   const [tab, setTab] = useState(5);
   const [data, setData] = useState<Record<number, LeaderboardEntry[]>>({ 5: [], 10: [], 15: [], 20: [] });
   const [loading, setLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -132,13 +135,14 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
             ← Back
           </button>
           <h1 className="text-3xl font-black text-white">🏆 Leaderboard</h1>
+          <span className="ml-auto text-white/60 text-xs font-semibold">Top 10 per group</span>
         </div>
 
         <div className="flex gap-2 mb-4">
           {[5, 10, 15, 20].map((n) => (
             <button
               key={n}
-              onClick={() => setTab(n)}
+              onClick={() => { setTab(n); setExpandedId(null); }}
               className={`flex-1 py-2.5 rounded-2xl font-black text-sm transition-all border-2
                 ${tab === n
                   ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
@@ -166,31 +170,68 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
               <p className="text-gray-400 font-semibold">No scores yet — be the first!</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-50 max-h-[55vh] overflow-y-auto">
+            <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
               {rows.map((r, i) => (
-                <div
-                  key={i}
-                  className={`grid grid-cols-12 items-center px-4 py-3 text-sm
-                    ${i === 0 ? "bg-yellow-50" : i === 1 ? "bg-gray-50" : i === 2 ? "bg-orange-50" : ""}`}
-                >
-                  <div className="col-span-1 font-black text-lg">
-                    {i < 3 ? MEDALS[i] : <span className="text-gray-400 text-xs">{i + 1}</span>}
+                <div key={r.id ?? i}>
+                  {/* Main row */}
+                  <div
+                    className={`grid grid-cols-12 items-center px-4 py-3 text-sm cursor-pointer transition-colors
+                      ${i === 0 ? "bg-yellow-50 hover:bg-yellow-100" : i === 1 ? "bg-gray-50 hover:bg-gray-100" : i === 2 ? "bg-orange-50 hover:bg-orange-100" : "hover:bg-gray-50"}`}
+                    onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}
+                  >
+                    <div className="col-span-1 font-black text-lg">
+                      {i < 3 ? MEDALS[i] : <span className="text-gray-400 text-xs">{i + 1}</span>}
+                    </div>
+                    <div className="col-span-4 font-bold text-gray-800 truncate">{r.name}</div>
+                    <div className="col-span-3 text-center">
+                      <span
+                        className={`font-black px-2 py-0.5 rounded-full text-xs
+                        ${r.score === r.total
+                          ? "bg-green-100 text-green-700"
+                          : r.score / r.total >= 0.6
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-red-100 text-red-600"}`}
+                      >
+                        {r.score}/{r.total}
+                      </span>
+                    </div>
+                    <div className="col-span-2 text-center text-gray-500 font-semibold text-xs">⏱ {fmt(r.time)}</div>
+                    <div className="col-span-2 text-center text-gray-400 text-xs flex items-center justify-center gap-1">
+                      {r.date}
+                      {r.history.length > 0 && (
+                        <span className="text-purple-400">{expandedId === r.id ? "▲" : "▼"}</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="col-span-4 font-bold text-gray-800 truncate">{r.name}</div>
-                  <div className="col-span-3 text-center">
-                    <span
-                      className={`font-black px-2 py-0.5 rounded-full text-xs
-                      ${r.score === r.total
-                        ? "bg-green-100 text-green-700"
-                        : r.score / r.total >= 0.6
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-red-100 text-red-600"}`}
-                    >
-                      {r.score}/{r.total}
-                    </span>
-                  </div>
-                  <div className="col-span-2 text-center text-gray-500 font-semibold text-xs">⏱ {fmt(r.time)}</div>
-                  <div className="col-span-2 text-center text-gray-400 text-xs">{r.date}</div>
+
+                  {/* Expandable history */}
+                  {expandedId === r.id && r.history.length > 0 && (
+                    <div className="bg-indigo-50 border-t border-indigo-100 px-4 py-3 space-y-2">
+                      <p className="text-xs font-black text-indigo-400 uppercase tracking-wide mb-2">📝 Test History</p>
+                      {r.history.map((h, hi) => (
+                        <div
+                          key={hi}
+                          className={`rounded-xl p-3 border text-xs ${
+                            h.correct
+                              ? "bg-green-50 border-green-200"
+                              : "bg-red-50 border-red-200"
+                          }`}
+                        >
+                          <p className="font-bold text-gray-800 mb-1">
+                            <span className="text-gray-400 mr-1">Q{hi + 1}.</span> {h.question}
+                          </p>
+                          <p className={`font-semibold ${h.correct ? "text-green-600" : "text-red-500"}`}>
+                            {h.correct ? "✅" : "❌"} {h.options[h.chosen]}
+                          </p>
+                          {!h.correct && (
+                            <p className="text-green-700 font-semibold mt-0.5">
+                              ✅ Correct: {h.options[h.correctAnswer]}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -203,7 +244,7 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────
-export default function TriviaGameClient() {
+export default function QuizGameClient() {
   const supabase = useMemo(() => createBrowserClient(), []);
   const [phase, setPhase] = useState<"setup" | "loading" | "playing" | "results">("setup");
   const [showLb, setShowLb] = useState(false);
@@ -266,10 +307,18 @@ export default function TriviaGameClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Save score to Supabase via API route when results screen appears
+  // Save score + full test history to Supabase via API route when results screen appears
   useEffect(() => {
     if (phase === "results" && !savedRef.current && questions.length > 0) {
       savedRef.current = true;
+      // Serialize history: include question text, options, correct+chosen index
+      const historyPayload = history.map((h) => ({
+        question: h.q.question,
+        options: h.q.options,
+        correctAnswer: h.q.correctAnswer,
+        chosen: h.chosen,
+        correct: h.correct,
+      }));
       fetch("/api/leaderboard", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -279,6 +328,7 @@ export default function TriviaGameClient() {
           total: questions.length,
           time: elapsed,
           question_count: questions.length,
+          history: historyPayload,
         }),
       }).catch(console.error);
     }
@@ -295,7 +345,7 @@ export default function TriviaGameClient() {
     }
     setPhase("loading");
     try {
-      const prompt = `You are generating trivia questions for Vietnamese students in Grades 6–11 (ages 11–16).
+      const prompt = `You are generating quiz questions for Vietnamese students in Grades 6–11 (ages 11–16).
 Rules:
 - Engaging and appropriate for Vietnamese secondary school students
 - Include Vietnamese context where relevant
@@ -315,7 +365,7 @@ Respond ONLY with valid JSON, no markdown:
   }]
 }`;
 
-      const res = await fetch("/api/trivia", {
+      const res = await fetch("/api/quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -398,7 +448,7 @@ Respond ONLY with valid JSON, no markdown:
           <div className="text-center py-6">
             <div className="text-5xl mb-1">🧠✨</div>
             <h1 className="text-5xl font-black text-white drop-shadow-lg">Brain Blast!</h1>
-            <p className="text-white/80 mt-1">Trivia challenge for super-smart students 🎓</p>
+            <p className="text-white/80 mt-1">Quiz challenge for super-smart students 🎓</p>
           </div>
 
           <button

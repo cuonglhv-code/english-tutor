@@ -1,19 +1,19 @@
-// app/tutor/trivia/page.tsx
+// app/tutor/quiz/page.tsx
 "use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
-import TriviaGameClient from "../TriviaGameClient";
+import QuizGameClient from "../QuizGameClient";
 
-export default function TriviaPage() {
+export default function QuizPage() {
   const router = useRouter();
   const { user, loading } = useUser();
 
   useEffect(() => {
     if (loading) return;
-    if (!user) router.replace("/login?next=/tutor/trivia");
+    if (!user) router.replace("/login?next=/tutor/quiz");
   }, [loading, user, router]);
 
   if (loading) {
@@ -29,7 +29,7 @@ export default function TriviaPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
       <div className="w-full max-w-3xl">
-        <TriviaGameClient />
+        <QuizGameClient />
       </div>
     </div>
   );

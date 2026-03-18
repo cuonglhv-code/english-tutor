@@ -151,6 +151,7 @@ function FilterSidebar({
     setSourceFilters,
     allTypes,
     open,
+    setActiveTab,
 }: {
     taskFilter: "All" | "Task 1" | "Task 2";
     setTaskFilter: (t: "All" | "Task 1" | "Task 2") => void;
@@ -160,6 +161,7 @@ function FilterSidebar({
     setSourceFilters: React.Dispatch<React.SetStateAction<string[]>>;
     allTypes: readonly string[];
     open: boolean;
+    setActiveTab: (t: "task1" | "task2") => void;
 }) {
     const toggle = (
         arr: string[],
@@ -179,10 +181,16 @@ function FilterSidebar({
                 {(["All", "Task 1", "Task 2"] as const).map((t) => (
                     <button
                         key={t}
-                        onClick={() => { setTaskFilter(t); setTypeFilters([]); }}
-                        className={`block w-full text-left px-3 py-1.5 rounded-lg text-sm mb-1 transition-colors ${taskFilter === t
-                            ? "bg-jaxtina-red/10 text-jaxtina-red font-semibold"
-                            : "text-muted-foreground hover:bg-muted"
+                        onClick={() => {
+                            setTaskFilter(t);
+                            setTypeFilters([]);
+                            if (t === "Task 1") setActiveTab("task1");
+                            if (t === "Task 2") setActiveTab("task2");
+                        }}
+                        className={`block w-full text-left px-3 py-1.5 rounded-lg text-sm mb-1 transition-colors ${
+                            taskFilter === t
+                                ? "bg-jaxtina-red/10 text-jaxtina-red font-semibold"
+                                : "text-muted-foreground hover:bg-muted"
                             }`}
                     >
                         {t}
@@ -411,22 +419,22 @@ export default function PracticePage() {
                 {/* ── Tab Switcher ── */}
                 <div className="flex items-center gap-1 bg-muted/60 p-1.5 rounded-2xl w-full sm:w-fit border shadow-sm">
                     <button
-                        onClick={() => setActiveTab("task1")}
+                        onClick={() => { setActiveTab("task1"); setTaskFilter("Task 1"); setTypeFilters([]); }}
                         className={`flex-1 sm:flex-none px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === "task1"
                             ? "bg-card text-jaxtina-red shadow-md scale-[1.02]"
                             : "text-muted-foreground hover:text-foreground"
                             }`}
                     >
-                        Task 1 (Image Upload)
+                         Task 1
                     </button>
                     <button
-                        onClick={() => setActiveTab("task2")}
+                        onClick={() => { setActiveTab("task2"); setTaskFilter("Task 2"); setTypeFilters([]); }}
                         className={`flex-1 sm:flex-none px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === "task2"
                             ? "bg-card text-jaxtina-red shadow-md scale-[1.02]"
                             : "text-muted-foreground hover:text-foreground"
                             }`}
                     >
-                        Task 2 (Library)
+                         Task 2
                     </button>
                 </div>
 
@@ -623,6 +631,7 @@ export default function PracticePage() {
                                 setSourceFilters={setSourceFilters}
                                 allTypes={allTypes}
                                 open={filtersOpen}
+                                setActiveTab={setActiveTab}
                             />
 
                             <div className="flex-1 min-w-0">
