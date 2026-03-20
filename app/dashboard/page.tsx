@@ -67,7 +67,7 @@ export default function DashboardPage() {
 
       const [subRes, progRes, profileRes, goalsRes, examRes, activityRes] =
         await Promise.all([
-          // ── Switched to Prisma/Neon ───────────────────────────────────────
+          // ── Using Supabase via API ───────────────────────────────────────
           fetch("/api/user/submissions")
             .then(res => res.json())
             .then(data => ({ data: Array.isArray(data) ? data : [], error: data.error ? new Error(data.error) : null })),

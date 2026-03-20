@@ -271,7 +271,7 @@ export default function PracticePage() {
     const [loading, setLoading] = useState(false);
     const [loadingDone, setLoadingDone] = useState(false);
 
-    // Fetch dynamic questions from the Prisma Postgres
+    // Fetch dynamic questions from Supabase (REST API proxy)
     useEffect(() => {
         const fetchQuestions = async () => {
             setLoading(true);
@@ -302,7 +302,7 @@ export default function PracticePage() {
     }, [dbQuestions]);
 
 
-    // Load submitted question IDs from Prisma for authenticated users
+    // Load submitted question IDs from Supabase for authenticated users
     useEffect(() => {
         if (!user) return;
         setLoadingDone(true);
