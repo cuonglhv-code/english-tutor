@@ -79,6 +79,8 @@ export default function OnboardingPage() {
         .upsert({
           id: user!.id,
           email: user!.email ?? "",
+          full_name: (user!.user_metadata?.display_name as string) || (user!.email?.split("@")[0]),
+          display_name: (user!.user_metadata?.display_name as string) || (user!.email?.split("@")[0]),
           age: ageNum,
           city: city.trim(),
           phone: phone.trim(),

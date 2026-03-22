@@ -71,13 +71,28 @@ export function LoginPageContent() {
                     toast.error(error.message || t("auth", "errorGeneric", lang));
                     return;
                 }
-                toast.success(t("auth", "successRegister", lang));
-
                 // If email confirmation is enabled, there may be no session yet.
+                const needsConfirmation = data?.user && !(data as any)?.session;
+                
+                if (needsConfirmation) {
+                    toast.success(
+                        lang === "vi" 
+                            ? "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản. Bạn vẫn có thể tiếp tục sử dụng ngay lúc này." 
+                            : "Registration successful! Check your email to confirm your account. You can still continue for now.",
+                        { duration: 6000 }
+                    );
+                } else {
+                    toast.success(t("auth", "successRegister", lang));
+                }
+
                 // Still direct users toward Tutor; if not authenticated they will be prompted accordingly.
                 const targetUrl = "/tutor";
-                if (data?.user && (data as any)?.session) {
-                    window.location.href = targetUrl;
+                
+                // If it needs confirmation, give the user a second to see the toast before redirect
+                if (needsConfirmation) {
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 2000);
                 } else {
                     window.location.href = targetUrl;
                 }

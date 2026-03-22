@@ -21,10 +21,18 @@ export function SubscribeCTA({ email, name, mobile }: Props) {
   useEffect(() => {
     const already = sessionStorage.getItem("ielts_subscribed");
     if (!already) {
-      const timer = setTimeout(() => setOpen(true), 2000);
+      const timer = setTimeout(() => setOpen(true), 5000);
       return () => clearTimeout(timer);
     }
   }, []);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    // If user closes it manually (without subscribing), mark it as dismissed for this session
+    if (!newOpen && !subscribed) {
+      sessionStorage.setItem("ielts_subscribed", "dismissed");
+    }
+  };
 
   const handleSubscribe = async () => {
     confetti({
@@ -54,7 +62,7 @@ export function SubscribeCTA({ email, name, mobile }: Props) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-jaxtina-red/10">

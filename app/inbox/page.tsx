@@ -110,15 +110,15 @@ export default function InboxPage() {
     const unread = messages.filter(m => !m.is_read).length;
 
     return (
-        <div className="min-h-screen bg-neutral-950">
+        <div className="min-h-screen bg-background">
             <div className="max-w-4xl mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
-                    <Link href="/dashboard" className="text-white/40 hover:text-white transition-colors">
+                    <Link href="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
                         <ArrowLeft className="h-5 w-5" />
                     </Link>
                     <div>
-                        <h1 className="text-2xl font-black text-white flex items-center gap-3">
+                        <h1 className="text-2xl font-black text-foreground flex items-center gap-3">
                             <Mail className="h-6 w-6 text-jaxtina-blue" />
                             Inbox
                             {unread > 0 && (
@@ -127,41 +127,41 @@ export default function InboxPage() {
                                 </span>
                             )}
                         </h1>
-                        <p className="text-sm text-white/40 mt-0.5">Messages from your IELTS instructor</p>
+                        <p className="text-sm text-muted-foreground mt-0.5">Messages from your IELTS instructor</p>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-[320px,1fr] gap-4">
                     {/* Message list */}
-                    <div className="bg-neutral-900 border border-white/[0.06] rounded-2xl overflow-hidden">
+                    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
                         {loading ? (
                             <div className="flex items-center justify-center py-16">
-                                <Loader2 className="h-5 w-5 animate-spin text-white/30" />
+                                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground/30" />
                             </div>
                         ) : messages.length === 0 ? (
                             <div className="py-16 px-6 text-center">
-                                <Mail className="h-8 w-8 text-white/10 mx-auto mb-3" />
-                                <p className="text-white/30 text-sm italic">No messages yet</p>
-                                <p className="text-white/20 text-xs mt-1">Announcements from your teacher will appear here</p>
+                                <Mail className="h-8 w-8 text-muted-foreground/10 mx-auto mb-3" />
+                                <p className="text-muted-foreground/50 text-sm italic">No messages yet</p>
+                                <p className="text-muted-foreground/30 text-xs mt-1">Announcements from your teacher will appear here</p>
                             </div>
                         ) : (
-                            <ul className="divide-y divide-white/[0.04]">
+                            <ul className="divide-y divide-border/50">
                                 {messages.map(msg => (
                                     <li key={msg.id}>
                                         <button
                                             onClick={() => openMessage(msg)}
-                                            className={`w-full text-left px-4 py-3.5 hover:bg-white/[0.03] transition-colors flex gap-3 items-start ${selected?.id === msg.id ? "bg-jaxtina-blue/5 border-l-2 border-jaxtina-blue" : ""
+                                            className={`w-full text-left px-4 py-3.5 hover:bg-muted/50 transition-colors flex gap-3 items-start ${selected?.id === msg.id ? "bg-jaxtina-blue/5 border-l-2 border-jaxtina-blue" : ""
                                                 }`}
                                         >
                                             <div className="shrink-0 mt-0.5">
                                                 {msg.is_read
-                                                    ? <MailOpen className="h-4 w-4 text-white/20" />
+                                                    ? <MailOpen className="h-4 w-4 text-muted-foreground/30" />
                                                     : <Mail className="h-4 w-4 text-jaxtina-blue" />
                                                 }
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center justify-between gap-2">
-                                                    <p className={`text-sm truncate ${msg.is_read ? "text-white/50 font-normal" : "text-white font-semibold"}`}>
+                                                    <p className={`text-sm truncate ${msg.is_read ? "text-muted-foreground font-normal" : "text-foreground font-semibold"}`}>
                                                         {msg.subject}
                                                     </p>
                                                     {!msg.is_read && (
@@ -170,12 +170,12 @@ export default function InboxPage() {
                                                 </div>
                                                 <div className="flex items-center gap-2 mt-0.5">
                                                     {msg.recipient_id === null && (
-                                                        <span className="text-[9px] font-bold bg-purple-500/10 text-purple-400 px-1.5 py-px rounded-full flex items-center gap-1">
+                                                        <span className="text-[9px] font-bold bg-purple-500/10 text-purple-600 dark:text-purple-400 px-1.5 py-px rounded-full flex items-center gap-1">
                                                             <Globe className="h-2.5 w-2.5" /> Broadcast
                                                         </span>
                                                     )}
-                                                    <p className="text-[11px] text-white/30 truncate">{senderName(msg.sender)}</p>
-                                                    <span className="text-white/20 text-[10px] ml-auto shrink-0">{timeAgo(msg.sent_at)}</span>
+                                                    <p className="text-[11px] text-muted-foreground/60 truncate">{senderName(msg.sender)}</p>
+                                                    <span className="text-muted-foreground/40 text-[10px] ml-auto shrink-0">{timeAgo(msg.sent_at)}</span>
                                                 </div>
                                             </div>
                                         </button>
@@ -186,25 +186,25 @@ export default function InboxPage() {
                     </div>
 
                     {/* Reading pane */}
-                    <div className="bg-neutral-900 border border-white/[0.06] rounded-2xl">
+                    <div className="bg-card border border-border rounded-2xl shadow-sm">
                         {!selected ? (
                             <div className="flex flex-col items-center justify-center h-full py-24 px-8 text-center">
-                                <MailOpen className="h-10 w-10 text-white/10 mb-3" />
-                                <p className="text-white/30 text-sm">Select a message to read it</p>
+                                <MailOpen className="h-10 w-10 text-muted-foreground/10 mb-3" />
+                                <p className="text-muted-foreground/40 text-sm">Select a message to read it</p>
                             </div>
                         ) : (
                             <div className="p-6 space-y-5">
                                 {/* Message header */}
-                                <div className="border-b border-white/[0.06] pb-5 space-y-2">
-                                    <h2 className="text-lg font-bold text-white">{selected.subject}</h2>
-                                    <div className="flex flex-wrap items-center gap-3 text-xs text-white/40">
+                                <div className="border-b border-border/50 pb-5 space-y-2">
+                                    <h2 className="text-lg font-bold text-foreground">{selected.subject}</h2>
+                                    <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                                         <span>
-                                            From: <span className="text-white/60">{senderName(selected.sender)}</span>
+                                            From: <span className="text-foreground/70">{senderName(selected.sender)}</span>
                                         </span>
                                         <span>{new Date(selected.sent_at).toLocaleString()}</span>
                                         <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${selected.message_type === "email"
-                                                ? "bg-blue-500/10 text-blue-400"
-                                                : "bg-white/5 text-white/30"
+                                                ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                                                : "bg-muted text-muted-foreground"
                                             }`}>
                                             {selected.message_type === "email"
                                                 ? <><Mail className="h-2.5 w-2.5" /> Email copy</>
@@ -212,7 +212,7 @@ export default function InboxPage() {
                                             }
                                         </span>
                                         {selected.recipient_id === null && (
-                                            <span className="flex items-center gap-1 text-[10px] font-bold bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full">
+                                            <span className="flex items-center gap-1 text-[10px] font-bold bg-purple-500/10 text-purple-600 dark:text-purple-400 px-2 py-0.5 rounded-full">
                                                 <Globe className="h-2.5 w-2.5" /> Sent to all students
                                             </span>
                                         )}
@@ -220,7 +220,7 @@ export default function InboxPage() {
                                 </div>
 
                                 {/* Body */}
-                                <div className="text-sm text-white/70 leading-relaxed whitespace-pre-wrap">
+                                <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
                                     {selected.body}
                                 </div>
                             </div>

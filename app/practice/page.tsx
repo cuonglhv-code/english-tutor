@@ -311,9 +311,11 @@ export default function PracticePage() {
             .then(data => {
                 if (Array.isArray(data)) {
                     const promptSet = new Set(data.map((r: any) => r.prompt_text?.trim()).filter(Boolean));
+                    const dbQuestionIdSet = new Set(data.map((r: any) => r.question_id).filter(Boolean));
+                    
                     const ids = new Set(
                         allQuestions
-                            .filter((q) => promptSet.has(q.questionText.trim()))
+                            .filter((q) => dbQuestionIdSet.has(q.id) || promptSet.has(q.questionText.trim()))
                             .map((q) => q.id)
                     );
                     setDoneIds(ids);
@@ -357,6 +359,7 @@ export default function PracticePage() {
             "practice_question",
             JSON.stringify({
                 question: q.questionText,
+                question_id: q.id,
                 taskNumber,
                 taskType,
                 questionImage: q.imageUrl ? proxyImg(q.imageUrl) : undefined,

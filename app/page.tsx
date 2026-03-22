@@ -45,6 +45,7 @@ export default function HomePage() {
       setData((prev) => ({
         ...prev,
         question: preloaded.question,
+        question_id: (preloaded as any).question_id,
         taskNumber: preloaded.taskNumber,
         taskType: preloaded.taskType,
         questionImage: preloaded.questionImage,

@@ -93,7 +93,7 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
       ? "text-green-600 dark:text-green-400"
       : wordCount >= minWords * 0.8
         ? "text-yellow-600 dark:text-yellow-400"
-        : "text-red-600 dark:text-red-400";
+        : "text-muted-foreground";
 
   // Validate and show the essay plan modal
   const handleSubmitClick = () => {
@@ -103,7 +103,13 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
     }
     if (wordCount < minWords) {
       const warnFn = t("write", "warningShort", lang);
-      toast.warning(typeof warnFn === "function" ? warnFn(wordCount, minWords) : String(warnFn));
+      const warnMsg = typeof warnFn === "function" ? warnFn(wordCount, minWords) : String(warnFn);
+      // user wants a friendlier warning about band penalties
+      const penaltyMsg = lang === "vi" 
+        ? "Lưu ý: Bài viết dưới số từ quy định có thể bị trừ điểm Band Score tự động." 
+        : "Note: Essays below the required word count receive automatic band penalties.";
+      
+      toast.warning(`${warnMsg} ${penaltyMsg}`, { duration: 5000 });
     }
     setShowPlanModal(true);
   };
@@ -298,11 +304,7 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
             disabled={isProcessing}
             spellCheck
           />
-          {wordCount > 0 && wordCount < minWords && (
-            <p className="text-xs text-yellow-600 dark:text-yellow-400">
-              ⚠ {minWords - wordCount} {t("write", "shortWarning", lang)}
-            </p>
-          )}
+
         </div>
       </div>
 

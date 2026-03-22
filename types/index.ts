@@ -18,6 +18,7 @@ export interface WizardData {
   essay: string;
   language: "en" | "vi";
   user_id?: string;
+  question_id?: string;
 }
 
 export interface BandScores {
@@ -150,6 +151,7 @@ export interface EssaySubmission {
   // Task 1 Image fields
   image_path?: string | null;
   chart_data?: Record<string, unknown> | null;
+  question_id?: string | null;
 }
 
 export interface FeedbackResult {

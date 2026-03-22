@@ -271,6 +271,7 @@ async function persistToSupabase(
         word_count: result.wordCount,
         language: data.language || "en",
         scoring_method: result.scoring_method || "rule_based_fallback",
+        question_id: data.question_id || null,
       })
       .select("id")
       .single();
