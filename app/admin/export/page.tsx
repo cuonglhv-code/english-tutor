@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Download, Users, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
+import { Download, Users, FileText, FileSpreadsheet, Loader2, UserPlus, Trophy } from "lucide-react";
 import { useToast, ToastContainer } from "@/hooks/useToast";
 
 const EXPORTS = [
@@ -11,6 +11,20 @@ const EXPORTS = [
         icon: Users,
         description: "All student profiles with submission counts, current & target bands, phone numbers, enrolment date, and active status.",
         columns: "id · full_name · email · phone · role · current_band · target_band · enrolled_at · is_active · submission_count · last_submission_date",
+    },
+    {
+        type: "guest_users",
+        label: "Experience Leads (Guests)",
+        icon: UserPlus,
+        description: "All users who registered via the public Experience page.",
+        columns: "All standard guest profile fields (id, name, email, phone, etc.)",
+    },
+    {
+        type: "leaderboard",
+        label: "Quiz Leaderboard",
+        icon: Trophy,
+        description: "All quiz attempts, including scores, time taken, question counts, and difficulty levels.",
+        columns: "id · name · user_id (if logged in) · score · total_possible · time_seconds · question_count · difficulty · played_at",
     },
     {
         type: "submissions",

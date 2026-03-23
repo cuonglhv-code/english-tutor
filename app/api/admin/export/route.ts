@@ -1,3 +1,4 @@
+// app/api/admin/export/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin, writeAuditLog } from "@/lib/admin-auth";
 
@@ -31,16 +32,70 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get("type") ?? "users";
 
-    if (!["users", "submissions", "full_report"].includes(type)) {
-        return NextResponse.json({ error: "Invalid type. Must be users, submissions, or full_report" }, { status: 400 });
+    // Valid types: users, guest_users, submissions, leaderboard, full_report
+    if (!["users", "guest_users", "submissions", "leaderboard", "full_report"].includes(type)) {
+        return NextResponse.json({ error: "Invalid type. Must be users, guest_users, submissions, leaderboard, or full_report" }, { status: 400 });
     }
 
     let csv = "";
     let rowCount = 0;
     const filename = `jaxtina-export-${type}-${new Date().toISOString().slice(0, 10)}.csv`;
 
+    // --- QUIZ LEADERBOARD EXPORT ---
+    if (type === "leaderboard") {
+        const { data: leaderboard, error } = await service
+            .from("quiz_leaderboard")
+            // Intentionally excluding test_history JSONB to keep the CSV clean
+            .select("id, name, user_id, score, total, time_seconds, question_count, difficulty, played_at")
+            .order("played_at", { ascending: false });
+
+        if (error) {
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        if (!leaderboard || leaderboard.length === 0) {
+            csv = "No leaderboard data found";
+        } else {
+            const boardHeaders = ["id", "name", "user_id", "score", "total_possible", "time_seconds", "question_count", "difficulty", "played_at"];
+            const boardRows = leaderboard.map((r: any) => [
+                r.id, 
+                r.name, 
+                r.user_id || "Anonymous Guest", 
+                r.score, 
+                r.total, 
+                r.time_seconds, 
+                r.question_count, 
+                r.difficulty || "medium", // Fallback for older rows before difficulty was added
+                r.played_at
+            ]);
+            csv = toCsv(boardHeaders, boardRows);
+            rowCount = boardRows.length;
+        }
+    }
+
+    // --- GUEST USERS EXPORT (EXPERIENCE PAGE) ---
+    if (type === "guest_users") {
+        const { data: guests, error } = await service
+            .from("guest_users")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        if (!guests || guests.length === 0) {
+            csv = "No guest users found";
+        } else {
+            const guestHeaders = Object.keys(guests[0]);
+            const guestRows = guests.map((g: any) => guestHeaders.map(h => g[h]));
+            csv = toCsv(guestHeaders, guestRows);
+            rowCount = guestRows.length;
+        }
+    }
+
+    // --- STANDARD USERS EXPORT ---
     if (type === "users" || type === "full_report") {
-        // Fetch users with submission counts
         const { data: users, error } = await service
             .from("profiles")
             .select("*")
@@ -51,7 +106,6 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
-        // Submission stats per user
         const userIds = (users ?? []).map((u: any) => u.id);
         let subMap: Record<string, { count: number; last_date: string | null }> = {};
 
@@ -90,16 +144,16 @@ export async function GET(req: NextRequest) {
             subMap[u.id]?.last_date ?? "",
         ]);
 
-        rowCount = userRows.length;
+        rowCount += userRows.length;
 
         if (type === "users") {
             csv = toCsv(userHeaders, userRows);
-        } else {
-            // full_report — prepend user section, append submission section below
+        } else if (type === "full_report") {
             csv += "=== STUDENTS ===\r\n" + toCsv(userHeaders, userRows) + "\r\n\r\n";
         }
     }
 
+    // --- SUBMISSIONS EXPORT ---
     if (type === "submissions" || type === "full_report") {
         const { data: subs, error } = await service
             .from("essay_submissions")
@@ -145,7 +199,7 @@ export async function GET(req: NextRequest) {
 
         if (type === "submissions") {
             csv = toCsv(subHeaders, subRows);
-        } else {
+        } else if (type === "full_report") {
             csv += "=== SUBMISSIONS ===\r\n" + toCsv(subHeaders, subRows);
         }
     }
