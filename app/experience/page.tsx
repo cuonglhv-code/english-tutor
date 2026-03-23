@@ -231,7 +231,7 @@ export default function ExperiencePage() {
           </Link>
 
           {/* Vocabulary Challenge Card */}
-          <a href="/vocabulary-challenge/index.html" target="_self" className="group block h-full">
+          <Link href="/vocabulary-challenge" className="group block h-full">
             <div className="bg-gray-900 border border-gray-700 hover:border-purple-500 rounded-2xl p-8 transition-all duration-300 hover:shadow-lg hover:shadow-purple-900/20 h-full flex flex-col items-center text-center">
               {/* Icon */}
               <div className="w-14 h-14 rounded-2xl bg-purple-600/20 border border-purple-600/30 flex items-center justify-center mb-6 group-hover:bg-purple-600/30 transition">
@@ -263,7 +263,7 @@ export default function ExperiencePage() {
                 </svg>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,3 +1,6 @@
+'use client'
+
+const htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -308,7 +311,7 @@
                     {/* Vùng Thẻ (Card Area) */}
                     <div className="relative w-full max-w-[340px] aspect-[3/4.2] perspective-1000 mx-auto group">
                         <div 
-                            className={`absolute inset-0 w-full h-full transition-all duration-700 transform-style-3d cursor-pointer ${isFlipped ? 'rotate-y-180' : 'hover:scale-105'} ${cardAnimationClass}`}
+                            className={\`absolute inset-0 w-full h-full transition-all duration-700 transform-style-3d cursor-pointer \${isFlipped ? 'rotate-y-180' : 'hover:scale-105'} \${cardAnimationClass}\`}
                             onClick={handleFlip}
                             style={{ transformOrigin: 'bottom center' }}
                         >
@@ -345,7 +348,7 @@
                     </div>
 
                     {/* Action Buttons */}
-                    <div className={`w-full max-w-[340px] flex justify-between items-center mt-10 transition-all duration-500 ${isFlipped ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+                    <div className={\`w-full max-w-[340px] flex justify-between items-center mt-10 transition-all duration-500 \${isFlipped ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}\`}>
                         <div className="flex flex-col items-center gap-3">
                             <button onClick={() => handleSwipe(false)} className="w-20 h-20 bg-slate-800/80 backdrop-blur-md rounded-full flex items-center justify-center text-rose-500 shadow-[0_10px_30px_rgba(244,63,94,0.3)] border border-rose-500/30 hover:bg-rose-500 hover:text-white hover:scale-110 transition-all group">
                                 <X className="group-hover:scale-110 transition-transform" />
@@ -435,7 +438,7 @@
                                         key={idx} 
                                         onClick={() => handleSelect(option)}
                                         disabled={!!selectedOption}
-                                        className={`py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform ${btnClass}`}
+                                        className={\`py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform \${btnClass}\`}
                                     >
                                         {option.idiom}
                                     </button>
@@ -525,12 +528,12 @@
                             <input
                                 ref={inputRef} type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)}
                                 disabled={status === 'correct' || status === 'revealed'} placeholder="Type in English..."
-                                className={`w-full bg-slate-900 border-2 rounded-2xl py-4 px-6 text-xl font-bold text-center outline-none transition-all
-                                    ${status === 'idle' ? 'border-slate-600 focus:border-rose-500 text-white' : ''}
-                                    ${status === 'correct' ? 'border-green-500 bg-green-500/10 text-green-400' : ''}
-                                    ${status === 'wrong' ? 'border-rose-500 bg-rose-500/10 text-rose-400 animate-shake' : ''}
-                                    ${status === 'revealed' ? 'border-amber-500 bg-amber-500/10 text-amber-400' : ''}
-                                `}
+                                className={\`w-full bg-slate-900 border-2 rounded-2xl py-4 px-6 text-xl font-bold text-center outline-none transition-all
+                                    \${status === 'idle' ? 'border-slate-600 focus:border-rose-500 text-white' : ''}
+                                    \${status === 'correct' ? 'border-green-500 bg-green-500/10 text-green-400' : ''}
+                                    \${status === 'wrong' ? 'border-rose-500 bg-rose-500/10 text-rose-400 animate-shake' : ''}
+                                    \${status === 'revealed' ? 'border-amber-500 bg-amber-500/10 text-amber-400' : ''}
+                                \`}
                                 autoComplete="off" autoCorrect="off" spellCheck="false"
                             />
                             {status === 'correct' && <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500 animate-pop-in"><Check /></div>}
@@ -641,17 +644,17 @@
                             <p className="text-slate-400 text-sm">Sắp xếp các từ để tạo thành câu hoàn chỉnh</p>
                         </div>
 
-                        <div className={`relative z-10 min-h-[100px] p-3 rounded-2xl border-2 flex flex-wrap gap-2 items-center transition-all duration-300 ${status === 'correct' ? 'bg-green-500/10 border-green-500' : status === 'wrong' ? 'bg-rose-500/10 border-rose-500 animate-shake' : 'bg-slate-900/50 border-dashed border-slate-600'}`}>
+                        <div className={\`relative z-10 min-h-[100px] p-3 rounded-2xl border-2 flex flex-wrap gap-2 items-center transition-all duration-300 \${status === 'correct' ? 'bg-green-500/10 border-green-500' : status === 'wrong' ? 'bg-rose-500/10 border-rose-500 animate-shake' : 'bg-slate-900/50 border-dashed border-slate-600'}\`}>
                             {selectedWords.length === 0 && <span className="text-slate-500 text-sm mx-auto">Chạm hoặc kéo thả từ vào đây</span>}
                             {selectedWords.map((word, idx) => (
                                 <button
-                                    key={`sel-${word.id}`} draggable
+                                    key={\`sel-\${word.id}\`} draggable
                                     onDragStart={(e) => onDragStart(e, idx)} onDragOver={(e) => onDragOver(e, idx)} onDrop={(e) => onDrop(e, idx)} onClick={() => handleDeselectWord(word)}
-                                    className={`px-4 py-2 rounded-xl font-bold shadow-sm transition-all cursor-grab active:cursor-grabbing
-                                        ${status === 'correct' ? 'bg-green-500 text-white' : status === 'wrong' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white hover:scale-105'}
-                                        ${draggedIdx === idx ? 'opacity-50' : ''}
-                                        ${dragOverIdx === idx ? 'ring-2 ring-white scale-110 mx-2' : ''}
-                                    `}
+                                    className={\`px-4 py-2 rounded-xl font-bold shadow-sm transition-all cursor-grab active:cursor-grabbing
+                                        \${status === 'correct' ? 'bg-green-500 text-white' : status === 'wrong' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white hover:scale-105'}
+                                        \${draggedIdx === idx ? 'opacity-50' : ''}
+                                        \${dragOverIdx === idx ? 'ring-2 ring-white scale-110 mx-2' : ''}
+                                    \`}
                                 >
                                     {word.text}
                                 </button>
@@ -661,7 +664,7 @@
                         <div className="flex flex-wrap gap-2 min-h-[80px] mt-6 justify-center relative z-10">
                             {availableWords.map((word) => (
                                 <button
-                                    key={`avail-${word.id}`} onClick={() => handleSelectWord(word)}
+                                    key={\`avail-\${word.id}\`} onClick={() => handleSelectWord(word)}
                                     className="px-4 py-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded-xl font-bold shadow-sm hover:-translate-y-1 transition-all"
                                 >
                                     {word.text}
@@ -701,7 +704,7 @@
             const timeDiff = Math.floor((Date.now() - startTime) / 1000);
             const mins = Math.floor(timeDiff / 60);
             const secs = timeDiff % 60;
-            const timeString = `${mins > 0 ? `${mins}m ` : ''}${secs}s`;
+            const timeString = \`\${mins > 0 ? \`\${mins}m \` : ''}\${secs}s\`;
             
             const totalQuestions = totalCards * 4; // 4 stages per card
             const progress = Math.min(100, Math.round((answeredCount / totalQuestions) * 100));
@@ -843,7 +846,8 @@
                                 VOCABULARY CHALLENGE
                             </h1>
                         </div>
-                        <a href="/experience" 
+                        <a href="#" 
+                           onclick="window.parent.location='/experience'; return false;"
                            style="display:flex;align-items:center;gap:6px;background:rgba(30,41,59,0.8);padding:10px 14px;border-radius:12px;border:1px solid rgba(71,85,105,1);color:#94a3b8;text-decoration:none;font-size:14px;font-weight:700;transition:all 0.2s;"
                            onMouseOver={(e) => { e.currentTarget.style.background='rgba(51,65,85,1)'; e.currentTarget.style.color='white'; }}
                            onMouseOut={(e) => { e.currentTarget.style.background='rgba(30,41,59,0.8)'; e.currentTarget.style.color='#94a3b8'; }}>
@@ -978,3 +982,17 @@
     </script>
 </body>
 </html>
+`
+
+export default function VocabularyChallengePage() {
+  return (
+    <div className="h-screen w-screen overflow-hidden bg-slate-900 font-sans">
+      <iframe
+        srcDoc={htmlContent}
+        className="w-full h-full border-0"
+        title="Vocabulary Challenge"
+        sandbox="allow-scripts allow-same-origin allow-forms"
+      />
+    </div>
+  )
+}
