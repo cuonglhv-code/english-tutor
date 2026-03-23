@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
     // --- GUEST USERS EXPORT (EXPERIENCE PAGE) ---
     if (type === "guest_users") {
         const { data: guests, error } = await service
-            .from("guest_users")
+            .from("guest_registrations")
             .select("*")
             .order("created_at", { ascending: false });
 
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
         }
 
         if (!guests || guests.length === 0) {
-            csv = "No guest users found";
+            csv = "id,name,email,phone,created_at\n";
         } else {
             const guestHeaders = Object.keys(guests[0]);
             const guestRows = guests.map((g: any) => guestHeaders.map(h => g[h]));
