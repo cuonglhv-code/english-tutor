@@ -156,11 +156,11 @@ export default function ExperiencePage() {
         <div className="text-center mb-12 animate-in fade-in slide-in-from-top duration-700">
           <p className="text-red-400 text-sm font-medium uppercase tracking-widest mb-2">Xin chào, {guest.name.split(' ').pop()}!</p>
           <h1 className="text-4xl font-bold text-white mb-3">Chọn trải nghiệm của bạn</h1>
-          <p className="text-gray-400">Luyện tập cùng AI hoặc kiểm tra từ vựng IELTS — miễn phí.</p>
+          <p className="text-gray-400">Luyện tập cùng AI Tutor, kiểm tra từ vựng, hoặc chinh phục thành ngữ — miễn phí.</p>
         </div>
 
-        {/* Two experience cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom duration-700 delay-200">
+        {/* Three experience cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom duration-700 delay-200">
 
           {/* AI Tutor Card */}
           <Link href="/tutor" className="group block h-full">
@@ -230,6 +230,40 @@ export default function ExperiencePage() {
             </div>
           </Link>
 
+          {/* Vocabulary Challenge Card */}
+          <a href="/vocabulary-challenge/" target="_self" className="group block h-full">
+            <div className="bg-gray-900 border border-gray-700 hover:border-purple-500 rounded-2xl p-8 transition-all duration-300 hover:shadow-lg hover:shadow-purple-900/20 h-full flex flex-col items-center text-center">
+              {/* Icon */}
+              <div className="w-14 h-14 rounded-2xl bg-purple-600/20 border border-purple-600/30 flex items-center justify-center mb-6 group-hover:bg-purple-600/30 transition">
+                <svg className="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+                </svg>
+              </div>
+
+              <div className="flex-1">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <h2 className="text-xl font-bold text-white">Vocabulary Challenge</h2>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-purple-600/20 text-purple-400 border border-purple-600/30 font-medium">NEW</span>
+                </div>
+                <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                  Học thành ngữ tiếng Anh qua 4 giai đoạn: Flashcard → Trắc nghiệm → Gõ từ → Ghép câu. Có hệ thống lặp lại thông minh (SRS).
+                </p>
+                <ul className="space-y-2 text-sm text-gray-500 text-left">
+                  <li><span className="text-green-400 mr-2">✓</span> Top 10 idioms kinh doanh thực tế</li>
+                  <li><span className="text-green-400 mr-2">✓</span> 4 chế độ luyện tập khác nhau</li>
+                  <li><span className="text-green-400 mr-2">✓</span> Ghi nhớ thông minh với SRS</li>
+                </ul>
+              </div>
+
+              <div className="mt-8 flex items-center text-purple-400 text-sm font-semibold group-hover:gap-3 gap-2 transition-all">
+                Bắt đầu luyện tập
+                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>

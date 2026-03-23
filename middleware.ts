@@ -13,6 +13,7 @@ const PUBLIC_ROUTES = [
   "/quiz",
   "/tutor",
   "/experience",
+  "/vocabulary-challenge",
   "/api",
   // Note: /placement (intro only) is handled via EXACT_PUBLIC_ROUTES below
 ];

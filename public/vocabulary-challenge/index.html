@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Challenge</title>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Polyfill for Drag & Drop on Mobile -->
+    <script src="https://unpkg.com/drag-drop-touch"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+        body { font-family: 'Nunito', sans-serif; background-color: #0f172a; color: white; overflow-x: hidden; }
+        
+        /* 3D Flip Card CSS */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop-in { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
+
+        /* Swipe Animations */
+        @keyframes swipeLeftOut {
+            to { transform: translateX(-150%) rotate(-20deg); opacity: 0; }
+        }
+        .animate-swipe-left { animation: swipeLeftOut 0.4s ease-out forwards; }
+
+        @keyframes swipeRightOut {
+            to { transform: translateX(150%) rotate(20deg); opacity: 0; }
+        }
+        .animate-swipe-right { animation: swipeRightOut 0.4s ease-out forwards; }
+
+        /* Shine Effect cho thẻ */
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+        .shimmer-effect {
+            position: absolute;
+            top: 0; left: 0; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg) translateX(-150%);
+            transition: 0.5s;
+        }
+        .group:hover .shimmer-effect {
+            animation: shimmer 1.5s infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- ICONS ---
+        const Brain = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>;
+        const Pencil = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>;
+        const KeyboardIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><line x1="6" y1="8" x2="6.01" y2="8"/><line x1="10" y1="8" x2="10.01" y2="8"/><line x1="14" y1="8" x2="14.01" y2="8"/><line x1="18" y1="8" x2="18.01" y2="8"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="10" y1="12" x2="10.01" y2="12"/><line x1="14" y1="12" x2="14.01" y2="12"/><line x1="18" y1="12" x2="18.01" y2="12"/><line x1="7" y1="16" x2="17" y2="16"/></svg>;
+        const ChevronRight = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>;
+        const ChevronLeft = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>;
+        const HomeIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>;
+        const X = () => <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>;
+        const Check = () => <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>;
+        const CalendarIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>;
+        const StarIcon = ({ filled }) => <svg width="20" height="20" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
+        const ListChecks = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>;
+        const Volume2 = ({ size = 24, className = "" }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>;
+        const Trophy = () => <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>;
+        const Clock = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>;
+        const FastForward = ({ size = 24, className = "" }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg>;
+        const StopCircle = ({ size = 24, className = "" }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><rect x="9" y="9" width="6" height="6"/></svg>;
+        const Activity = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>;
+        const QuoteIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25-.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>;
+
+        // --- DATA (Top 10 Idioms) ---
+        const quizData = [
+            { id: "top1", idiom: "Think outside the box", emojis: "💭 📦", meaning: "Suy nghĩ đột phá", explanation: "Tìm ra những ý tưởng mới lạ, không bị gò bó theo lối cũ.", example: "We need to think outside the box for this design.", exampleVN: "Chúng ta cần suy nghĩ đột phá cho thiết kế này.", practiceSentences: ["We need to think outside the box for this design"], practiceSentencesVN: ["Chúng ta cần suy nghĩ đột phá cho thiết kế này"] },
+            { id: "top2", idiom: "Get down to business", emojis: "💼 🤝", meaning: "Bắt đầu làm việc chính", explanation: "Ngưng nói chuyện phiếm và tập trung vào công việc.", example: "Let's get down to business and start working.", exampleVN: "Hãy bắt đầu làm việc nghiêm túc nào.", practiceSentences: ["Let's get down to business and start working"], practiceSentencesVN: ["Hãy bắt đầu làm việc nghiêm túc nào"] },
+            { id: "top3", idiom: "The elephant in the room", emojis: "🐘 🛋️", meaning: "Vấn đề ai cũng né", explanation: "Một vấn đề lớn rõ ràng nhưng mọi người đều ngại nhắc đến.", example: "Let's discuss the elephant in the room: our budget.", exampleVN: "Hãy thảo luận về vấn đề ai cũng né tránh: ngân sách của chúng ta.", practiceSentences: ["Let's discuss the elephant in the room our budget"], practiceSentencesVN: ["Hãy thảo luận về vấn đề ai cũng né tránh là ngân sách của chúng ta"] },
+            { id: "top4", idiom: "Win-win", emojis: "🏆 🤝", meaning: "Đôi bên cùng có lợi", explanation: "Một thỏa thuận mà cả hai phòng ban/công ty đều có lợi.", example: "This contract is a win-win for both teams.", exampleVN: "Hợp đồng này đôi bên cùng có lợi cho cả hai nhóm.", practiceSentences: ["This contract is a win-win for both teams"], practiceSentencesVN: ["Hợp đồng này đôi bên cùng có lợi cho cả hai nhóm"] },
+            { id: "top5", idiom: "A game changer", emojis: "🎮 🔄", meaning: "Nhân tố đột phá", explanation: "Một công cụ hoặc ý tưởng làm thay đổi hoàn toàn cách làm việc.", example: "This new tool is a game changer.", exampleVN: "Công cụ mới này là một nhân tố đột phá.", practiceSentences: ["This new tool is a game changer"], practiceSentencesVN: ["Công cụ mới này là một nhân tố đột phá"] },
+            { id: "top6", idiom: "The big picture", emojis: "🖼️ 🔭", meaning: "Bức tranh toàn cảnh", explanation: "Mục tiêu lớn, tổng thể của dự án thay vì chi tiết nhỏ.", example: "Look at the big picture of our project.", exampleVN: "Hãy nhìn vào bức tranh toàn cảnh của dự án chúng ta.", practiceSentences: ["Look at the big picture of our project"], practiceSentencesVN: ["Hãy nhìn vào bức tranh toàn cảnh của dự án chúng ta"] },
+            { id: "top7", idiom: "On the same page", emojis: "📖 🤝", meaning: "Hiểu ý nhau", explanation: "Tất cả mọi người đều hiểu và đồng ý với nhau về công việc.", example: "Are we on the same page about this plan?", exampleVN: "Chúng ta có đang hiểu ý nhau về kế hoạch này không?", practiceSentences: ["Are we on the same page about this plan"], practiceSentencesVN: ["Chúng ta có đang hiểu ý nhau về kế hoạch này không"] },
+            { id: "top8", idiom: "Call the shots", emojis: "🗣️ 🎯", meaning: "Người quyết định", explanation: "Người có quyền chỉ đạo và đưa ra quyết định cuối cùng.", example: "The new manager calls the shots here.", exampleVN: "Người quản lý mới đưa ra các quyết định ở đây.", practiceSentences: ["The new manager calls the shots here"], practiceSentencesVN: ["Người quản lý mới đưa ra các quyết định ở đây"] },
+            { id: "top9", idiom: "Bite the bullet", emojis: "🦷 🔫", meaning: "Cắn răng làm", explanation: "Phải ép bản thân làm một việc khó khăn mà mình không thích.", example: "We must bite the bullet and finish this.", exampleVN: "Chúng ta phải cắn răng chịu đựng và hoàn thành việc này.", practiceSentences: ["We must bite the bullet and finish this"], practiceSentencesVN: ["Chúng ta phải cắn răng chịu đựng và hoàn thành việc này"] },
+            { id: "top10", idiom: "Keep me posted", emojis: "📬 📱", meaning: "Nhớ báo cáo tình hình", explanation: "Nhắc nhở ai đó liên tục cập nhật thông tin cho mình.", example: "Keep me posted on the client's email.", exampleVN: "Hãy báo cáo cho tôi về email của khách hàng nhé.", practiceSentences: ["Keep me posted on the client's email"], practiceSentencesVN: ["Hãy báo cáo cho tôi về email của khách hàng nhé"] }
+        ];
+
+        const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
+
+        // --- SPACED REPETITION SYSTEM (SRS) HOOK ---
+        const INTERVALS = [0, 10 * 60 * 1000, 24 * 60 * 60 * 1000, 3 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000];
+
+        const useSRS = () => {
+            const [srsData, setSrsData] = useState({});
+
+            useEffect(() => {
+                const saved = localStorage.getItem('idiom_srs_data_top10');
+                if (saved) {
+                    try { setSrsData(JSON.parse(saved)); } catch(e) {}
+                } else {
+                    const initial = {};
+                    quizData.forEach(q => { initial[q.id] = { level: 0, nextReview: Date.now() }; });
+                    setSrsData(initial);
+                    localStorage.setItem('idiom_srs_data_top10', JSON.stringify(initial));
+                }
+            }, []);
+
+            const updateItem = (id, isCorrect) => {
+                setSrsData(prev => {
+                    const item = prev[id] || { level: 0, nextReview: Date.now() };
+                    let newLevel = isCorrect ? Math.min(item.level + 1, 4) : 0;
+                    let nextReviewTime = Date.now() + INTERVALS[newLevel];
+                    const newData = { ...prev, [id]: { level: newLevel, nextReview: nextReviewTime } };
+                    localStorage.setItem('idiom_srs_data_top10', JSON.stringify(newData));
+                    return newData;
+                });
+            };
+
+            const getDueItems = (count = 10) => {
+                const now = Date.now();
+                let items = quizData.map(q => ({ ...q, srs: srsData[q.id] || { level: 0, nextReview: 0 } }));
+                let due = items.filter(item => item.srs.nextReview <= now);
+                due.sort((a, b) => a.srs.nextReview - b.srs.nextReview);
+
+                if (due.length < count) {
+                    let notDue = items.filter(item => item.srs.nextReview > now);
+                    notDue.sort((a, b) => a.srs.level - b.srs.level);
+                    due = [...due, ...notDue].slice(0, count);
+                } else {
+                    due = due.slice(0, count);
+                }
+                return shuffleArray(due); 
+            };
+
+            const getStats = () => {
+                let stats = { 0:0, 1:0, 2:0, 3:0, 4:0 };
+                Object.values(srsData).forEach(item => { stats[item.level] = (stats[item.level] || 0) + 1; });
+                return stats;
+            };
+
+            return { srsData, updateItem, getDueItems, getStats };
+        };
+
+        // --- HÀM PHÁT ÂM (TEXT TO SPEECH) ---
+        const playAudio = (text) => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); 
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9; 
+                window.speechSynthesis.speak(utterance);
+            }
+        };
+
+        // ==========================================
+        // SHARED COMPONENTS
+        // ==========================================
+        const StageComplete = ({ stageNum, title, onNext }) => (
+            <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto animate-pop-in text-center h-[60vh]">
+                <div className="text-7xl mb-6 animate-float">🎉</div>
+                <div className="text-indigo-400 font-bold tracking-widest uppercase mb-2">STAGE {stageNum} CLEAR</div>
+                <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 mb-8">{title}</h2>
+                <button onClick={onNext} className="bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-2xl font-bold text-lg shadow-[0_10px_20px_rgba(79,70,229,0.3)] hover:-translate-y-1 transition-all flex items-center gap-2">
+                    CONTINUE <ChevronRight />
+                </button>
+            </div>
+        );
+
+        const StageHeaderControls = ({ onSkip, onFinishEarly }) => (
+            <div className="flex gap-2 relative z-10">
+                <button onClick={onSkip} className="p-3 bg-slate-800/80 backdrop-blur-md border border-slate-700 hover:bg-slate-700 text-indigo-400 hover:text-white rounded-full transition-all shadow-lg" title="Skip to next stage">
+                    <FastForward size={20} />
+                </button>
+                <button onClick={onFinishEarly} className="p-3 bg-slate-800/80 backdrop-blur-md border border-slate-700 hover:bg-slate-700 text-rose-400 hover:text-white rounded-full transition-all shadow-lg" title="Finish session early">
+                    <StopCircle size={20} />
+                </button>
+            </div>
+        );
+
+        // ==========================================
+        // OVERVIEW: VOCABULARY LIST
+        // ==========================================
+        const VocabularyOverview = ({ cards, onNext, onBack }) => {
+            return (
+                <div className="flex flex-col items-center w-full max-w-2xl mx-auto animate-pop-in h-full py-6">
+                    <div className="flex justify-between items-center w-full mb-6 px-4">
+                        <button onClick={onBack} className="text-slate-400 hover:text-white p-3 rounded-full bg-slate-800/80 hover:bg-slate-700 transition shadow-lg"><ChevronLeft /></button>
+                        <div className="flex flex-col items-center">
+                            <span className="font-black text-white uppercase tracking-widest text-lg">VOCABULARY LIST</span>
+                            <span className="text-sm text-indigo-400 font-bold">Preview before starting</span>
+                        </div>
+                        <div className="w-12"></div>
+                    </div>
+
+                    <div className="w-full bg-slate-800/50 border border-slate-700 rounded-3xl p-4 md:p-6 mb-8 max-h-[60vh] overflow-y-auto shadow-inner">
+                        {cards.map((item, index) => (
+                            <div key={item.id} className="flex items-center gap-4 p-4 border-b border-slate-700/50 last:border-0 hover:bg-slate-700/30 transition-colors rounded-xl group">
+                                <div className="text-3xl md:text-4xl w-16 text-center shrink-0">{item.emojis}</div>
+                                <div className="flex-1">
+                                    <h4 className="font-black text-lg text-white">{item.idiom}</h4>
+                                    <p className="text-sm text-slate-400">{item.meaning}</p>
+                                </div>
+                                <button 
+                                    onClick={() => playAudio(item.idiom)}
+                                    className="p-3 bg-slate-700/50 text-indigo-300 rounded-full hover:bg-indigo-500 hover:text-white transition-all opacity-70 group-hover:opacity-100"
+                                >
+                                    <Volume2 size={20} />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+
+                    <button onClick={onNext} className="w-full max-w-sm bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 px-8 py-4 rounded-2xl font-black text-xl shadow-[0_10px_30px_rgba(79,70,229,0.4)] hover:-translate-y-1 transition-all flex justify-center items-center gap-2">
+                        START STAGE 1 <ChevronRight />
+                    </button>
+                </div>
+            );
+        };
+
+        // ==========================================
+        // STAGE 1: SMART SWIPE
+        // ==========================================
+        const SmartSwipe = ({ cards, currentIndex, onAdvance, onPrevStage, onNextStage, srs, onCorrect, onAnswered, onSkip, onFinishEarly }) => {
+            const [isFlipped, setIsFlipped] = useState(false);
+            const [swipeState, setSwipeState] = useState(null); 
+
+            if (currentIndex >= cards.length) return <StageComplete stageNum="1" title="Excellent Memory!" onNext={onNextStage} />;
+
+            const currentCard = cards[currentIndex];
+
+            const handleFlip = () => {
+                if (swipeState) return;
+                const newFlippedState = !isFlipped;
+                setIsFlipped(newFlippedState);
+                if (newFlippedState) playAudio(currentCard.idiom);
+            };
+
+            const handleAudioClick = (e) => {
+                e.stopPropagation(); 
+                playAudio(currentCard.idiom);
+            };
+
+            const handleSwipe = (isKnown) => {
+                if (swipeState) return; 
+                setIsFlipped(false); 
+                setSwipeState(isKnown ? 'right' : 'left');
+
+                if (isKnown) onCorrect();
+                onAnswered();
+                srs.updateItem(currentCard.id, isKnown);
+
+                setTimeout(() => {
+                    onAdvance();
+                    setSwipeState(null);
+                }, 400); 
+            };
+
+            let cardAnimationClass = "";
+            if (swipeState === 'left') cardAnimationClass = "animate-swipe-left";
+            if (swipeState === 'right') cardAnimationClass = "animate-swipe-right";
+
+            return (
+                <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto animate-pop-in h-full py-6">
+                    <div className="flex justify-between items-center w-full mb-8 px-4">
+                        <button onClick={onPrevStage} className="text-slate-400 hover:text-white p-3 rounded-full bg-slate-800/80 hover:bg-slate-700 transition shadow-lg relative z-10"><ChevronLeft /></button>
+                        <div className="flex flex-col items-center bg-slate-800/50 px-6 py-2 rounded-full border border-slate-700/50 backdrop-blur-md relative z-10">
+                            <span className="font-black text-slate-200 uppercase tracking-widest text-sm">STAGE 1: FLASHCARDS</span>
+                            <span className="text-xs text-indigo-400 font-bold">{cards.length - currentIndex} cards left</span>
+                        </div>
+                        <StageHeaderControls onSkip={onSkip} onFinishEarly={onFinishEarly} />
+                    </div>
+
+                    {/* Vùng Thẻ (Card Area) */}
+                    <div className="relative w-full max-w-[340px] aspect-[3/4.2] perspective-1000 mx-auto group">
+                        <div 
+                            className={`absolute inset-0 w-full h-full transition-all duration-700 transform-style-3d cursor-pointer ${isFlipped ? 'rotate-y-180' : 'hover:scale-105'} ${cardAnimationClass}`}
+                            onClick={handleFlip}
+                            style={{ transformOrigin: 'bottom center' }}
+                        >
+                            {/* FRONT */}
+                            <div className="absolute w-full h-full backface-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center shadow-[0_20px_50px_rgba(79,70,229,0.4)] border-2 border-white/10 z-10 overflow-hidden">
+                                <div className="shimmer-effect"></div>
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full blur-2xl -translate-y-10 translate-x-10"></div>
+                                <div className="text-8xl mb-8 animate-float drop-shadow-2xl">{currentCard.emojis}</div>
+                                <h3 className="text-3xl font-black text-white mb-3 drop-shadow-lg leading-tight">{currentCard.meaning}</h3>
+                                <div className="absolute bottom-8 bg-black/20 backdrop-blur-md px-6 py-3 rounded-full text-indigo-100 text-sm flex items-center gap-2 border border-white/10">
+                                    <Brain size={18}/> Tap to reveal
+                                </div>
+                            </div>
+
+                            {/* BACK */}
+                            <div className="absolute w-full h-full backface-hidden bg-white rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center rotate-y-180 text-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.3),inset_0_0_0_2px_rgba(255,255,255,1)] z-0 relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-indigo-50 to-transparent"></div>
+                                <div className="relative z-10 w-full">
+                                    <h2 className="text-4xl font-black text-indigo-700 mb-6 leading-tight drop-shadow-sm">{currentCard.idiom}</h2>
+                                    <button 
+                                        onClick={handleAudioClick}
+                                        className="mx-auto mb-6 w-14 h-14 bg-indigo-100 hover:bg-indigo-500 hover:text-white text-indigo-600 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_4px_15px_rgba(99,102,241,0.2)] hover:scale-110 active:scale-95 group/btn"
+                                    >
+                                        <Volume2 size={28} className="group-hover/btn:scale-110 transition-transform"/>
+                                    </button>
+                                    <p className="text-slate-600 font-medium mb-8 leading-relaxed text-base px-2">{currentCard.explanation}</p>
+                                    <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl w-full text-left relative shadow-inner">
+                                        <div className="absolute -top-3 left-4 bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">Ví dụ</div>
+                                        <p className="text-indigo-900 font-bold italic text-base mt-2">"{currentCard.example}"</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className={`w-full max-w-[340px] flex justify-between items-center mt-10 transition-all duration-500 ${isFlipped ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+                        <div className="flex flex-col items-center gap-3">
+                            <button onClick={() => handleSwipe(false)} className="w-20 h-20 bg-slate-800/80 backdrop-blur-md rounded-full flex items-center justify-center text-rose-500 shadow-[0_10px_30px_rgba(244,63,94,0.3)] border border-rose-500/30 hover:bg-rose-500 hover:text-white hover:scale-110 transition-all group">
+                                <X className="group-hover:scale-110 transition-transform" />
+                            </button>
+                            <span className="text-rose-400 font-bold text-sm tracking-wide bg-rose-500/10 px-4 py-1.5 rounded-full border border-rose-500/20">FORGOT</span>
+                        </div>
+                        <div className="w-px h-12 bg-slate-700/50"></div>
+                        <div className="flex flex-col items-center gap-3">
+                            <button onClick={() => handleSwipe(true)} className="w-20 h-20 bg-slate-800/80 backdrop-blur-md rounded-full flex items-center justify-center text-emerald-400 shadow-[0_10px_30px_rgba(52,211,153,0.3)] border border-emerald-500/30 hover:bg-emerald-500 hover:text-white hover:scale-110 transition-all group">
+                                <Check className="group-hover:scale-110 transition-transform" />
+                            </button>
+                            <span className="text-emerald-400 font-bold text-sm tracking-wide bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">KNOW IT</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ==========================================
+        // STAGE 2: MULTIPLE CHOICE QUIZ
+        // ==========================================
+        const MultipleChoiceQuiz = ({ cards, currentIndex, onAdvance, onPrevStage, onNextStage, srs, onCorrect, onAnswered, onSkip, onFinishEarly }) => {
+            const [options, setOptions] = useState([]);
+            const [selectedOption, setSelectedOption] = useState(null);
+
+            const currentCard = cards[currentIndex];
+
+            useEffect(() => {
+                if (currentCard) {
+                    const others = quizData.filter(q => q.id !== currentCard.id);
+                    const shuffledOthers = shuffleArray(others).slice(0, 3);
+                    const combined = shuffleArray([...shuffledOthers, currentCard]);
+                    setOptions(combined);
+                    setSelectedOption(null);
+                }
+            }, [currentIndex, currentCard]);
+
+            if (currentIndex >= cards.length) return <StageComplete stageNum="2" title="Great Recognition!" onNext={onNextStage} />;
+            if (!currentCard) return null;
+
+            const handleSelect = (option) => {
+                if (selectedOption) return;
+                setSelectedOption(option);
+                
+                const isCorrect = option.id === currentCard.id;
+                if (isCorrect) onCorrect();
+                onAnswered();
+                srs.updateItem(currentCard.id, isCorrect);
+                
+                setTimeout(() => {
+                    onAdvance();
+                }, 1500);
+            };
+
+            return (
+                <div className="flex flex-col items-center w-full max-w-2xl mx-auto animate-pop-in h-full py-6">
+                    <div className="flex justify-between items-center w-full mb-6 px-4">
+                        <button onClick={onPrevStage} className="text-slate-400 hover:text-white p-3 rounded-full bg-slate-800/80 hover:bg-slate-700 transition shadow-lg relative z-10"><ChevronLeft /></button>
+                        <div className="flex flex-col items-center bg-slate-800/50 px-6 py-2 rounded-full border border-slate-700/50 backdrop-blur-md relative z-10">
+                            <span className="font-black text-slate-200 uppercase tracking-widest text-sm">STAGE 2: QUIZ</span>
+                            <span className="text-xs text-indigo-400 font-bold">{currentIndex + 1} / {cards.length}</span>
+                        </div>
+                        <StageHeaderControls onSkip={onSkip} onFinishEarly={onFinishEarly} />
+                    </div>
+
+                    <div className="bg-slate-800 border border-slate-700 rounded-3xl p-6 md:p-10 w-full shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500 opacity-5 rounded-full blur-3xl -translate-y-10 translate-x-10"></div>
+                        
+                        <div className="text-7xl mb-6 animate-float relative z-10">{currentCard.emojis}</div>
+                        <h3 className="text-3xl font-black text-white mb-2 relative z-10">{currentCard.meaning}</h3>
+                        <p className="text-slate-400 text-sm mb-8 relative z-10">{currentCard.explanation}</p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full relative z-10">
+                            {options.map((option, idx) => {
+                                let btnClass = "bg-slate-700 hover:bg-slate-600 border-2 border-slate-600 text-white";
+                                if (selectedOption) {
+                                    if (option.id === currentCard.id) {
+                                        btnClass = "bg-green-500/20 border-green-500 text-green-400 scale-[1.02] z-10 shadow-lg shadow-green-500/20";
+                                    } else if (option.id === selectedOption.id) {
+                                        btnClass = "bg-rose-500/20 border-rose-500 text-rose-400 opacity-80 animate-shake";
+                                    } else {
+                                        btnClass = "bg-slate-800 border-slate-700 text-slate-500 opacity-50 scale-95";
+                                    }
+                                }
+                                return (
+                                    <button 
+                                        key={idx} 
+                                        onClick={() => handleSelect(option)}
+                                        disabled={!!selectedOption}
+                                        className={`py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform ${btnClass}`}
+                                    >
+                                        {option.idiom}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ==========================================
+        // STAGE 3: TYPE CHALLENGE
+        // ==========================================
+        const TypeChallenge = ({ cards, currentIndex, onAdvance, onPrevStage, onNextStage, srs, onCorrect, onAnswered, onSkip, onFinishEarly }) => {
+            const [inputValue, setInputValue] = useState("");
+            const [status, setStatus] = useState("idle"); 
+            const inputRef = useRef(null);
+
+            const currentCard = cards[currentIndex];
+
+            useEffect(() => {
+                setInputValue("");
+                setStatus("idle");
+            }, [currentIndex, cards]);
+
+            useEffect(() => {
+                if (status === 'idle' && inputRef.current && currentCard) inputRef.current.focus();
+            }, [status, currentCard]);
+
+            if (currentIndex >= cards.length) return <StageComplete stageNum="3" title="Perfect Spelling!" onNext={onNextStage} />;
+            if (!currentCard) return null;
+
+            const normalizeStr = (str) => str.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+
+            const handleSubmit = (e) => {
+                if (e) e.preventDefault();
+                if (status !== 'idle' || !inputValue.trim()) return;
+
+                const isCorrect = normalizeStr(inputValue) === normalizeStr(currentCard.idiom);
+
+                if (isCorrect) {
+                    setStatus('correct');
+                    onCorrect();
+                    onAnswered();
+                    srs.updateItem(currentCard.id, true); 
+                    setTimeout(() => onAdvance(), 1500);
+                } else {
+                    setStatus('wrong');
+                    onAnswered();
+                    setTimeout(() => setStatus('idle'), 800);
+                }
+            };
+
+            const handleGiveUp = () => {
+                if (status !== 'idle') return;
+                setStatus('revealed');
+                setInputValue(currentCard.idiom); 
+                onAnswered();
+                srs.updateItem(currentCard.id, false); 
+                setTimeout(() => onAdvance(), 3000); 
+            };
+
+            return (
+                <div className="flex flex-col items-center w-full max-w-2xl mx-auto animate-pop-in h-full py-6">
+                    <div className="flex justify-between items-center w-full mb-6 px-4">
+                        <button onClick={onPrevStage} className="text-slate-400 hover:text-white p-3 rounded-full bg-slate-800/80 hover:bg-slate-700 transition shadow-lg relative z-10"><ChevronLeft /></button>
+                        <div className="flex flex-col items-center bg-slate-800/50 px-6 py-2 rounded-full border border-slate-700/50 backdrop-blur-md relative z-10">
+                            <span className="font-black text-slate-200 uppercase tracking-widest text-sm">STAGE 3: TYPE</span>
+                            <span className="text-xs text-indigo-400 font-bold">{currentIndex + 1} / {cards.length}</span>
+                        </div>
+                        <StageHeaderControls onSkip={onSkip} onFinishEarly={onFinishEarly} />
+                    </div>
+
+                    <div className="bg-slate-800 border border-slate-700 rounded-3xl p-6 md:p-10 w-full shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500 opacity-5 rounded-full blur-3xl -translate-y-10 translate-x-10"></div>
+                        
+                        <div className="text-7xl mb-6 animate-float relative z-10">{currentCard.emojis}</div>
+                        <h3 className="text-3xl font-black text-white mb-2 relative z-10">{currentCard.meaning}</h3>
+                        <p className="text-slate-400 text-sm mb-6 relative z-10">{currentCard.explanation}</p>
+                        
+                        <button type="button" onClick={() => playAudio(currentCard.idiom)} className="mb-8 flex items-center gap-2 text-indigo-400 hover:text-white transition-colors bg-indigo-500/10 hover:bg-indigo-500 px-4 py-2 rounded-full text-sm font-bold shadow-sm relative z-10">
+                            <Volume2 size={18} /> Nghe gợi ý
+                        </button>
+
+                        <form onSubmit={handleSubmit} className="w-full max-w-md relative z-10">
+                            <input
+                                ref={inputRef} type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)}
+                                disabled={status === 'correct' || status === 'revealed'} placeholder="Type in English..."
+                                className={`w-full bg-slate-900 border-2 rounded-2xl py-4 px-6 text-xl font-bold text-center outline-none transition-all
+                                    ${status === 'idle' ? 'border-slate-600 focus:border-rose-500 text-white' : ''}
+                                    ${status === 'correct' ? 'border-green-500 bg-green-500/10 text-green-400' : ''}
+                                    ${status === 'wrong' ? 'border-rose-500 bg-rose-500/10 text-rose-400 animate-shake' : ''}
+                                    ${status === 'revealed' ? 'border-amber-500 bg-amber-500/10 text-amber-400' : ''}
+                                `}
+                                autoComplete="off" autoCorrect="off" spellCheck="false"
+                            />
+                            {status === 'correct' && <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500 animate-pop-in"><Check /></div>}
+                            {status === 'wrong' && <div className="absolute right-4 top-1/2 -translate-y-1/2 text-rose-500 animate-pop-in"><X /></div>}
+
+                            <div className="flex gap-4 mt-6">
+                                <button type="button" onClick={handleGiveUp} disabled={status !== 'idle'} className="flex-1 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 py-3 rounded-xl font-bold text-slate-300 transition-colors">
+                                    Show Answer
+                                </button>
+                                <button type="submit" disabled={status !== 'idle' || !inputValue.trim()} className="flex-1 bg-rose-500 hover:bg-rose-600 disabled:opacity-50 py-3 rounded-xl font-bold shadow-lg shadow-rose-500/30 transition-colors">
+                                    Check
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        // ==========================================
+        // STAGE 4: SENTENCE BUILDER
+        // ==========================================
+        const SentenceBuilder = ({ cards, currentIndex, onAdvance, onPrevStage, onNextStage, srs, onCorrect, onAnswered, onSkip, onFinishEarly }) => {
+            const [availableWords, setAvailableWords] = useState([]);
+            const [selectedWords, setSelectedWords] = useState([]);
+            const [status, setStatus] = useState(null); 
+            const [draggedIdx, setDraggedIdx] = useState(null);
+            const [dragOverIdx, setDragOverIdx] = useState(null);
+
+            const currentCard = cards[currentIndex];
+
+            useEffect(() => {
+                if (currentCard) {
+                    setStatus(null);
+                    setSelectedWords([]);
+                    const words = currentCard.practiceSentences[0].split(' ').map((word, i) => ({ id: i, text: word }));
+                    setAvailableWords(shuffleArray(words));
+                }
+            }, [currentIndex, currentCard]);
+
+            if (currentIndex >= cards.length) return null; // Logic is handled in App to go straight to summary
+            if (!currentCard) return null;
+
+            const handleSelectWord = (wordObj) => {
+                const newAvailable = availableWords.filter(w => w.id !== wordObj.id);
+                setAvailableWords(newAvailable);
+                const newSelected = [...selectedWords, wordObj];
+                setSelectedWords(newSelected);
+                checkAnswer(newSelected);
+            };
+
+            const handleDeselectWord = (wordObj) => {
+                setSelectedWords(selectedWords.filter(w => w.id !== wordObj.id));
+                setAvailableWords([...availableWords, wordObj]);
+                setStatus(null);
+            };
+
+            const checkAnswer = (currentSelected) => {
+                const targetWords = currentCard.practiceSentences[0].split(' ');
+                if (currentSelected.length === targetWords.length) {
+                    const attempt = currentSelected.map(w => w.text).join(' ');
+                    const isCorrect = attempt === currentCard.practiceSentences[0];
+                    setStatus(isCorrect ? 'correct' : 'wrong');
+                    
+                    if (isCorrect) {
+                        onCorrect();
+                        onAnswered();
+                        srs.updateItem(currentCard.id, true);
+                    } else srs.updateItem(currentCard.id, false);
+                } else {
+                    setStatus(null);
+                }
+            };
+
+            const onDragStart = (e, idx) => { setDraggedIdx(idx); };
+            const onDragOver = (e, idx) => { e.preventDefault(); setDragOverIdx(idx); };
+            const onDrop = (e, targetIdx) => {
+                e.preventDefault();
+                if (draggedIdx === null || draggedIdx === targetIdx) return;
+                
+                const newW = [...selectedWords];
+                const item = newW[draggedIdx];
+                newW.splice(draggedIdx, 1);
+                newW.splice(targetIdx, 0, item);
+                
+                setSelectedWords(newW);
+                checkAnswer(newW);
+                
+                setDraggedIdx(null); setDragOverIdx(null);
+            };
+
+            return (
+                <div className="flex flex-col items-center w-full max-w-2xl mx-auto animate-pop-in h-full py-6">
+                    <div className="flex justify-between items-center w-full mb-6 px-4">
+                        <button onClick={onPrevStage} className="text-slate-400 hover:text-white p-3 rounded-full bg-slate-800/80 hover:bg-slate-700 transition shadow-lg relative z-10"><ChevronLeft /></button>
+                        <div className="flex flex-col items-center bg-slate-800/50 px-6 py-2 rounded-full border border-slate-700/50 backdrop-blur-md relative z-10">
+                            <span className="font-black text-slate-200 uppercase tracking-widest text-sm">STAGE 4: SYNTAX</span>
+                            <span className="text-xs text-indigo-400 font-bold">{currentIndex + 1} / {cards.length}</span>
+                        </div>
+                        <StageHeaderControls onSkip={onSkip} onFinishEarly={onFinishEarly} />
+                    </div>
+
+                    <div className="bg-slate-800 border border-slate-700 rounded-3xl p-6 md:p-8 w-full shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500 opacity-5 rounded-full blur-3xl -translate-y-10 translate-x-10"></div>
+                        <div className="text-center mb-6 relative z-10">
+                            <div className="text-5xl mb-2">{currentCard.emojis}</div>
+                            <h3 className="text-2xl font-black text-amber-400 mb-1">{currentCard.practiceSentencesVN[0]}</h3>
+                            <p className="text-slate-400 text-sm">Sắp xếp các từ để tạo thành câu hoàn chỉnh</p>
+                        </div>
+
+                        <div className={`relative z-10 min-h-[100px] p-3 rounded-2xl border-2 flex flex-wrap gap-2 items-center transition-all duration-300 ${status === 'correct' ? 'bg-green-500/10 border-green-500' : status === 'wrong' ? 'bg-rose-500/10 border-rose-500 animate-shake' : 'bg-slate-900/50 border-dashed border-slate-600'}`}>
+                            {selectedWords.length === 0 && <span className="text-slate-500 text-sm mx-auto">Chạm hoặc kéo thả từ vào đây</span>}
+                            {selectedWords.map((word, idx) => (
+                                <button
+                                    key={`sel-${word.id}`} draggable
+                                    onDragStart={(e) => onDragStart(e, idx)} onDragOver={(e) => onDragOver(e, idx)} onDrop={(e) => onDrop(e, idx)} onClick={() => handleDeselectWord(word)}
+                                    className={`px-4 py-2 rounded-xl font-bold shadow-sm transition-all cursor-grab active:cursor-grabbing
+                                        ${status === 'correct' ? 'bg-green-500 text-white' : status === 'wrong' ? 'bg-rose-500 text-white' : 'bg-amber-500 text-white hover:scale-105'}
+                                        ${draggedIdx === idx ? 'opacity-50' : ''}
+                                        ${dragOverIdx === idx ? 'ring-2 ring-white scale-110 mx-2' : ''}
+                                    `}
+                                >
+                                    {word.text}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 min-h-[80px] mt-6 justify-center relative z-10">
+                            {availableWords.map((word) => (
+                                <button
+                                    key={`avail-${word.id}`} onClick={() => handleSelectWord(word)}
+                                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded-xl font-bold shadow-sm hover:-translate-y-1 transition-all"
+                                >
+                                    {word.text}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="mt-8 flex justify-center h-12 relative z-10">
+                            {status === 'correct' && (
+                                <button onClick={() => onAdvance()} className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-green-500/30 flex items-center gap-2 animate-pop-in">
+                                    {currentIndex < cards.length - 1 ? 'CONTINUE' : 'FINISH SESSION'} <ChevronRight size={20}/>
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ==========================================
+        // FINAL SUMMARY SCREEN
+        // ==========================================
+        const SessionSummary = ({ onHome, startTime, correctCount, answeredCount, totalCards }) => {
+            const [quote, setQuote] = useState("");
+            const quotes = [
+                "Great job! Consistency is the key to mastery. Keep it up! 🚀",
+                "Every small step counts! You are getting better every day. 🌟",
+                "Fantastic effort! Your vocabulary is growing stronger. 💪",
+                "Success is the sum of small efforts. Proud of you! 🏆",
+                "You're unstoppable! Keep this amazing momentum going! 🔥"
+            ];
+
+            useEffect(() => {
+                setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+            }, []);
+
+            const timeDiff = Math.floor((Date.now() - startTime) / 1000);
+            const mins = Math.floor(timeDiff / 60);
+            const secs = timeDiff % 60;
+            const timeString = `${mins > 0 ? `${mins}m ` : ''}${secs}s`;
+            
+            const totalQuestions = totalCards * 4; // 4 stages per card
+            const progress = Math.min(100, Math.round((answeredCount / totalQuestions) * 100));
+
+            return (
+                <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto animate-pop-in h-auto min-h-[80vh] text-center py-8">
+                    <div className="text-indigo-400 mb-6 animate-bounce"><Trophy /></div>
+                    <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-rose-500 mb-8">SESSION COMPLETED!</h2>
+                    
+                    <div className="w-full bg-slate-800 border border-slate-700 rounded-3xl p-6 md:p-8 mb-8 shadow-xl relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 opacity-5 rounded-full blur-3xl -translate-y-10 translate-x-10"></div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                            <div className="flex flex-col items-center p-6 bg-slate-900/50 rounded-2xl border border-slate-700/50">
+                                <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mb-3"><Activity /></div>
+                                <p className="text-4xl font-black text-amber-400">{progress || 0}%</p>
+                                <p className="text-slate-400 font-bold mt-2 uppercase tracking-wider text-xs">Completion</p>
+                            </div>
+                            
+                            <div className="flex flex-col items-center p-6 bg-slate-900/50 rounded-2xl border border-slate-700/50">
+                                <div className="w-12 h-12 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center mb-3"><Check /></div>
+                                <p className="text-4xl font-black text-green-400">{correctCount}</p>
+                                <p className="text-slate-400 font-bold mt-2 uppercase tracking-wider text-xs">Words Mastered</p>
+                            </div>
+                            
+                            <div className="flex flex-col items-center p-6 bg-slate-900/50 rounded-2xl border border-slate-700/50">
+                                <div className="w-12 h-12 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-3"><Clock /></div>
+                                <p className="text-4xl font-black text-indigo-400">{timeString}</p>
+                                <p className="text-slate-400 font-bold mt-2 uppercase tracking-wider text-xs">Total Time</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Motivational Quote */}
+                    <div className="w-full bg-indigo-500/10 border border-indigo-500/20 p-6 rounded-2xl mb-10 relative overflow-hidden flex items-center gap-4">
+                        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-indigo-400 to-rose-400"></div>
+                        <QuoteIcon className="text-indigo-400 opacity-50 shrink-0" />
+                        <p className="text-lg text-indigo-100 font-medium italic text-left">"{quote}"</p>
+                    </div>
+
+                    <button onClick={onHome} className="w-full max-w-sm bg-white text-slate-900 px-8 py-4 rounded-2xl font-black text-lg shadow-[0_10px_30px_rgba(255,255,255,0.2)] hover:-translate-y-1 transition-all">
+                        RETURN TO MENU
+                    </button>
+                </div>
+            );
+        };
+
+        // ==========================================
+        // MAIN APP COMPONENT
+        // ==========================================
+        function App() {
+            const [view, setView] = useState('home'); 
+            const srs = useSRS();
+
+            // Session State tracking all progress
+            const [session, setSession] = useState({
+                active: false,
+                cards: [],
+                startTime: null,
+                correctCount: 0,
+                answeredCount: 0,
+                idxSwipe: 0,
+                idxQuiz: 0,
+                idxType: 0,
+                idxBuild: 0,
+            });
+            
+            const [showFinishModal, setShowFinishModal] = useState(false);
+
+            const startJourney = () => {
+                const dueItems = srs.getDueItems(10);
+                setSession({
+                    active: true,
+                    cards: dueItems,
+                    startTime: Date.now(),
+                    correctCount: 0,
+                    answeredCount: 0,
+                    idxSwipe: 0,
+                    idxQuiz: 0,
+                    idxType: 0,
+                    idxBuild: 0,
+                });
+                setView('overview');
+            };
+
+            const advanceIndex = (stageKey) => {
+                setSession(prev => {
+                    const newIndex = prev[stageKey] + 1;
+                    // Automatically transition to next stage if current is done
+                    if (newIndex >= prev.cards.length) {
+                        if (stageKey === 'idxSwipe') setTimeout(() => setView('quiz'), 600);
+                        else if (stageKey === 'idxQuiz') setTimeout(() => setView('type'), 600);
+                        else if (stageKey === 'idxType') setTimeout(() => setView('build'), 600);
+                        else if (stageKey === 'idxBuild') setTimeout(() => setView('summary'), 600);
+                    }
+                    return { ...prev, [stageKey]: newIndex };
+                });
+            };
+
+            const handleCorrect = () => setSession(p => ({ ...p, correctCount: p.correctCount + 1 }));
+            const handleAnswered = () => setSession(p => ({ ...p, answeredCount: p.answeredCount + 1 }));
+
+            const finishSessionEarly = () => {
+                setShowFinishModal(false);
+                setView('summary');
+            };
+
+            return (
+                <div className="min-h-screen bg-slate-900 text-white font-sans p-4 md:p-8 flex flex-col relative overflow-hidden">
+                    <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-rose-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+                    {/* FINISH MODAL */}
+                    {showFinishModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-md p-4 animate-pop-in">
+                            <div className="bg-slate-800 border border-slate-700 p-8 rounded-[2rem] w-full max-w-sm text-center shadow-2xl relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500 opacity-10 rounded-full blur-2xl -translate-y-10 translate-x-10"></div>
+                                <div className="text-rose-500 mb-4 flex justify-center"><StopCircle size={48} /></div>
+                                <h3 className="text-2xl font-black text-white mb-2 relative z-10">End Session?</h3>
+                                <p className="text-slate-400 mb-8 relative z-10">Are you sure you want to finish early? Your progress so far is safely saved.</p>
+                                <div className="flex gap-4 relative z-10">
+                                    <button onClick={() => setShowFinishModal(false)} className="flex-1 py-4 rounded-xl font-bold bg-slate-700 hover:bg-slate-600 text-white transition-colors shadow-lg">
+                                        CONTINUE
+                                    </button>
+                                    <button onClick={finishSessionEarly} className="flex-1 py-4 rounded-xl font-bold bg-rose-500 hover:bg-rose-600 text-white shadow-lg shadow-rose-500/30 transition-colors">
+                                        FINISH NOW
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <nav className="relative z-10 flex justify-between items-center mb-6 max-w-4xl mx-auto w-full">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg transform rotate-3">
+                                <span className="text-xl font-black">💼</span>
+                            </div>
+                            <h1 className="text-xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
+                                VOCABULARY CHALLENGE
+                            </h1>
+                        </div>
+                        <a href="/experience" 
+                           style="display:flex;align-items:center;gap:6px;background:rgba(30,41,59,0.8);padding:10px 14px;border-radius:12px;border:1px solid rgba(71,85,105,1);color:#94a3b8;text-decoration:none;font-size:14px;font-weight:700;transition:all 0.2s;"
+                           onmouseover="this.style.background='rgba(51,65,85,1)';this.style.color='white'"
+                           onmouseout="this.style.background='rgba(30,41,59,0.8)';this.style.color='#94a3b8'">
+                          ← Experience
+                        </a>
+                    </nav>
+
+                    <main className="relative z-10 flex-grow flex flex-col items-center w-full">
+                        
+                        {view === 'home' && (
+                            <div className="max-w-md w-full animate-pop-in">
+                                {/* Timeline Path UI */}
+                                <div className="bg-slate-800/60 p-6 md:p-8 rounded-[2.5rem] mb-8 border border-slate-700 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-20 translate-x-20 pointer-events-none"></div>
+                                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl translate-y-20 -translate-x-20 pointer-events-none"></div>
+                                    <div className="absolute top-4 right-6 p-2 opacity-10 animate-float pointer-events-none"><Brain size={120}/></div>
+                                    
+                                    <div className="relative z-10 text-center mb-8">
+                                        <span className="inline-block py-1 px-3 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-black tracking-widest uppercase mb-3 border border-indigo-500/30">Your Path to Mastery</span>
+                                        <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-slate-300 tracking-wide">LEARNING JOURNEY</h2>
+                                    </div>
+                                    
+                                    <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[27px] before:h-full before:w-1 before:bg-gradient-to-b before:from-indigo-500 before:via-emerald-500 before:to-amber-500">
+                                        
+                                        <div className="relative flex items-center gap-4 z-10 group">
+                                            <div className="w-14 h-14 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.3)] shrink-0 overflow-hidden relative">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-600 opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <Brain size={24} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300"/>
+                                            </div>
+                                            <div className="flex-1 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 p-4 rounded-2xl group-hover:bg-slate-700/60 group-hover:border-indigo-500/50 transition-all duration-300 shadow-lg group-hover:shadow-indigo-500/20 hover:-translate-y-1">
+                                                <h3 className="text-lg font-black text-indigo-300 tracking-wide">1. SMART FLASHCARDS</h3>
+                                                <p className="text-xs text-slate-400 mt-1 leading-relaxed">Lật thẻ và tự đánh giá mức độ ghi nhớ.</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="relative flex items-center gap-4 z-10 group">
+                                            <div className="w-14 h-14 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] shrink-0 overflow-hidden relative">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <ListChecks size={24} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300"/>
+                                            </div>
+                                            <div className="flex-1 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 p-4 rounded-2xl group-hover:bg-slate-700/60 group-hover:border-emerald-500/50 transition-all duration-300 shadow-lg group-hover:shadow-emerald-500/20 hover:-translate-y-1">
+                                                <h3 className="text-lg font-black text-emerald-300 tracking-wide">2. QUIZ CHALLENGE</h3>
+                                                <p className="text-xs text-slate-400 mt-1 leading-relaxed">Chọn đáp án tiếng Anh chính xác ứng với ý nghĩa.</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="relative flex items-center gap-4 z-10 group">
+                                            <div className="w-14 h-14 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center shadow-[0_0_20px_rgba(244,63,94,0.3)] shrink-0 overflow-hidden relative">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-rose-500 to-pink-600 opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <KeyboardIcon size={24} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300"/>
+                                            </div>
+                                            <div className="flex-1 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 p-4 rounded-2xl group-hover:bg-slate-700/60 group-hover:border-rose-500/50 transition-all duration-300 shadow-lg group-hover:shadow-rose-500/20 hover:-translate-y-1">
+                                                <h3 className="text-lg font-black text-rose-300 tracking-wide">3. TYPE CHALLENGE</h3>
+                                                <p className="text-xs text-slate-400 mt-1 leading-relaxed">Tự viết lại tiếng Anh từ trí nhớ (Kèm gợi ý).</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="relative flex items-center gap-4 z-10 group">
+                                            <div className="w-14 h-14 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.3)] shrink-0 overflow-hidden relative">
+                                                <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-600 opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <Pencil size={24} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300"/>
+                                            </div>
+                                            <div className="flex-1 bg-slate-800/50 backdrop-blur-md border border-slate-700/50 p-4 rounded-2xl group-hover:bg-slate-700/60 group-hover:border-amber-500/50 transition-all duration-300 shadow-lg group-hover:shadow-amber-500/20 hover:-translate-y-1">
+                                                <h3 className="text-lg font-black text-amber-300 tracking-wide">4. SENTENCE BUILDER</h3>
+                                                <p className="text-xs text-slate-400 mt-1 leading-relaxed">Kéo thả để ráp thành ngữ vào câu văn hoàn chỉnh.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {session.active ? (
+                                    <div className="flex gap-3">
+                                        <button onClick={() => setView('overview')} className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-5 rounded-[1.5rem] font-black text-lg shadow-lg hover:-translate-y-1 transition-all flex justify-center items-center">
+                                            RESUME
+                                        </button>
+                                        <button onClick={startJourney} className="flex-1 bg-slate-800 border border-slate-600 text-slate-300 hover:bg-slate-700 px-6 py-5 rounded-[1.5rem] font-black text-lg shadow-lg hover:-translate-y-1 transition-all flex justify-center items-center">
+                                            RESTART
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button onClick={startJourney} className="relative overflow-hidden w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 text-white px-8 py-5 rounded-[2rem] font-black text-xl shadow-[0_15px_30px_rgba(168,85,247,0.4)] hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(168,85,247,0.6)] transition-all flex justify-center items-center gap-3 group">
+                                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+                                        <span className="relative z-10">START JOURNEY</span>
+                                        <ChevronRight size={28} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                                    </button>
+                                )}
+                            </div>
+                        )}
+
+                        {view === 'overview' && <VocabularyOverview cards={session.cards} onNext={() => setView('swipe')} onBack={() => setView('home')} />}
+                        
+                        {view === 'swipe' && <SmartSwipe 
+                            cards={session.cards} currentIndex={session.idxSwipe} onAdvance={() => advanceIndex('idxSwipe')} 
+                            onPrevStage={() => setView('overview')} onNextStage={() => setView('quiz')} 
+                            srs={srs} onCorrect={handleCorrect} onAnswered={handleAnswered} 
+                            onSkip={() => setView('quiz')} onFinishEarly={() => setShowFinishModal(true)} 
+                        />}
+                        
+                        {view === 'quiz' && <MultipleChoiceQuiz 
+                            cards={session.cards} currentIndex={session.idxQuiz} onAdvance={() => advanceIndex('idxQuiz')} 
+                            onPrevStage={() => setView('swipe')} onNextStage={() => setView('type')} 
+                            srs={srs} onCorrect={handleCorrect} onAnswered={handleAnswered} 
+                            onSkip={() => setView('type')} onFinishEarly={() => setShowFinishModal(true)} 
+                        />}
+                        
+                        {view === 'type' && <TypeChallenge 
+                            cards={session.cards} currentIndex={session.idxType} onAdvance={() => advanceIndex('idxType')} 
+                            onPrevStage={() => setView('quiz')} onNextStage={() => setView('build')} 
+                            srs={srs} onCorrect={handleCorrect} onAnswered={handleAnswered} 
+                            onSkip={() => setView('build')} onFinishEarly={() => setShowFinishModal(true)} 
+                        />}
+                        
+                        {view === 'build' && <SentenceBuilder 
+                            cards={session.cards} currentIndex={session.idxBuild} onAdvance={() => advanceIndex('idxBuild')} 
+                            onPrevStage={() => setView('type')} onNextStage={() => setView('summary')} 
+                            srs={srs} onCorrect={handleCorrect} onAnswered={handleAnswered} 
+                            onSkip={() => setView('summary')} onFinishEarly={() => setShowFinishModal(true)} 
+                        />}
+                        
+                        {view === 'summary' && <SessionSummary 
+                            onHome={() => { setSession(p => ({...p, active: false})); setView('home'); }} 
+                            startTime={session.startTime} correctCount={session.correctCount} answeredCount={session.answeredCount} totalCards={session.cards.length}
+                        />}
+
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
