@@ -10,6 +10,9 @@ const PUBLIC_ROUTES = [
   "/writing-101",
   "/courses",
   "/practice",
+  "/quiz",
+  "/tutor",
+  "/api",
   // Note: /placement (intro only) is handled via EXACT_PUBLIC_ROUTES below
 ];
 
@@ -23,7 +26,10 @@ const PROFILE_EXEMPT = [
   "/register",
   "/auth",
   "/logout",
-  "/placement",  // Allow new users to access the full placement flow before completing profile
+  "/placement",
+  "/quiz",
+  "/tutor",
+  // Allow new users to access the full placement flow before completing profile
 ];
 
 export async function middleware(request: NextRequest) {
@@ -127,5 +133,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

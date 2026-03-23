@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useUser } from '@/hooks/useUser'
 
-const STORAGE_KEY = 'jaxtina_guest'
+const GUEST_KEY = 'jaxtina_guest'
 
 interface GuestData {
   name: string
@@ -18,19 +18,17 @@ interface GuestGateProps {
 
 export default function GuestGate({ children, source }: GuestGateProps) {
   const { user, loading: authLoading } = useUser()
-  const [guestData, setGuestData] = useState<GuestData | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
-
+  const [guest, setGuest] = useState<GuestData | null>(null)
   const [form, setForm] = useState({ name: '', email: '', phone: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     if (authLoading) return
 
     if (user) {
       // Logged-in user — skip gate entirely
-      setGuestData({ 
+      setGuest({ 
         name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User', 
         email: user.email || '', 
         phone: '' 
@@ -38,12 +36,12 @@ export default function GuestGate({ children, source }: GuestGateProps) {
       setIsLoading(false)
     } else {
       // Not logged in — check localStorage for existing guest data
-      const stored = localStorage.getItem(STORAGE_KEY)
+      const stored = localStorage.getItem(GUEST_KEY)
       if (stored) {
         try {
-          setGuestData(JSON.parse(stored))
+          setGuest(JSON.parse(stored))
         } catch {
-          localStorage.removeItem(STORAGE_KEY)
+          localStorage.removeItem(GUEST_KEY)
         }
       }
       setIsLoading(false)
@@ -52,34 +50,27 @@ export default function GuestGate({ children, source }: GuestGateProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-
-    if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
-      setError('Vui lòng điền đầy đủ thông tin.')
-      return
-    }
+    if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) return
 
     setIsSubmitting(true)
 
     try {
-      const res = await fetch('/api/guest/register', {
+      const res = await fetch('/api/guest-register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source }),
+        body: JSON.stringify(form),
       })
 
       const data = await res.json()
 
-      if (!data.success) {
-        setError(data.error || 'Đã có lỗi xảy ra. Vui lòng thử lại.')
-        return
+      if (data.success) {
+        localStorage.setItem(GUEST_KEY, JSON.stringify(form))
+        setGuest(form)
+      } else {
+        alert(data.error || 'Oops! Something went wrong.')
       }
-
-      // Save to localStorage so we don't ask again
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(form))
-      setGuestData(form)
     } catch {
-      setError('Không thể kết nối. Vui lòng kiểm tra mạng và thử lại.')
+      alert('Network error. Please check your connection.')
     } finally {
       setIsSubmitting(false)
     }
@@ -89,109 +80,55 @@ export default function GuestGate({ children, source }: GuestGateProps) {
   if (isLoading || authLoading) return null
 
   // Already registered or logged in — show the actual page
-  if (guestData) return <>{children}</>
+  if (guest) return <>{children}</>
 
   // Show the gate form
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-600 to-pink-500 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <div className="text-4xl mb-3">
-            {source === 'quiz' ? '🧠✨' : '💬✨'}
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {source === 'quiz' ? 'Tham gia Jaxtina Quiz' : 'Chat với Jaxtina Tutor'}
-          </h1>
-          <p className="text-gray-500 text-sm mt-2">
-            Miễn phí — không cần tạo tài khoản.<br />
-            Chỉ cần điền thông tin để bắt đầu!
-          </p>
-        </div>
-
-        {/* Form */}
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+      <div className="bg-gray-900 border border-gray-700 rounded-2xl p-8 w-full max-w-md shadow-xl animate-in fade-in zoom-in-95 duration-500">
+        <h2 className="text-2xl font-bold text-white mb-2">
+          {source === 'quiz' ? 'Trước khi bắt đầu' : 'Trước khi chat với Tutor'}
+        </h2>
+        <p className="text-gray-400 mb-6 text-sm">
+          {source === 'quiz' ? 'Vui lòng nhập thông tin để tham gia Quiz' : 'Vui lòng nhập thông tin để bắt đầu hỏi đáp'}
+        </p>
+        
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              ✏️ Họ và tên <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Ví dụ: Nguyễn Văn An"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-              required
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              📧 Email <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="email"
-              placeholder="email@example.com"
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-              required
-            />
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">
-              📱 Số điện thoại <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="tel"
-              placeholder="Ví dụ: 0901234567"
-              value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
-              required
-            />
-          </div>
-
-          {/* Error message */}
-          {error && (
-            <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-              ⚠️ {error}
-            </p>
-          )}
-
-          {/* Privacy note */}
-          <p className="text-xs text-gray-400 text-center">
-            Thông tin của bạn được bảo mật và chỉ dùng để cải thiện trải nghiệm học tập.
-          </p>
-
-          {/* Submit */}
+          <input
+            type="text"
+            placeholder="Họ và tên *"
+            value={form.name}
+            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+            required
+            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-red-500 outline-none transition-all"
+          />
+          <input
+            type="email"
+            placeholder="Email *"
+            value={form.email}
+            onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+            required
+            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-red-500 outline-none transition-all"
+          />
+          <input
+            type="tel"
+            placeholder="Số điện thoại *"
+            value={form.phone}
+            onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+            required
+            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-red-500 outline-none transition-all"
+          />
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-3 rounded-xl font-bold text-white transition ${
-              isSubmitting
-                ? 'bg-gray-300 cursor-not-allowed'
-                : 'bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 shadow-md hover:shadow-lg'
-            }`}
+            className={`w-full py-3 ${isSubmitting ? 'bg-gray-700 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'} text-white font-semibold rounded-lg transition-all`}
           >
-            {isSubmitting
-              ? 'Đang xử lý...'
-              : source === 'quiz'
-              ? '🚀 Bắt đầu chơi Quiz!'
-              : '💬 Bắt đầu học với Tutor!'}
+            {isSubmitting ? 'Đang xử lý...' : source === 'quiz' ? 'Bắt đầu Quiz →' : 'Bắt đầu Chat →'}
           </button>
         </form>
 
-        {/* Footer note */}
-        <p className="text-center text-xs text-gray-400 mt-4">
-          Đã có tài khoản?{' '}
-          <a href="/login" className="text-purple-600 underline hover:text-purple-800">
-            Đăng nhập tại đây
-          </a>
+        <p className="mt-4 text-center text-xs text-gray-500">
+          Đã có tài khoản? <a href="/login" className="text-red-500 underline">Đăng nhập ngay</a>
         </p>
       </div>
     </div>
