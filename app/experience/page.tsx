@@ -156,7 +156,7 @@ export default function ExperiencePage() {
         <div className="text-center mb-12 animate-in fade-in slide-in-from-top duration-700">
           <p className="text-red-400 text-sm font-medium uppercase tracking-widest mb-2">Xin chào, {guest.name.split(' ').pop()}!</p>
           <h1 className="text-4xl font-bold text-white mb-3">Chọn trải nghiệm của bạn</h1>
-          <p className="text-gray-400">Luyện tập cùng AI Tutor, kiểm tra từ vựng, hoặc chinh phục thành ngữ — miễn phí.</p>
+          <p className="text-gray-400">Luyện tập cùng AI Tutor, kiểm tra kiến thức, hoặc chinh phục thành ngữ — miễn phí.</p>
         </div>
 
         {/* Three experience cards */}
@@ -181,9 +181,9 @@ export default function ExperiencePage() {
                   Hỏi bất kỳ câu hỏi nào về các nội dung học tiếng Anh. AI của chúng tôi sẽ giải thích, sửa lỗi và hướng dẫn bạn tức thì.
                 </p>
                 <ul className="space-y-2 text-sm text-gray-500 text-left">
-                  <li><span className="text-green-400 mr-2">✓</span> Giải đáp thắc mắc về Task 1 & 2</li>
+                  <li><span className="text-green-400 mr-2">✓</span> Giải đáp thắc mắc về các nội dung học tiếng Anh</li>
                   <li><span className="text-green-400 mr-2">✓</span> Phân tích lỗi ngữ pháp & từ vựng</li>
-                  <li><span className="text-green-400 mr-2">✓</span> Gợi ý cải thiện band score</li>
+                  <li><span className="text-green-400 mr-2">✓</span> Gợi ý cải thiện IELTS band score</li>
                 </ul>
               </div>
 
