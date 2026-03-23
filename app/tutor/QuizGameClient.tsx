@@ -167,7 +167,7 @@ function Leaderboard({ onBack, from }: { onBack: () => void; from?: "setup" | "r
             ← Back {from === "results" ? "to Results" : ""}
           </button>
           <h1 className="text-3xl font-black text-white">🏆 Leaderboard</h1>
-          <span className="ml-auto text-white/60 text-xs font-semibold">Top 10 per group</span>
+          <span className="ml-auto text-white/60 text-xs font-semibold">Top 100 per group</span>
         </div>
 
         <div className="flex gap-2 mb-4">
