@@ -32,6 +32,7 @@ const PROFILE_EXEMPT = [
   "/quiz",
   "/tutor",
   "/experience",
+  "/vocabulary-challenge",
   // Allow new users to access the full placement flow before completing profile
 ];
 

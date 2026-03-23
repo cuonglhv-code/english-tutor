@@ -19,10 +19,10 @@ export default function ExperiencePage() {
       // Check if already logged in
       const { data: { session } } = await supabase.auth.getSession()
       if (session) {
-        setGuest({ 
-          name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User', 
-          email: session.user.email ?? '', 
-          phone: '' 
+        setGuest({
+          name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+          email: session.user.email ?? '',
+          phone: ''
         })
         setIsLoading(false)
         return
@@ -30,7 +30,7 @@ export default function ExperiencePage() {
       // Check localStorage for returning guest
       const stored = localStorage.getItem(GUEST_KEY)
       if (stored) {
-        try { setGuest(JSON.parse(stored)) } catch {}
+        try { setGuest(JSON.parse(stored)) } catch { }
       }
       setIsLoading(false)
     }
@@ -178,7 +178,7 @@ export default function ExperiencePage() {
                   <span className="text-xs px-2 py-0.5 rounded-full bg-red-600/20 text-red-400 border border-red-600/30 font-medium">AI</span>
                 </div>
                 <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                  Hỏi bất kỳ câu hỏi nào về IELTS Writing. AI của chúng tôi sẽ giải thích, sửa lỗi và hướng dẫn bạn tức thì.
+                  Hỏi bất kỳ câu hỏi nào về các nội dung học tiếng Anh. AI của chúng tôi sẽ giải thích, sửa lỗi và hướng dẫn bạn tức thì.
                 </p>
                 <ul className="space-y-2 text-sm text-gray-500 text-left">
                   <li><span className="text-green-400 mr-2">✓</span> Giải đáp thắc mắc về Task 1 & 2</li>
@@ -208,14 +208,14 @@ export default function ExperiencePage() {
 
               <div className="flex-1">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <h2 className="text-xl font-bold text-white">Vocabulary Quiz</h2>
+                  <h2 className="text-xl font-bold text-white">Knowledge Quiz</h2>
                   <span className="text-xs px-2 py-0.5 rounded-full bg-orange-600/20 text-orange-400 border border-orange-600/30 font-medium">IELTS</span>
                 </div>
                 <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                  Kiểm tra và mở rộng vốn từ vựng IELTS của bạn theo chủ đề. Xem kết quả ngay và so sánh với bảng xếp hạng.
+                  Kiểm tra và mở rộng kiến thức tổng quát của bạn theo chủ đề. Xem kết quả ngay và so sánh với bảng xếp hạng.
                 </p>
                 <ul className="space-y-2 text-sm text-gray-500 text-left">
-                  <li><span className="text-green-400 mr-2">✓</span> Từ vựng theo chủ đề IELTS thực tế</li>
+                  <li><span className="text-green-400 mr-2">✓</span> Kiến thức theo chủ đề</li>
                   <li><span className="text-green-400 mr-2">✓</span> Kết quả ngay lập tức</li>
                   <li><span className="text-green-400 mr-2">✓</span> Thử thách cùng bạn bè</li>
                 </ul>
@@ -231,7 +231,7 @@ export default function ExperiencePage() {
           </Link>
 
           {/* Vocabulary Challenge Card */}
-          <a href="/vocabulary-challenge/" target="_self" className="group block h-full">
+          <a href="/vocabulary-challenge/index.html" target="_self" className="group block h-full">
             <div className="bg-gray-900 border border-gray-700 hover:border-purple-500 rounded-2xl p-8 transition-all duration-300 hover:shadow-lg hover:shadow-purple-900/20 h-full flex flex-col items-center text-center">
               {/* Icon */}
               <div className="w-14 h-14 rounded-2xl bg-purple-600/20 border border-purple-600/30 flex items-center justify-center mb-6 group-hover:bg-purple-600/30 transition">
@@ -250,7 +250,7 @@ export default function ExperiencePage() {
                   Học thành ngữ tiếng Anh qua 4 giai đoạn: Flashcard → Trắc nghiệm → Gõ từ → Ghép câu. Có hệ thống lặp lại thông minh (SRS).
                 </p>
                 <ul className="space-y-2 text-sm text-gray-500 text-left">
-                  <li><span className="text-green-400 mr-2">✓</span> Top 10 idioms kinh doanh thực tế</li>
+                  <li><span className="text-green-400 mr-2">✓</span> Idioms phổ biến</li>
                   <li><span className="text-green-400 mr-2">✓</span> 4 chế độ luyện tập khác nhau</li>
                   <li><span className="text-green-400 mr-2">✓</span> Ghi nhớ thông minh với SRS</li>
                 </ul>
