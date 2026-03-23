@@ -353,13 +353,38 @@ export default function TutorSessionClient() {
   // ── Session config ─────────────────────────────────────────────────────────
   const [level,     setLevel]     = useState<ProficiencyLevel>((params.get('level') as ProficiencyLevel) ?? 'Pre-Intermediate')
   const [skillArea, setSkillArea] = useState<SkillArea>((params.get('skill') as SkillArea) ?? 'Free Conversation')
+  const [tutorUserName, setTutorUserName] = useState<string>('')
+
+  useEffect(() => {
+    const stored = localStorage.getItem('jaxtina_guest')
+    if (stored) {
+      try {
+        const guest = JSON.parse(stored)
+        if (guest.name) setTutorUserName(guest.name)
+      } catch {}
+    }
+  }, [])
 
   // ── Auth ───────────────────────────────────────────────────────────────────
   const [userId, setUserId] = useState<string>('')
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) router.replace('/login?next=/tutor')
-      else setUserId(data.user.id)
+      if (data.user) {
+        setUserId(data.user.id)
+      } else {
+        // Not logged in — check for guest
+        const saved = localStorage.getItem('jaxtina_guest')
+        if (saved) {
+          try {
+            const guest = JSON.parse(saved)
+            setUserId('guest-' + (guest.phone || guest.email))
+          } catch (e) {
+            router.replace('/login?next=/tutor')
+          }
+        } else {
+          router.replace('/login?next=/tutor')
+        }
+      }
     })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

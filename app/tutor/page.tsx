@@ -1,20 +1,13 @@
 // app/tutor/page.tsx
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
 import HomeScreenClient from "./HomeScreenClient";
+import GuestGate from "@/components/GuestGate";
 
 export default function TutorHomePage() {
-  const router = useRouter();
   const { user, loading } = useUser();
-
-  useEffect(() => {
-    if (loading) return;
-    if (!user) router.replace("/login?next=/tutor");
-  }, [loading, user, router]);
 
   if (loading) {
     return (
@@ -24,7 +17,9 @@ export default function TutorHomePage() {
     );
   }
 
-  if (!user) return null;
-
-  return <HomeScreenClient userId={user.id} />;
+  return (
+    <GuestGate source="tutor">
+      <HomeScreenClient userId={user?.id || ""} />
+    </GuestGate>
+  );
 }

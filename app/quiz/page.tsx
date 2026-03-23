@@ -7,14 +7,11 @@ import { Loader2 } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
 import QuizGameClient from "../tutor/QuizGameClient";
 
-export default function QuizPage() {
-  const router = useRouter();
-  const { user, loading } = useUser();
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) router.replace("/login?next=/quiz");
-  }, [loading, user, router]);
+import GuestGate from "@/components/GuestGate";
+
+export default function QuizPage() {
+  const { user, loading } = useUser();
 
   if (loading) {
     return (
@@ -24,13 +21,13 @@ export default function QuizPage() {
     );
   }
 
-  if (!user) return null;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
-      <div className="w-full max-w-3xl">
-        <QuizGameClient />
+    <GuestGate source="quiz">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
+        <div className="w-full max-w-3xl">
+          <QuizGameClient />
+        </div>
       </div>
-    </div>
+    </GuestGate>
   );
 }

@@ -333,25 +333,34 @@ export default function QuizGameClient() {
     };
   }, [phase]);
 
-  // Auto-fill name for logged-in users (full_name → display_name → email prefix)
+  // Auto-fill name for players (Auth user → Guest localStorage)
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
         const { data: auth } = await supabase.auth.getUser();
-        const user = auth.user;
-        if (!user) return;
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("full_name, display_name, email")
-          .eq("id", user.id)
-          .single();
-        if (cancelled) return;
-        const derived =
-          (profile as any)?.full_name ||
-          (profile as any)?.display_name ||
-          (profile as any)?.email?.split("@")[0];
-        if (derived && !playerName.trim()) setPlayerName(String(derived).trim().slice(0, 24));
+        if (auth.user) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("full_name, display_name, email")
+            .eq("id", auth.user.id)
+            .single();
+          if (cancelled) return;
+          const derived =
+            (profile as any)?.full_name ||
+            (profile as any)?.display_name ||
+            (profile as any)?.email?.split("@")[0];
+          if (derived && !playerName.trim()) setPlayerName(String(derived).trim().slice(0, 24));
+        } else {
+          // Check localStorage for guest
+          const stored = localStorage.getItem('jaxtina_guest');
+          if (stored) {
+            const guest = JSON.parse(stored);
+            if (guest.name && !playerName.trim()) {
+               setPlayerName(guest.name.trim().slice(0, 24));
+            }
+          }
+        }
       } catch {
         // ignore
       }
