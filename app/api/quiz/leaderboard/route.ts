@@ -15,10 +15,10 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabase
     .from("quiz_leaderboard")
-    .select("id, name, score, total, time_seconds, played_at, question_count, test_history, topics")
+    .select("id, name, score, total, time_seconds, played_at, question_count, test_history, topics, difficulty")
     .eq("question_count", questionCount)
     .order("score", { ascending: false })
-    .order("time_seconds", { ascending: true })  // ← correct column name
+    .order("time_seconds", { ascending: true })
     .order("played_at", { ascending: false })
     .limit(10);
 
@@ -49,38 +49,42 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     // Map client fields → DB column names
-    const { name, score, total, time, question_count, history, topics } = body ?? {};
+    const { name, score, total, time, question_count, history, topics, difficulty } = body ?? {};
+    const qCount = Number(question_count);
 
     if (
       typeof score !== "number" ||
       typeof total !== "number" ||
       typeof time !== "number" ||
-      typeof question_count !== "number" ||
+      isNaN(qCount) ||
       total <= 0 || score < 0 || score > total ||
-      ![5, 10, 15, 20].includes(question_count)
+      ![5, 10, 15, 20].includes(qCount)
     ) {
+      console.warn("Invalid payload received in leaderboard POST:", { score, total, time, qCount });
       return NextResponse.json({ error: "Invalid payload" }, { status: 422 });
     }
 
-    const { error } = await supabase.from("quiz_leaderboard").insert({
+    const { data, error } = await supabase.from("quiz_leaderboard").insert({
       name:           String(name ?? "Anonymous").trim().slice(0, 48) || "Anonymous",
       score,
       total,
-      time_seconds:   time,        // client sends 'time', DB column is 'time_seconds'
-      question_count,
-      test_history:   Array.isArray(history) ? history : [],   // client sends 'history', DB column is 'test_history'
+      time_seconds:   time,
+      question_count: qCount,
+      difficulty:     difficulty || "medium",
+      test_history:   Array.isArray(history) ? history : [],
       topics:         Array.isArray(topics) ? topics : [],
       played_at:      new Date().toISOString(),
-    });
+    }).select();
 
     if (error) {
-      console.error("[quiz/leaderboard POST]", error.message);
+      console.error('❌ Leaderboard insert FAILED:', error.message, error.details, error.hint);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ ok: true });
+    console.log('✅ Score saved successfully:', data);
+    return NextResponse.json({ ok: true, data });
   } catch (err: any) {
-    console.error("[quiz/leaderboard POST]", err);
+    console.error('❌ Leaderboard insert FAILED:', err.message);
     return NextResponse.json({ error: err?.message ?? "Failed to save" }, { status: 500 });
   }
 }

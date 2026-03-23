@@ -364,30 +364,58 @@ export default function QuizGameClient() {
 
   // Save score + full test history to Supabase via API route when results screen appears
   useEffect(() => {
-    if (phase === "results" && !savedRef.current && questions.length > 0) {
-      savedRef.current = true;
-      // Serialize history: include question text, options, correct+chosen index
-      const historyPayload = history.map((h) => ({
-        question: h.q.question,
-        options: h.q.options,
-        correctAnswer: h.q.correctAnswer,
-        chosen: h.chosen,
-        correct: h.correct,
-      }));
-      fetch("/api/quiz/leaderboard", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+    const saveScore = async () => {
+      if (phase === "results" && !savedRef.current && questions.length > 0) {
+        savedRef.current = true;
+        
+        console.log('Attempting to save score:', {
           name: playerName.trim() || "Anonymous",
-          score,
+          score: score,
           total: questions.length,
-          time: elapsed,
-          question_count: questions.length,
-          history: historyPayload,
+          time_seconds: elapsed,
           topics: cats,
-        }),
-      }).catch(console.error);
-    }
+          difficulty: diff,
+          question_count: questions.length,
+        });
+        
+        // Serialize history: include question text, options, correct+chosen index
+        const historyPayload = history.map((h) => ({
+          question: h.q.question,
+          options: h.q.options,
+          correctAnswer: h.q.correctAnswer,
+          chosen: h.chosen,
+          correct: h.correct,
+        }));
+
+        try {
+          const res = await fetch("/api/quiz/leaderboard", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: playerName.trim() || "Anonymous",
+              score,
+              total: questions.length,
+              time: elapsed,
+              question_count: Number(questions.length), // cast to Number
+              history: historyPayload,
+              topics: cats,
+              difficulty: diff,
+            }),
+          });
+          
+          const result = await res.json();
+          if (!res.ok) {
+            console.error('❌ Leaderboard insert FAILED:', result.error || res.statusText);
+          } else {
+            console.log('✅ Score saved successfully:', result.data || result);
+          }
+        } catch (err: any) {
+          console.error('❌ Leaderboard insert FAILED:', err.message);
+        }
+      }
+    };
+    
+    saveScore();
     if (phase !== "results") savedRef.current = false;
   }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -570,28 +598,28 @@ Respond ONLY with valid JSON, no markdown:
             🏆 View Leaderboard
           </button>
 
-          <div className="bg-white/15 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 relative overflow-hidden flex flex-col max-h-[75vh]">
+          <div className="bg-gradient-to-br from-purple-700 via-purple-600 to-pink-500 rounded-3xl p-6 shadow-2xl relative overflow-hidden flex flex-col max-h-[75vh] border border-white/10">
             <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar pb-6">
-              <h2 className="text-white font-black text-xl mb-1">✏️ Your name</h2>
-              <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider mb-2">This name will appear on the leaderboard.</p>
+              <h2 className="text-white font-bold text-xl mb-1">✏️ Your name</h2>
+              <p className="text-white/70 text-xs font-bold uppercase tracking-wide mb-2 mt-1">THIS NAME WILL APPEAR ON THE LEADERBOARD.</p>
               <input
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
                 placeholder="Enter your name…"
                 maxLength={24}
-                className="w-full mb-6 px-4 py-3 rounded-2xl bg-white/90 text-gray-800 font-bold text-base placeholder-gray-400 outline-none focus:ring-2 focus:ring-yellow-300 transition-all"
+                className="w-full mb-6 px-4 py-3 rounded-2xl bg-white/95 text-gray-800 font-bold text-base placeholder-gray-400 outline-none focus:ring-2 focus:ring-yellow-300 transition-all"
               />
 
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-white font-black text-xl">🎯 Pick your topics</h2>
+                <h2 className="text-white font-bold text-xl">🎯 Pick your topics</h2>
                 <button
                   onClick={() => {
                     if (cats.length === CATEGORIES.length) setCats([]);
                     else setCats(CATEGORIES.map(c => c.id));
                   }}
-                  className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-black uppercase tracking-tight transition-all border border-white/20"
+                  className="text-white/80 text-sm underline hover:text-white transition-all font-medium"
                 >
-                  {cats.length === CATEGORIES.length ? "❌ Clear All" : "✨ Select All Topics"}
+                  {cats.length === CATEGORIES.length ? "Clear All" : "SELECT ALL TOPICS"}
                 </button>
               </div>
               
@@ -602,10 +630,10 @@ Respond ONLY with valid JSON, no markdown:
                     <button
                       key={c.id}
                       onClick={() => toggleCat(c.id)}
-                      className={`btn-pop py-2.5 px-3 rounded-2xl font-bold text-sm transition-all duration-200 border-2 flex items-center gap-2 group
+                      className={`btn-pop flex items-center gap-2 group transition
                       ${isSelected
-                          ? "bg-gradient-to-br from-yellow-300 to-orange-400 text-gray-900 border-yellow-200 scale-[1.02] shadow-lg"
-                          : "bg-white/10 text-white border-white/10 hover:bg-white/20 hover:border-white/30"}`}
+                          ? "bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold rounded-full px-4 py-2 shadow-md scale-[1.02]"
+                          : "border border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-4 py-2"}`}
                     >
                       <span className="text-base group-hover:scale-110 transition-transform">{c.emoji}</span>
                       <span className="truncate flex-1 text-left">{c.label}</span>
@@ -615,32 +643,32 @@ Respond ONLY with valid JSON, no markdown:
                 })}
               </div>
 
-              <h2 className="text-white font-black text-xl mb-3">⚡ Difficulty</h2>
+              <h2 className="text-white font-bold text-xl mb-3">⚡ Difficulty</h2>
               <div className="flex gap-2 mb-6">
                 {Object.entries(DIFF).map(([k, v]) => (
                   <button
                     key={k}
                     onClick={() => setDiff(k)}
-                    className={`btn-pop flex-1 py-3 rounded-2xl font-black text-xs transition-all border-2
+                    className={`btn-pop flex-1 font-bold text-xs transition
                     ${diff === k
-                        ? `bg-gradient-to-r ${v.color} text-white border-white/40 scale-105 shadow-lg`
-                        : "bg-white/10 text-white border-white/10 hover:bg-white/20"}`}
+                        ? `bg-gradient-to-r ${v.color} text-white font-bold rounded-full px-4 py-3 shadow-lg scale-105`
+                        : "border border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-4 py-3"}`}
                   >
                     {v.emoji} {v.label}
                   </button>
                 ))}
               </div>
 
-              <h2 className="text-white font-black text-xl mb-3">🔢 How many questions?</h2>
+              <h2 className="text-white font-bold text-xl mb-3">🔢 How many questions?</h2>
               <div className="flex gap-2 mb-4">
                 {[5, 10, 15, 20].map((n) => (
                   <button
                     key={n}
                     onClick={() => setNumQ(n)}
-                    className={`btn-pop flex-1 py-3 rounded-2xl font-black text-base transition-all border-2
+                    className={`btn-pop flex-1 font-bold text-base transition
                     ${numQ === n
-                        ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
-                        : "bg-white/10 text-white border-white/10 hover:bg-white/20"}`}
+                        ? "bg-yellow-300 text-gray-900 font-bold rounded-full px-4 py-3 shadow-lg scale-105"
+                        : "border border-white/40 text-white bg-white/10 hover:bg-white/20 rounded-full px-4 py-3"}`}
                   >
                     {n}
                   </button>
