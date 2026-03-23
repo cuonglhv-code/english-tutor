@@ -8,8 +8,6 @@ import { useUser } from "@/hooks/useUser";
 import QuizGameClient from "../tutor/QuizGameClient";
 
 
-import GuestGate from "@/components/GuestGate";
-
 export default function QuizPage() {
   const { user, loading } = useUser();
 
@@ -22,12 +20,10 @@ export default function QuizPage() {
   }
 
   return (
-    <GuestGate source="quiz">
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
-        <div className="w-full max-w-3xl">
-          <QuizGameClient />
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
+      <div className="w-full max-w-3xl">
+        <QuizGameClient />
       </div>
-    </GuestGate>
+    </div>
   );
 }

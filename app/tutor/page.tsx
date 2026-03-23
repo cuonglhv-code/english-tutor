@@ -4,7 +4,6 @@
 import { Loader2 } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
 import HomeScreenClient from "./HomeScreenClient";
-import GuestGate from "@/components/GuestGate";
 
 export default function TutorHomePage() {
   const { user, loading } = useUser();
@@ -17,9 +16,5 @@ export default function TutorHomePage() {
     );
   }
 
-  return (
-    <GuestGate source="tutor">
-      <HomeScreenClient userId={user?.id || ""} />
-    </GuestGate>
-  );
+  return <HomeScreenClient userId={user?.id || ""} />;
 }

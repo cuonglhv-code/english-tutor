@@ -266,43 +266,13 @@ export function Navbar() {
             </>
           )}
 
-          <div className="relative" ref={tutorRef}>
-            <button
-              onClick={() => setTutorOpen(o => !o)}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
-              aria-haspopup="menu"
-              aria-expanded={tutorOpen}
-            >
-              <MessageSquare className="h-4 w-4" />
-              <span className="hidden sm:inline">{lang === "vi" ? "Gia sư" : "Tutor"}</span>
-            </button>
-
-            {tutorOpen && (
-              <div
-                role="menu"
-                className="absolute left-0 mt-2 w-56 rounded-xl border bg-card shadow-lg p-2"
-              >
-                <Link
-                  href="/tutor"
-                  onClick={() => setTutorOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
-                  role="menuitem"
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  {lang === "vi" ? "Gia sư" : "Tutor"}
-                </Link>
-                <Link
-                  href="/quiz"
-                  onClick={() => setTutorOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
-                  role="menuitem"
-                >
-                  <Gamepad2 className="h-4 w-4" />
-                  {lang === "vi" ? "Trắc nghiệm" : "Quiz"}
-                </Link>
-              </div>
-            )}
-          </div>
+          <Link
+            href="/experience"
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden sm:inline">{lang === "vi" ? "Trải nghiệm" : "Experience"}</span>
+          </Link>
           {user ? (
             <>
               {role === "admin" && (

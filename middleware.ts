@@ -12,6 +12,7 @@ const PUBLIC_ROUTES = [
   "/practice",
   "/quiz",
   "/tutor",
+  "/experience",
   "/api",
   // Note: /placement (intro only) is handled via EXACT_PUBLIC_ROUTES below
 ];
@@ -29,6 +30,7 @@ const PROFILE_EXEMPT = [
   "/placement",
   "/quiz",
   "/tutor",
+  "/experience",
   // Allow new users to access the full placement flow before completing profile
 ];
 
