@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabase
     .from("quiz_leaderboard")
-    .select("id, name, score, total, time_seconds, played_at, question_count, test_history")
+    .select("id, name, score, total, time_seconds, played_at, question_count, test_history, topics")
     .eq("question_count", questionCount)
     .order("score", { ascending: false })
     .order("time_seconds", { ascending: true })  // ← correct column name
@@ -35,7 +35,9 @@ export async function GET(req: NextRequest) {
     total:   r.total,
     time:    r.time_seconds,   // component uses 'time'
     date:    new Date(r.played_at).toLocaleDateString("en-GB"),
+    fullDate: r.played_at,    // Keep iso string for relative dates
     history: Array.isArray(r.test_history) ? r.test_history : [],
+    topics: Array.isArray(r.topics) ? r.topics : [],
   }));
 
   return NextResponse.json(rows);
@@ -47,7 +49,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     // Map client fields → DB column names
-    const { name, score, total, time, question_count, history } = body ?? {};
+    const { name, score, total, time, question_count, history, topics } = body ?? {};
 
     if (
       typeof score !== "number" ||
@@ -67,6 +69,7 @@ export async function POST(req: NextRequest) {
       time_seconds:   time,        // client sends 'time', DB column is 'time_seconds'
       question_count,
       test_history:   Array.isArray(history) ? history : [],   // client sends 'history', DB column is 'test_history'
+      topics:         Array.isArray(topics) ? topics : [],
       played_at:      new Date().toISOString(),
     });
 

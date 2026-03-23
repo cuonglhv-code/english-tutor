@@ -194,7 +194,7 @@ export function Navbar() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 data-[quiz-active=true]:hidden">
           {role !== "admin" && (
             <>
               <div className="relative" ref={practiceRef}>

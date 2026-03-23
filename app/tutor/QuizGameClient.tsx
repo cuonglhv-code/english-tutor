@@ -20,6 +20,8 @@ interface LeaderboardEntry {
   total: number;
   time: number;
   date: string;
+  fullDate?: string;
+  topics?: string[];
   history: { question: string; options: string[]; correctAnswer: number; chosen: number; correct: boolean }[];
 }
 
@@ -46,6 +48,20 @@ const DIFF: Record<string, { label: string; emoji: string; color: string }> = {
 };
 
 const MEDALS = ["🥇", "🥈", "🥉"];
+
+// ─── Utilities ────────────────────────────────────────────────────────
+function getRelativeTime(dateStr: string) {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return "Just now";
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+  if (diffInSeconds < 172800) return "Yesterday";
+  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+  return date.toLocaleDateString("en-GB");
+}
 
 function fmt(s: number) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -96,8 +112,24 @@ function StreakBadge({ streak }: { streak: number }) {
   );
 }
 
-// ─── Leaderboard ──────────────────────────────────────────────────────
-function Leaderboard({ onBack }: { onBack: () => void }) {
+function LeaderboardSkeleton() {
+  return (
+    <div className="divide-y divide-gray-50">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="grid grid-cols-12 items-center px-4 py-4 animate-pulse">
+          <div className="col-span-1 h-4 w-4 bg-gray-200 rounded shrink-0" />
+          <div className="col-span-3 h-4 bg-gray-200 rounded mx-2" />
+          <div className="col-span-3 h-4 bg-gray-200 rounded mx-2" />
+          <div className="col-span-2 h-4 bg-gray-200 rounded mx-2" />
+          <div className="col-span-1 h-4 bg-gray-200 rounded mx-2" />
+          <div className="col-span-2 h-4 bg-gray-200 rounded mx-2" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Leaderboard({ onBack, from }: { onBack: () => void; from?: "setup" | "results" }) {
   const [tab, setTab] = useState(5);
   const [data, setData] = useState<Record<number, LeaderboardEntry[]>>({ 5: [], 10: [], 15: [], 20: [] });
   const [loading, setLoading] = useState(true);
@@ -126,13 +158,13 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
 
   return (
     <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-6 pt-2">
           <button
             onClick={onBack}
             className="bg-white/20 hover:bg-white/30 text-white rounded-2xl px-4 py-2 font-black transition-all"
           >
-            ← Back
+            ← Back {from === "results" ? "to Results" : ""}
           </button>
           <h1 className="text-3xl font-black text-white">🏆 Leaderboard</h1>
           <span className="ml-auto text-white/60 text-xs font-semibold">Top 10 per group</span>
@@ -153,39 +185,58 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
           ))}
         </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          <div className="grid grid-cols-12 text-xs font-black text-gray-400 uppercase tracking-wide px-4 py-3 border-b border-gray-100">
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-6">
+          <div className="grid grid-cols-12 text-[10px] font-black text-gray-400 uppercase tracking-widest px-4 py-4 border-b border-gray-100 bg-gray-50/50">
             <div className="col-span-1">#</div>
-            <div className="col-span-4">Name</div>
-            <div className="col-span-3 text-center">Score</div>
-            <div className="col-span-2 text-center">Time</div>
-            <div className="col-span-2 text-center">Date</div>
+            <div className="col-span-3">Name</div>
+            <div className="col-span-3">Topics</div>
+            <div className="col-span-2 text-center">Score</div>
+            <div className="col-span-1 text-center">Time</div>
+            <div className="col-span-2 text-right pr-2">Played</div>
           </div>
 
           {loading ? (
-            <div className="py-12 text-center text-gray-400 font-semibold">Loading…</div>
+            <LeaderboardSkeleton />
           ) : rows.length === 0 ? (
-            <div className="py-12 text-center">
+            <div className="py-12 text-center text-gray-400">
               <div className="text-5xl mb-2">😴</div>
-              <p className="text-gray-400 font-semibold">No scores yet — be the first!</p>
+              <p className="font-semibold italic">No scores yet — be the first!</p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
+            <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto custom-scrollbar">
               {rows.map((r, i) => (
                 <div key={r.id ?? i}>
-                  {/* Main row */}
                   <div
-                    className={`grid grid-cols-12 items-center px-4 py-3 text-sm cursor-pointer transition-colors
-                      ${i === 0 ? "bg-yellow-50 hover:bg-yellow-100" : i === 1 ? "bg-gray-50 hover:bg-gray-100" : i === 2 ? "bg-orange-50 hover:bg-orange-100" : "hover:bg-gray-50"}`}
+                    className={`grid grid-cols-12 items-center px-4 py-4 text-sm cursor-pointer transition-all active:scale-[0.98]
+                      ${i === 0 ? "bg-yellow-50/50 hover:bg-yellow-50" : i === 1 ? "bg-gray-50/50 hover:bg-gray-50" : i === 2 ? "bg-orange-50/50 hover:bg-orange-50" : "hover:bg-gray-50/80"}`}
                     onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}
                   >
-                    <div className="col-span-1 font-black text-lg">
-                      {i < 3 ? MEDALS[i] : <span className="text-gray-400 text-xs">{i + 1}</span>}
+                    <div className="col-span-1 flex flex-col items-center">
+                      {i < 3 && <span className="text-base leading-none mb-0.5">{MEDALS[i]}</span>}
+                      <span className={`font-black text-[10px] ${i < 3 ? "text-gray-600" : "text-gray-400"}`}>{i + 1}</span>
                     </div>
-                    <div className="col-span-4 font-bold text-gray-800 truncate">{r.name}</div>
-                    <div className="col-span-3 text-center">
+                    <div className="col-span-3 font-bold text-gray-800 truncate pr-2">{r.name}</div>
+                    <div className="col-span-3">
+                      <div className="flex flex-wrap gap-1 items-center">
+                        {r.topics && r.topics.length > 0 ? (
+                          <>
+                            <span className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-lg text-[10px] font-bold border border-indigo-100 truncate max-w-full">
+                              {CATEGORIES.find(c => c.id === r.topics![0])?.emoji || "🎯"} {r.topics[0]}
+                            </span>
+                            {r.topics.length > 1 && (
+                              <span className="bg-gray-100 text-gray-500 px-1 py-0.5 rounded-lg text-[10px] font-bold">
+                                +{r.topics.length - 1}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <span className="text-gray-400 text-[10px italic]">Various</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-span-2 text-center">
                       <span
-                        className={`font-black px-2 py-0.5 rounded-full text-xs
+                        className={`font-black px-2 py-0.5 rounded-md text-[10px]
                         ${r.score === r.total
                           ? "bg-green-100 text-green-700"
                           : r.score / r.total >= 0.6
@@ -195,39 +246,42 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
                         {r.score}/{r.total}
                       </span>
                     </div>
-                    <div className="col-span-2 text-center text-gray-500 font-semibold text-xs">⏱ {fmt(r.time)}</div>
-                    <div className="col-span-2 text-center text-gray-400 text-xs flex items-center justify-center gap-1">
-                      {r.date}
-                      {r.history.length > 0 && (
-                        <span className="text-purple-400">{expandedId === r.id ? "▲" : "▼"}</span>
-                      )}
+                    <div className="col-span-1 text-center text-gray-500 font-bold text-[10px]">
+                      {fmt(r.time)}
+                    </div>
+                    <div
+                      title={r.fullDate ? new Date(r.fullDate).toLocaleString() : r.date}
+                      className="col-span-2 text-right text-gray-400 text-[11px] font-medium pr-2"
+                    >
+                      {r.fullDate ? getRelativeTime(r.fullDate) : r.date}
                     </div>
                   </div>
 
-                  {/* Expandable history */}
                   {expandedId === r.id && r.history.length > 0 && (
-                    <div className="bg-indigo-50 border-t border-indigo-100 px-4 py-3 space-y-2">
-                      <p className="text-xs font-black text-indigo-400 uppercase tracking-wide mb-2">📝 Test History</p>
+                    <div className="bg-indigo-50/50 border-y border-indigo-100/50 px-4 py-4 space-y-2 animate-in slide-in-from-top-2 duration-200">
+                      <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-3">📝 Test History</p>
                       {r.history.map((h, hi) => (
                         <div
                           key={hi}
-                          className={`rounded-xl p-3 border text-xs ${
+                          className={`rounded-2xl p-3 border text-xs shadow-sm ${
                             h.correct
-                              ? "bg-green-50 border-green-200"
-                              : "bg-red-50 border-red-200"
+                              ? "bg-white/80 border-green-200"
+                              : "bg-white/80 border-red-200"
                           }`}
                         >
-                          <p className="font-bold text-gray-800 mb-1">
-                            <span className="text-gray-400 mr-1">Q{hi + 1}.</span> {h.question}
+                          <p className="font-bold text-gray-800 mb-1.5 leading-snug">
+                            <span className="text-gray-400 mr-1.5">Q{hi + 1}.</span> {h.question}
                           </p>
-                          <p className={`font-semibold ${h.correct ? "text-green-600" : "text-red-500"}`}>
-                            {h.correct ? "✅" : "❌"} {h.options[h.chosen]}
-                          </p>
-                          {!h.correct && (
-                            <p className="text-green-700 font-semibold mt-0.5">
-                              ✅ Correct: {h.options[h.correctAnswer]}
-                            </p>
-                          )}
+                          <div className="flex gap-2 items-center flex-wrap">
+                            <span className={`font-bold px-2 py-0.5 rounded-lg ${h.correct ? "bg-green-100 text-green-600" : "bg-red-100 text-red-500"}`}>
+                              {h.correct ? "✅" : "❌"} {h.options[h.chosen]}
+                            </span>
+                            {!h.correct && (
+                              <span className="text-green-700 font-bold bg-green-50 px-2 py-0.5 rounded-lg">
+                                ✅ Correct: {h.options[h.correctAnswer]}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -237,11 +291,11 @@ function Leaderboard({ onBack }: { onBack: () => void }) {
             </div>
           )}
         </div>
-        <p className="text-white/50 text-xs text-center mt-3">Ranked by highest score, then fastest time.</p>
       </div>
     </div>
   );
 }
+
 
 // ─── Main ─────────────────────────────────────────────────────────────
 export default function QuizGameClient() {
@@ -262,6 +316,7 @@ export default function QuizGameClient() {
   const [confetti, setConfetti] = useState(false);
   const [shake, setShake] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const savedRef = useRef(false);
 
@@ -329,11 +384,36 @@ export default function QuizGameClient() {
           time: elapsed,
           question_count: questions.length,
           history: historyPayload,
+          topics: cats,
         }),
       }).catch(console.error);
     }
     if (phase !== "results") savedRef.current = false;
   }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (phase !== "playing" || showExitConfirm) return;
+
+      const key = e.key.toUpperCase();
+      if (["A", "B", "C", "D"].includes(key)) {
+        if (!revealed) {
+          const idx = ["A", "B", "C", "D"].indexOf(key);
+          setChosen(idx);
+        }
+      } else if (e.key === "Enter") {
+        if (!revealed) {
+          if (chosen !== null) handleCheck();
+        } else {
+          handleCheck();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [phase, revealed, chosen, showExitConfirm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleCat = (id: string) =>
     setCats((p) => (p.includes(id) ? p.filter((c) => c !== id) : [...p, id]));
@@ -451,14 +531,30 @@ Respond ONLY with valid JSON, no markdown:
     setElapsed(0);
   };
 
-  if (showLb) return <Leaderboard onBack={() => setShowLb(false)} />;
+  // Navigation & Global Effects
+  useEffect(() => {
+    if (phase === "playing") {
+      document.documentElement.setAttribute("data-quiz-active", "true");
+      if (cats.length === 0) {
+        alert("Please select at least one topic to start.");
+        setPhase("setup");
+      }
+    } else {
+      document.documentElement.removeAttribute("data-quiz-active");
+    }
+    return () => document.documentElement.removeAttribute("data-quiz-active");
+  }, [phase, cats.length]);
+
+  if (showLb) return <Leaderboard onBack={() => setShowLb(false)} from={phase === "results" ? "results" : "setup"} />;
 
   if (phase === "setup")
     return (
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
+      <div className="min-h-[85vh] py-8 px-4 animate-in fade-in zoom-in-95 duration-500">
         <style>{`
-          @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
-          .btn-pop:active { transform: scale(.95); }
+          .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+          .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+          .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
         `}</style>
         <div className="max-w-2xl mx-auto">
           <div className="text-center py-6">
@@ -474,71 +570,97 @@ Respond ONLY with valid JSON, no markdown:
             🏆 View Leaderboard
           </button>
 
-          <div className="bg-white/15 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30">
-            <h2 className="text-white font-black text-xl mb-2">✏️ Your name</h2>
-            <input
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              placeholder="Enter your name…"
-              maxLength={24}
-              className="w-full mb-6 px-4 py-3 rounded-2xl bg-white/90 text-gray-800 font-bold text-base placeholder-gray-400 outline-none focus:ring-2 focus:ring-yellow-300"
-            />
+          <div className="bg-white/15 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30 relative overflow-hidden flex flex-col max-h-[75vh]">
+            <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar pb-6">
+              <h2 className="text-white font-black text-xl mb-1">✏️ Your name</h2>
+              <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider mb-2">This name will appear on the leaderboard.</p>
+              <input
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                placeholder="Enter your name…"
+                maxLength={24}
+                className="w-full mb-6 px-4 py-3 rounded-2xl bg-white/90 text-gray-800 font-bold text-base placeholder-gray-400 outline-none focus:ring-2 focus:ring-yellow-300 transition-all"
+              />
 
-            <h2 className="text-white font-black text-xl mb-3">🎯 Pick your topics</h2>
-            <div className="grid grid-cols-3 gap-2 mb-6">
-              {CATEGORIES.map((c) => (
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-white font-black text-xl">🎯 Pick your topics</h2>
                 <button
-                  key={c.id}
-                  onClick={() => toggleCat(c.id)}
-                  className={`btn-pop py-2 px-2 rounded-2xl font-bold text-sm transition-all duration-150 border-2 flex items-center gap-1.5
-                  ${cats.includes(c.id)
-                      ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
-                      : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
+                  onClick={() => {
+                    if (cats.length === CATEGORIES.length) setCats([]);
+                    else setCats(CATEGORIES.map(c => c.id));
+                  }}
+                  className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-black uppercase tracking-tight transition-all border border-white/20"
                 >
-                  <span>{c.emoji}</span>
-                  <span className="truncate">{c.label}</span>
+                  {cats.length === CATEGORIES.length ? "❌ Clear All" : "✨ Select All Topics"}
                 </button>
-              ))}
+              </div>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
+                {CATEGORIES.map((c) => {
+                  const isSelected = cats.includes(c.id);
+                  return (
+                    <button
+                      key={c.id}
+                      onClick={() => toggleCat(c.id)}
+                      className={`btn-pop py-2.5 px-3 rounded-2xl font-bold text-sm transition-all duration-200 border-2 flex items-center gap-2 group
+                      ${isSelected
+                          ? "bg-gradient-to-br from-yellow-300 to-orange-400 text-gray-900 border-yellow-200 scale-[1.02] shadow-lg"
+                          : "bg-white/10 text-white border-white/10 hover:bg-white/20 hover:border-white/30"}`}
+                    >
+                      <span className="text-base group-hover:scale-110 transition-transform">{c.emoji}</span>
+                      <span className="truncate flex-1 text-left">{c.label}</span>
+                      {isSelected && <span className="text-[10px] font-black">✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <h2 className="text-white font-black text-xl mb-3">⚡ Difficulty</h2>
+              <div className="flex gap-2 mb-6">
+                {Object.entries(DIFF).map(([k, v]) => (
+                  <button
+                    key={k}
+                    onClick={() => setDiff(k)}
+                    className={`btn-pop flex-1 py-3 rounded-2xl font-black text-xs transition-all border-2
+                    ${diff === k
+                        ? `bg-gradient-to-r ${v.color} text-white border-white/40 scale-105 shadow-lg`
+                        : "bg-white/10 text-white border-white/10 hover:bg-white/20"}`}
+                  >
+                    {v.emoji} {v.label}
+                  </button>
+                ))}
+              </div>
+
+              <h2 className="text-white font-black text-xl mb-3">🔢 How many questions?</h2>
+              <div className="flex gap-2 mb-4">
+                {[5, 10, 15, 20].map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setNumQ(n)}
+                    className={`btn-pop flex-1 py-3 rounded-2xl font-black text-base transition-all border-2
+                    ${numQ === n
+                        ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
+                        : "bg-white/10 text-white border-white/10 hover:bg-white/20"}`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <h2 className="text-white font-black text-xl mb-3">⚡ Difficulty</h2>
-            <div className="flex gap-3 mb-6">
-              {Object.entries(DIFF).map(([k, v]) => (
-                <button
-                  key={k}
-                  onClick={() => setDiff(k)}
-                  className={`btn-pop flex-1 py-3 rounded-2xl font-black text-sm transition-all border-2
-                  ${diff === k
-                      ? `bg-gradient-to-r ${v.color} text-white border-white/40 scale-105 shadow-lg`
-                      : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
-                >
-                  {v.emoji} {v.label}
-                </button>
-              ))}
-            </div>
+            {/* Bottom Scroll Hint Gradient */}
+            <div className="absolute bottom-[88px] left-0 right-0 h-12 bg-gradient-to-t from-black/20 to-transparent pointer-events-none z-10" />
 
-            <h2 className="text-white font-black text-xl mb-3">🔢 How many questions?</h2>
-            <div className="flex gap-3 mb-8">
-              {[5, 10, 15, 20].map((n) => (
-                <button
-                  key={n}
-                  onClick={() => setNumQ(n)}
-                  className={`btn-pop flex-1 py-3 rounded-2xl font-black text-lg transition-all border-2
-                  ${numQ === n
-                      ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
-                      : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
-                >
-                  {n}
-                </button>
-              ))}
+            <div className="pt-4 mt-auto">
+              <button
+                onClick={generate}
+                disabled={cats.length === 0}
+                className={`btn-pop w-full py-4 rounded-2xl font-black text-xl text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 shadow-xl transition-all
+                  ${cats.length === 0 ? "opacity-30 cursor-not-allowed scale-95" : "hover:opacity-90 hover:scale-[1.02]"}`}
+              >
+                🚀 Let&apos;s Go!
+              </button>
             </div>
-
-            <button
-              onClick={generate}
-              className="btn-pop w-full py-4 rounded-2xl font-black text-xl text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all hover:scale-[1.02]"
-            >
-              🚀 Let&apos;s Go!
-            </button>
           </div>
         </div>
       </div>
@@ -546,7 +668,7 @@ Respond ONLY with valid JSON, no markdown:
 
   if (phase === "loading")
     return (
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex flex-col items-center justify-center gap-6 p-10 rounded-3xl">
+      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 min-h-[60vh] flex flex-col items-center justify-center gap-6 rounded-3xl animate-in fade-in duration-500">
         <div className="text-7xl animate-bounce">🧠</div>
         <div className="w-16 h-16 border-4 border-yellow-300 border-t-transparent rounded-full animate-spin" />
         <p className="text-white text-xl font-black animate-pulse">Loading your questions… 📚</p>
@@ -555,109 +677,172 @@ Respond ONLY with valid JSON, no markdown:
 
   if (phase === "playing") {
     const q = questions[qIdx];
-    const optLabels = ["A", "B", "C", "D"];
     return (
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
-        <Confetti active={confetti} />
-        <style>{`
-          @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
-          @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
-          .shake { animation: shake .4s ease; }
-        `}</style>
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center justify-between mb-3">
-            <div className="bg-white/20 rounded-2xl px-3 py-2 text-white font-black text-sm">
-              Q {qIdx + 1}/{questions.length}
+      <div className="min-h-screen pb-12 animate-in fade-in duration-500">
+        {/* Persistent Minimal Sticky Header */}
+        <header className="sticky top-0 z-50 w-full bg-indigo-600/80 backdrop-blur-md border-b border-white/10 px-4 py-3 mb-8 shadow-xl">
+          <div className="max-w-3xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="bg-white rounded-lg p-1.5 shadow-md shrink-0">
+                <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="16" cy="16" r="16" fill="#D32F2F" />
+                  <text x="16" y="21" textAnchor="middle" fontFamily="Georgia, serif" fontSize="16" fontWeight="bold" fill="white">J</text>
+                </svg>
+              </div>
+              <span className="font-black text-white text-lg tracking-tight hidden sm:inline">Jaxtina Quiz</span>
             </div>
-            <StreakBadge streak={streak} />
-            <div className="flex gap-2">
-              <div className={`rounded-2xl px-3 py-2 font-black text-sm ${elapsed >= 60 ? "bg-red-400 text-white animate-pulse" : "bg-white/20 text-white"}`}>
-                ⏱ {fmt(elapsed)}
-              </div>
-              <div className="bg-yellow-300 rounded-2xl px-3 py-2 text-gray-900 font-black text-sm">
-                ⭐ {score}
-              </div>
+            <div className="flex items-center gap-3">
+               <div className="bg-white/20 rounded-xl px-3 py-1.5 text-white font-black text-xs border border-white/10">
+                 ⭐ {score}
+               </div>
+               <div className="bg-white/20 rounded-xl px-3 py-1.5 text-white font-black text-xs border border-white/10">
+                 ⏱ {fmt(elapsed)}
+               </div>
+               <button
+                 onClick={() => setShowExitConfirm(true)}
+                 className="px-3 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-black text-xs transition-all border border-rose-400 shadow-lg"
+               >
+                 🚪 Exit
+               </button>
             </div>
           </div>
-          <ProgressBar current={qIdx} total={questions.length} />
+        </header>
 
-          <div className={`mt-4 bg-white rounded-3xl p-6 shadow-2xl ${shake ? "shake" : ""}`}>
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
-              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">
-                {CATEGORIES.find((c) => c.id === q.category)?.emoji || "🎯"} {q.category}
-              </span>
-              <span className={`px-3 py-1 rounded-full text-sm font-bold text-white bg-gradient-to-r ${DIFF[diff].color}`}>
-                {DIFF[diff].emoji} {diff}
-              </span>
-              <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-sm font-bold">
-                👤 {playerName || "Anonymous"}
-              </span>
+        <div className="max-w-xl mx-auto px-4">
+          <div className="mb-6">
+             <div className="flex justify-between items-end mb-2">
+               <span className="text-white/60 text-[10px] font-black uppercase tracking-widest">Progress</span>
+               <span className="text-white font-black text-sm">{qIdx + 1} / {questions.length}</span>
+             </div>
+             <ProgressBar current={qIdx + 1} total={questions.length} />
+          </div>
+
+          <div
+            className={`bg-white rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-300 relative overflow-hidden border-2 border-white/50
+            ${shake ? "animate-[shake_0.5s_ease-in-out]" : ""}`}
+          >
+            <Confetti active={confetti} />
+
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-1">Topic: {q.category}</span>
+                <span className="inline-block h-1 w-12 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full" />
+              </div>
+              <StreakBadge streak={streak} />
             </div>
-            <h2 className="text-xl font-black text-gray-800 leading-snug mb-5">{q.question}</h2>
 
-            <div className="grid grid-cols-1 gap-3 mb-5">
+            <h2 className="text-2xl font-black text-gray-800 leading-tight mb-10 min-h-[4rem]">
+              {q.question}
+            </h2>
+
+            <div className="grid grid-cols-1 gap-3 mb-10">
               {q.options.map((opt, i) => {
-                let cls = "w-full p-4 rounded-2xl font-bold text-left transition-all duration-200 border-2 flex items-center gap-3 ";
-                if (!revealed) {
-                  cls +=
-                    chosen === i
-                      ? "bg-indigo-500 text-white border-indigo-400 scale-[1.02] shadow-md"
-                      : "bg-gray-50 text-gray-800 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50";
-                } else {
-                  if (i === q.correctAnswer) cls += "bg-green-400 text-white border-green-300 scale-[1.02] shadow-md";
-                  else if (i === chosen) cls += "bg-red-400 text-white border-red-300";
-                  else cls += "bg-gray-100 text-gray-400 border-gray-200";
-                }
+                const label = ["A", "B", "C", "D"][i];
+                const isChosen = chosen === i;
+                const isCorrect = i === q.correctAnswer;
+                const stateClass = revealed
+                  ? isCorrect
+                    ? "bg-green-100 border-green-400 text-green-700 shadow-[0_4px_0_#48bb78] scale-[1.02]"
+                    : isChosen
+                      ? "bg-red-50 border-red-300 text-red-600 shadow-[0_4px_0_#f56565]"
+                      : "bg-gray-50 border-gray-100 text-gray-400 opacity-60"
+                  : isChosen
+                    ? "bg-indigo-50 border-indigo-500 text-indigo-700 shadow-[0_4px_0_#6366f1] scale-[1.02]"
+                    : "bg-gray-50 border-gray-200 text-gray-700 hover:border-indigo-300 hover:bg-white hover:scale-[1.01]";
+
                 return (
-                  <button key={i} onClick={() => !revealed && setChosen(i)} className={cls}>
-                    <span className="w-8 h-8 flex items-center justify-center rounded-full bg-white/30 font-black text-sm shrink-0">
-                      {optLabels[i]}
+                  <button
+                    key={i}
+                    disabled={revealed}
+                    onClick={() => setChosen(i)}
+                    className={`btn-pop flex items-center gap-4 px-6 py-4 rounded-2xl border-2 font-black text-left transition-all duration-200 ${stateClass}`}
+                  >
+                    <span className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-sm shadow-inner transition-colors duration-300
+                      ${isChosen ? "bg-indigo-600 text-white" : "bg-white/80 text-gray-400"}`}>
+                      {label}
                     </span>
-                    <span>{opt}</span>
-                    {revealed && i === q.correctAnswer && <span className="ml-auto text-xl">✅</span>}
-                    {revealed && i === chosen && i !== q.correctAnswer && <span className="ml-auto text-xl">❌</span>}
+                    <span className="flex-1 text-base">{opt}</span>
+                    {revealed && isCorrect && <span className="text-xl">✅</span>}
+                    {revealed && !isCorrect && isChosen && <span className="text-xl">❌</span>}
                   </button>
                 );
               })}
             </div>
 
-            {revealed && (q.funFact || q.source) && (
-              <div className="space-y-2 mb-4">
-                {q.funFact && (
-                  <div className="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4 flex gap-2">
-                    <span className="text-2xl">💡</span>
-                    <p className="text-sm text-yellow-800 font-semibold">{q.funFact}</p>
-                  </div>
-                )}
+            {revealed && (
+              <div className="bg-indigo-50 rounded-3xl p-6 mb-8 border border-indigo-100 animate-in slide-in-from-bottom-2 duration-300">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-xl">💡</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-indigo-400">Did you know?</span>
+                </div>
+                <p className="text-sm text-gray-700 font-bold leading-relaxed">{q.funFact}</p>
                 {q.source && (
-                  <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-3 flex gap-2 items-start">
-                    <span className="text-lg">📚</span>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className="uppercase tracking-wide text-blue-400 text-[10px] font-semibold">Source</span>
-                        <div className="relative group">
-                          <span className="cursor-pointer text-blue-300 hover:text-blue-500 text-xs select-none">ⓘ</span>
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-800 text-white text-[11px] font-normal rounded-xl p-2.5 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 leading-snug">
-                            This source was suggested by AI and may not be exact. Always double-check it yourself! 🔍
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-xs text-blue-700 font-semibold">{q.source}</p>
-                    </div>
+                  <div className="mt-4 pt-4 border-t border-indigo-100/50">
+                    <p className="text-[10px] text-gray-500 mb-1.5 font-bold uppercase tracking-tight">Source Material</p>
+                    <a
+                      href={q.source.startsWith('http') ? q.source : `https://www.google.com/search?q=${encodeURIComponent(q.source)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-indigo-600 font-black hover:underline inline-flex items-center gap-1.5 group"
+                    >
+                      📖 {q.source}
+                      <span className="text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+                    </a>
                   </div>
                 )}
               </div>
             )}
 
-            <button
-              onClick={handleCheck}
-              className="w-full py-4 rounded-2xl font-black text-lg text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-lg transition-all hover:scale-[1.02]"
-            >
-              {!revealed ? "✅ Check Answer" : qIdx + 1 === questions.length ? "🏁 See Results" : "➡️ Next Question"}
-            </button>
+            <div className="flex flex-col items-center gap-4">
+              <button
+                onClick={handleCheck}
+                disabled={chosen === null}
+                className={`btn-pop w-full py-5 rounded-3xl font-black text-xl text-gray-900 shadow-xl transition-all relative overflow-hidden group
+                  ${chosen === null ? "bg-gray-200 cursor-not-allowed text-gray-400 opacity-50" : "bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 hover:scale-[1.02]"}`}
+              >
+                <div className="relative z-10 flex items-center justify-center gap-3">
+                  {revealed ? (qIdx + 1 === questions.length ? "🏁 See Results" : "Next Question ➡️") : "⚡ Check Answer"}
+                </div>
+                {!revealed && chosen !== null && (
+                  <div className="absolute inset-0 bg-white/20 animate-[pulse_2s_infinite] pointer-events-none" />
+                )}
+              </button>
+              
+              {!revealed && (
+                <div className="flex items-center gap-1.5 opacity-40 text-gray-900 font-black text-[10px] tracking-widest uppercase">
+                  <span>Press</span>
+                  <kbd className="bg-gray-900 text-white px-1.5 py-0.5 rounded shadow-sm">Enter</kbd>
+                  <span>to confirm</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Exit Confirmation Modal */}
+        {showExitConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="bg-white rounded-[2.5rem] p-8 max-w-sm w-full shadow-2xl">
+              <div className="text-4xl mb-4 text-center">👋</div>
+              <h3 className="text-2xl font-black text-gray-800 text-center mb-2">Wait, don&quot;t go!</h3>
+              <p className="text-gray-500 text-center font-bold mb-8">You&quot;ll lose your progress. Are you sure you want to exit?</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowExitConfirm(false)}
+                  className="flex-1 py-4 rounded-2xl font-black text-gray-500 bg-gray-100 hover:bg-gray-200 transition-all"
+                >
+                  Stay
+                </button>
+                <button
+                  onClick={reset}
+                  className="flex-1 py-4 rounded-2xl font-black text-white bg-rose-500 hover:bg-rose-600 transition-all shadow-lg"
+                >
+                  Exit
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -665,51 +850,98 @@ Respond ONLY with valid JSON, no markdown:
   if (phase === "results") {
     const pct = Math.round((score / questions.length) * 100);
     const [medalEmoji, msg] =
-      pct >= 80 ? ["🏆", "Genius level!"] :
-        pct >= 60 ? ["🥈", "Great effort!"] :
-          pct >= 40 ? ["🥉", "Not bad!"] :
-            ["📚", "Keep studying!"];
+      pct === 100 ? ["🏆", "Perfect score! 🏆"] :
+      pct >= 80 ? ["🌟", "Great job! 🌟"] :
+      pct >= 60 ? ["🎯", "Good effort! 🎯"] :
+      pct >= 40 ? ["👍", "Not bad! Keep going 👍"] :
+      ["💪", "Keep practising! 💪"];
+
+    const handleShare = async () => {
+      const url = window.location.href;
+      const text = `I scored ${score}/${questions.length} (${pct}%) on the Jaxtina Quiz! Can you beat me? 🧠`;
+      
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: "Jaxtina Quiz", text, url });
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(`${text} ${url}`);
+          alert("Result copied to clipboard! 📋");
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+
     return (
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
+      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl min-h-[80vh] flex flex-col items-center">
         <Confetti active={pct >= 60} />
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl w-full mx-auto">
           <div className="text-center py-6">
             <div className="text-7xl mb-1">{medalEmoji}</div>
             <h1 className="text-4xl font-black text-white">{msg}</h1>
             <p className="text-white/90 text-lg mt-1 font-bold">{playerName || "Anonymous"}</p>
             <div className="flex justify-center gap-4 mt-3">
-              <span className="bg-white/20 rounded-2xl px-4 py-2 text-white font-black">
+              <span className="bg-white/20 rounded-2xl px-4 py-2 text-white font-black shadow-lg">
                 ⭐ {score}/{questions.length} · {pct}%
               </span>
-              <span className="bg-white/20 rounded-2xl px-4 py-2 text-white font-black">
+              <span className="bg-white/20 rounded-2xl px-4 py-2 text-white font-black shadow-lg">
                 ⏱ {fmt(elapsed)}
               </span>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 shadow-2xl space-y-3 mb-4 max-h-[40vh] overflow-y-auto">
+          <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <button
+              onClick={handleShare}
+              className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-white hover:bg-white/90 shadow-xl transition-all hover:scale-[1.02]"
+            >
+              📤 Share Result
+            </button>
+            <button
+              onClick={() => generate()}
+              className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all hover:scale-[1.02]"
+            >
+              🔁 Retry Same Settings
+            </button>
+          </div>
+
+          <div className="space-y-4 mb-8">
+            <h3 className="text-white font-black text-xl px-2">📜 Question Review</h3>
             {history.map((h, i) => (
               <div
                 key={i}
-                className={`p-4 rounded-2xl border-2 ${h.correct ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}`}
+                className={`p-5 rounded-3xl border-2 shadow-lg transition-all hover:translate-x-1 ${h.correct ? "border-green-300 bg-green-50/95" : "border-red-300 bg-red-50/95"}`}
               >
-                <p className="font-bold text-gray-800 text-sm mb-1">{h.q.question}</p>
-                <p className={`text-sm font-semibold ${h.correct ? "text-green-600" : "text-red-500"}`}>
-                  {h.correct ? "✅" : "❌"} Your answer: {h.q.options[h.chosen]}
-                </p>
-                {!h.correct && (
-                  <p className="text-sm text-green-700 font-semibold">
-                    ✅ Correct: {h.q.options[h.q.correctAnswer]}
-                  </p>
-                )}
+                <div className="flex items-start gap-3">
+                  <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs shrink-0 ${h.correct ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                    {i + 1}
+                  </span>
+                  <div className="flex-1">
+                    <p className="font-bold text-gray-800 text-base mb-2 leading-tight">{h.q.question}</p>
+                    <div className="space-y-1">
+                      <p className={`text-sm font-semibold flex items-center gap-2 ${h.correct ? "text-green-600" : "text-red-500"}`}>
+                        {h.correct ? "✅" : "❌"} {h.correct ? "Your answer" : "You chose"}: {h.q.options[h.chosen]}
+                      </p>
+                      {!h.correct && (
+                        <p className="text-sm text-green-700 font-bold flex items-center gap-2">
+                          ✅ Correct: {h.q.options[h.q.correctAnswer]}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 pb-6">
             <button
               onClick={() => setShowLb(true)}
-              className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-[1.02]"
+              className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-white/20 text-white hover:bg-white/30 transition-all"
             >
               🏆 Leaderboard
             </button>
@@ -717,7 +949,7 @@ Respond ONLY with valid JSON, no markdown:
               onClick={reset}
               className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all hover:scale-[1.02]"
             >
-              🔄 Play Again
+              🏠 Start Over
             </button>
           </div>
         </div>
