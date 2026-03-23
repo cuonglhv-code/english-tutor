@@ -14,6 +14,7 @@ const PUBLIC_ROUTES = [
   "/tutor",
   "/experience",
   "/vocabulary-challenge",
+  "/vocabulary-game.html",
   "/api",
   // Note: /placement (intro only) is handled via EXACT_PUBLIC_ROUTES below
 ];

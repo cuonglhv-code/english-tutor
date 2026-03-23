@@ -25,11 +25,14 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/vocabulary-challenge/:path*",
+        // Use a pattern that matches the page AND any sub-resources
+        source: "/vocabulary-challenge(.*)", 
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.tailwindcss.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://unpkg.com; img-src 'self' data: blob:; worker-src blob:;"
+            // Senior Note: Added 'blob:' to script-src as Tailwind/Babel 
+            // sometimes use it for runtime compilation
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://unpkg.com https://cdn.tailwindcss.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://unpkg.com; img-src 'self' data: blob:; worker-src blob:;"
           }
         ]
       }
