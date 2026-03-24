@@ -50,7 +50,7 @@ export function StepTask({ data, onUpdate, onNext, onBack }: Props) {
           <RadioGroup
             value={taskType}
             onValueChange={(v) => setTaskType(v as "academic" | "general")}
-            className="grid grid-cols-2 gap-3"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
           >
             {(["academic", "general"] as const).map((type) => (
               <Label
@@ -81,7 +81,7 @@ export function StepTask({ data, onUpdate, onNext, onBack }: Props) {
           <RadioGroup
             value={taskNumber}
             onValueChange={(v) => setTaskNumber(v as "1" | "2")}
-            className="grid grid-cols-2 gap-3"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
           >
             {(["1", "2"] as const).map((num) => (
               <Label

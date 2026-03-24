@@ -134,7 +134,7 @@ export default function ResultsPage() {
               🎯 {t("results", "priorityActions", lang)}
             </h3>
             {result.priorityActions_vi && result.priorityActions_vi.length > 0 ? (
-              <div className="grid gap-x-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
                 {/* EN column */}
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">EN</p>
@@ -150,7 +150,7 @@ export default function ResultsPage() {
                   </ul>
                 </div>
                 {/* VI column */}
-                <div className="border-l pl-4">
+                <div className="sm:border-l sm:pl-4">
                   <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-2">VI</p>
                   <ul className="space-y-1.5">
                     {result.priorityActions_vi.map((action, i) => (
@@ -184,12 +184,12 @@ export default function ResultsPage() {
           <div className="rounded-xl border p-4 bg-muted/30">
             <h3 className="font-bold text-sm mb-3">{t("results", "overallComment", lang)}</h3>
             {result.overallComment_vi ? (
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">EN</p>
                   <p className="text-sm leading-relaxed">{result.overallComment}</p>
                 </div>
-                <div className="border-l pl-4">
+                <div className="sm:border-l sm:pl-4">
                   <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground mb-1">VI</p>
                   <p className="text-sm leading-relaxed vi">{result.overallComment_vi}</p>
                 </div>
@@ -202,7 +202,7 @@ export default function ResultsPage() {
 
         <TipsCarousel tips={result.tips} lang={lang} />
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-8">
           <Button variant="blue" asChild size="lg">
             <Link href="/courses">
               <BookOpen className="h-4 w-4 mr-2" /> {t("results", "exploreCourses", lang)}

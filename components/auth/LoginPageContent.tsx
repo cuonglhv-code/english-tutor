@@ -196,7 +196,7 @@ export function LoginPageContent() {
                             </button>
                         </div>
 
-                        <CardContent className="p-8 pt-10">
+                        <CardContent className="p-5 sm:p-8 pt-6 sm:pt-10">
                             <form onSubmit={handleAuth} className="space-y-5">
                                 <AnimatePresence mode="wait">
                                     {mode === "register" && (

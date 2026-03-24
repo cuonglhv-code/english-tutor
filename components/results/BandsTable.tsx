@@ -46,11 +46,11 @@ export function BandsTable({ bands, taskNumber, lang }: Props) {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
       <div className="mb-6 rounded-2xl bg-gradient-to-r from-jaxtina-red to-jaxtina-blue p-6 text-white text-center">
         <p className="text-sm font-medium uppercase tracking-wider opacity-80">{t("results", "overallBand", lang)}</p>
-        <div className="text-7xl font-black mt-1">{bands.overall}</div>
-        <p className="text-sm opacity-70 mt-1">{levelLabel}</p>
+        <div className="text-5xl sm:text-7xl font-black mt-2 mb-1">{bands.overall}</div>
+        <p className="text-xs sm:text-sm opacity-70 mt-1">{levelLabel}</p>
       </div>
 
-      <div className="rounded-xl border overflow-hidden">
+      <div className="rounded-xl border overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="bg-muted text-muted-foreground text-xs uppercase tracking-wide">

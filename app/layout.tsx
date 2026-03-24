@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body>
         <Navbar />
-        <main>{children}</main>
+        <main className="px-0 sm:px-0 lg:px-0 overflow-x-hidden">{children}</main>
         <Toaster position="top-right" richColors />
       </body>
     </html>

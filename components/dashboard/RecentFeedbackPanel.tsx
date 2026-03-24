@@ -47,7 +47,7 @@ export function RecentFeedbackPanel({ submissions, lang }: Props) {
               </div>
               <Link
                 href={`/dashboard/submission/${s.id}`}
-                className="text-xs text-jaxtina-blue hover:underline shrink-0"
+                className="text-sm font-bold text-jaxtina-blue hover:underline shrink-0 min-h-[44px] flex items-center px-2"
               >
                 {t("dashboard", "viewFull", lang)}
               </Link>

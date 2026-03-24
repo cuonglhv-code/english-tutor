@@ -134,13 +134,10 @@ export default function HomePage() {
               return (
                 <span
                   key={s}
-                  className={
-                    isActive
-                      ? "text-jaxtina-red font-bold"
-                      : isDone
-                        ? "text-jaxtina-blue"
-                        : "text-muted-foreground"
-                  }
+                  className={`
+                    ${isActive ? "text-jaxtina-red font-bold" : isDone ? "text-jaxtina-blue" : "text-muted-foreground"}
+                    ${!isActive && "hidden sm:inline"}
+                  `}
                 >
                   {isDone ? "✓ " : ""}
                   {s}

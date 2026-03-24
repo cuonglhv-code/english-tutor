@@ -34,6 +34,7 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
   const [leftPct, setLeftPct] = useState(42);
   const containerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
+  const [activeTab, setActiveTab] = useState<"question" | "essay">("essay");
   const router = useRouter();
 
   const minWords = data.taskNumber === "1" ? 150 : 250;
@@ -228,18 +229,34 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
           size="sm"
           onClick={onBack}
           disabled={isProcessing}
-          className="ml-4 shrink-0"
+          className="ml-4 shrink-0 hidden sm:flex"
         >
           <ChevronLeft className="h-4 w-4 mr-1" /> {t("write", "back", lang)}
         </Button>
+
+        {/* Mobile Tab Toggle */}
+        <div className="flex sm:hidden border rounded-lg overflow-hidden bg-background h-8 ml-2 shrink-0">
+          <button
+            onClick={() => setActiveTab("question")}
+            className={`px-3 text-xs font-bold transition-colors ${activeTab === "question" ? "bg-jaxtina-red text-white" : "text-muted-foreground"}`}
+          >
+            {t("write", "questionPanel", lang)}
+          </button>
+          <button
+            onClick={() => setActiveTab("essay")}
+            className={`px-3 text-xs font-bold transition-colors ${activeTab === "essay" ? "bg-jaxtina-red text-white" : "text-muted-foreground"}`}
+          >
+            {t("write", "responsePanel", lang)}
+          </button>
+        </div>
       </div>
 
-      {/* Split pane */}
-      <div ref={containerRef} className="flex flex-1 overflow-hidden">
+      {/* Split pane / Tabs */}
+      <div ref={containerRef} className="flex flex-1 overflow-hidden relative">
         {/* Left: Question */}
         <div
-          className="overflow-y-auto p-5 shrink-0"
-          style={{ width: `${leftPct}%` }}
+          className={`overflow-y-auto p-5 shrink-0 transition-all duration-300 ${activeTab === "question" ? "block w-full" : "hidden sm:block"} sm:shrink-0`}
+          style={{ width: typeof window !== "undefined" && window.innerWidth < 640 ? "100%" : `${leftPct}%` }}
         >
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
             {t("write", "questionPanel", lang)}
@@ -280,8 +297,8 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
 
         {/* Right: Essay */}
         <div
-          className="flex flex-col p-4 gap-2 overflow-hidden"
-          style={{ width: `${100 - leftPct - 0.5}%` }}
+          className={`flex flex-col p-4 gap-2 overflow-hidden transition-all duration-300 ${activeTab === "essay" ? "flex w-full" : "hidden sm:flex"}`}
+          style={{ width: typeof window !== "undefined" && window.innerWidth < 640 ? "100%" : `${100 - leftPct - 0.5}%` }}
         >
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground font-medium">{t("write", "responsePanel", lang)}</span>

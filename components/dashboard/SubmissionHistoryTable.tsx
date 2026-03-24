@@ -59,8 +59,10 @@ export function SubmissionHistoryTable({ submissions, lang }: Props) {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-muted text-muted-foreground text-xs uppercase tracking-wide">
-              <th className="text-left p-3 font-semibold cursor-pointer select-none" onClick={() => toggleSort("submitted_at")}>
-                {t("dashboard", "date", lang)} <SortIcon field="submitted_at" />
+              <th className="text-left p-3 font-semibold cursor-pointer select-none min-h-[44px]" onClick={() => toggleSort("submitted_at")}>
+                <div className="flex items-center gap-1">
+                  {t("dashboard", "date", lang)} <SortIcon field="submitted_at" />
+                </div>
               </th>
               <th className="text-left p-3 font-semibold">{t("dashboard", "taskType", lang)}</th>
               <th className="text-left p-3 font-semibold hidden md:table-cell">{t("dashboard", "prompt", lang)}</th>
@@ -106,8 +108,8 @@ export function SubmissionHistoryTable({ submissions, lang }: Props) {
                   </td>
                   <td className="p-3 text-right">
                     <Link href={`/dashboard/submission/${s.id}`}>
-                      <Button size="sm" variant="ghost" className="h-7 px-2">
-                        <ExternalLink className="h-3.5 w-3.5" />
+                      <Button size="sm" variant="ghost" className="h-11 w-11 p-0 flex items-center justify-center">
+                        <ExternalLink className="h-4 w-4" />
                       </Button>
                     </Link>
                   </td>

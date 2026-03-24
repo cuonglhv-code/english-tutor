@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare, User as UserIcon, Gamepad2, FileText } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare, User as UserIcon, Gamepad2, FileText, Menu, X } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -58,6 +58,7 @@ export function Navbar() {
   const practiceRef = useRef<HTMLDivElement | null>(null);
   const [tutorOpen, setTutorOpen] = useState(false);
   const tutorRef = useRef<HTMLDivElement | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Fetch unread count and subscribe to new messages
   useEffect(() => {
@@ -178,7 +179,7 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b bg-card/80 backdrop-blur-md">
-      <div className="mx-auto max-w-5xl flex h-14 items-center justify-between px-4">
+      <div className="mx-auto max-w-5xl flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2.5">
           <JaxtinaMark />
           <div className="flex flex-col leading-none">
@@ -200,7 +201,7 @@ export function Navbar() {
               <div className="relative" ref={practiceRef}>
                 <button
                   onClick={() => setPracticeOpen(o => !o)}
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                  className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
                   aria-haspopup="menu"
                   aria-expanded={practiceOpen}
                 >
@@ -268,7 +269,7 @@ export function Navbar() {
 
           <Link
             href="/experience"
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+            className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
           >
             <MessageSquare className="h-4 w-4" />
             <span className="hidden sm:inline">{lang === "vi" ? "Trải nghiệm" : "Experience"}</span>
@@ -289,7 +290,7 @@ export function Navbar() {
               <div className="relative" ref={profileRef}>
                 <button
                   onClick={() => setProfileOpen(o => !o)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                  className="hidden sm:flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
                   aria-haspopup="menu"
                   aria-expanded={profileOpen}
                 >
@@ -381,8 +382,151 @@ export function Navbar() {
 
           <LangToggle lang={lang} setLang={setLang} />
           <DarkModeToggle />
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="flex sm:hidden p-2 rounded-lg hover:bg-muted transition-colors text-foreground"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="sm:hidden fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-lg animate-in fade-in slide-in-from-top-4 duration-200">
+          <div className="flex flex-col p-4 gap-4 overflow-y-auto max-h-[calc(100vh-64px)]">
+            {role !== "admin" && (
+              <>
+                <div className="text-xs font-bold text-muted-foreground px-2 uppercase tracking-wider">
+                  {lang === "vi" ? "Luyện tập" : "Practice"}
+                </div>
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
+                >
+                  <PenLine className="h-5 w-5 text-jaxtina-red" />
+                  <span>{lang === "vi" ? "Luyện viết" : "Writing practice"}</span>
+                </Link>
+                <Link
+                  href="/practice"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
+                >
+                  <Library className="h-5 w-5 text-jaxtina-blue" />
+                  <span>{lang === "vi" ? "Thư viện viết" : "Writing library"}</span>
+                </Link>
+                <Link
+                  href="/full-test"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
+                >
+                  <FileText className="h-5 w-5 text-jaxtina-grey" />
+                  <span>{lang === "vi" ? "Thi thực tế" : "Actual test"}</span>
+                </Link>
+
+                <div className="text-xs font-bold text-muted-foreground px-2 pt-2 uppercase tracking-wider">
+                  {lang === "vi" ? "Học tập" : "Learning"}
+                </div>
+                <Link
+                  href="/writing-101"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+                >
+                  <BookOpen className="h-5 w-5 text-jaxtina-blue" />
+                  <span>{t("nav", "writing101", lang)}</span>
+                </Link>
+                <Link
+                  href="/courses"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+                >
+                  <BookOpen className="h-5 w-5 text-jaxtina-blue" />
+                  <span>{t("nav", "courses", lang)}</span>
+                </Link>
+                <Link
+                  href="/placement"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors text-jaxtina-blue font-bold"
+                >
+                  <ClipboardList className="h-5 w-5" />
+                  <span>{t("nav", "placement", lang)}</span>
+                </Link>
+              </>
+            )}
+
+            <div className="text-xs font-bold text-muted-foreground px-2 pt-2 uppercase tracking-wider">
+              {lang === "vi" ? "Dịch vụ" : "Services"}
+            </div>
+            <Link
+              href="/experience"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+            >
+              <MessageSquare className="h-5 w-5 text-jaxtina-red" />
+              <span>{lang === "vi" ? "Trải nghiệm" : "Experience"}</span>
+            </Link>
+
+            <div className="my-2 h-px bg-border" />
+
+            {user ? (
+              <>
+                <div className="flex items-center gap-3 px-2 py-1">
+                  <div className="h-10 w-10 rounded-full bg-jaxtina-red/10 flex items-center justify-center text-jaxtina-red font-black">
+                    {(displayName || user.email || "U")[0].toUpperCase()}
+                  </div>
+                  <div className="flex flex-col truncate">
+                    <span className="font-bold text-sm truncate">{displayName || user.email?.split("@")[0]}</span>
+                    <span className="text-[10px] text-muted-foreground truncate">{user.role || "Student"}</span>
+                  </div>
+                </div>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+                >
+                  <LayoutDashboard className="h-5 w-5" />
+                  <span>{t("nav", "dashboard", lang)}</span>
+                </Link>
+                <Link
+                  href="/inbox"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-muted transition-colors"
+                >
+                  <span className="flex items-center gap-3">
+                    <Mail className="h-5 w-5" />
+                    <span>{lang === "vi" ? "Hộp thư" : "Inbox"}</span>
+                  </span>
+                  {unread > 0 && (
+                    <span className="h-5 px-1.5 rounded-full bg-jaxtina-red text-white text-[10px] font-black flex items-center justify-center">
+                      {unread}
+                    </span>
+                  )}
+                </Link>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-jaxtina-red font-bold transition-colors text-left"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>{t("nav", "logout", lang)}</span>
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 p-3 rounded-xl bg-jaxtina-red text-white font-bold transition-colors justify-center"
+              >
+                <LogIn className="h-5 w-5" />
+                <span>{t("nav", "login", lang)}</span>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

@@ -172,7 +172,7 @@ function FilterSidebar({
     if (!open) return null;
 
     return (
-        <aside className="w-full md:w-56 shrink-0 space-y-5 bg-card border rounded-2xl p-4 h-fit">
+        <aside className="w-full md:w-56 shrink-0 order-last md:order-first space-y-5 bg-card border rounded-2xl p-4 h-fit">
             {/* Task filter */}
             <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
@@ -402,28 +402,29 @@ export default function PracticePage() {
                             variant="outline"
                             size="sm"
                             onClick={() => setFiltersOpen((v) => !v)}
-                            className="gap-1.5"
+                            className="gap-1.5 min-h-[44px]"
                         >
                             <Filter className="h-3.5 w-3.5" />
-                            {filtersOpen ? "Hide filters" : "Filters"}
+                            <span className="hidden xs:inline">{filtersOpen ? "Hide filters" : "Filters"}</span>
                             {filtersOpen ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
                         </Button>
 
                         {/* Quick link to custom question entry */}
-                        <Button asChild size="sm" className="gap-1.5">
+                        <Button asChild size="sm" className="gap-1.5 min-h-[44px]">
                             <Link href="/">
                                 <PenLine className="h-3.5 w-3.5" />
-                                {lang === "vi" ? "Tự nhập đề" : "Custom Question"}
+                                <span className="hidden xs:inline">{lang === "vi" ? "Tự nhập đề" : "Custom Question"}</span>
+                                <span className="xs:hidden">{lang === "vi" ? "Tự nhập" : "Custom"}</span>
                             </Link>
                         </Button>
                     </div>
                 </div>
 
                 {/* ── Tab Switcher ── */}
-                <div className="flex items-center gap-1 bg-muted/60 p-1.5 rounded-2xl w-full sm:w-fit border shadow-sm">
+                <div className="flex items-center gap-1 bg-muted/60 p-1.5 rounded-2xl w-full sm:w-fit border shadow-sm touch-pan-x overflow-x-auto sm:overflow-visible">
                     <button
                         onClick={() => { setActiveTab("task1"); setTaskFilter("Task 1"); setTypeFilters([]); }}
-                        className={`flex-1 sm:flex-none px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === "task1"
+                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-3 rounded-xl text-sm font-bold transition-all duration-200 min-h-[48px] ${activeTab === "task1"
                             ? "bg-card text-jaxtina-red shadow-md scale-[1.02]"
                             : "text-muted-foreground hover:text-foreground"
                             }`}
@@ -432,7 +433,7 @@ export default function PracticePage() {
                     </button>
                     <button
                         onClick={() => { setActiveTab("task2"); setTaskFilter("Task 2"); setTypeFilters([]); }}
-                        className={`flex-1 sm:flex-none px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === "task2"
+                        className={`flex-1 sm:flex-none px-4 sm:px-8 py-3 rounded-xl text-sm font-bold transition-all duration-200 min-h-[48px] ${activeTab === "task2"
                             ? "bg-card text-jaxtina-red shadow-md scale-[1.02]"
                             : "text-muted-foreground hover:text-foreground"
                             }`}

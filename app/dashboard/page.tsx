@@ -159,16 +159,16 @@ export default function DashboardPage() {
         {/* ══════════════════════════════════════════════════════════════════
             PAGE HEADER
         ══════════════════════════════════════════════════════════════════ */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2 sm:px-0">
           <div>
-            <h1 className="text-2xl font-black">
+            <h1 className="text-xl sm:text-2xl font-black">
               {lang === "vi"
                 ? "Bảng điều khiển học tập"
                 : "IELTS Learning Dashboard"}
             </h1>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{user.email}</p>
           </div>
-          <Button asChild>
+          <Button asChild className="w-full sm:w-auto min-h-[44px]">
             <Link href="/">
               <PenLine className="h-4 w-4 mr-2" />
               {lang === "vi" ? "Viết bài mới" : "New Essay"}
@@ -332,16 +332,16 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-3">
                 {criteriaStats.map(({ key, label }) => {
                   const avg = avgPerCriterion[key];
                   return (
-                    <div key={key} className="text-center">
-                      <p className="text-xs text-muted-foreground mb-1 leading-tight">
+                    <div key={key} className="flex sm:block items-center justify-between border-b sm:border-0 pb-2 sm:pb-0 last:border-0 text-center sm:text-center">
+                      <p className="text-xs text-muted-foreground mb-1 leading-tight text-left sm:text-center max-w-[140px] sm:max-w-none">
                         {label}
                       </p>
                       <p
-                        className={`text-2xl font-black ${avg ? bandToColor(avg) : ""
+                        className={`text-xl sm:text-2xl font-black ${avg ? bandToColor(avg) : ""
                           }`}
                       >
                         {avg ?? "—"}
