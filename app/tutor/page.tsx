@@ -21,13 +21,13 @@ export default function TutorHomePage() {
     <div className="relative min-h-screen">
       {/* Floating Back Button */}
       <div className="absolute top-4 left-4 z-50">
-        <Link
-          href="/experience"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white text-slate-700 rounded-full shadow-md backdrop-blur-sm transition-all text-sm font-medium border border-slate-200"
+        <a
+          href="https://jaxtina-ielts-examiner.vercel.app/experience"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 hover:bg-white text-slate-700 rounded-full shadow-md backdrop-blur-sm transition-all text-sm font-medium border border-slate-200 min-h-[44px]"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Experience
-        </Link>
+        </a>
       </div>
 
       <HomeScreenClient userId={user?.id || ""} />

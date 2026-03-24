@@ -23,13 +23,13 @@ export default function QuizPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
       {/* Navigation Header */}
       <div className="w-full max-w-3xl mb-6">
-        <Link
-          href="/experience"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 hover:bg-white text-slate-700 rounded-full shadow-sm backdrop-blur-sm transition-all text-sm font-medium border border-slate-200"
+        <a
+          href="https://jaxtina-ielts-examiner.vercel.app/experience"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 hover:bg-white text-slate-700 rounded-full shadow-sm backdrop-blur-sm transition-all text-sm font-medium border border-slate-200 min-h-[44px]"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Experience
-        </Link>
+        </a>
       </div>
 
       <div className="w-full max-w-3xl">
