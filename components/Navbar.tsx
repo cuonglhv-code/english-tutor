@@ -10,6 +10,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { t, type Lang } from "@/lib/i18n";
 import { toast } from "sonner";
 import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function JaxtinaMark() {
   return (
@@ -387,7 +388,10 @@ export function Navbar() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="flex sm:hidden p-2 rounded-lg hover:bg-muted transition-colors text-foreground"
-            aria-label="Toggle mobile menu"
+            aria-label={mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
+            aria-haspopup="true"
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -395,138 +399,269 @@ export function Navbar() {
       </div>
 
       {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="sm:hidden fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-lg animate-in fade-in slide-in-from-top-4 duration-200">
-          <div className="flex flex-col p-4 gap-4 overflow-y-auto max-h-[calc(100vh-64px)]">
-            {role !== "admin" && (
-              <>
-                <div className="text-xs font-bold text-muted-foreground px-2 uppercase tracking-wider">
-                  {lang === "vi" ? "Luyện tập" : "Practice"}
-                </div>
-                <Link
-                  href="/"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
-                >
-                  <PenLine className="h-5 w-5 text-jaxtina-red" />
-                  <span>{lang === "vi" ? "Luyện viết" : "Writing practice"}</span>
-                </Link>
-                <Link
-                  href="/practice"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
-                >
-                  <Library className="h-5 w-5 text-jaxtina-blue" />
-                  <span>{lang === "vi" ? "Thư viện viết" : "Writing library"}</span>
-                </Link>
-                <Link
-                  href="/full-test"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
-                >
-                  <FileText className="h-5 w-5 text-jaxtina-grey" />
-                  <span>{lang === "vi" ? "Thi thực tế" : "Actual test"}</span>
-                </Link>
-
-                <div className="text-xs font-bold text-muted-foreground px-2 pt-2 uppercase tracking-wider">
-                  {lang === "vi" ? "Học tập" : "Learning"}
-                </div>
-                <Link
-                  href="/writing-101"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
-                >
-                  <BookOpen className="h-5 w-5 text-jaxtina-blue" />
-                  <span>{t("nav", "writing101", lang)}</span>
-                </Link>
-                <Link
-                  href="/courses"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
-                >
-                  <BookOpen className="h-5 w-5 text-jaxtina-blue" />
-                  <span>{t("nav", "courses", lang)}</span>
-                </Link>
-                <Link
-                  href="/placement"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors text-jaxtina-blue font-bold"
-                >
-                  <ClipboardList className="h-5 w-5" />
-                  <span>{t("nav", "placement", lang)}</span>
-                </Link>
-              </>
-            )}
-
-            <div className="text-xs font-bold text-muted-foreground px-2 pt-2 uppercase tracking-wider">
-              {lang === "vi" ? "Dịch vụ" : "Services"}
-            </div>
-            <Link
-              href="/experience"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="sm:hidden fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-lg"
+          >
+            <motion.div 
+              className="flex flex-col p-4 gap-4 overflow-y-auto max-h-[calc(100vh-64px)]"
+              initial="closed"
+              animate="open"
+              variants={{
+                open: {
+                  transition: { staggerChildren: 0.05, delayChildren: 0.1 }
+                },
+                closed: {
+                  transition: { staggerChildren: 0.05, staggerDirection: -1 }
+                }
+              }}
             >
-              <MessageSquare className="h-5 w-5 text-jaxtina-red" />
-              <span>{lang === "vi" ? "Trải nghiệm" : "Experience"}</span>
-            </Link>
+              {role !== "admin" && (
+                <>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                    className="text-xs font-bold text-muted-foreground px-2 uppercase tracking-wider"
+                  >
+                    {lang === "vi" ? "Luyện tập" : "Practice"}
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <Link
+                      href="/"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
+                    >
+                      <PenLine className="h-5 w-5 text-jaxtina-red" />
+                      <span>{lang === "vi" ? "Luyện viết" : "Writing practice"}</span>
+                    </Link>
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <Link
+                      href="/practice"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
+                    >
+                      <Library className="h-5 w-5 text-jaxtina-blue" />
+                      <span>{lang === "vi" ? "Thư viện viết" : "Writing library"}</span>
+                    </Link>
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <Link
+                      href="/full-test"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted font-medium transition-all"
+                    >
+                      <FileText className="h-5 w-5 text-jaxtina-grey" />
+                      <span>{lang === "vi" ? "Thi thực tế" : "Actual test"}</span>
+                    </Link>
+                  </motion.div>
 
-            <div className="my-2 h-px bg-border" />
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                    className="text-xs font-bold text-muted-foreground px-2 pt-2 uppercase tracking-wider"
+                  >
+                    {lang === "vi" ? "Học tập" : "Learning"}
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <Link
+                      href="/writing-101"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+                    >
+                      <BookOpen className="h-5 w-5 text-jaxtina-blue" />
+                      <span>{t("nav", "writing101", lang)}</span>
+                    </Link>
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <Link
+                      href="/courses"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+                    >
+                      <BookOpen className="h-5 w-5 text-jaxtina-blue" />
+                      <span>{t("nav", "courses", lang)}</span>
+                    </Link>
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <Link
+                      href="/placement"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors text-jaxtina-blue font-bold"
+                    >
+                      <ClipboardList className="h-5 w-5" />
+                      <span>{t("nav", "placement", lang)}</span>
+                    </Link>
+                  </motion.div>
+                </>
+              )}
 
-            {user ? (
-              <>
-                <div className="flex items-center gap-3 px-2 py-1">
-                  <div className="h-10 w-10 rounded-full bg-jaxtina-red/10 flex items-center justify-center text-jaxtina-red font-black">
-                    {(displayName || user.email || "U")[0].toUpperCase()}
-                  </div>
-                  <div className="flex flex-col truncate">
-                    <span className="font-bold text-sm truncate">{displayName || user.email?.split("@")[0]}</span>
-                    <span className="text-[10px] text-muted-foreground truncate">{user.role || "Student"}</span>
-                  </div>
-                </div>
+              <motion.div 
+                variants={{
+                  open: { opacity: 1, x: 0 },
+                  closed: { opacity: 0, x: -10 }
+                }}
+                className="text-xs font-bold text-muted-foreground px-2 pt-2 uppercase tracking-wider"
+              >
+                {lang === "vi" ? "Dịch vụ" : "Services"}
+              </motion.div>
+              <motion.div 
+                variants={{
+                  open: { opacity: 1, x: 0 },
+                  closed: { opacity: 0, x: -10 }
+                }}
+              >
                 <Link
-                  href="/dashboard"
+                  href="/experience"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
                 >
-                  <LayoutDashboard className="h-5 w-5" />
-                  <span>{t("nav", "dashboard", lang)}</span>
+                  <MessageSquare className="h-5 w-5 text-jaxtina-red" />
+                  <span>{lang === "vi" ? "Trải nghiệm" : "Experience"}</span>
                 </Link>
-                <Link
-                  href="/inbox"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-3 rounded-xl hover:bg-muted transition-colors"
+              </motion.div>
+
+              <motion.div 
+                variants={{
+                  open: { opacity: 1 },
+                  closed: { opacity: 0 }
+                }}
+                className="my-2 h-px bg-border" 
+              />
+
+              {user ? (
+                <>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                    className="flex items-center gap-3 px-2 py-1"
+                  >
+                    <div className="h-10 w-10 rounded-full bg-jaxtina-red/10 flex items-center justify-center text-jaxtina-red font-black">
+                      {(displayName || user.email || "U")[0].toUpperCase()}
+                    </div>
+                    <div className="flex flex-col truncate">
+                      <span className="font-bold text-sm truncate">{displayName || user.email?.split("@")[0]}</span>
+                      <span className="text-[10px] text-muted-foreground truncate">{user.role || "Student"}</span>
+                    </div>
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+                    >
+                      <LayoutDashboard className="h-5 w-5" />
+                      <span>{t("nav", "dashboard", lang)}</span>
+                    </Link>
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <Link
+                      href="/inbox"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between p-3 rounded-xl hover:bg-muted transition-colors"
+                    >
+                      <span className="flex items-center gap-3">
+                        <Mail className="h-5 w-5" />
+                        <span>{lang === "vi" ? "Hộp thư" : "Inbox"}</span>
+                      </span>
+                      {unread > 0 && (
+                        <span className="h-5 px-1.5 rounded-full bg-jaxtina-red text-white text-[10px] font-black flex items-center justify-center">
+                          {unread}
+                        </span>
+                      )}
+                    </Link>
+                  </motion.div>
+                  <motion.div 
+                    variants={{
+                      open: { opacity: 1, x: 0 },
+                      closed: { opacity: 0, x: -10 }
+                    }}
+                  >
+                    <button
+                      onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-jaxtina-red font-bold transition-colors text-left"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span>{t("nav", "logout", lang)}</span>
+                    </button>
+                  </motion.div>
+                </>
+              ) : (
+                <motion.div 
+                  variants={{
+                    open: { opacity: 1, scale: 1 },
+                    closed: { opacity: 0, scale: 0.95 }
+                  }}
                 >
-                  <span className="flex items-center gap-3">
-                    <Mail className="h-5 w-5" />
-                    <span>{lang === "vi" ? "Hộp thư" : "Inbox"}</span>
-                  </span>
-                  {unread > 0 && (
-                    <span className="h-5 px-1.5 rounded-full bg-jaxtina-red text-white text-[10px] font-black flex items-center justify-center">
-                      {unread}
-                    </span>
-                  )}
-                </Link>
-                <button
-                  onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted text-jaxtina-red font-bold transition-colors text-left"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>{t("nav", "logout", lang)}</span>
-                </button>
-              </>
-            ) : (
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 p-3 rounded-xl bg-jaxtina-red text-white font-bold transition-colors justify-center"
-              >
-                <LogIn className="h-5 w-5" />
-                <span>{t("nav", "login", lang)}</span>
-              </Link>
-            )}
-          </div>
-        </div>
-      )}
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-jaxtina-red text-white font-bold transition-colors justify-center"
+                  >
+                    <LogIn className="h-5 w-5" />
+                    <span>{t("nav", "login", lang)}</span>
+                  </Link>
+                </motion.div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

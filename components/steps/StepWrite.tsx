@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -235,94 +236,129 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
         </Button>
 
         {/* Mobile Tab Toggle */}
-        <div className="flex sm:hidden border rounded-lg overflow-hidden bg-background h-8 ml-2 shrink-0">
+        <div className="flex sm:hidden p-1 bg-muted rounded-lg h-9 ml-2 shrink-0 relative items-center">
           <button
             onClick={() => setActiveTab("question")}
-            className={`px-3 text-xs font-bold transition-colors ${activeTab === "question" ? "bg-jaxtina-red text-white" : "text-muted-foreground"}`}
+            className={`relative z-10 px-3 h-7 text-[10px] font-black uppercase tracking-wider transition-colors duration-200 ${activeTab === "question" ? "text-white" : "text-muted-foreground hover:text-foreground"}`}
           >
             {t("write", "questionPanel", lang)}
+            {activeTab === "question" && (
+              <motion.div
+                layoutId="activeStepTab"
+                className="absolute inset-0 bg-jaxtina-red rounded-md -z-10"
+                transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
+              />
+            )}
           </button>
           <button
             onClick={() => setActiveTab("essay")}
-            className={`px-3 text-xs font-bold transition-colors ${activeTab === "essay" ? "bg-jaxtina-red text-white" : "text-muted-foreground"}`}
+            className={`relative z-10 px-3 h-7 text-[10px] font-black uppercase tracking-wider transition-colors duration-200 ${activeTab === "essay" ? "text-white" : "text-muted-foreground hover:text-foreground"}`}
           >
             {t("write", "responsePanel", lang)}
+            {activeTab === "essay" && (
+              <motion.div
+                layoutId="activeStepTab"
+                className="absolute inset-0 bg-jaxtina-red rounded-md -z-10"
+                transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
+              />
+            )}
           </button>
         </div>
       </div>
 
       {/* Split pane / Tabs */}
       <div ref={containerRef} className="flex flex-1 overflow-hidden relative">
-        {/* Left: Question */}
-        <div
-          className={`overflow-y-auto p-5 shrink-0 transition-all duration-300 ${activeTab === "question" ? "block w-full" : "hidden sm:block"} sm:shrink-0`}
-          style={{ width: typeof window !== "undefined" && window.innerWidth < 640 ? "100%" : `${leftPct}%` }}
-        >
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-            {t("write", "questionPanel", lang)}
-          </p>
+        <AnimatePresence mode="popLayout" initial={false}>
+          {/* Left: Question */}
+          {(activeTab === "question" || (typeof window !== "undefined" && window.innerWidth >= 640)) && (
+            <motion.div
+              key="question"
+              initial={{ x: activeTab === "question" ? -20 : 0, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -20, opacity: 0 }}
+              transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+              className={`overflow-y-auto p-5 shrink-0 h-full ${activeTab === "question" ? "w-full" : "hidden sm:block"} sm:shrink-0 scrollbar-thin`}
+              style={{
+                width: typeof window !== "undefined" && window.innerWidth < 640 ? "100%" : `${leftPct}%`,
+                position: typeof window !== "undefined" && window.innerWidth < 640 && activeTab !== "question" ? "absolute" : "relative"
+              }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+                {t("write", "questionPanel", lang)}
+              </p>
 
-          {data.question &&
-            !(data.questionImage && data.question.startsWith("[Image question:")) ? (
-            <p className="text-base leading-relaxed whitespace-pre-wrap mb-4">
-              {data.question}
-            </p>
-          ) : !data.questionImage ? (
-            <p className="text-sm text-muted-foreground italic mb-4">
-              {lang === "vi" ? "Không có nội dung câu hỏi." : "No question text was provided."}
-            </p>
-          ) : null}
+              {data.question &&
+                !(data.questionImage && data.question.startsWith("[Image question:")) ? (
+                <p className="text-base leading-relaxed whitespace-pre-wrap mb-4">
+                  {data.question}
+                </p>
+              ) : !data.questionImage ? (
+                <p className="text-sm text-muted-foreground italic mb-4">
+                  {lang === "vi" ? "Không có nội dung câu hỏi." : "No question text was provided."}
+                </p>
+              ) : null}
 
-          {data.questionImage && (
-            <div className="mb-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={data.questionImage}
-                alt="Question"
-                className="w-full rounded-lg border object-contain"
-                style={{ maxHeight: "60vh" }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Draggable divider */}
-        <div
-          onMouseDown={handleMouseDown}
-          className="w-2 shrink-0 cursor-col-resize bg-border hover:bg-jaxtina-red/60 transition-colors flex items-center justify-center group"
-          title="Drag to resize"
-        >
-          <GripVertical className="h-5 w-5 text-muted-foreground/40 group-hover:text-jaxtina-red/70 transition-colors pointer-events-none" />
-        </div>
-
-        {/* Right: Essay */}
-        <div
-          className={`flex flex-col p-4 gap-2 overflow-hidden transition-all duration-300 ${activeTab === "essay" ? "flex w-full" : "hidden sm:flex"}`}
-          style={{ width: typeof window !== "undefined" && window.innerWidth < 640 ? "100%" : `${100 - leftPct - 0.5}%` }}
-        >
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground font-medium">{t("write", "responsePanel", lang)}</span>
-            <span className={`font-semibold tabular-nums ${wordColor}`}>
-              {wordCount} {t("write", "words", lang)}{" "}
-              {wordCount >= minWords ? (
-                <span className="text-green-600 dark:text-green-400">✓</span>
-              ) : (
-                <span className="text-muted-foreground font-normal">
-                  / {minWords} {t("write", "wordsRequired", lang)}
-                </span>
+              {data.questionImage && (
+                <div className="mb-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={data.questionImage}
+                    alt="Question"
+                    className="w-full rounded-lg border object-contain shadow-sm"
+                    style={{ maxHeight: "60vh" }}
+                  />
+                </div>
               )}
-            </span>
-          </div>
-          <textarea
-            className="flex-1 w-full resize-none rounded-lg border border-input bg-background p-3 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-jaxtina-red/30 font-[inherit] disabled:opacity-60"
-            value={essay}
-            onChange={(e) => setEssay(e.target.value)}
-            placeholder={data.taskNumber === "1" ? t("write", "placeholder1", lang) : t("write", "placeholder2", lang)}
-            disabled={isProcessing}
-            spellCheck
-          />
+            </motion.div>
+          )}
 
-        </div>
+          {/* Draggable divider */}
+          <div
+            onMouseDown={handleMouseDown}
+            className="hidden sm:flex w-2 shrink-0 cursor-col-resize bg-border hover:bg-jaxtina-red/60 transition-colors items-center justify-center group"
+            title="Drag to resize"
+          >
+            <GripVertical className="h-5 w-5 text-muted-foreground/40 group-hover:text-jaxtina-red/70 transition-colors pointer-events-none" />
+          </div>
+
+          {/* Right: Essay */}
+          {(activeTab === "essay" || (typeof window !== "undefined" && window.innerWidth >= 640)) && (
+            <motion.div
+              key="essay"
+              initial={{ x: activeTab === "essay" ? 20 : 0, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 20, opacity: 0 }}
+              transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+              className={`flex flex-col p-4 gap-2 overflow-hidden h-full ${activeTab === "essay" ? "w-full" : "hidden sm:flex"}`}
+              style={{
+                width: typeof window !== "undefined" && window.innerWidth < 640 ? "100%" : `${100 - leftPct - 0.5}%`,
+                position: typeof window !== "undefined" && window.innerWidth < 640 && activeTab !== "essay" ? "absolute" : "relative"
+              }}
+            >
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground font-medium">{t("write", "responsePanel", lang)}</span>
+                <span className={`font-bold tabular-nums ${wordColor}`}>
+                  {wordCount} {t("write", "words", lang)}{" "}
+                  {wordCount >= minWords ? (
+                    <span className="text-green-600 dark:text-green-400">✓</span>
+                  ) : (
+                    <span className="text-muted-foreground font-normal">
+                      / {minWords} {t("write", "wordsRequired", lang)}
+                    </span>
+                  )}
+                </span>
+              </div>
+              <textarea
+                className="flex-1 w-full resize-none rounded-xl border border-input bg-background p-4 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-jaxtina-red/30 font-[inherit] disabled:opacity-60 shadow-inner"
+                value={essay}
+                onChange={(e) => setEssay(e.target.value)}
+                placeholder={data.taskNumber === "1" ? t("write", "placeholder1", lang) : t("write", "placeholder2", lang)}
+                disabled={isProcessing}
+                spellCheck
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Bottom nav bar */}

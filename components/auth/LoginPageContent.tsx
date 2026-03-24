@@ -22,13 +22,37 @@ export function LoginPageContent() {
     const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     // Default landing after login should be Tutor.
     // If a protected page redirected here, it will pass `?next=...` and we honor it.
     const nextUrl = searchParams.get("next") || "/tutor";
 
+    const validate = () => {
+        const newErrors: Record<string, string> = {};
+        if (!email.includes("@")) {
+            newErrors.email = lang === "vi" ? "Email không hợp lệ." : "Invalid email address.";
+        }
+        if (mode === "register") {
+            if (!displayName.trim()) {
+                newErrors.displayName = lang === "vi" ? "Vui lòng nhập họ tên." : "Please enter your name.";
+            }
+            if (password.length < 8) {
+                newErrors.password = lang === "vi" ? "Mật khẩu ít nhất 8 ký tự." : "Password must be at least 8 chars.";
+            }
+        } else {
+            if (!password) {
+                newErrors.password = lang === "vi" ? "Vui lòng nhập mật khẩu." : "Please enter your password.";
+            }
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!validate()) return;
+        
         setLoading(true);
         const supabase = createBrowserClient();
 
@@ -37,6 +61,7 @@ export function LoginPageContent() {
                 const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) {
                     toast.error(t("auth", "errorInvalid", lang) || error.message);
+                    setLoading(false);
                     return;
                 }
 
@@ -57,11 +82,6 @@ export function LoginPageContent() {
                 // Hard-navigate to avoid App Router transition/session timing issues.
                 window.location.href = targetUrl;
             } else {
-                if (password.length < 8) {
-                    toast.error(lang === "vi" ? "Mật khẩu phải từ 8 ký tự." : "Password must be at least 8 chars.");
-                    setLoading(false);
-                    return;
-                }
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
@@ -69,6 +89,7 @@ export function LoginPageContent() {
                 });
                 if (error) {
                     toast.error(error.message || t("auth", "errorGeneric", lang));
+                    setLoading(false);
                     return;
                 }
                 // If email confirmation is enabled, there may be no session yet.
@@ -77,8 +98,8 @@ export function LoginPageContent() {
                 if (needsConfirmation) {
                     toast.success(
                         lang === "vi" 
-                            ? "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản. Bạn vẫn có thể tiếp tục sử dụng ngay lúc này." 
-                            : "Registration successful! Check your email to confirm your account. You can still continue for now.",
+                            ? "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản." 
+                            : "Registration successful! Please check your email to confirm your account.",
                         { duration: 6000 }
                     );
                 } else {
@@ -99,7 +120,6 @@ export function LoginPageContent() {
             }
         } catch {
             toast.error(t("auth", "errorGeneric", lang));
-        } finally {
             setLoading(false);
         }
     };
@@ -206,52 +226,64 @@ export function LoginPageContent() {
                                             exit={{ opacity: 0, y: -10 }}
                                             className="space-y-1.5"
                                         >
-                                            <Label className="flex items-center gap-1.5 ml-1 text-sm font-bold">
+                                            <Label className={`flex items-center gap-1.5 ml-1 text-sm font-bold ${errors.displayName ? "text-red-500" : ""}`}>
                                                 <User className="h-3.5 w-3.5" /> {t("auth", "displayNameLabel", lang)}
                                             </Label>
                                             <Input
                                                 type="text"
                                                 placeholder={lang === "vi" ? "Nguyen Van A" : "Your full name"}
-                                                className="rounded-xl h-12 bg-background/50"
+                                                className={`rounded-xl h-12 bg-background/50 ${errors.displayName ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                                                 value={displayName}
-                                                onChange={(e) => setDisplayName(e.target.value)}
+                                                onChange={(e) => {
+                                                    setDisplayName(e.target.value);
+                                                    if (errors.displayName) setErrors(prev => ({ ...prev, displayName: "" }));
+                                                }}
                                                 disabled={loading}
                                                 required={mode === "register"}
                                             />
+                                            {errors.displayName && <p className="text-[10px] font-bold text-red-500 ml-1 uppercase">{errors.displayName}</p>}
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
 
                                 <div className="space-y-1.5">
-                                    <Label className="flex items-center gap-1.5 ml-1 text-sm font-bold">
+                                    <Label className={`flex items-center gap-1.5 ml-1 text-sm font-bold ${errors.email ? "text-red-500" : ""}`}>
                                         <Mail className="h-3.5 w-3.5" /> {t("auth", "emailLabel", lang)}
                                     </Label>
                                     <Input
                                         type="email"
                                         placeholder="you@email.com"
-                                        className="rounded-xl h-12 bg-background/50"
+                                        className={`rounded-xl h-12 bg-background/50 ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) => {
+                                            setEmail(e.target.value);
+                                            if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
+                                        }}
                                         required
                                         disabled={loading}
                                     />
+                                    {errors.email && <p className="text-[10px] font-bold text-red-500 ml-1 uppercase">{errors.email}</p>}
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label className="flex items-center gap-1.5 ml-1 text-sm font-bold">
+                                    <Label className={`flex items-center gap-1.5 ml-1 text-sm font-bold ${errors.password ? "text-red-500" : ""}`}>
                                         <Lock className="h-3.5 w-3.5" /> {t("auth", "passwordLabel", lang)}
                                     </Label>
                                     <Input
                                         type="password"
                                         placeholder="••••••••"
-                                        className="rounded-xl h-12 bg-background/50"
+                                        className={`rounded-xl h-12 bg-background/50 ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
                                         value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={(e) => {
+                                            setPassword(e.target.value);
+                                            if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
+                                        }}
                                         required
                                         disabled={loading}
-                                        minLength={mode === "register" ? 8 : undefined}
                                     />
-                                    {mode === "register" && (
+                                    {errors.password ? (
+                                        <p className="text-[10px] font-bold text-red-500 ml-1 uppercase">{errors.password}</p>
+                                    ) : mode === "register" && (
                                         <p className="text-[10px] text-muted-foreground ml-1">
                                             {lang === "vi" ? "* Ít nhất 8 ký tự" : "* Minimum 8 characters"}
                                         </p>

@@ -28,6 +28,7 @@ export default function OnboardingPage() {
   const [targetBand, setTargetBand] = useState("");
   const [nearestCenter, setNearestCenter] = useState("");
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Redirect logged-out users to login
   useEffect(() => {
@@ -48,30 +49,38 @@ export default function OnboardingPage() {
       });
   }, [user, router]);
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    const ageNum = parseInt(age, 10);
+
+    if (!age) newErrors.age = lang === "vi" ? "Vui lòng nhập tuổi." : "Please enter your age.";
+    else if (isNaN(ageNum) || ageNum < 16 || ageNum > 70) 
+      newErrors.age = lang === "vi" ? "Tuổi từ 16 đến 70." : "Age must be between 16 and 70.";
+
+    if (!city.trim()) newErrors.city = lang === "vi" ? "Vui lòng chọn tỉnh/thành." : "Please select your city.";
+    
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (!phone.trim()) newErrors.phone = lang === "vi" ? "Vui lòng nhập số điện thoại." : "Please enter your phone number.";
+    else if (!phoneRegex.test(phone.trim().replace(/\s/g, "")))
+      newErrors.phone = lang === "vi" ? "Số điện thoại không hợp lệ." : "Invalid phone number format.";
+
+    if (!nearestCenter) newErrors.nearestCenter = lang === "vi" ? "Vui lòng chọn cơ sở gần nhất." : "Please select nearest center.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const ageNum = parseInt(age, 10);
-    if (!age || isNaN(ageNum) || ageNum < 16 || ageNum > 70) {
-      toast.error(t("onboarding", "errorAge", lang));
-      return;
-    }
-    if (!city.trim()) {
-      toast.error(t("onboarding", "errorCity", lang));
-      return;
-    }
-    if (!phone.trim()) {
-      toast.error(t("onboarding", "errorPhone", lang));
-      return;
-    }
-    if (!nearestCenter) {
-      toast.error("Please select your nearest Jaxtina center.");
+    if (!validate()) {
+      toast.error(lang === "vi" ? "Vui lòng kiểm tra lại thông tin." : "Please check your information.");
       return;
     }
 
     setSaving(true);
     try {
       const supabase = createBrowserClient();
+      const ageNum = parseInt(age, 10);
 
       // 1. Save profile fields — upsert handles both missing and existing rows
       const { error: profileErr } = await supabase
@@ -137,10 +146,12 @@ export default function OnboardingPage() {
             <CardDescription>{user.email}</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSave} className="space-y-4">
+            <form onSubmit={handleSave} className="space-y-5">
               {/* Age */}
               <div className="space-y-1">
-                <Label htmlFor="age">{t("onboarding", "age", lang)} *</Label>
+                <Label htmlFor="age" className={errors.age ? "text-red-500" : ""}>
+                  {t("onboarding", "age", lang)} *
+                </Label>
                 <Input
                   id="age"
                   type="number"
@@ -148,20 +159,28 @@ export default function OnboardingPage() {
                   max={70}
                   placeholder="22"
                   value={age}
-                  onChange={(e) => setAge(e.target.value)}
+                  onChange={(e) => {
+                    setAge(e.target.value);
+                    if (errors.age) setErrors(prev => ({ ...prev, age: "" }));
+                  }}
                   disabled={saving}
+                  className={errors.age ? "border-red-500 focus-visible:ring-red-500" : ""}
                 />
+                {errors.age && <p className="text-[10px] font-bold text-red-500 mt-1 uppercase tracking-tight">{errors.age}</p>}
               </div>
 
               {/* City */}
               <div className="space-y-1">
-                <Label className="flex items-center gap-1">
+                <Label className={`flex items-center gap-1 ${errors.city ? "text-red-500" : ""}`}>
                   <MapPin className="h-3.5 w-3.5" /> {t("onboarding", "city", lang)} *
                 </Label>
                 <select
-                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 transition-all text-gray-600"
+                  className={`w-full p-3 bg-gray-50 border rounded-xl appearance-none focus:outline-none focus:ring-2 transition-all text-gray-600 ${errors.city ? "border-red-500 focus:ring-red-500" : "border-gray-200 focus:ring-red-500"}`}
                   value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    if (errors.city) setErrors(prev => ({ ...prev, city: "" }));
+                  }}
                   disabled={saving}
                   required
                 >
@@ -172,33 +191,42 @@ export default function OnboardingPage() {
                     <option key={p} value={p}>{p}</option>
                   ))}
                 </select>
+                {errors.city && <p className="text-[10px] font-bold text-red-500 mt-1 uppercase tracking-tight">{errors.city}</p>}
               </div>
 
               {/* Phone */}
               <div className="space-y-1">
-                <Label className="flex items-center gap-1">
+                <Label className={`flex items-center gap-1 ${errors.phone ? "text-red-500" : ""}`}>
                   <Phone className="h-3.5 w-3.5" /> {t("onboarding", "phone", lang)} *
                 </Label>
                 <Input
                   placeholder={t("onboarding", "phonePlaceholder", lang)}
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    if (errors.phone) setErrors(prev => ({ ...prev, phone: "" }));
+                  }}
                   disabled={saving}
+                  className={errors.phone ? "border-red-500 focus-visible:ring-red-500" : ""}
                 />
+                {errors.phone && <p className="text-[10px] font-bold text-red-500 mt-1 uppercase tracking-tight">{errors.phone}</p>}
               </div>
 
               {/* Nearest Center */}
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+              <div className="flex flex-col gap-1">
+                <label className={`flex items-center gap-2 text-sm font-bold ${errors.nearestCenter ? "text-red-500" : "text-gray-700"}`}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                   Nearest Center *
                 </label>
                 <select
-                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 transition-all text-gray-600"
+                  className={`w-full p-3 bg-gray-50 border rounded-xl appearance-none focus:outline-none focus:ring-2 transition-all text-gray-600 ${errors.nearestCenter ? "border-red-500 focus:ring-red-500" : "border-gray-200 focus:ring-red-500"}`}
                   value={nearestCenter}
-                  onChange={(e) => setNearestCenter(e.target.value)}
+                  onChange={(e) => {
+                    setNearestCenter(e.target.value);
+                    if (errors.nearestCenter) setErrors(prev => ({ ...prev, nearestCenter: "" }));
+                  }}
                   disabled={saving}
                   required
                 >
@@ -211,6 +239,7 @@ export default function OnboardingPage() {
                   <option>Jaxtina Gò Vấp, 12 Đường Số 12, Cityland Park Hills, P10, Quận Gò Vấp, TP.HCM</option>
                   <option>Jaxtina Nguyễn Văn Cừ, 60-62 Nguyễn Văn Cừ, Bồ Đề, Long Biên</option>
                 </select>
+                {errors.nearestCenter && <p className="text-[10px] font-bold text-red-500 mt-1 uppercase tracking-tight">{errors.nearestCenter}</p>}
               </div>
 
               {/* Current Writing Band */}
