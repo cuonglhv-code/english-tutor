@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createBrowserClient } from "@/lib/supabase";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { ArrowLeft } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────
 interface Question {
@@ -132,12 +134,12 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          <div className="grid grid-cols-12 text-xs font-black text-gray-400 uppercase tracking-wide px-4 py-3 border-b border-gray-100">
+          <div className="grid grid-cols-12 text-[10px] sm:text-xs font-black text-gray-400 uppercase tracking-wide px-4 py-3 border-b border-gray-100 italic">
             <div className="col-span-1">{dict.quiz.leaderboard.rank}</div>
-            <div className="col-span-4">{dict.quiz.leaderboard.name}</div>
+            <div className="col-span-4 sm:col-span-4">{dict.quiz.leaderboard.name}</div>
             <div className="col-span-3 text-center">{dict.quiz.leaderboard.score}</div>
-            <div className="col-span-2 text-center">{dict.quiz.leaderboard.time}</div>
-            <div className="col-span-2 text-center">{dict.quiz.leaderboard.date}</div>
+            <div className="col-span-4 sm:col-span-2 text-center">{dict.quiz.leaderboard.time}</div>
+            <div className="hidden sm:block col-span-2 text-center">{dict.quiz.leaderboard.date}</div>
           </div>
 
           {loading ? (
@@ -160,10 +162,10 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
                     <div className="col-span-1 font-black text-lg">
                       {i < 3 ? ["🥇", "🥈", "🥉"][i] : <span className="text-gray-400 text-xs">{i + 1}</span>}
                     </div>
-                    <div className="col-span-4 font-bold text-gray-800 truncate">{r.name}</div>
+                    <div className="col-span-4 font-bold text-gray-800 truncate pr-2 text-xs sm:text-sm">{r.name}</div>
                     <div className="col-span-3 text-center">
                       <span
-                        className={`font-black px-2 py-0.5 rounded-full text-xs
+                        className={`font-black px-2 py-0.5 rounded-full text-[10px] sm:text-xs
                         ${r.score === r.total
                           ? "bg-green-100 text-green-700"
                           : r.score / r.total >= 0.6
@@ -173,8 +175,8 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
                         {r.score}/{r.total}
                       </span>
                     </div>
-                    <div className="col-span-2 text-center text-gray-500 font-semibold text-xs">⏱ {fmt(r.time)}</div>
-                    <div className="col-span-2 text-center text-gray-400 text-xs flex items-center justify-center gap-1">
+                    <div className="col-span-4 sm:col-span-2 text-center text-gray-500 font-semibold text-[10px] sm:text-xs">⏱ {fmt(r.time)}</div>
+                    <div className="hidden sm:flex col-span-2 text-center text-gray-400 text-xs items-center justify-center gap-1">
                       {r.date}
                       {r.history.length > 0 && (
                         <span className="text-purple-400">{expandedId === r.id ? "▲" : "▼"}</span>
@@ -481,9 +483,17 @@ Respond ONLY with valid JSON, no markdown:
             <p className="text-white/80 mt-1">{dict.quiz.subtitle}</p>
           </div>
 
+          <Link
+            href={`/${lang}/experience`}
+            className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full bg-white/10 border border-purple-300/20 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/20 hover:border-purple-300/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all group"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+            {lang === 'vi' ? 'Quay lại' : 'Back to Experience'}
+          </Link>
+
           <button
             onClick={() => setShowLb(true)}
-            className="btn-pop w-full mb-4 py-3 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-lg transition-all flex items-center justify-center gap-2"
+            className="btn-pop w-full mb-8 py-3.5 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-lg transition-all flex items-center justify-center gap-2"
           >
             {dict.quiz.viewLeaderboard}
           </button>
@@ -499,31 +509,31 @@ Respond ONLY with valid JSON, no markdown:
             />
 
             <h2 className="text-white font-black text-xl mb-3">{dict.quiz.pickTopics}</h2>
-            <div className="grid grid-cols-3 gap-2 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-8">
               {CATEGORIES.map((c) => (
                 <button
                   key={c.id}
                   onClick={() => toggleCat(c.id)}
-                  className={`btn-pop py-2 px-2 rounded-2xl font-bold text-sm transition-all duration-150 border-2 flex items-center gap-1.5
+                  className={`btn-pop py-3 px-3 rounded-2xl font-bold text-[13px] transition-all duration-150 border-2 flex items-center gap-2
                   ${cats.includes(c.id)
-                      ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
+                      ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-[1.03] shadow-lg"
                       : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
                 >
-                  <span>{c.emoji}</span>
+                  <span className="text-base shrink-0">{c.emoji}</span>
                   <span className="truncate">{c.label}</span>
                 </button>
               ))}
             </div>
 
             <h2 className="text-white font-black text-xl mb-3">{dict.quiz.difficulty}</h2>
-            <div className="flex gap-3 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 mb-8">
               {Object.entries(DIFF).map(([k, v]) => (
                 <button
                   key={k}
                   onClick={() => setDiff(k)}
-                  className={`btn-pop flex-1 py-3 rounded-2xl font-black text-sm transition-all border-2
+                  className={`btn-pop flex-1 py-3.5 rounded-2xl font-black text-sm transition-all border-2
                   ${diff === k
-                      ? `bg-gradient-to-r ${v.color} text-white border-white/40 scale-105 shadow-lg`
+                      ? `bg-gradient-to-r ${v.color} text-white border-white/40 scale-[1.03] shadow-lg`
                       : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
                 >
                   {v.emoji} {v.label}
@@ -532,14 +542,14 @@ Respond ONLY with valid JSON, no markdown:
             </div>
 
             <h2 className="text-white font-black text-xl mb-3">{dict.quiz.questionCount}</h2>
-            <div className="flex gap-3 mb-8">
+            <div className="grid grid-cols-2 sm:flex sm:flex-row gap-3 mb-10">
               {[5, 10, 15, 20].map((n) => (
                 <button
                   key={n}
                   onClick={() => setNumQ(n)}
-                  className={`btn-pop flex-1 py-3 rounded-2xl font-black text-lg transition-all border-2
+                  className={`btn-pop flex-1 py-4 rounded-2xl font-black text-lg transition-all border-2
                   ${numQ === n
-                      ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
+                      ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-[1.03] shadow-lg"
                       : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
                 >
                   {n}
