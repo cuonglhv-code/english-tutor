@@ -183,14 +183,14 @@ export function Navbar() {
       <div className="mx-auto max-w-5xl flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2.5">
           <JaxtinaMark />
-          <div className="flex flex-col leading-none">
+          <div className="flex flex-col leading-none shrink-0 min-w-0">
             <span className="font-black text-base tracking-tight text-foreground">
               Jaxtina
               <span className="ml-1.5 rounded bg-jaxtina-blue px-1 py-px text-[9px] font-bold text-white align-middle">
                 ENGLISH
               </span>
             </span>
-            <span className="text-[11px] text-muted-foreground font-medium -mt-0.5">
+            <span className="text-[11px] text-muted-foreground font-medium -mt-0.5 truncate whitespace-nowrap">
               IELTS Examiner
             </span>
           </div>
@@ -246,21 +246,21 @@ export function Navbar() {
               </div>
               <Link
                 href="/writing-101"
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
               >
                 <BookOpen className="h-4 w-4" />
                 <span className="hidden sm:inline">{t("nav", "writing101", lang)}</span>
               </Link>
               <Link
                 href="/courses"
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
               >
                 <BookOpen className="h-4 w-4" />
                 <span className="hidden sm:inline">{t("nav", "courses", lang)}</span>
               </Link>
               <Link
                 href="/placement"
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-jaxtina-blue hover:bg-jaxtina-blue/10 transition-colors"
+                className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-jaxtina-blue hover:bg-jaxtina-blue/10 transition-colors"
               >
                 <ClipboardList className="h-4 w-4" />
                 <span className="hidden sm:inline">{t("nav", "placement", lang)}</span>
@@ -280,7 +280,7 @@ export function Navbar() {
               {role === "admin" && (
                 <Link
                   href="/admin/dashboard"
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold text-jaxtina-blue hover:bg-jaxtina-blue/10 transition-colors"
+                  className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold text-jaxtina-blue hover:bg-jaxtina-blue/10 transition-colors"
                 >
                   <ShieldCheck className="h-4 w-4" />
                   <span className="hidden sm:inline">Admin</span>
@@ -374,7 +374,7 @@ export function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+              className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
             >
               <LogIn className="h-4 w-4" />
               <span className="hidden sm:inline">{t("nav", "login", lang)}</span>
@@ -382,7 +382,9 @@ export function Navbar() {
           )}
 
           <LangToggle lang={lang} setLang={setLang} />
-          <DarkModeToggle />
+          <span className="hidden xs:inline-flex">
+            <DarkModeToggle />
+          </span>
 
           {/* Mobile Menu Toggle */}
           <button
@@ -410,10 +412,10 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="sm:hidden fixed inset-0 top-16 z-50 bg-background/95 backdrop-blur-lg"
+            className="sm:hidden fixed inset-x-0 top-[57px] z-50 bg-background border-t border-border shadow-xl overflow-y-auto max-h-[calc(100vh-57px)] pb-[env(safe-area-inset-bottom,16px)]"
           >
             <motion.div 
-              className="flex flex-col p-4 gap-4 overflow-y-auto max-h-[calc(100vh-64px)]"
+              className="flex flex-col p-4 gap-4"
               initial="closed"
               animate="open"
               variants={{

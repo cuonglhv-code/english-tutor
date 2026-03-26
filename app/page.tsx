@@ -127,25 +127,29 @@ export default function HomePage() {
         </motion.div>
 
         <div className="mb-6">
-          <div className="flex justify-between text-xs font-medium mb-2">
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide w-full no-scrollbar">
             {STEPS.map((s, i) => {
               const isActive = i === step;
               const isDone = i < step;
               return (
-                <span
+                <div
                   key={s}
                   className={`
-                    ${isActive ? "text-jaxtina-red font-bold" : isDone ? "text-jaxtina-blue" : "text-muted-foreground"}
-                    ${!isActive && "hidden sm:inline"}
+                    flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs sm:px-4 sm:py-1.5 sm:text-sm
+                    font-semibold border transition-all min-w-0 shrink-0 truncate max-w-[35vw] sm:max-w-none
+                    ${isActive ? "bg-jaxtina-red text-white border-jaxtina-red shadow-sm" : ""}
+                    ${isDone ? "text-muted-foreground bg-muted/30 border-border" : "border-border bg-card"}
                   `}
                 >
-                  {isDone ? "✓ " : ""}
-                  {s}
-                </span>
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] border border-current font-black">
+                    {isDone ? "✓" : i + 1}
+                  </span>
+                  <span className="truncate">{s}</span>
+                </div>
               );
             })}
           </div>
-          <Progress value={progress} />
+          <Progress value={progress} className="h-1.5 mt-2" />
         </div>
 
         <AnimatePresence mode="wait">

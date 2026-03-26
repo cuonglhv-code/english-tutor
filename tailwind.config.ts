@@ -38,6 +38,9 @@ const config: Config = {
         xl: "16px",
         "2xl": "20px",
       },
+      screens: {
+        xs: "375px",
+      },
       boxShadow: {
         card: "0 4px 24px 0 rgba(0,0,0,0.08)",
         "card-hover": "0 8px 32px 0 rgba(0,0,0,0.14)",
