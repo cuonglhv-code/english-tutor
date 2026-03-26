@@ -7,6 +7,7 @@ export const en = {
     dashboard: "Dashboard",
     login: "Log in",
     logout: "Log out",
+    quiz: "Quiz",
   },
   landing: {
     heroBadge: "AI-Powered Academic Precision",
@@ -31,8 +32,8 @@ export const en = {
     cardTutorDesc: "Instant academic feedback, grammar precision, and personalized study paths.",
     cardTutorBtn: "Start Masterclass",
     cardAssessmentTitle: "Quiz",
-    cardAssessmentDesc: "Scientific diagnostic to pinpoint your current band score and curriculum gaps.",
-    cardAssessmentBtn: "Begin Quiz",
+    cardAssessmentDesc: "IELTS precision diagnostic to benchmark your current score and curricular progress.",
+    cardAssessmentBtn: "Begin Quiz →",
     cardVocabTitle: "Vocabulary",
     cardVocabDesc: "Master academic idioms using SRS logic and intelligent repetition algorithms.",
     cardVocabBtn: "Train Memory",
@@ -107,6 +108,71 @@ export const en = {
     start: "Begin Practice →",
     topic: "Topic",
     level: "Complexity"
+  },
+  quiz: {
+    title: "Jaxtina Quiz",
+    subtitle: "Test your knowledge — English, Science, Vietnam & more",
+    viewLeaderboard: "🏆 View Leaderboard",
+    yourName: "✏️ Your Name",
+    namePlaceholder: "Enter your name...",
+    pickTopics: "🎯 Pick your topics",
+    difficulty: "⚡ Difficulty",
+    questionCount: "🔢 How many questions?",
+    letsGo: "🚀 Let's Go!",
+    loading: "Loading your questions... 📚",
+    stats: {
+      question: "Q",
+      score: "Score",
+      time: "Time",
+      streak: "Streak"
+    },
+    gameplay: {
+      checkAnswer: "✅ Check Answer",
+      nextQuestion: "➡️ Next Question",
+      seeResults: "🏁 See Results",
+      pickFirst: "Pick an answer first! 👆",
+      correct: "Correct!",
+      wrong: "Wrong!"
+    },
+    results: {
+      genius: "Genius level!",
+      great: "Great effort!",
+      notBad: "Not bad!",
+      keepStudying: "Keep studying!",
+      playAgain: "🔄 Play Again",
+      leaderboard: "🏆 Leaderboard"
+    },
+    leaderboard: {
+      title: "🏆 Leaderboard",
+      back: "← Back",
+      top10: "Top 10 per group",
+      noScores: "No scores yet — be the first!",
+      history: "📝 Test History",
+      rank: "#",
+      name: "Name",
+      score: "Score",
+      time: "Time",
+      date: "Date"
+    },
+    categories: {
+      Science: "Science",
+      History: "History",
+      Geography: "Geography",
+      Sports: "Sports",
+      Movies: "Movies & TV",
+      Music: "Music",
+      Literature: "Literature",
+      Technology: "Technology",
+      Animals: "Animals",
+      Space: "Space",
+      Math: "Math",
+      Vietnam: "About Vietnam"
+    },
+    diff: {
+      easy: "Easy",
+      medium: "Medium",
+      hard: "Hard"
+    }
   }
 };
 

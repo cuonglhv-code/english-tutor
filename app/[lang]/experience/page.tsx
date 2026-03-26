@@ -16,6 +16,7 @@ export default function ExperiencePage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '' })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [quizCount, setQuizCount] = useState<number | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -38,6 +39,18 @@ export default function ExperiencePage() {
       setIsLoading(false)
     }
     init()
+  }, [])
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      const supabase = createBrowserClient()
+      const { count } = await supabase
+        .from('quiz_questions')
+        .select('*', { count: 'exact', head: true })
+        .eq('active', true)
+      setQuizCount(count)
+    }
+    fetchCount()
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -178,7 +191,7 @@ export default function ExperiencePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <ExperienceCard 
-            href="/tutor"
+            href={`/${lang}/tutor`}
             icon={<Layout className="w-10 h-10 text-primary" />}
             title={dict.landing.cardTutorTitle}
             desc={dict.landing.cardTutorDesc}
@@ -187,16 +200,16 @@ export default function ExperiencePage() {
             accent="primary"
           />
           <ExperienceCard 
-            href="/placement"
+            href={`/${lang}/quiz`}
             icon={<Award className="w-10 h-10 text-secondary" />}
             title={dict.landing.cardAssessmentTitle}
             desc={dict.landing.cardAssessmentDesc}
             btnText={dict.landing.cardAssessmentBtn}
-            variants={['CEFR Integrated', 'Skill Radar Chart']}
+            variants={[`${quizCount || '350+'} Questions`, 'Global Leaderboard']}
             accent="secondary"
           />
           <ExperienceCard 
-            href="/vocabulary-challenge"
+            href={`/${lang}/vocabulary-challenge`}
             icon={<TrendingUp className="w-10 h-10 text-on-surface-variant/40" />}
             title={dict.landing.cardVocabTitle}
             desc={dict.landing.cardVocabDesc}

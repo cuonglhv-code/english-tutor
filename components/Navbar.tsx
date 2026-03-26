@@ -245,6 +245,13 @@ export function Navbar() {
           )}
 
           <Link
+            href={`/${lang}/quiz`}
+            className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#41B883] hover:bg-[#41B883]/10 transition-colors"
+          >
+            <Gamepad2 className="h-4 w-4" />
+            <span className="hidden sm:inline">{dict.nav.quiz}</span>
+          </Link>
+          <Link
             href={`/${lang}/experience`}
             className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-secondary hover:bg-secondary/10 transition-colors"
           >
@@ -525,6 +532,21 @@ export function Navbar() {
                 className="text-xs font-bold text-muted-foreground px-2 pt-2 uppercase tracking-wider"
               >
                 {lang === "vi" ? "Dịch vụ" : "Services"}
+              </motion.div>
+              <motion.div 
+                variants={{
+                  open: { opacity: 1, x: 0 },
+                  closed: { opacity: 0, x: -10 }
+                }}
+              >
+                <Link
+                  href={`/${lang}/quiz`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+                >
+                  <Gamepad2 className="h-5 w-5 text-[#41B883]" />
+                  <span>{dict.nav.quiz}</span>
+                </Link>
               </motion.div>
               <motion.div 
                 variants={{

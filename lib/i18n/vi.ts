@@ -9,6 +9,7 @@ export const vi: Dictionary = {
     dashboard: "Tổng quan",
     login: "Đăng nhập",
     logout: "Đăng xuất",
+    quiz: "Trắc nghiệm",
   },
   landing: {
     heroBadge: "AI-Powered Academic Precision",
@@ -32,9 +33,9 @@ export const vi: Dictionary = {
     cardTutorTitle: "AI Tutor",
     cardTutorDesc: "Phản hồi học thuật tức thì, chính xác về ngữ pháp và lộ trình học cá nhân hóa.",
     cardTutorBtn: "Bắt đầu masterclass",
-    cardAssessmentTitle: "Quiz",
+    cardAssessmentTitle: "Trắc nghiệm",
     cardAssessmentDesc: "Chẩn đoán khoa học để xác định band điểm hiện tại và các lỗ hổng kiến thức.",
-    cardAssessmentBtn: "Bắt đầu Quiz",
+    cardAssessmentBtn: "Vào thi ngay →",
     cardVocabTitle: "Từ vựng",
     cardVocabDesc: "Làm chủ các thành ngữ học thuật bằng SRS logic và thuật toán lặp lại thông minh.",
     cardVocabBtn: "Luyện trí nhớ",
@@ -109,5 +110,70 @@ export const vi: Dictionary = {
     start: "Bắt đầu luyện tập →",
     topic: "Chủ đề",
     level: "Độ khó"
+  },
+  quiz: {
+    title: "Trắc nghiệm Jaxtina",
+    subtitle: "Kiểm tra kiến thức — Tiếng Anh, Khoa học, Việt Nam & hơn thế nữa",
+    viewLeaderboard: "🏆 Xem Bảng xếp hạng",
+    yourName: "✏️ Tên của bạn",
+    namePlaceholder: "Nhập tên của bạn...",
+    pickTopics: "🎯 Chọn chủ đề",
+    difficulty: "⚡ Độ khó",
+    questionCount: "🔢 Số lượng câu hỏi?",
+    letsGo: "🚀 Bắt đầu!",
+    loading: "Đang tải câu hỏi... 📚",
+    stats: {
+      question: "Câu",
+      score: "Điểm",
+      time: "Thời gian",
+      streak: "Chuỗi"
+    },
+    gameplay: {
+      checkAnswer: "✅ Kiểm tra",
+      nextQuestion: "➡️ Câu tiếp theo",
+      seeResults: "🏁 Xem kết quả",
+      pickFirst: "Vui lòng chọn đáp án! 👆",
+      correct: "Chính xác!",
+      wrong: "Sai rồi!"
+    },
+    results: {
+      genius: "Thiên tài!",
+      great: "Rất tốt!",
+      notBad: "Không tệ!",
+      keepStudying: "Hãy tiếp tục cố gắng!",
+      playAgain: "🔄 Chơi lại",
+      leaderboard: "🏆 Bảng xếp hạng"
+    },
+    leaderboard: {
+      title: "🏆 Bảng xếp hạng",
+      back: "← Quay lại",
+      top10: "Top 10 mỗi nhóm",
+      noScores: "Chưa có điểm — hãy là người đầu tiên!",
+      history: "📝 Lịch sử làm bài",
+      rank: "#",
+      name: "Tên",
+      score: "Điểm",
+      time: "Thời gian",
+      date: "Ngày"
+    },
+    categories: {
+      Science: "Khoa học",
+      History: "Lịch sử",
+      Geography: "Địa lý",
+      Sports: "Thể thao",
+      Movies: "Phim & TV",
+      Music: "Âm nhạc",
+      Literature: "Văn học",
+      Technology: "Công nghệ",
+      Animals: "Động vật",
+      Space: "Vũ trụ",
+      Math: "Toán học",
+      Vietnam: "Về Việt Nam"
+    },
+    diff: {
+      easy: "Dễ",
+      medium: "Trung bình",
+      hard: "Khó"
+    }
   }
 };

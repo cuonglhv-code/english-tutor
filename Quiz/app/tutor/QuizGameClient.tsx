@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createBrowserClient } from "@/lib/supabase";
-import { useTranslation } from "@/lib/i18n/useTranslation";
 
 // ─── Types ────────────────────────────────────────────────────────────
 interface Question {
@@ -23,6 +22,30 @@ interface LeaderboardEntry {
   date: string;
   history: { question: string; options: string[]; correctAnswer: number; chosen: number; correct: boolean }[];
 }
+
+// ─── Constants ────────────────────────────────────────────────────────
+const CATEGORIES = [
+  { id: "Science", label: "Science", emoji: "🔬" },
+  { id: "History", label: "History", emoji: "🏛️" },
+  { id: "Geography", label: "Geography", emoji: "🌏" },
+  { id: "Sports", label: "Sports", emoji: "⚽" },
+  { id: "Movies", label: "Movies & TV", emoji: "🎬" },
+  { id: "Music", label: "Music", emoji: "🎵" },
+  { id: "Literature", label: "Literature", emoji: "📖" },
+  { id: "Technology", label: "Technology", emoji: "💻" },
+  { id: "Animals", label: "Animals", emoji: "🐾" },
+  { id: "Space", label: "Space", emoji: "🚀" },
+  { id: "Math", label: "Math", emoji: "🔢" },
+  { id: "Vietnam", label: "About Vietnam", emoji: "🇻🇳" },
+];
+
+const DIFF: Record<string, { label: string; emoji: string; color: string }> = {
+  easy: { label: "Easy", emoji: "🌱", color: "from-green-400 to-emerald-500" },
+  medium: { label: "Medium", emoji: "🔥", color: "from-amber-400 to-orange-500" },
+  hard: { label: "Hard", emoji: "💀", color: "from-rose-500 to-pink-600" },
+};
+
+const MEDALS = ["🥇", "🥈", "🥉"];
 
 function fmt(s: number) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -64,17 +87,17 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
   );
 }
 
-function StreakBadge({ streak, label }: { streak: number; label: string }) {
+function StreakBadge({ streak }: { streak: number }) {
   if (streak < 2) return null;
   return (
     <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-black bg-orange-400 text-white animate-bounce">
-      🔥 {streak}× {label}!
+      🔥 {streak}× Streak!
     </div>
   );
 }
 
 // ─── Leaderboard ──────────────────────────────────────────────────────
-function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
+function Leaderboard({ onBack }: { onBack: () => void }) {
   const [tab, setTab] = useState(5);
   const [data, setData] = useState<Record<number, LeaderboardEntry[]>>({ 5: [], 10: [], 15: [], 20: [] });
   const [loading, setLoading] = useState(true);
@@ -109,10 +132,10 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
             onClick={onBack}
             className="bg-white/20 hover:bg-white/30 text-white rounded-2xl px-4 py-2 font-black transition-all"
           >
-            {dict.quiz.leaderboard.back}
+            ← Back
           </button>
-          <h1 className="text-3xl font-black text-white">{dict.quiz.leaderboard.title}</h1>
-          <span className="ml-auto text-white/60 text-xs font-semibold">{dict.quiz.leaderboard.top10}</span>
+          <h1 className="text-3xl font-black text-white">🏆 Leaderboard</h1>
+          <span className="ml-auto text-white/60 text-xs font-semibold">Top 10 per group</span>
         </div>
 
         <div className="flex gap-2 mb-4">
@@ -125,18 +148,18 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
                   ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
                   : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
             >
-              {n} {dict.quiz.stats.question}s
+              {n} Qs
             </button>
           ))}
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
           <div className="grid grid-cols-12 text-xs font-black text-gray-400 uppercase tracking-wide px-4 py-3 border-b border-gray-100">
-            <div className="col-span-1">{dict.quiz.leaderboard.rank}</div>
-            <div className="col-span-4">{dict.quiz.leaderboard.name}</div>
-            <div className="col-span-3 text-center">{dict.quiz.leaderboard.score}</div>
-            <div className="col-span-2 text-center">{dict.quiz.leaderboard.time}</div>
-            <div className="col-span-2 text-center">{dict.quiz.leaderboard.date}</div>
+            <div className="col-span-1">#</div>
+            <div className="col-span-4">Name</div>
+            <div className="col-span-3 text-center">Score</div>
+            <div className="col-span-2 text-center">Time</div>
+            <div className="col-span-2 text-center">Date</div>
           </div>
 
           {loading ? (
@@ -144,7 +167,7 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
           ) : rows.length === 0 ? (
             <div className="py-12 text-center">
               <div className="text-5xl mb-2">😴</div>
-              <p className="text-gray-400 font-semibold">{dict.quiz.leaderboard.noScores}</p>
+              <p className="text-gray-400 font-semibold">No scores yet — be the first!</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
@@ -157,7 +180,7 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
                     onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}
                   >
                     <div className="col-span-1 font-black text-lg">
-                      {i < 3 ? ["🥇", "🥈", "🥉"][i] : <span className="text-gray-400 text-xs">{i + 1}</span>}
+                      {i < 3 ? MEDALS[i] : <span className="text-gray-400 text-xs">{i + 1}</span>}
                     </div>
                     <div className="col-span-4 font-bold text-gray-800 truncate">{r.name}</div>
                     <div className="col-span-3 text-center">
@@ -184,7 +207,7 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
                   {/* Expandable history */}
                   {expandedId === r.id && r.history.length > 0 && (
                     <div className="bg-indigo-50 border-t border-indigo-100 px-4 py-3 space-y-2">
-                      <p className="text-xs font-black text-indigo-400 uppercase tracking-wide mb-2">{dict.quiz.leaderboard.history}</p>
+                      <p className="text-xs font-black text-indigo-400 uppercase tracking-wide mb-2">📝 Test History</p>
                       {r.history.map((h, hi) => (
                         <div
                           key={hi}
@@ -222,30 +245,7 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
 
 // ─── Main ─────────────────────────────────────────────────────────────
 export default function QuizGameClient() {
-  const { dict, lang } = useTranslation();
   const supabase = useMemo(() => createBrowserClient(), []);
-
-  const CATEGORIES = useMemo(() => [
-    { id: "Science", label: dict.quiz.categories.Science, emoji: "🔬" },
-    { id: "History", label: dict.quiz.categories.History, emoji: "🏛️" },
-    { id: "Geography", label: dict.quiz.categories.Geography, emoji: "🌏" },
-    { id: "Sports", label: dict.quiz.categories.Sports, emoji: "⚽" },
-    { id: "Movies", label: dict.quiz.categories.Movies, emoji: "🎬" },
-    { id: "Music", label: dict.quiz.categories.Music, emoji: "🎵" },
-    { id: "Literature", label: dict.quiz.categories.Literature, emoji: "📖" },
-    { id: "Technology", label: dict.quiz.categories.Technology, emoji: "💻" },
-    { id: "Animals", label: dict.quiz.categories.Animals, emoji: "🐾" },
-    { id: "Space", label: dict.quiz.categories.Space, emoji: "🚀" },
-    { id: "Math", label: dict.quiz.categories.Math, emoji: "🔢" },
-    { id: "Vietnam", label: dict.quiz.categories.Vietnam, emoji: "🇻🇳" },
-  ], [dict]);
-
-  const DIFF: Record<string, { label: string; emoji: string; color: string }> = useMemo(() => ({
-    easy: { label: dict.quiz.diff.easy, emoji: "🌱", color: "from-green-400 to-emerald-500" },
-    medium: { label: dict.quiz.diff.medium, emoji: "🔥", color: "from-amber-400 to-orange-500" },
-    hard: { label: dict.quiz.diff.hard, emoji: "💀", color: "from-rose-500 to-pink-600" },
-  }), [dict]);
-
   const [phase, setPhase] = useState<"setup" | "loading" | "playing" | "results">("setup");
   const [showLb, setShowLb] = useState(false);
   const [playerName, setPlayerName] = useState("");
@@ -340,7 +340,7 @@ export default function QuizGameClient() {
 
   const generate = async () => {
     if (cats.length === 0) {
-      alert(dict.quiz.gameplay.pickFirst);
+      alert("Pick at least one category! 🎯");
       return;
     }
     setPhase("loading");
@@ -369,7 +369,7 @@ export default function QuizGameClient() {
 Rules:
 - Engaging and appropriate for Vietnamese secondary school students
 - Include Vietnamese context where relevant
-- Language: English (questions and options)
+- Language: English
 - Difficulty: ${diff}
 - Categories: ${cats.join(", ")}
 - Generate exactly ${numQ} questions
@@ -380,7 +380,7 @@ Respond ONLY with valid JSON, no markdown:
     "options": ["A","B","C","D"],
     "correctAnswer": 0,
     "category": "...",
-    "funFact": "one short interesting fun fact about the answer (max 20 words in English)",
+    "funFact": "one short interesting fun fact about the answer (max 20 words)",
     "source": "a credible source e.g. 'NASA.gov', 'National Geographic', 'BBC Science', 'Khan Academy'"
   }]
 }`;
@@ -410,7 +410,7 @@ Respond ONLY with valid JSON, no markdown:
 
   const handleCheck = () => {
     if (chosen === null) {
-      alert(dict.quiz.gameplay.pickFirst);
+      alert("Pick an answer first! 👆");
       return;
     }
     if (!revealed) {
@@ -451,7 +451,7 @@ Respond ONLY with valid JSON, no markdown:
     setElapsed(0);
   };
 
-  if (showLb) return <Leaderboard onBack={() => setShowLb(false)} dict={dict} />;
+  if (showLb) return <Leaderboard onBack={() => setShowLb(false)} />;
 
   if (phase === "setup")
     return (
@@ -463,28 +463,28 @@ Respond ONLY with valid JSON, no markdown:
         <div className="max-w-2xl mx-auto">
           <div className="text-center py-6">
             <div className="text-5xl mb-1">🧠✨</div>
-            <h1 className="text-5xl font-black text-white drop-shadow-lg">{dict.quiz.title}</h1>
-            <p className="text-white/80 mt-1">{dict.quiz.subtitle}</p>
+            <h1 className="text-5xl font-black text-white drop-shadow-lg">Jaxtina Quiz</h1>
+            <p className="text-white/80 mt-1">Test your knowledge — English, Science, Vietnam & more</p>
           </div>
 
           <button
             onClick={() => setShowLb(true)}
             className="btn-pop w-full mb-4 py-3 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-lg transition-all flex items-center justify-center gap-2"
           >
-            {dict.quiz.viewLeaderboard}
+            🏆 View Leaderboard
           </button>
 
           <div className="bg-white/15 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30">
-            <h2 className="text-white font-black text-xl mb-2">{dict.quiz.yourName}</h2>
+            <h2 className="text-white font-black text-xl mb-2">✏️ Your name</h2>
             <input
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
-              placeholder={dict.quiz.namePlaceholder}
+              placeholder="Enter your name…"
               maxLength={24}
               className="w-full mb-6 px-4 py-3 rounded-2xl bg-white/90 text-gray-800 font-bold text-base placeholder-gray-400 outline-none focus:ring-2 focus:ring-yellow-300"
             />
 
-            <h2 className="text-white font-black text-xl mb-3">{dict.quiz.pickTopics}</h2>
+            <h2 className="text-white font-black text-xl mb-3">🎯 Pick your topics</h2>
             <div className="grid grid-cols-3 gap-2 mb-6">
               {CATEGORIES.map((c) => (
                 <button
@@ -501,7 +501,7 @@ Respond ONLY with valid JSON, no markdown:
               ))}
             </div>
 
-            <h2 className="text-white font-black text-xl mb-3">{dict.quiz.difficulty}</h2>
+            <h2 className="text-white font-black text-xl mb-3">⚡ Difficulty</h2>
             <div className="flex gap-3 mb-6">
               {Object.entries(DIFF).map(([k, v]) => (
                 <button
@@ -517,7 +517,7 @@ Respond ONLY with valid JSON, no markdown:
               ))}
             </div>
 
-            <h2 className="text-white font-black text-xl mb-3">{dict.quiz.questionCount}</h2>
+            <h2 className="text-white font-black text-xl mb-3">🔢 How many questions?</h2>
             <div className="flex gap-3 mb-8">
               {[5, 10, 15, 20].map((n) => (
                 <button
@@ -537,7 +537,7 @@ Respond ONLY with valid JSON, no markdown:
               onClick={generate}
               className="btn-pop w-full py-4 rounded-2xl font-black text-xl text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all hover:scale-[1.02]"
             >
-              {dict.quiz.letsGo}
+              🚀 Let&apos;s Go!
             </button>
           </div>
         </div>
@@ -549,7 +549,7 @@ Respond ONLY with valid JSON, no markdown:
       <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex flex-col items-center justify-center gap-6 p-10 rounded-3xl">
         <div className="text-7xl animate-bounce">🧠</div>
         <div className="w-16 h-16 border-4 border-yellow-300 border-t-transparent rounded-full animate-spin" />
-        <p className="text-white text-xl font-black animate-pulse">{dict.quiz.loading}</p>
+        <p className="text-white text-xl font-black animate-pulse">Loading your questions… 📚</p>
       </div>
     );
 
@@ -567,15 +567,15 @@ Respond ONLY with valid JSON, no markdown:
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <div className="bg-white/20 rounded-2xl px-3 py-2 text-white font-black text-sm">
-              {dict.quiz.stats.question} {qIdx + 1}/{questions.length}
+              Q {qIdx + 1}/{questions.length}
             </div>
-            <StreakBadge streak={streak} label={dict.quiz.stats.streak} />
+            <StreakBadge streak={streak} />
             <div className="flex gap-2">
               <div className={`rounded-2xl px-3 py-2 font-black text-sm ${elapsed >= 60 ? "bg-red-400 text-white animate-pulse" : "bg-white/20 text-white"}`}>
                 ⏱ {fmt(elapsed)}
               </div>
               <div className="bg-yellow-300 rounded-2xl px-3 py-2 text-gray-900 font-black text-sm">
-                ⭐ {dict.quiz.stats.score}: {score}
+                ⭐ {score}
               </div>
             </div>
           </div>
@@ -654,7 +654,7 @@ Respond ONLY with valid JSON, no markdown:
               onClick={handleCheck}
               className="w-full py-4 rounded-2xl font-black text-lg text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-lg transition-all hover:scale-[1.02]"
             >
-              {!revealed ? dict.quiz.gameplay.checkAnswer : qIdx + 1 === questions.length ? dict.quiz.gameplay.seeResults : dict.quiz.gameplay.nextQuestion}
+              {!revealed ? "✅ Check Answer" : qIdx + 1 === questions.length ? "🏁 See Results" : "➡️ Next Question"}
             </button>
           </div>
         </div>
@@ -665,10 +665,10 @@ Respond ONLY with valid JSON, no markdown:
   if (phase === "results") {
     const pct = Math.round((score / questions.length) * 100);
     const [medalEmoji, msg] =
-      pct >= 80 ? ["🏆", dict.quiz.results.genius] :
-        pct >= 60 ? ["🥈", dict.quiz.results.great] :
-          pct >= 40 ? ["🥉", dict.quiz.results.notBad] :
-            ["📚", dict.quiz.results.keepStudying];
+      pct >= 80 ? ["🏆", "Genius level!"] :
+        pct >= 60 ? ["🥈", "Great effort!"] :
+          pct >= 40 ? ["🥉", "Not bad!"] :
+            ["📚", "Keep studying!"];
     return (
       <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
         <Confetti active={pct >= 60} />
@@ -711,13 +711,13 @@ Respond ONLY with valid JSON, no markdown:
               onClick={() => setShowLb(true)}
               className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-[1.02]"
             >
-              {dict.quiz.results.leaderboard}
+              🏆 Leaderboard
             </button>
             <button
               onClick={reset}
               className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all hover:scale-[1.02]"
             >
-              {dict.quiz.results.playAgain}
+              🔄 Play Again
             </button>
           </div>
         </div>
