@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label";
 import { Upload, FileText, ChevronLeft, X, ImageIcon } from "lucide-react";
 import type { WizardData } from "@/types";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/lib/i18n";
 
 interface Props {
   data: Partial<WizardData>;
@@ -15,6 +17,7 @@ interface Props {
 }
 
 export function StepQuestion({ data, onUpdate, onNext, onBack }: Props) {
+  const { lang } = useLanguage();
   const [question, setQuestion] = useState(data.question || "");
   const [questionImage, setQuestionImage] = useState<string | null>(data.questionImage || null);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
@@ -64,7 +67,7 @@ export function StepQuestion({ data, onUpdate, onNext, onBack }: Props) {
 
   const handleNext = () => {
     if (!question.trim() || question.trim().length < 5) {
-      setError("Please enter the question (at least 5 characters).");
+      setError(t("question", "errorEmpty", lang));
       return;
     }
     onUpdate({ question, questionImage: questionImage ?? undefined });
@@ -76,9 +79,9 @@ export function StepQuestion({ data, onUpdate, onNext, onBack }: Props) {
       <CardHeader>
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-jaxtina-red" />
-          <CardTitle>Enter the Question</CardTitle>
+          <CardTitle>{t("question", "title", lang)}</CardTitle>
         </div>
-        <CardDescription>Upload the question image/file or type it directly below.</CardDescription>
+        <CardDescription>{t("question", "description", lang)}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Drop zone */}
@@ -136,16 +139,16 @@ export function StepQuestion({ data, onUpdate, onNext, onBack }: Props) {
           ) : (
             <>
               <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
-              <p className="text-sm font-medium">Drag &amp; drop or click to upload</p>
-              <p className="text-xs text-muted-foreground mt-1">Image, PDF, or .txt file</p>
+              <p className="text-sm font-medium">{t("question", "dropzone", lang)}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("question", "dropzoneHint", lang)}</p>
             </>
           )}
         </div>
 
-        <div className="text-center text-sm text-muted-foreground">— or type below —</div>
+        <div className="text-center text-sm text-muted-foreground">{t("question", "orType", lang)}</div>
 
         <div className="space-y-1">
-          <Label>Question Text *</Label>
+          <Label>{t("question", "questionLabel", lang)} *</Label>
           <Textarea
             value={question}
             onChange={(e) => { setQuestion(e.target.value); setError(""); }}
@@ -163,10 +166,10 @@ export function StepQuestion({ data, onUpdate, onNext, onBack }: Props) {
 
         <div className="flex gap-3">
           <Button variant="outline" onClick={onBack} className="flex-1">
-            <ChevronLeft className="h-4 w-4 mr-1" /> Back
+            <ChevronLeft className="h-4 w-4 mr-1" /> {t("question", "back", lang)}
           </Button>
           <Button onClick={handleNext} className="flex-1" size="lg">
-            Continue to Writing →
+            {t("question", "continue", lang)}
           </Button>
         </div>
       </CardContent>

@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { FileText, ChevronLeft } from "lucide-react";
 import type { WizardData } from "@/types";
+import { useLanguage } from "@/hooks/useLanguage";
+import { t } from "@/lib/i18n";
 
 interface Props {
   data: Partial<WizardData>;
@@ -27,6 +29,7 @@ const TASK_INFO = {
 };
 
 export function StepTask({ data, onUpdate, onNext, onBack }: Props) {
+  const { lang } = useLanguage();
   const [taskType, setTaskType] = useState<"academic" | "general">(data.taskType || "academic");
   const [taskNumber, setTaskNumber] = useState<"1" | "2">(data.taskNumber || "1");
 
@@ -40,13 +43,13 @@ export function StepTask({ data, onUpdate, onNext, onBack }: Props) {
       <CardHeader>
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-jaxtina-red" />
-          <CardTitle>Select Your Task</CardTitle>
+          <CardTitle>{t("task", "title", lang)}</CardTitle>
         </div>
-        <CardDescription>Choose your IELTS module and task type.</CardDescription>
+        <CardDescription>{t("task", "description", lang)}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-3">
-          <Label className="text-base font-semibold">IELTS Module</Label>
+          <Label className="text-base font-semibold">{t("task", "module", lang)}</Label>
           <RadioGroup
             value={taskType}
             onValueChange={(v) => setTaskType(v as "academic" | "general")}
@@ -68,8 +71,8 @@ export function StepTask({ data, onUpdate, onNext, onBack }: Props) {
                 </div>
                 <p className="text-xs text-muted-foreground pl-6">
                   {type === "academic"
-                    ? "University admission, professional registration"
-                    : "Secondary education, work experience abroad"}
+                    ? t("task", "academicDesc", lang)
+                    : t("task", "generalDesc", lang)}
                 </p>
               </Label>
             ))}
@@ -77,7 +80,7 @@ export function StepTask({ data, onUpdate, onNext, onBack }: Props) {
         </div>
 
         <div className="space-y-3">
-          <Label className="text-base font-semibold">Task Number</Label>
+          <Label className="text-base font-semibold">{t("task", "taskNumber", lang)}</Label>
           <RadioGroup
             value={taskNumber}
             onValueChange={(v) => setTaskNumber(v as "1" | "2")}
@@ -110,10 +113,10 @@ export function StepTask({ data, onUpdate, onNext, onBack }: Props) {
 
         <div className="flex gap-3">
           <Button variant="outline" onClick={onBack} className="flex-1">
-            <ChevronLeft className="h-4 w-4 mr-1" /> Back
+            <ChevronLeft className="h-4 w-4 mr-1" /> {t("task", "back", lang)}
           </Button>
           <Button onClick={handleNext} className="flex-1" size="lg">
-            Continue to Question →
+            {t("task", "continue", lang)}
           </Button>
         </div>
       </CardContent>
