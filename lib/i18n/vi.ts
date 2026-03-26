@@ -15,7 +15,7 @@ export const vi: Dictionary = {
     heroBadge: "AI-Powered Academic Precision",
     heroTitlePrefix: "Chinh phục IELTS với",
     heroTitleSuffix: "Độ chính xác tuyệt đối.",
-    heroDesc: "Trải nghiệm hệ sinh thái luyện thi IELTS tiên tiến nhất thế giới. Bắt đầu dùng thử miễn phí ngay hôm nay.",
+    heroDesc: "Trải nghiệm hệ sinh thái luyện thi IELTS tiên tiến nhất thế giới với Jaxtina Tutor — Powered by Claude AI.",
     startBtn: "Kiểm tra xếp lớp miễn phí",
     viewPathsBtn: "Xem lộ trình học",
     trustedBy: "Được tin tưởng bởi 12,000+ thí sinh",
@@ -64,8 +64,8 @@ export const vi: Dictionary = {
     categoryGrammarDesc: "Làm chủ các cấu trúc câu phức và các phương tiện liên kết logic.",
   },
   login: {
-    title: "Cổng đăng nhập Scholar",
-    desc: "Đăng nhập bằng thông tin học thuật để truy cập dashboard của bạn.",
+    title: "Cổng đăng nhập Jaxtina",
+    desc: "Đăng nhập bằng thông tin học thuật để truy cập Jaxtina Tutor.",
     emailLabel: "Email học thuật",
     passwordLabel: "Mật khẩu",
     loginBtn: "Xác thực truy cập",
@@ -86,7 +86,7 @@ export const vi: Dictionary = {
     timeRemaining: "Thời gian còn lại",
   },
   practiceLibrary: {
-    badge: "Kho lưu trữ Scholar",
+    badge: "Kho lưu trữ Jaxtina",
     title: "Thư viện",
     subtitle: "Luyện tập.",
     desc: "Bộ sưu tập các đề thi IELTS band cao, từ đề thi chính thức đến các thử thách học thuật.",

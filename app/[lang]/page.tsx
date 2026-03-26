@@ -93,7 +93,7 @@ export default function PracticePage() {
         >
           <div className="inline-flex items-center gap-3 rounded-full bg-primary/5 px-6 py-2 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-8 border border-primary/5">
             <GraduationCap className="h-4 w-4" />
-            Scholar Mastery Platform
+            Jaxtina Mastery Platform
           </div>
           <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter leading-[0.9] text-on-surface mb-10">
             {lang === 'vi' ? 'Nhận ' : 'Get Your '}

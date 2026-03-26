@@ -70,8 +70,8 @@ export default function ExperiencePage() {
             <AlertCircle className="w-4 h-4" />
             <p className="text-[11px] font-black uppercase tracking-widest leading-none">
               {lang === 'vi' 
-                ? 'Sử dụng Scholar AI như khách — không cần tài khoản. Tiến trình của bạn sẽ không được lưu.' 
-                : 'Try Scholar AI as a guest — no account required. Your progress won’t be saved.'}
+                ? 'Sử dụng Jaxtina Tutor như khách — không cần tài khoản. Tiến trình của bạn sẽ không được lưu.' 
+                : 'Try Jaxtina Tutor as a guest — no account required. Your progress won’t be saved.'}
             </p>
             <div className="h-3 w-px bg-primary/20 mx-2" />
             <Link href="/login" className="text-[11px] font-black uppercase underline underline-offset-4 hover:text-secondary transition-colors">

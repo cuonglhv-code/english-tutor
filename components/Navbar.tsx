@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare, User as UserIcon, Gamepad2, FileText, Menu, X } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,8 @@ export function Navbar() {
   const { user, role } = useUser();
   const { dict, lang, setLang } = useTranslation();
   const router = useRouter();
+  const pathname = usePathname();
+  const isLoginPage = pathname?.includes("/login");
   const [unread, setUnread] = useState(0);
   const channelRef = useRef<any>(null);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -163,11 +165,11 @@ export function Navbar() {
           <JaxtinaMark />
           <div className="flex flex-col leading-none shrink-0 min-w-0">
             <span className="font-display font-black text-xl tracking-tighter text-on-surface">
-              Scholar
-              <span className="text-primary ml-1">AI</span>
+              Jaxtina
+              <span className="text-primary ml-1">Tutor</span>
             </span>
-            <span className="text-[10px] text-on-surface-variant font-black uppercase tracking-[0.2em] -mt-1 opacity-60">
-              The Digital Mentor
+            <span className="text-[10px] text-on-surface-variant font-black uppercase tracking-[0.15em] -mt-1 opacity-60">
+              Powered by Claude AI
             </span>
           </div>
         </Link>
@@ -244,13 +246,15 @@ export function Navbar() {
             </>
           )}
 
-          <Link
-            href={`/${lang}/quiz`}
-            className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#41B883] hover:bg-[#41B883]/10 transition-colors"
-          >
-            <Gamepad2 className="h-4 w-4" />
-            <span className="hidden sm:inline">{dict.nav.quiz}</span>
-          </Link>
+          {!isLoginPage && (
+            <Link
+              href={`/${lang}/quiz`}
+              className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#41B883] hover:bg-[#41B883]/10 transition-colors"
+            >
+              <Gamepad2 className="h-4 w-4" />
+              <span className="hidden sm:inline">{dict.nav.quiz}</span>
+            </Link>
+          )}
           <Link
             href={`/${lang}/experience`}
             className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-secondary hover:bg-secondary/10 transition-colors"
@@ -533,21 +537,23 @@ export function Navbar() {
               >
                 {lang === "vi" ? "Dịch vụ" : "Services"}
               </motion.div>
-              <motion.div 
-                variants={{
-                  open: { opacity: 1, x: 0 },
-                  closed: { opacity: 0, x: -10 }
-                }}
-              >
-                <Link
-                  href={`/${lang}/quiz`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+              {!isLoginPage && (
+                <motion.div 
+                  variants={{
+                    open: { opacity: 1, x: 0 },
+                    closed: { opacity: 0, x: -10 }
+                  }}
                 >
-                  <Gamepad2 className="h-5 w-5 text-[#41B883]" />
-                  <span>{dict.nav.quiz}</span>
-                </Link>
-              </motion.div>
+                  <Link
+                    href={`/${lang}/quiz`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors"
+                  >
+                    <Gamepad2 className="h-5 w-5 text-[#41B883]" />
+                    <span>{dict.nav.quiz}</span>
+                  </Link>
+                </motion.div>
+              )}
               <motion.div 
                 variants={{
                   open: { opacity: 1, x: 0 },

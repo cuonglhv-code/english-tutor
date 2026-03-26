@@ -1,4 +1,4 @@
-# Design System: Jaxtina Scholar (Digital Mentor)
+# Design System: Jaxtina Tutor (Powered by Claude AI)
 
 ## 1. Color Palette
 | Token | Hex | Tailwind Class | Usage |
@@ -18,7 +18,7 @@
     - Weights: Medium (`font-medium`) or Regular (`font-normal`).
 - **Labels**: `Inter` (uppercase, tracked).
 
-## 3. The Digital Mentor Rules
+## 3. Powered by Claude AI Rules
 ### The "No-Line" Rule
 - **Standard**: Avoid `border` and `divide` utilities.
 - **Implementation**: Define boundaries using background shifts (e.g., a `bg-surface-container-low` container on a `bg-surface` background).

@@ -201,9 +201,9 @@ export default function WritingGuidePage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
           <div className="flex flex-col items-center md:items-start">
             <span className="font-display font-black text-2xl tracking-tighter text-on-surface">
-                Scholar<span className="text-primary italic">AI.</span>
+                Jaxtina<span className="text-primary italic">Tutor.</span>
             </span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-20 -mt-1">Digital Mentor</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-20 -mt-1">Powered by Claude AI</span>
           </div>
           <p className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant opacity-20 text-center md:text-left">
             © 2024 Jaxtina English Group. All rights reserved.

@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 import { i18n, type Locale } from "@/lib/i18n/i18n-config";
 
 export const metadata: Metadata = {
-  title: "IELTS Scholar | The Digital Mentor",
+  title: "Jaxtina Tutor | Powered by Claude AI",
   description: "AI-powered academic excellence for IELTS candidates worldwide.",
 };
 

@@ -13,7 +13,7 @@ export const en = {
     heroBadge: "AI-Powered Academic Precision",
     heroTitlePrefix: "Master IELTS with",
     heroTitleSuffix: "Clinical Accuracy.",
-    heroDesc: "Experience the world's most advanced IELTS preparation ecosystem. start your free trial today.",
+    heroDesc: "Experience the world's most advanced IELTS preparation ecosystem with Jaxtina Tutor — Powered by Claude AI.",
     startBtn: "Get Your Free Quiz",
     viewPathsBtn: "View Study Paths",
     trustedBy: "Trusted by 12,000+ candidates",
@@ -62,8 +62,8 @@ export const en = {
     categoryGrammarDesc: "Master complex sentence structures and logical cohesive devices.",
   },
   login: {
-    title: "Scholar Gateway",
-    desc: "Sign in with your academic credentials to access your dashboard.",
+    title: "Jaxtina Gateway",
+    desc: "Sign in with your academic credentials to access Jaxtina Tutor.",
     emailLabel: "Academic Email",
     passwordLabel: "Password",
     loginBtn: "Authorize Access",
@@ -84,7 +84,7 @@ export const en = {
     timeRemaining: "Time remaining",
   },
   practiceLibrary: {
-    badge: "Scholar Repository",
+    badge: "Jaxtina Repository",
     title: "Practice",
     subtitle: "Library.",
     desc: "Curated collection of high-band IELTS writing prompts, from official past-papers to academic simulations.",

@@ -202,7 +202,7 @@ export default function ResultsPage() {
         </div>
 
         <p className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant opacity-20 pt-12">
-            Automated Evaluation by Scholar AI Logic Hub v4.0.2
+            Automated Evaluation by Jaxtina Tutor AI Logic Hub v4.0.2
         </p>
       </div>
 
