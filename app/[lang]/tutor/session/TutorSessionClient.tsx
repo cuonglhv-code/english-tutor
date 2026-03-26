@@ -377,12 +377,13 @@ export default function TutorSessionClient() {
         if (saved) {
           try {
             const guest = JSON.parse(saved)
-            setUserId('guest-' + (guest.phone || guest.email))
+            setUserId('guest-' + (guest.phone || guest.email || 'anonymous'))
           } catch (e) {
-            router.replace('/login?next=/tutor')
+            setUserId('guest-anonymous-' + Date.now())
           }
         } else {
-          router.replace('/login?next=/tutor')
+          // Zero friction: start anonymous guest session
+          setUserId('guest-anonymous-' + Date.now())
         }
       }
     })
@@ -595,6 +596,12 @@ export default function TutorSessionClient() {
 
         {/* Header */}
         <div className="bg-white border-b border-gray-200 px-4 py-2.5 flex items-center flex-wrap gap-3 shadow-sm">
+          {userId.startsWith('guest-') && (
+            <div className="mr-4 px-3 py-1 bg-orange-50 border border-orange-200 rounded-full flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+              <span className="text-[10px] font-black text-orange-700 uppercase tracking-widest leading-none">Guest session · data not saved</span>
+            </div>
+          )}
           <button
             onClick={() => router.push('/tutor')}
             className="flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium"

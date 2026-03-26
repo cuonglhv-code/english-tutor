@@ -112,6 +112,7 @@ export const en = {
   quiz: {
     title: "Jaxtina Quiz",
     subtitle: "Test your knowledge — English, Science, Vietnam & more",
+    guest: "Guest",
     viewLeaderboard: "🏆 View Leaderboard",
     yourName: "✏️ Your Name",
     namePlaceholder: "Enter your name...",

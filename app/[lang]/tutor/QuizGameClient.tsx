@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@/lib/supabase";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
@@ -248,6 +249,8 @@ export default function QuizGameClient() {
 
   const [phase, setPhase] = useState<"setup" | "loading" | "playing" | "results">("setup");
   const [showLb, setShowLb] = useState(false);
+  const [userId, setUserId] = useState<string>('');
+  const router = useRouter();
   const [playerName, setPlayerName] = useState("");
   const [cats, setCats] = useState<string[]>([]);
   const [diff, setDiff] = useState("medium");
@@ -285,7 +288,7 @@ export default function QuizGameClient() {
       try {
         const { data: auth } = await supabase.auth.getUser();
         const user = auth.user;
-        if (!user) return;
+        if (!user) throw new Error('No user');
         const { data: profile } = await supabase
           .from("profiles")
           .select("full_name, display_name, email")
@@ -297,19 +300,30 @@ export default function QuizGameClient() {
           (profile as any)?.display_name ||
           (profile as any)?.email?.split("@")[0];
         if (derived && !playerName.trim()) setPlayerName(String(derived).trim().slice(0, 24));
+        setUserId(user.id);
       } catch {
-        // ignore
+        const saved = localStorage.getItem('jaxtina_guest')
+        if (saved) {
+          try {
+            const guestItems = JSON.parse(saved)
+            setUserId('guest-' + (guestItems.phone || guestItems.email || 'anonymous'))
+            if (guestItems.name && !playerName.trim()) setPlayerName(guestItems.name.slice(0, 24))
+          } catch {
+            setUserId('guest-anonymous-' + Date.now())
+          }
+        } else {
+          setUserId('guest-anonymous-' + Date.now())
+          setPlayerName(dict.quiz.guest || "Guest")
+        }
       }
     })();
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => { cancelled = true; };
+  }, [supabase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Save score + full test history to Supabase via API route when results screen appears
   useEffect(() => {
     if (phase === "results" && !savedRef.current && questions.length > 0) {
+      if (userId.startsWith('guest-')) return; // No persistence for guests
       savedRef.current = true;
       // Serialize history: include question text, options, correct+chosen index
       const historyPayload = history.map((h) => ({
@@ -706,6 +720,22 @@ Respond ONLY with valid JSON, no markdown:
             ))}
           </div>
 
+          {userId.startsWith('guest-') && (
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 text-center mb-6">
+              <p className="text-white text-sm font-black mb-4 uppercase tracking-widest leading-relaxed">
+                {lang === 'vi' 
+                  ? 'Bạn đang ở chế độ Khách. Tạo tài khoản để lưu kết quả và xem phân tích!' 
+                  : 'You’re in Guest Mode. Create a free account to save this and unlock full analytics.'}
+              </p>
+              <button
+                onClick={() => router.push(`/${lang}/register`)}
+                className="w-full py-4 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all"
+              >
+                {lang === 'vi' ? 'Tạo tài khoản Miễn phí' : 'Create Free Account'}
+              </button>
+            </div>
+          )}
+          
           <div className="flex gap-3">
             <button
               onClick={() => setShowLb(true)}

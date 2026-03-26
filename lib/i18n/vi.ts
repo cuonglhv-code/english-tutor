@@ -114,6 +114,7 @@ export const vi: Dictionary = {
   quiz: {
     title: "Trắc nghiệm Jaxtina",
     subtitle: "Kiểm tra kiến thức — Tiếng Anh, Khoa học, Việt Nam & hơn thế nữa",
+    guest: "Khách",
     viewLeaderboard: "🏆 Xem Bảng xếp hạng",
     yourName: "✏️ Tên của bạn",
     namePlaceholder: "Nhập tên của bạn...",
