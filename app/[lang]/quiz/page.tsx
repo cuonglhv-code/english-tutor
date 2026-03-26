@@ -11,11 +11,6 @@ export default function QuizPage() {
   const router = useRouter();
   const { user, loading } = useUser();
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) router.replace("/login?next=/quiz");
-  }, [loading, user, router]);
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
@@ -23,8 +18,6 @@ export default function QuizPage() {
       </div>
     );
   }
-
-  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
