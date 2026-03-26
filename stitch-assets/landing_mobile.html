@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IELTS Mentor - Master Writing with AI Precision</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-background": "#1a1c1c",
+              "surface-container-low": "#f3f3f3",
+              "tertiary-fixed": "#e2e2e2",
+              "surface-container": "#eeeeee",
+              "primary-fixed-dim": "#a5c8ff",
+              "primary-container": "#0075d6",
+              "outline": "#707785",
+              "surface-container-highest": "#e2e2e2",
+              "on-tertiary-fixed": "#1b1b1b",
+              "inverse-surface": "#2f3131",
+              "surface-tint": "#005faf",
+              "surface-variant": "#e2e2e2",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#001c3a",
+              "on-tertiary-container": "#fcfcfc",
+              "secondary-fixed": "#ffdad6",
+              "secondary": "#b7131d",
+              "on-secondary-container": "#fffbff",
+              "error": "#ba1a1a",
+              "inverse-on-surface": "#f1f1f1",
+              "surface": "#f9f9f9",
+              "on-tertiary-fixed-variant": "#474747",
+              "primary": "#005cab",
+              "error-container": "#ffdad6",
+              "on-primary-fixed-variant": "#004786",
+              "on-primary": "#ffffff",
+              "on-primary-container": "#fefcff",
+              "on-surface": "#1a1c1c",
+              "tertiary-container": "#747474",
+              "on-secondary-fixed-variant": "#930010",
+              "tertiary-fixed-dim": "#c6c6c6",
+              "inverse-primary": "#a5c8ff",
+              "outline-variant": "#c0c7d6",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "tertiary": "#5c5c5c",
+              "background": "#f9f9f9",
+              "surface-dim": "#dadada",
+              "primary-fixed": "#d4e3ff",
+              "surface-bright": "#f9f9f9",
+              "on-error": "#ffffff",
+              "surface-container-high": "#e8e8e8",
+              "secondary-fixed-dim": "#ffb3ac",
+              "on-surface-variant": "#404753",
+              "on-secondary-fixed": "#410003",
+              "secondary-container": "#db3232",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary/20">
+<!-- Top Navigation (Desktop Only via JSON shell layout logic) -->
+<nav class="hidden md:flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none font-['Plus_Jakarta_Sans'] antialiased fixed top-0 z-50">
+<div class="text-2xl font-bold tracking-tight text-blue-800 dark:text-blue-300">IELTS Mentor</div>
+<div class="flex gap-8">
+<a class="text-blue-700 dark:text-blue-400 font-bold border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Practice</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Writing 101</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Courses</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Placement Test</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors" href="#">Experience</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">language</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">account_circle</span>
+</div>
+</nav>
+<!-- Content Canvas -->
+<main class="pb-24 md:pt-24 min-h-screen">
+<!-- Hero Section -->
+<section class="px-6 pt-12 pb-16 md:px-12 md:py-32 flex flex-col items-center text-center max-w-4xl mx-auto">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-fixed text-on-primary-fixed text-sm font-semibold mb-8">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
+                New: AI Real-Time Analysis
+            </div>
+<h1 class="font-headline text-4xl md:text-7xl font-extrabold tracking-tight text-on-surface leading-tight mb-6">
+                Master IELTS Writing with <span class="text-primary italic">AI Precision</span>
+</h1>
+<p class="text-lg md:text-xl text-on-surface-variant mb-10 max-w-2xl leading-relaxed">
+                Unlock your potential with the Digital Mentor. Personalized feedback, instant grading, and data-driven learning paths designed for academic excellence.
+            </p>
+<div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+<button class="w-full md:px-8 py-4 bg-gradient-to-br from-secondary to-secondary-container text-white font-bold rounded-xl shadow-lg shadow-secondary/20 active:scale-95 transition-transform">
+                    Start Free Writing Test
+                </button>
+<button class="w-full md:px-8 py-4 bg-surface-container-lowest text-primary border border-outline-variant/30 font-bold rounded-xl active:scale-95 transition-transform">
+                    View Course Catalog
+                </button>
+</div>
+<!-- Progress Orbit (Specialized Component) -->
+<div class="mt-16 flex justify-center">
+<div class="relative w-32 h-32 md:w-40 md:h-40 rounded-full bg-surface-bright glass-effect flex items-center justify-center shadow-2xl">
+<svg class="absolute inset-0 w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="50%" cy="50%" fill="none" r="45%" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="50%" cy="50%" fill="none" r="45%" stroke="currentColor" stroke-dasharray="283" stroke-dashoffset="70" stroke-width="8"></circle>
+</svg>
+<div class="text-center">
+<span class="block font-headline text-2xl md:text-3xl font-bold">7.5</span>
+<span class="block text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Avg Band</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="px-6 py-12 bg-surface-container-low">
+<div class="max-w-screen-xl mx-auto">
+<h2 class="font-headline text-2xl md:text-4xl font-bold mb-12 text-center">Engineered for Results</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Feature 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="w-12 h-12 bg-primary-fixed rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary">instant_mix</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-3">Instant Grading</h3>
+<p class="text-on-surface-variant leading-relaxed">Submit your essay and receive a full band score breakdown across all four criteria in under 60 seconds.</p>
+</div>
+<!-- Feature 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="w-12 h-12 bg-secondary-fixed rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary">smart_toy</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-3">Smart Correction</h3>
+<p class="text-on-surface-variant leading-relaxed">Our AI highlights lexical errors and suggests academic alternatives to boost your vocabulary score instantly.</p>
+</div>
+<!-- Feature 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="w-12 h-12 bg-surface-container-highest rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-tertiary">analytics</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-3">Progress Orbit</h3>
+<p class="text-on-surface-variant leading-relaxed">Visualize your improvement trajectory with advanced data analytics and predictive scoring models.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Learning Paths -->
+<section class="px-6 py-20">
+<div class="max-w-screen-xl mx-auto">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="font-headline text-3xl md:text-5xl font-extrabold mb-4">Learning Paths</h2>
+<p class="text-on-surface-variant">Curated courses by certified examiners.</p>
+</div>
+<button class="hidden md:block text-primary font-bold hover:underline">Explore all courses</button>
+</div>
+<div class="flex flex-col gap-8">
+<!-- Featured Course Card -->
+<div class="group relative bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
+<div class="md:w-1/2 aspect-video md:aspect-auto relative overflow-hidden">
+<img alt="Academic Writing" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close-up of a high-end fountain pen resting on a handwritten manuscript with soft natural window lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs-6yq57-UyP20JVp5HIYiQjBP2HyBSORHgDPZbJFwHRI3QAIiTEK5_QibZnYe3uUUVm-Uzi3fWoeIxtCDaRb7LCQnKeno_89JWOoYYkg2jJQZv7c-MVW7b_2oyfL9-KEKigYcXvrcPG8P8teOkcX0Ff4mNdGuaF_-Ox4BvaSq9GuaTOKn92xwvFO7IX0qaAZKm88uLvRmoaJqSxZiCwayHY0SI0iksDVzKLFVcQIB6ySqZvxrdr4Z1TsYeN6EOUF7_G9doxgfYrg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden"></div>
+<div class="absolute bottom-4 left-4 md:hidden">
+<span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">Bestseller</span>
+</div>
+</div>
+<div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+<span class="hidden md:inline-block bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full self-start mb-6">Bestseller</span>
+<h3 class="font-headline text-2xl md:text-3xl font-bold mb-4">Mastering Academic Writing</h3>
+<p class="text-on-surface-variant mb-8 leading-relaxed">A comprehensive 8-week intensive focusing on complex sentence structures, cohesive devices, and high-level vocabulary for Task 1 &amp; 2.</p>
+<div class="flex items-center gap-6 mb-8 text-sm font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-primary text-lg">schedule</span> 12 Hours</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-primary text-lg">person</span> 2.4k Students</span>
+</div>
+<button class="bg-on-background text-white px-8 py-4 rounded-xl font-bold hover:bg-primary transition-colors self-start w-full md:w-auto">
+                                Enroll Now
+                            </button>
+</div>
+</div>
+<!-- Secondary Course Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm border border-outline-variant/10">
+<div class="flex gap-6 items-center">
+<div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Vocabulary" class="w-full h-full object-cover" data-alt="A leather-bound notebook with an open page and a minimalist wooden pencil on a white surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5zXVX9FWoY-3tSUHY-7NvrOGP3pfx-UwuOToBok8a9HWXKFDDSEe2QQF19z-BXine1J3AUMGXgXRIfM1k-DARLqLVuxljxoRvwZ5AGJoy_PCrEgGbMkp-v5r6Ct9DZSYUU1g_NUxZx5BWuCoZO0csnOFOuQmWRJ44P4re6Qjo_3-8-bKbQ_ONw0Ql3qMFTyPkyR5IXrThKGWO-UTRYgnv-6NWezZbTclb9QXKT6qk8Xq10yFt_g-fjh46LDrIUlqoRxq6bDltlu0"/>
+</div>
+<div>
+<h4 class="font-headline text-lg font-bold">Lexical Resource Intensive</h4>
+<p class="text-sm text-on-surface-variant">Focus on high-band synonyms and collocations.</p>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-6">
+<span class="font-headline text-xl font-bold">$49.00</span>
+<button class="bg-surface-container p-3 rounded-full hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Success Stories -->
+<section class="px-6 py-20 bg-primary overflow-hidden relative">
+<!-- Decorative Texture -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<svg height="100%" width="100%">
+<pattern height="20" id="dots" patternunits="userSpaceOnUse" width="20">
+<circle cx="2" cy="2" fill="#ffffff" r="1"></circle>
+</pattern>
+<rect fill="url(#dots)" height="100%" width="100%"></rect>
+</svg>
+</div>
+<div class="max-w-screen-xl mx-auto relative z-10">
+<h2 class="font-headline text-3xl md:text-5xl font-extrabold text-white mb-16 text-center">Global Success</h2>
+<div class="flex flex-col md:flex-row gap-8">
+<!-- Testimonial 1 -->
+<div class="bg-white/10 backdrop-blur-xl p-8 rounded-2xl text-white flex-1 border border-white/20">
+<div class="flex gap-1 mb-6 text-secondary-fixed">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-lg italic mb-8">"The AI feedback was spooky accurate. It caught grammar mistakes my previous tutor missed. Jumped from a 6.0 to 7.5 in just 3 weeks."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container overflow-hidden">
+<img alt="Student" class="w-full h-full object-cover" data-alt="Professional portrait of a young man smiling in a studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDubW_0kk9vumVYceYygOxWZJchWrQXMxBZoTHJaj4riPLk-8SAUgHWy-ab4jHta3vGk6qPlDJNRPfbOLddlV3E7BtZVLMexR66VhINHwwdaoci2x89f6ij6wySZvQ4vc0hbhhZpYXVSiotLKzbz_q5_jtw7o1WAmBYmBf_3SfFShANCT17g-qOz6VBg8SXXqGHgc-JYOuE5lJodqD7tnAe8ealuYl3bxhxgyQTfvtQAE8Zn_EYsGlBjduCRgqz1PU_BpYSrGTheYw"/>
+</div>
+<div>
+<p class="font-bold">Ahmed K.</p>
+<p class="text-xs opacity-70 uppercase tracking-widest">Achieved Band 7.5</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-white p-8 rounded-2xl text-on-surface flex-1 shadow-2xl">
+<div class="flex gap-1 mb-6 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-lg italic mb-8">"I struggled with Task 2 structure for months. The mentor's templates and personalized learning path made everything finally click."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container overflow-hidden">
+<img alt="Student" class="w-full h-full object-cover" data-alt="Close-up of a young woman with a joyful expression and blurred outdoor green background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV0QHk1fOk5N6dnYa5ZXy53svmlwn147MLAGQvhZCADSIm4uAgTuGm6t8ziFDnY5OOan1zEMshTcoPgHcj9u8DCOQYAqHd7LbG2krDyLDPao9V2Ygox6DgSAmm-PXxor9F9dbqD5Bix-OEBACKPlqTQ1CrZJPIk4vjMYMKWyRCT7077yJt7_6E5M6uFgqWr3CGGxRyijF7NQa_mpfYi7KxlkiQYBeOJYXsnJxXTmaiHStdCKjy3V6vu1qUKMVZxq2ZUJs7iMmNXT8"/>
+</div>
+<div>
+<p class="font-bold">Sofia L.</p>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest">Achieved Band 8.0</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter CTA -->
+<section class="px-6 py-20 bg-surface-container-lowest">
+<div class="max-w-screen-md mx-auto text-center">
+<h2 class="font-headline text-3xl font-bold mb-6">Stay Ahead of the Curve</h2>
+<p class="text-on-surface-variant mb-10">Get weekly IELTS tips, sample band 9 essays, and exclusive course discounts directly to your inbox.</p>
+<div class="flex flex-col gap-3">
+<input class="w-full px-6 py-4 bg-surface rounded-xl border-none ring-1 ring-outline-variant/30 focus:ring-2 focus:ring-primary transition-all text-center" placeholder="Enter your email address" type="email"/>
+<button class="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                        Subscribe for Tips
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only via JSON shell layout logic) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-safe pt-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50">
+<a class="flex flex-col items-center justify-center text-blue-700 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/30 rounded-xl px-3 py-1 scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">exercise</span>
+<span class="text-[10px] font-medium font-['Inter']">Practice</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:bg-slate-100 dark:active:bg-slate-800" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="text-[10px] font-medium font-['Inter']">Writing</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:bg-slate-100 dark:active:bg-slate-800" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="text-[10px] font-medium font-['Inter']">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:bg-slate-100 dark:active:bg-slate-800" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span class="text-[10px] font-medium font-['Inter']">Test</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:bg-slate-100 dark:active:bg-slate-800" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium font-['Inter']">Profile</span>
+</a>
+</nav>
+<!-- Mobile Header Logo (Anchor) -->
+<div class="md:hidden flex justify-between items-center px-6 py-4 bg-white/80 backdrop-blur-md sticky top-0 z-40">
+<div class="text-xl font-bold tracking-tight text-blue-800 font-headline">IELTS Mentor</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</div>
+</div>
+</body></html>
