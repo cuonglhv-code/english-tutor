@@ -12,8 +12,8 @@ export default function VocabularyChallengePage() {
         src="/vocabulary-game.html"
         className="w-full h-full border-0"
         title="Vocabulary Challenge"
-        // Ensure same-origin is allowed for local storage/SRS logic to work
-        sandbox="allow-scripts allow-same-origin allow-forms"
+        // Ensure same-origin and top-navigation are allowed for global navigation to work
+        sandbox="allow-scripts allow-same-origin allow-forms allow-top-navigation"
       />
     </div>
   );
