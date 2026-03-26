@@ -213,10 +213,10 @@ export default function SubmissionDetailPage() {
               <p className="text-6xl font-black">{fb?.overall_band ?? "—"}</p>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-2 mt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 pt-4 border-t border-white/20">
             {criteriaLabels.map(({ label, band }) => (
-              <div key={label} className="text-center">
-                <p className="text-[10px] opacity-60 leading-tight">{label}</p>
+              <div key={label} className="text-center bg-white/10 rounded-xl p-2 sm:bg-transparent sm:p-0">
+                <p className="text-[10px] sm:text-[11px] opacity-70 uppercase tracking-wider mb-0.5">{label}</p>
                 <p className="text-xl font-bold">{band ?? "—"}</p>
               </div>
             ))}

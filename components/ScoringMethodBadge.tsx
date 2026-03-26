@@ -27,7 +27,7 @@ export function ScoringMethodBadge({ method, lang, size = "sm" }: Props) {
         }
       </Badge>
       {/* Tooltip */}
-      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-64 rounded-lg bg-popover border border-border shadow-lg p-2.5 text-xs text-popover-foreground leading-snug opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-[max-content] max-w-[80vw] sm:max-w-64 rounded-lg bg-popover border border-border shadow-lg p-2.5 text-xs text-popover-foreground leading-snug opacity-0 group-hover:opacity-100 transition-opacity duration-150">
         {tooltipText}
         <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-border" />
       </span>
