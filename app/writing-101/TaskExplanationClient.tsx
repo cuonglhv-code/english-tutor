@@ -90,43 +90,47 @@ function TaskAccordion({
             type="multiple"
             value={openItems}
             onValueChange={setOpenItems}
-            className="w-full"
+            className="w-full space-y-3"
         >
             {rows.map((row, idx) => {
                 const itemId = `row-${idx}`;
                 const viTitle = viTranslations[row.questionType] || row.questionType;
                 return (
-                    <AccordionItem key={itemId} value={itemId} className="border rounded-xl mb-3 px-4 last:mb-0">
-                        <AccordionTrigger className="hover:no-underline py-3 text-left">
-                            <div className="flex items-center gap-2">
+                    <AccordionItem 
+                        key={itemId} 
+                        value={itemId} 
+                        className="border-none rounded-2xl mb-3 px-4 bg-white shadow-stitched overflow-hidden transition-all last:mb-0"
+                    >
+                        <AccordionTrigger className="hover:no-underline py-4 text-left group">
+                            <div className="flex items-center gap-3">
                                 <Badge
                                     variant="secondary"
-                                    className="shrink-0 text-[11px] bg-jaxtina-red/10 text-jaxtina-red border-jaxtina-red/20 hover:bg-jaxtina-red/10"
+                                    className="shrink-0 text-[11px] h-6 w-6 p-0 flex items-center justify-center rounded-lg gradient-secondary text-white border-none shadow-sm group-data-[state=open]:rotate-12 transition-transform"
                                 >
                                     {idx + 1}
                                 </Badge>
-                                <span className="font-semibold text-sm">
+                                <span className="font-bold text-base font-display">
                                     {row.questionType}{" "}
                                     {viTitle !== row.questionType && (
-                                        <span className="font-normal">/ <em className="vi" lang="vi">{viTitle}</em></span>
+                                        <span className="font-normal opacity-60">/ <em className="vi" lang="vi">{viTitle}</em></span>
                                     )}
                                 </span>
                             </div>
                         </AccordionTrigger>
-                        <AccordionContent className="pt-0">
-                            <div className="grid gap-5 sm:grid-cols-3 border-t pt-4">
+                        <AccordionContent className="pt-2 pb-6">
+                            <div className="grid gap-6 sm:grid-cols-3 border-t border-dashed border-muted pt-6 mt-2">
                                 <Section
-                                    icon={<AlignLeft className="h-3.5 w-3.5 text-jaxtina-blue" />}
+                                    icon={<AlignLeft className="h-4 w-4 text-primary" />}
                                     heading={L("colStructure")}
                                     text={row.structure}
                                 />
                                 <Section
-                                    icon={<CheckCircle2 className="h-3.5 w-3.5 text-green-600" />}
+                                    icon={<CheckCircle2 className="h-4 w-4 text-green-600" />}
                                     heading={L("colTips")}
                                     text={row.tips}
                                 />
                                 <Section
-                                    icon={<AlertCircle className="h-3.5 w-3.5 text-orange-500" />}
+                                    icon={<AlertCircle className="h-4 w-4 text-orange-500" />}
                                     heading={L("colMistakes")}
                                     text={row.mistakes}
                                 />

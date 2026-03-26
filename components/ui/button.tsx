@@ -4,16 +4,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-3xl text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
   {
     variants: {
       variant: {
-        default: "bg-jaxtina-red text-white hover:bg-jaxtina-red/90 shadow-lg hover:shadow-xl active:scale-[0.98]",
-        blue: "bg-jaxtina-blue text-white hover:bg-jaxtina-blue/90 shadow-lg hover:shadow-xl active:scale-[0.98]",
-        outline: "border-2 border-jaxtina-red text-jaxtina-red hover:bg-jaxtina-red hover:text-white",
+        default: "gradient-secondary text-white shadow-stitched hover:opacity-90",
+        blue: "gradient-primary text-white shadow-stitched hover:opacity-90",
+        outline: "border-2 border-primary text-primary hover:bg-primary hover:text-white",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-muted text-muted-foreground hover:bg-muted/80",
-        link: "text-jaxtina-blue underline-offset-4 hover:underline",
+        secondary: "bg-surface-container text-foreground hover:bg-surface-container/80",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-6 py-2",

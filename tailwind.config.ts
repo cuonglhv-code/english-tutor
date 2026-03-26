@@ -10,9 +10,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "jaxtina-red": "#D32F2F",
-        "jaxtina-blue": "#1976D2",
-        "jaxtina-grey": "#9E9E9E",
+        "jaxtina-red": "#b7131d",
+        "jaxtina-blue": "#005cab",
+        "jaxtina-grey": "#404753",
+        primary: {
+          DEFAULT: "var(--primary)",
+          container: "var(--primary-container)",
+        },
+        secondary: {
+          DEFAULT: "var(--secondary)",
+          container: "var(--secondary-container)",
+        },
+        surface: {
+          DEFAULT: "var(--surface)",
+          bright: "var(--surface-bright)",
+          container: {
+            DEFAULT: "var(--surface-container)",
+            low: "var(--surface-container-low)",
+            lowest: "var(--surface-container-lowest)",
+          },
+        },
         background: "var(--background)",
         foreground: "var(--foreground)",
         card: {
@@ -33,17 +50,19 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
+        display: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
       },
       borderRadius: {
-        xl: "16px",
-        "2xl": "20px",
+        xl: "1.5rem",
+        "2xl": "2rem",
       },
       screens: {
         xs: "375px",
       },
       boxShadow: {
-        card: "0 4px 24px 0 rgba(0,0,0,0.08)",
-        "card-hover": "0 8px 32px 0 rgba(0,0,0,0.14)",
+        stitched: "0px 20px 40px rgba(26, 28, 28, 0.06)",
+        card: "0 4px 24px 0 rgba(0,0,0,0.04)",
+        "card-hover": "0 8px 32px 0 rgba(0,0,0,0.08)",
       },
     },
   },

@@ -18,8 +18,9 @@
     <script src="https://unpkg.com/drag-drop-touch"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
-        body { font-family: 'Nunito', sans-serif; background-color: #0f172a; color: white; overflow-x: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: white; overflow-x: hidden; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; }
         
         /* 3D Flip Card CSS */
         .perspective-1000 { perspective: 1000px; }
@@ -845,9 +846,9 @@
                         </div>
                         <a href="#" 
                            onClick={(e) => { e.preventDefault(); window.top.location.href='https://jaxtina-ielts-examiner.vercel.app/experience'; }}
-                           style={{display:'flex', alignItems:'center', gap:'6px', background:'rgba(30,41,59,0.8)', padding:'10px 14px', borderRadius:'12px', border:'1px solid rgba(71,85,105,1)', color:'#94a3b8', textDecoration:'none', fontSize:'14px', fontWeight:'700', transition:'all 0.2s'}}
-                           onMouseOver={(e) => { e.currentTarget.style.background='rgba(51,65,85,1)'; e.currentTarget.style.color='white'; }}
-                           onMouseOut={(e) => { e.currentTarget.style.background='rgba(30,41,59,0.8)'; e.currentTarget.style.color='#94a3b8'; }}>
+                           style={{display:'flex', alignItems:'center', gap:'6px', background:'rgba(183,19,29,0.1)', padding:'10px 16px', borderRadius:'1.5rem', border:'1px solid rgba(183,19,29,0.3)', color:'#b7131d', textDecoration:'none', fontSize:'14px', fontWeight:'800', transition:'all 0.2s'}}
+                           onMouseOver={(e) => { e.currentTarget.style.background='rgba(183,19,29,1)'; e.currentTarget.style.color='white'; }}
+                           onMouseOut={(e) => { e.currentTarget.style.background='rgba(183,19,29,0.1)'; e.currentTarget.style.color='#b7131d'; }}>
                           ← Experience
                         </a>
                     </nav>

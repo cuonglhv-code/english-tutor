@@ -129,27 +129,27 @@ export function LoginPageContent() {
         <div className="relative min-h-screen w-full flex flex-col lg:grid lg:grid-cols-2 overflow-hidden bg-background">
             {/* Background Orbs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-jaxtina-red/5 blur-[120px] max-w-full" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-jaxtina-blue/5 blur-[120px] max-w-full" />
+                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-secondary/5 blur-[120px] max-w-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px] max-w-full" />
             </div>
 
             {/* Left Column: Branding & Marketing (Desktop Only) */}
             <div className="hidden lg:flex flex-col justify-center p-12 xl:p-24 relative overflow-hidden bg-muted/30">
                 <div className="max-w-xl space-y-12">
-                    <div className="flex items-center gap-3 active:scale-95 transition-transform cursor-pointer">
-                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-jaxtina-red to-jaxtina-red/80 flex items-center justify-center shadow-lg shadow-jaxtina-red/20">
+                    <div className="flex items-center gap-3 active:scale-95 transition-transform cursor-pointer group">
+                        <div className="h-12 w-12 rounded-2xl gradient-secondary flex items-center justify-center shadow-stitched group-hover:scale-110 transition-transform">
                             <GraduationCap className="h-7 w-7 text-white" />
                         </div>
-                        <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                        <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 font-display">
                             Jaxtina IELTS Examiner
                         </span>
                     </div>
 
                     <div className="space-y-6">
-                        <h2 className="text-5xl font-black leading-tight tracking-tight">
+                        <h2 className="text-5xl font-black leading-tight tracking-tight font-display">
                             {lang === "vi" ? "Nâng tầm kỹ năng" : "Elevate Your"}
                             <br />
-                            <span className="text-jaxtina-red">
+                            <span className="text-secondary">
                                 {lang === "vi" ? "Viết IELTS" : "IELTS Writing"}
                             </span>
                         </h2>
@@ -161,8 +161,8 @@ export function LoginPageContent() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">
-                        <div className="space-y-2 p-4 rounded-2xl bg-background/50 border border-border shadow-sm">
-                            <Zap className="h-6 w-6 text-jaxtina-red" />
+                        <div className="space-y-2 p-4 rounded-2xl bg-surface/50 border border-border shadow-stitched">
+                            <Zap className="h-6 w-6 text-secondary" />
                             <p className="font-bold text-sm">
                                 {lang === "vi" ? "Chấm điểm tức thì" : "Instant Scoring"}
                             </p>
@@ -170,8 +170,8 @@ export function LoginPageContent() {
                                 {lang === "vi" ? "Kết quả phản hồi trong 10 giây" : "Band score & feedback in 10s"}
                             </p>
                         </div>
-                        <div className="space-y-2 p-4 rounded-2xl bg-background/50 border border-border shadow-sm">
-                            <Globe2 className="h-6 w-6 text-jaxtina-blue" />
+                        <div className="space-y-2 p-4 rounded-2xl bg-surface/50 border border-border shadow-stitched">
+                            <Globe2 className="h-6 w-6 text-primary" />
                             <p className="font-bold text-sm">
                                 {lang === "vi" ? "Đa ngôn ngữ" : "Multilingual"}
                             </p>
@@ -188,10 +188,10 @@ export function LoginPageContent() {
                 <div className="w-full space-y-8">
                     {/* Compact Hero (Mobile Only) */}
                     <div className="flex lg:hidden flex-col items-center text-center space-y-4 mb-8">
-                        <div className="h-16 w-16 rounded-3xl bg-gradient-to-br from-jaxtina-red to-jaxtina-red/80 flex items-center justify-center shadow-xl shadow-jaxtina-red/20 mb-2">
+                        <div className="h-16 w-16 rounded-3xl gradient-secondary flex items-center justify-center shadow-stitched mb-2">
                             <GraduationCap className="h-9 w-9 text-white" />
                         </div>
-                        <h1 className="text-3xl font-black tracking-tight">
+                        <h1 className="text-3xl font-black tracking-tight font-display">
                             {lang === "vi" ? "Chấm thi IELTS AI" : "IELTS AI Examiner"}
                         </h1>
                         <p className="text-sm text-muted-foreground px-6 leading-relaxed">
@@ -201,7 +201,7 @@ export function LoginPageContent() {
                         </p>
                     </div>
 
-                    <Card className="border-none shadow-none lg:shadow-2xl lg:shadow-foreground/5 lg:border lg:bg-card/50 lg:backdrop-blur-xl rounded-[2.5rem]">
+                    <Card className="border-none shadow-none lg:shadow-stitched lg:border lg:bg-card/50 lg:backdrop-blur-xl rounded-[2.5rem]">
                         <CardHeader className="space-y-1 pb-4">
                             <div className="flex items-center justify-between mb-2">
                                 <CardTitle className="text-2xl font-black">
@@ -211,7 +211,7 @@ export function LoginPageContent() {
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => setMode(mode === "login" ? "register" : "login")}
-                                    className="text-jaxtina-blue font-bold px-0 hover:bg-transparent hover:text-jaxtina-blue/80"
+                                    className="text-primary font-bold px-0 hover:bg-transparent hover:text-primary/80"
                                 >
                                     {mode === "login" ? t("auth", "signupLink", lang) : t("auth", "loginLink", lang)}
                                 </Button>
@@ -295,9 +295,9 @@ export function LoginPageContent() {
 
                                 <Button
                                     type="submit"
-                                    className={`w-full h-14 rounded-xl font-black text-lg shadow-lg transition-all active:scale-95 ${mode === "login"
-                                        ? "bg-jaxtina-red hover:bg-jaxtina-red/90 shadow-jaxtina-red/20"
-                                        : "bg-jaxtina-blue hover:bg-jaxtina-blue/90 shadow-jaxtina-blue/20"
+                                    className={`w-full h-14 rounded-2xl font-black text-lg transition-all active:scale-95 ${mode === "login"
+                                        ? "gradient-secondary"
+                                        : "gradient-primary"
                                         }`}
                                     disabled={loading}
                                 >
