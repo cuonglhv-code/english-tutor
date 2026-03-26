@@ -7,26 +7,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { createBrowserClient } from "@/lib/supabase";
-import { useLanguage } from "@/hooks/useLanguage";
-import { t } from "@/lib/i18n";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 
-export function LoginPageContent() {
-    const { lang } = useLanguage();
+import { useTranslation } from "@/lib/i18n/useTranslation";
+
+export function LoginPageContent({ initialMode = "login" }: { initialMode?: "login" | "register" }) {
+    const { dict, lang } = useTranslation();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [mode, setMode] = useState<"login" | "register">("login");
+    const [mode, setMode] = useState<"login" | "register">(initialMode);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    // Default landing after login should be Tutor.
+    // Default landing after login should be Practice or Tutor.
     // If a protected page redirected here, it will pass `?next=...` and we honor it.
-    const nextUrl = searchParams.get("next") || "/tutor";
+    const nextUrl = searchParams.get("next") || `/${lang}/practice`;
 
     const validate = () => {
         const newErrors: Record<string, string> = {};
@@ -60,7 +60,7 @@ export function LoginPageContent() {
             if (mode === "login") {
                 const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) {
-                    toast.error(t("auth", "errorInvalid", lang) || error.message);
+                    toast.error(error.message);
                     setLoading(false);
                     return;
                 }
@@ -88,11 +88,11 @@ export function LoginPageContent() {
                     options: { data: { display_name: displayName || email.split("@")[0] } },
                 });
                 if (error) {
-                    toast.error(error.message || t("auth", "errorGeneric", lang));
+                    toast.error(error.message);
                     setLoading(false);
                     return;
                 }
-                // If email confirmation is enabled, there may be no session yet.
+              // If email confirmation is enabled, there may be no session yet.
                 const needsConfirmation = data?.user && !(data as any)?.session;
                 
                 if (needsConfirmation) {
@@ -103,10 +103,10 @@ export function LoginPageContent() {
                         { duration: 6000 }
                     );
                 } else {
-                    toast.success(t("auth", "successRegister", lang));
+                    toast.success(lang === "vi" ? "Đăng ký thành công!" : "Registration successful!");
                 }
 
-                // Still direct users toward Tutor; if not authenticated they will be prompted accordingly.
+              // Still direct users toward Tutor; if not authenticated they will be prompted accordingly.
                 const targetUrl = "/tutor";
                 
                 // If it needs confirmation, give the user a second to see the toast before redirect
@@ -119,9 +119,9 @@ export function LoginPageContent() {
                 }
             }
         } catch {
-            toast.error(t("auth", "errorGeneric", lang));
+            toast.error(lang === "vi" ? "Đã có lỗi xảy ra." : "An error occurred.");
         } finally {
-            setLoading(false);
+           setLoading(false);
         }
     };
 
@@ -134,50 +134,59 @@ export function LoginPageContent() {
             </div>
 
             {/* Left Column: Branding & Marketing (Desktop Only) */}
-            <div className="hidden lg:flex flex-col justify-center p-12 xl:p-24 relative overflow-hidden bg-muted/30">
-                <div className="max-w-xl space-y-12">
-                    <div className="flex items-center gap-3 active:scale-95 transition-transform cursor-pointer group">
-                        <div className="h-12 w-12 rounded-2xl gradient-secondary flex items-center justify-center shadow-stitched group-hover:scale-110 transition-transform">
-                            <GraduationCap className="h-7 w-7 text-white" />
+            <div className="hidden lg:flex flex-col justify-center p-12 xl:p-24 relative overflow-hidden bg-surface-container-low/50">
+                <div className="max-w-xl space-y-12 relative z-10">
+                    <div className="flex items-center gap-4 group cursor-pointer">
+                        <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-stitched group-hover:scale-110 transition-transform">
+                            <GraduationCap className="h-8 w-8 text-white" />
                         </div>
-                        <span className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 font-display">
-                            Jaxtina IELTS Examiner
-                        </span>
+                        <div className="flex flex-col">
+                            <span className="text-2xl font-black tracking-tight text-on-surface font-display">
+                                Scholar<span className="text-primary">AI</span>
+                            </span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40 -mt-1">Digital Mentor</span>
+                        </div>
                     </div>
 
                     <div className="space-y-6">
-                        <h2 className="text-5xl font-black leading-tight tracking-tight font-display">
-                            {lang === "vi" ? "Nâng tầm kỹ năng" : "Elevate Your"}
+                        <h2 className="text-6xl font-black leading-[0.9] tracking-tighter font-display text-on-surface">
+                            {lang === "vi" ? "Nâng tầm" : "Elevate"}
                             <br />
-                            <span className="text-secondary">
-                                {lang === "vi" ? "Viết IELTS" : "IELTS Writing"}
+                            <span className="text-primary italic">
+                                {lang === "vi" ? "Học thuật." : "Academic Tone."}
                             </span>
                         </h2>
-                        <p className="text-lg text-muted-foreground leading-relaxed">
-                            {lang === "vi"
-                                ? "Cánh cửa dẫn đến điểm band mục tiêu. Được chấm điểm tức thì bởi AI Examiner chuyên sâu của chúng tôi."
-                                : "The highway to your target band score. Get instant feedback from our specialized AI Examiner."}
+                        <p className="text-xl text-on-surface-variant font-medium leading-relaxed opacity-70">
+                            {dict.login.desc}
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
-                        <div className="space-y-2 p-4 rounded-2xl bg-surface/50 border border-border shadow-stitched">
-                            <Zap className="h-6 w-6 text-secondary" />
-                            <p className="font-bold text-sm">
-                                {lang === "vi" ? "Chấm điểm tức thì" : "Instant Scoring"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                                {lang === "vi" ? "Kết quả phản hồi trong 10 giây" : "Band score & feedback in 10s"}
-                            </p>
+                    <div className="grid grid-cols-2 gap-8">
+                        <div className="space-y-4 p-8 rounded-[32px] bg-white shadow-premium">
+                            <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
+                                <Zap className="h-6 w-6 text-secondary" />
+                            </div>
+                            <div className="space-y-1">
+                                <p className="font-black text-xs uppercase tracking-widest text-on-surface">
+                                    {lang === "vi" ? "Chấm điểm tức thì" : "Instant Scoring"}
+                                </p>
+                                <p className="text-[11px] text-on-surface-variant opacity-60 font-medium">
+                                    {lang === "vi" ? "Kết quả phản hồi trong 10 giây" : "Band score & feedback in 10s"}
+                                </p>
+                            </div>
                         </div>
-                        <div className="space-y-2 p-4 rounded-2xl bg-surface/50 border border-border shadow-stitched">
-                            <Globe2 className="h-6 w-6 text-primary" />
-                            <p className="font-bold text-sm">
-                                {lang === "vi" ? "Đa ngôn ngữ" : "Multilingual"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                                {lang === "vi" ? "Giải thích chi tiết Tiếng Anh & Việt" : "Detailed EN & VI explanations"}
-                            </p>
+                        <div className="space-y-4 p-8 rounded-[32px] bg-white shadow-premium">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <ShieldCheck className="h-6 w-6 text-primary" />
+                            </div>
+                            <div className="space-y-1">
+                                <p className="font-black text-xs uppercase tracking-widest text-on-surface">
+                                    {lang === "vi" ? "An toàn" : "Secure Auth"}
+                                </p>
+                                <p className="text-[11px] text-on-surface-variant opacity-60 font-medium">
+                                    {lang === "vi" ? "Tiêu chuẩn bảo mật tổ chức" : "Institutional security standards"}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -204,21 +213,23 @@ export function LoginPageContent() {
                     <Card className="border-none shadow-none lg:shadow-stitched lg:border lg:bg-card/50 lg:backdrop-blur-xl rounded-[2.5rem]">
                         <CardHeader className="space-y-1 pb-4">
                             <div className="flex items-center justify-between mb-2">
-                                <CardTitle className="text-2xl font-black">
-                                    {mode === "login" ? t("auth", "loginTitle", lang) : t("auth", "registerTitle", lang)}
+                                <CardTitle className="text-4xl font-black font-display tracking-tight text-on-surface">
+                                    {mode === "login" ? dict.login.title : (lang === 'vi' ? 'Tạo tài khoản' : 'Join Scholar')}
                                 </CardTitle>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <CardDescription className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">
+                                    {mode === "login" ? dict.login.desc : (lang === 'vi' ? 'Tham gia hệ sinh thái học thuật của chúng tôi.' : 'Join our institutional ecosystem.')}
+                                </CardDescription>
                                 <Button
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => setMode(mode === "login" ? "register" : "login")}
-                                    className="text-primary font-bold px-0 hover:bg-transparent hover:text-primary/80"
+                                    className="text-primary font-black uppercase tracking-widest text-[10px] px-0 hover:bg-transparent hover:text-secondary transition-colors"
                                 >
-                                    {mode === "login" ? t("auth", "signupLink", lang) : t("auth", "loginLink", lang)}
+                                    {mode === "login" ? dict.login.registerLink : dict.login.loginBtn}
                                 </Button>
                             </div>
-                            <CardDescription className="text-xs sm:text-sm font-medium">
-                                {mode === "login" ? t("auth", "loginDesc", lang) : t("auth", "registerDesc", lang)}
-                            </CardDescription>
                         </CardHeader>
 
                         <CardContent className="space-y-6">
@@ -231,12 +242,12 @@ export function LoginPageContent() {
                                             exit={{ opacity: 0, height: 0 }}
                                             className="space-y-1.5"
                                         >
-                                            <Label className={`flex items-center gap-1.5 ml-1 text-sm font-bold ${errors.displayName ? "text-red-500" : ""}`}>
-                                                <User className="h-3.5 w-3.5" /> {t("auth", "displayNameLabel", lang)}
+                                            <Label className={`flex items-center gap-2 ml-6 text-[10px] font-black uppercase tracking-widest ${errors.displayName ? "text-secondary" : "text-on-surface-variant opacity-50"}`}>
+                                                <User className="h-3.5 w-3.5" /> {lang === 'vi' ? 'Tên hiển thị' : 'Display Name'}
                                             </Label>
                                             <Input
                                                 placeholder={lang === "vi" ? "Ví dụ: Nguyễn Văn A" : "e.g. John Doe"}
-                                                className={`rounded-xl h-12 bg-background/50 text-base ${errors.displayName ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                                                className={`rounded-2xl h-14 bg-surface-container-low border-none focus-visible:ring-4 focus-visible:ring-primary/10 text-base font-semibold ${errors.displayName ? "bg-secondary/5" : ""}`}
                                                 value={displayName}
                                                 onChange={(e) => {
                                                     setDisplayName(e.target.value);
@@ -244,19 +255,19 @@ export function LoginPageContent() {
                                                 }}
                                                 disabled={loading}
                                             />
-                                            {errors.displayName && <p className="text-[10px] font-bold text-red-500 ml-1 uppercase">{errors.displayName}</p>}
+                                            {errors.displayName && <p className="text-[10px] font-black text-secondary ml-6 uppercase tracking-widest">{errors.displayName}</p>}
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
 
                                 <div className="space-y-1.5">
-                                    <Label className={`flex items-center gap-1.5 ml-1 text-sm font-bold ${errors.email ? "text-red-500" : ""}`}>
-                                        <Mail className="h-3.5 w-3.5" /> {t("auth", "emailLabel", lang)}
+                                    <Label className={`flex items-center gap-2 ml-6 text-[10px] font-black uppercase tracking-widest ${errors.email ? "text-secondary" : "text-on-surface-variant opacity-50"}`}>
+                                        <Mail className="h-3.5 w-3.5" /> {dict.login.emailLabel}
                                     </Label>
                                     <Input
                                         type="email"
                                         placeholder="email@example.com"
-                                        className={`rounded-xl h-12 bg-background/50 text-base ${errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                                        className={`rounded-2xl h-14 bg-surface-container-low border-none focus-visible:ring-4 focus-visible:ring-primary/10 text-base font-semibold ${errors.email ? "bg-secondary/5" : ""}`}
                                         value={email}
                                         onChange={(e) => {
                                             setEmail(e.target.value);
@@ -265,17 +276,17 @@ export function LoginPageContent() {
                                         required
                                         disabled={loading}
                                     />
-                                    {errors.email && <p className="text-[10px] font-bold text-red-500 ml-1 uppercase">{errors.email}</p>}
+                                    {errors.email && <p className="text-[10px] font-black text-secondary ml-6 uppercase tracking-widest">{errors.email}</p>}
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label className={`flex items-center gap-1.5 ml-1 text-sm font-bold ${errors.password ? "text-red-500" : ""}`}>
-                                        <Lock className="h-3.5 w-3.5" /> {t("auth", "passwordLabel", lang)}
+                                    <Label className={`flex items-center gap-2 ml-6 text-[10px] font-black uppercase tracking-widest ${errors.password ? "text-secondary" : "text-on-surface-variant opacity-50"}`}>
+                                        <Lock className="h-3.5 w-3.5" /> {dict.login.passwordLabel}
                                     </Label>
                                     <Input
                                         type="password"
                                         placeholder="••••••••"
-                                        className={`rounded-xl h-12 bg-background/50 text-base ${errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}`}
+                                        className={`rounded-2xl h-14 bg-surface-container-low border-none focus-visible:ring-4 focus-visible:ring-primary/10 text-base font-semibold ${errors.password ? "bg-secondary/5" : ""}`}
                                         value={password}
                                         onChange={(e) => {
                                             setPassword(e.target.value);
@@ -285,7 +296,7 @@ export function LoginPageContent() {
                                         disabled={loading}
                                     />
                                     {errors.password ? (
-                                        <p className="text-[10px] font-bold text-red-500 ml-1 uppercase">{errors.password}</p>
+                                        <p className="text-[10px] font-black text-secondary ml-6 uppercase tracking-widest">{errors.password}</p>
                                     ) : mode === "register" && (
                                         <p className="text-[10px] text-muted-foreground ml-1">
                                             {lang === "vi" ? "* Ít nhất 8 ký tự" : "* Minimum 8 characters"}
@@ -295,15 +306,15 @@ export function LoginPageContent() {
 
                                 <Button
                                     type="submit"
-                                    className={`w-full h-14 rounded-2xl font-black text-lg transition-all active:scale-95 ${mode === "login"
-                                        ? "gradient-secondary"
-                                        : "gradient-primary"
+                                    className={`w-full h-16 rounded-[24px] font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all active:scale-95 ${mode === "login"
+                                        ? "gradient-primary"
+                                        : "gradient-secondary"
                                         }`}
                                     disabled={loading}
                                 >
                                     {loading
-                                        ? (mode === "login" ? t("auth", "loggingIn", lang) : t("auth", "registering", lang))
-                                        : (mode === "login" ? t("auth", "loginBtn", lang) : t("auth", "registerBtn", lang))
+                                        ? (mode === "login" ? 'Authorizing...' : 'Registering...')
+                                        : (mode === "login" ? dict.login.loginBtn : (lang === 'vi' ? 'Tạo tài khoản' : 'Join Now'))
                                     }
                                 </Button>
                             </form>

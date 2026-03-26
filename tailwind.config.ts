@@ -60,9 +60,10 @@ const config: Config = {
         xs: "375px",
       },
       boxShadow: {
-        stitched: "0px 20px 40px rgba(26, 28, 28, 0.06)",
+        stitched: "0px 20px 40px rgba(26, 28, 28, 0.08)",
         card: "0 4px 24px 0 rgba(0,0,0,0.04)",
         "card-hover": "0 8px 32px 0 rgba(0,0,0,0.08)",
+        "card-premium": "0 20px 50px -12px rgba(0, 0, 0, 0.08)",
       },
     },
   },

@@ -11,11 +11,10 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Loader2, ChevronLeft, Zap, CheckCircle2, GripVertical, FileText } from "lucide-react";
+import { Loader2, ChevronLeft, Zap, GripVertical, FileText } from "lucide-react";
 import { toast } from "sonner";
 import type { WizardData } from "@/types";
-import { useLanguage } from "@/hooks/useLanguage";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import { useUser } from "@/hooks/useUser";
 
 interface Props {
@@ -26,9 +25,9 @@ interface Props {
 
 export function StepWrite({ data, onUpdate, onBack }: Props) {
   const { user } = useUser();
-  const { lang, setLang } = useLanguage();
+  const { dict, lang, setLang } = useTranslation();
   const [essay, setEssay] = useState(data.essay || "");
-  const [feedbackLang, setFeedbackLang] = useState<"en" | "vi">(data.language || lang);
+  const [feedbackLang, setFeedbackLang] = useState<"en" | "vi">(data.language || (lang as "en" | "vi") || "en");
   const [loading, setLoading] = useState(false);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [planLoading, setPlanLoading] = useState(false);
@@ -42,7 +41,7 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
   const approxMinutes = data.taskNumber === "1" ? 20 : 40;
   const wordCount = essay.trim() === "" ? 0 : essay.trim().split(/\s+/).length;
 
-  const [timeLeft, setTimeLeft] = useState(60 * 60); // 60 mins countdown
+  const [timeLeft, setTimeLeft] = useState(60 * 60);
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -57,9 +56,10 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
-  // Keep feedbackLang in sync if lang toggle changes externally
   useEffect(() => {
-    setFeedbackLang(lang);
+    if (lang === "en" || lang === "vi") {
+      setFeedbackLang(lang);
+    }
   }, [lang]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -92,36 +92,30 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
 
   const wordColor =
     wordCount >= minWords
-      ? "text-green-600 dark:text-green-400"
+      ? "text-primary"
       : wordCount >= minWords * 0.8
-        ? "text-yellow-600 dark:text-yellow-400"
-        : "text-muted-foreground";
+        ? "text-secondary"
+        : "text-on-surface-variant opacity-40";
 
-  // Validate and show the essay plan modal
   const handleSubmitClick = () => {
     if (wordCount < 1) {
-      toast.error(t("write", "errorEmpty", lang));
+      toast.error(lang === 'vi' ? 'Vui lòng nhập bài viết của bạn.' : 'Please enter your essay.');
       return;
     }
     if (wordCount < minWords) {
-      const warnFn = t("write", "warningShort", lang);
-      const warnMsg = typeof warnFn === "function" ? warnFn(wordCount, minWords) : String(warnFn);
-      // user wants a friendlier warning about band penalties
       const penaltyMsg = lang === "vi" 
-        ? "Lưu ý: Bài viết dưới số từ quy định có thể bị trừ điểm Band Score tự động." 
-        : "Note: Essays below the required word count receive automatic band penalties.";
+        ? `Lưu ý: Bài viết mới chỉ có ${wordCount} từ (yêu cầu tối thiểu ${minWords} từ). Việc viết dưới số từ quy định có thể bị trừ điểm Band Score.` 
+        : `Note: Your essay only has ${wordCount} words (minimum ${minWords} required). Essays below the required word count receive band penalties.`;
       
-      toast.warning(`${warnMsg} ${penaltyMsg}`, { duration: 5000 });
+      toast.warning(penaltyMsg, { duration: 5000 });
     }
     setShowPlanModal(true);
   };
 
-  // Run the full analysis (optionally fetch plan first)
   const runAnalysis = async (withPlan: boolean) => {
     setShowPlanModal(false);
     setLoading(true);
 
-    // Exclude questionImage from API payload
     const { questionImage: _img, ...dataForApi } = data as WizardData;
     const fullData: WizardData = {
       ...dataForApi,
@@ -134,7 +128,6 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
     try {
       let planText: string | null = null;
 
-      // 1. Optional essay plan
       if (withPlan) {
         setPlanLoading(true);
         try {
@@ -152,16 +145,15 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
           if (planJson.success && planJson.plan) {
             planText = planJson.plan as string;
           } else {
-            toast.error(t("essayPlan", "error", lang));
+            toast.error(lang === 'vi' ? 'Không thể tạo dàn ý.' : 'Failed to generate essay plan.');
           }
         } catch {
-          toast.error(t("essayPlan", "error", lang));
+          toast.error(lang === 'vi' ? 'Không thể tạo dàn ý.' : 'Failed to generate essay plan.');
         } finally {
           setPlanLoading(false);
         }
       }
 
-      // 2. Analyze essay
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -176,7 +168,7 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
       );
       router.push("/results");
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : t("common", "error", lang));
+      toast.error(err instanceof Error ? err.message : (lang === 'vi' ? 'Đã có lỗi xảy ra.' : 'An error occurred.'));
     } finally {
       setLoading(false);
       setPlanLoading(false);
@@ -186,90 +178,92 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
   const isProcessing = loading || planLoading;
 
   return (
-    <div className="flex flex-col" style={{ height: "calc(100vh - 56px)" }}>
-      {/* Essay Plan Modal */}
+    <div className="flex flex-col bg-surface overflow-hidden h-screen">
       <Dialog open={showPlanModal} onOpenChange={(open) => { if (!isProcessing) setShowPlanModal(open); }}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-jaxtina-blue" />
-              {t("essayPlan", "modalTitle", lang)}
+        <DialogContent className="max-w-md rounded-[32px] border-none shadow-2xl p-10">
+          <DialogHeader className="space-y-4 text-left">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <FileText className="h-6 w-6" />
+            </div>
+            <DialogTitle className="text-2xl font-black font-display tracking-tight text-on-surface">
+              {lang === 'vi' ? 'Cần dàn ý không?' : 'Need an Essay Plan?'}
             </DialogTitle>
-            <DialogDescription>{t("essayPlan", "modalDesc", lang)}</DialogDescription>
+            <DialogDescription className="text-sm text-on-surface-variant font-medium opacity-60">
+                {lang === 'vi' ? 'Nhận dàn ý chi tiết giúp bạn đạt band điểm cao trước khi tiến hành chấm bài.' : 'Receive a high-scoring essay plan before proceeding to final evaluation.'}
+            </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex-col sm:flex-col gap-2">
-            <Button onClick={() => runAnalysis(true)} className="w-full">
-              <FileText className="h-4 w-4 mr-2" />
-              {t("essayPlan", "yesBtn", lang)}
+          <DialogFooter className="flex flex-col gap-3 pt-6 w-full sm:flex-col sm:space-x-0">
+            <Button onClick={() => runAnalysis(true)} className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[10px] border-none shadow-lg shadow-primary/20">
+              <Zap className="h-4 w-4 mr-2" />
+              {lang === 'vi' ? 'CÓ, TẠO DÀN Ý' : 'YES, GENERATE PLAN'}
             </Button>
-            <Button variant="outline" onClick={() => runAnalysis(false)} className="w-full">
-              {t("essayPlan", "noBtn", lang)}
+            <Button variant="ghost" onClick={() => runAnalysis(false)} className="w-full h-14 rounded-2xl text-on-surface-variant/40 font-black uppercase tracking-widest text-[10px] hover:bg-surface">
+              {lang === 'vi' ? 'KHÔNG, CHẤM BÀI NGAY' : 'NO, ANALYZE NOW'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Top info bar */}
-      <div className="flex items-center justify-between px-4 py-2 bg-muted/70 border-b shrink-0">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">
+      <div className="flex items-center justify-between px-8 py-5 bg-white border-b border-on-surface-variant/5 shrink-0">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-1 text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant/40">
+          <span className="text-primary opacity-100">
             Task {data.taskNumber}
           </span>
-          <span className="text-border">|</span>
-          <span>{data.taskType === "academic" ? "Academic" : "General Training"}</span>
-          <span className="text-border">|</span>
-          <span>{t("write", "spendAbout", lang)} {approxMinutes} {t("write", "minutes", lang)}</span>
-          <span>{t("write", "writeAtLeast", lang)} {minWords} {t("write", "words", lang)}</span>
-          <span className="text-border">|</span>
-          <span className="font-semibold text-jaxtina-red font-mono bg-jaxtina-red/10 px-2 py-0.5 rounded flex items-center gap-1">
-            ⏱️ {formatTime(timeLeft)}
+          <span className="w-1 h-1 rounded-full bg-on-surface-variant/10" />
+          <span>{data.taskType === "academic" ? "Academic" : "General"}</span>
+          <span className="w-1 h-1 rounded-full bg-on-surface-variant/10" />
+          <span>{approxMinutes} MINS</span>
+          <span className="w-1 h-1 rounded-full bg-on-surface-variant/10" />
+          <span>{minWords} WORDS</span>
+          <span className="w-1 h-1 rounded-full bg-on-surface-variant/10" />
+          <span className="font-mono text-secondary opacity-100 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
+            {formatTime(timeLeft)}
           </span>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onBack}
-          disabled={isProcessing}
-          className="ml-4 shrink-0 hidden sm:flex"
-        >
-          <ChevronLeft className="h-4 w-4 mr-1" /> {t("write", "back", lang)}
-        </Button>
-
-        {/* Mobile Tab Toggle */}
-        <div className="flex sm:hidden p-1 bg-muted rounded-lg h-9 ml-2 shrink-0 relative items-center">
-          <button
-            onClick={() => setActiveTab("question")}
-            className={`relative z-10 px-3 h-7 text-[10px] font-black uppercase tracking-wider transition-colors duration-200 ${activeTab === "question" ? "text-white" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            {t("write", "questionPanel", lang)}
-            {activeTab === "question" && (
-              <motion.div
-                layoutId="activeStepTab"
-                className="absolute inset-0 bg-jaxtina-red rounded-md -z-10"
-                transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
-              />
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab("essay")}
-            className={`relative z-10 px-3 h-7 text-[10px] font-black uppercase tracking-wider transition-colors duration-200 ${activeTab === "essay" ? "text-white" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            {t("write", "responsePanel", lang)}
-            {activeTab === "essay" && (
-              <motion.div
-                layoutId="activeStepTab"
-                className="absolute inset-0 bg-jaxtina-red rounded-md -z-10"
-                transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
-              />
-            )}
-          </button>
+        <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onBack}
+              disabled={isProcessing}
+              className="hidden sm:flex rounded-xl font-black uppercase tracking-widest text-[9px] text-on-surface-variant/40 hover:text-primary transition-colors"
+            >
+              <ChevronLeft className="h-3 w-3 mr-2" /> {dict.practice.back}
+            </Button>
+            <div className="flex sm:hidden p-1.5 bg-surface-container-low rounded-2xl shrink-0 relative items-center gap-1 shadow-inner">
+              <button
+                onClick={() => setActiveTab("question")}
+                className={`relative z-10 px-4 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all duration-300 ${activeTab === "question" ? "text-primary" : "text-on-surface-variant/40"}`}
+              >
+                Question
+                {activeTab === "question" && (
+                  <motion.div
+                    layoutId="activeStepTab"
+                    className="absolute inset-0 bg-white rounded-xl shadow-sm -z-10"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab("essay")}
+                className={`relative z-10 px-4 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all duration-300 ${activeTab === "essay" ? "text-primary" : "text-on-surface-variant/40"}`}
+              >
+                Draft
+                {activeTab === "essay" && (
+                  <motion.div
+                    layoutId="activeStepTab"
+                    className="absolute inset-0 bg-white rounded-xl shadow-sm -z-10"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </button>
+            </div>
         </div>
       </div>
 
-      {/* Split pane / Tabs */}
       <div ref={containerRef} className="flex flex-1 overflow-hidden relative">
         <AnimatePresence mode="popLayout" initial={false}>
-          {/* Left: Question */}
           {(activeTab === "question" || (typeof window !== "undefined" && window.innerWidth >= 640)) && (
             <motion.div
               key="question"
@@ -277,34 +271,32 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -20, opacity: 0 }}
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className={`overflow-y-auto p-5 shrink-0 h-full ${activeTab === "question" ? "w-full" : "hidden sm:block"} sm:shrink-0 scrollbar-thin`}
+              className={`overflow-y-auto p-10 shrink-0 h-full ${activeTab === "question" ? "w-full" : "hidden sm:block"} sm:shrink-0 scrollbar-thin`}
               style={{
                 width: typeof window !== "undefined" && window.innerWidth < 640 ? "100%" : `${leftPct}%`,
                 position: typeof window !== "undefined" && window.innerWidth < 640 && activeTab !== "question" ? "absolute" : "relative"
               }}
             >
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-                {t("write", "questionPanel", lang)}
+              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant/20 mb-8 px-1">
+                Examination Prompt
               </p>
-
               {data.question &&
                 !(data.questionImage && data.question.startsWith("[Image question:")) ? (
-                <p className="text-base leading-relaxed whitespace-pre-wrap mb-4">
+                <p className="text-xl leading-relaxed text-on-surface font-medium mb-10 px-1 whitespace-pre-wrap">
                   {data.question}
                 </p>
               ) : !data.questionImage ? (
-                <p className="text-sm text-muted-foreground italic mb-4">
-                  {lang === "vi" ? "Không có nội dung câu hỏi." : "No question text was provided."}
+                <p className="text-sm text-on-surface-variant opacity-40 italic mb-10 px-1">
+                  {lang === "vi" ? "Không có nội dung câu hỏi." : "No question text provided."}
                 </p>
               ) : null}
-
               {data.questionImage && (
-                <div className="mb-3">
+                <div className="mb-10 group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={data.questionImage}
                     alt="Question"
-                    className="w-full rounded-lg border object-contain shadow-sm"
+                    className="w-full rounded-[40px] border-none shadow-premium object-contain bg-white group-hover:scale-[1.02] transition-transform duration-700"
                     style={{ maxHeight: "60vh" }}
                   />
                 </div>
@@ -312,16 +304,14 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
             </motion.div>
           )}
 
-          {/* Draggable divider */}
           <div
             onMouseDown={handleMouseDown}
-            className="hidden sm:flex w-2 shrink-0 cursor-col-resize bg-border hover:bg-jaxtina-red/60 transition-colors items-center justify-center group"
+            className="hidden sm:flex w-2 shrink-0 cursor-col-resize bg-surface items-center justify-center group"
             title="Drag to resize"
           >
-            <GripVertical className="h-5 w-5 text-muted-foreground/40 group-hover:text-jaxtina-red/70 transition-colors pointer-events-none" />
+            <GripVertical className="h-4 w-4 text-on-surface-variant opacity-10 group-hover:text-primary transition-colors pointer-events-none" />
           </div>
 
-          {/* Right: Essay */}
           {(activeTab === "essay" || (typeof window !== "undefined" && window.innerWidth >= 640)) && (
             <motion.div
               key="essay"
@@ -329,30 +319,25 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 20, opacity: 0 }}
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className={`flex flex-col p-4 gap-2 overflow-hidden h-full ${activeTab === "essay" ? "w-full" : "hidden sm:flex"}`}
+              className={`flex flex-col p-8 gap-4 overflow-hidden h-full ${activeTab === "essay" ? "w-full" : "hidden sm:flex"}`}
               style={{
                 width: typeof window !== "undefined" && window.innerWidth < 640 ? "100%" : `${100 - leftPct - 0.5}%`,
                 position: typeof window !== "undefined" && window.innerWidth < 640 && activeTab !== "essay" ? "absolute" : "relative"
               }}
             >
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground font-medium">{t("write", "responsePanel", lang)}</span>
-                <span className={`font-bold tabular-nums ${wordColor}`}>
-                  {wordCount} {t("write", "words", lang)}{" "}
-                  {wordCount >= minWords ? (
-                    <span className="text-green-600 dark:text-green-400">✓</span>
-                  ) : (
-                    <span className="text-muted-foreground font-normal">
-                      / {minWords} {t("write", "wordsRequired", lang)}
-                    </span>
-                  )}
+              <div className="flex items-center justify-between px-2">
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant/20">{lang === 'vi' ? 'Bản thảo học thuật' : 'Academic Response'}</span>
+                <span className={`font-black tabular-nums text-[10px] tracking-widest uppercase ${wordColor}`}>
+                  {wordCount} {dict.practice.words}{" "}
+                  <span className="opacity-30">/</span>{" "}
+                  <span className="opacity-50">{minWords} {lang === 'vi' ? 'TỪ' : 'REQUIRED'}</span>
                 </span>
               </div>
               <textarea
-                className="flex-1 w-full resize-none rounded-xl border border-input bg-background p-4 text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-jaxtina-red/30 font-[inherit] disabled:opacity-60 shadow-inner"
+                className="flex-1 w-full resize-none rounded-[40px] bg-white p-12 text-lg leading-relaxed text-on-surface border-none focus:outline-none focus:ring-4 focus:ring-primary/5 font-body placeholder:text-on-surface-variant/10 shadow-premium disabled:opacity-60 transition-all"
                 value={essay}
                 onChange={(e) => setEssay(e.target.value)}
-                placeholder={data.taskNumber === "1" ? t("write", "placeholder1", lang) : t("write", "placeholder2", lang)}
+                placeholder={data.taskNumber === "1" ? (lang === 'vi' ? 'Mô tả các đặc điểm chính và so sánh...' : 'Summarize the information by selecting and reporting the main features...') : (lang === 'vi' ? 'Đưa ra lý do và dẫn chứng cho quan điểm của bạn...' : 'Give reasons for your answer and include any relevant examples...')}
                 disabled={isProcessing}
                 spellCheck
               />
@@ -361,59 +346,58 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
         </AnimatePresence>
       </div>
 
-      {/* Bottom nav bar */}
-      <div className="border-t bg-card flex items-center justify-between px-4 py-2.5 shrink-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          {(["1", "2"] as const).map((n) => {
-            const isActive = data.taskNumber === n;
-            return (
-              <div
-                key={n}
-                className={`flex items-center gap-1.5 rounded px-3 py-1 text-sm font-medium select-none ${isActive
-                    ? "bg-jaxtina-red text-white"
-                    : "bg-muted text-muted-foreground"
-                  }`}
-              >
-                {isActive && <CheckCircle2 className="h-3.5 w-3.5" />}
-                Part {n}
-              </div>
-            );
-          })}
+      <div className="bg-white/90 backdrop-blur-xl flex items-center justify-between px-10 py-5 shrink-0 shadow-stitched border-t border-on-surface-variant/5">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2 p-1.5 bg-surface-container-low rounded-2xl shadow-inner">
+            {(["1", "2"] as const).map((n) => {
+              const isActive = data.taskNumber === n;
+              return (
+                <div
+                  key={n}
+                  className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${isActive
+                      ? "bg-white text-primary shadow-sm"
+                      : "text-on-surface-variant opacity-20"
+                    }`}
+                >
+                  Part {n}
+                </div>
+              );
+            })}
+          </div>
 
-          {/* Feedback language selector */}
-          <div className="flex items-center gap-1 border rounded-lg overflow-hidden text-xs h-7">
-            <span className="px-2 text-muted-foreground text-[11px] hidden sm:inline">{t("write", "language", lang)}:</span>
+          <div className="hidden sm:flex items-center gap-2 p-1.5 bg-surface-container-low rounded-2xl shadow-inner">
             {(["en", "vi"] as const).map((l) => (
               <button
                 key={l}
                 onClick={() => { setFeedbackLang(l); setLang(l); }}
-                className={`px-2.5 h-full font-semibold transition-colors ${feedbackLang === l
-                    ? "bg-jaxtina-blue text-white"
-                    : "hover:bg-muted text-muted-foreground"
+                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${feedbackLang === l
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-on-surface-variant opacity-20 hover:opacity-100"
                   }`}
               >
-                {l.toUpperCase()}
+                {l}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <span className={`text-sm font-semibold tabular-nums ${wordColor}`}>
-            {wordCount} / {minWords} {t("write", "words", lang)}
-          </span>
-          <Button onClick={handleSubmitClick} disabled={isProcessing} size="sm">
+        <div className="flex items-center gap-8">
+          <Button 
+            onClick={handleSubmitClick} 
+            disabled={isProcessing} 
+            className="h-16 px-12 rounded-[24px] bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-[0.25em] text-[10px] shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 border-none"
+          >
             {planLoading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin mr-2" /> {t("essayPlan", "generating", lang)}
+                <Loader2 className="h-5 w-5 animate-spin mr-4" /> {lang === 'vi' ? 'ĐANG TẠO...' : 'GENERATING...'}
               </>
             ) : loading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin mr-2" /> {t("write", "analyzing", lang)}
+                <Loader2 className="h-5 w-5 animate-spin mr-4" /> {lang === 'vi' ? 'ĐANG PHÂN TÍCH...' : 'ANALYZING...'}
               </>
             ) : (
               <>
-                <Zap className="h-4 w-4 mr-2" /> {t("write", "analyzeBtn", lang)}
+                <Zap className="h-5 w-5 mr-4" /> {lang === 'vi' ? 'GỬI & CHẤM BÀI' : 'AUTHORIZE REVIEW'}
               </>
             )}
           </Button>
