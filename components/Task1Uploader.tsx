@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import {
     Upload, Image as ImageIcon, ArrowRight, CheckCircle2,
     ChevronDown, ChevronUp, Loader2, AlertCircle, RotateCcw,
@@ -197,7 +198,7 @@ export default function Task1Uploader({ onComplete, questionId, preloadedChartDa
                             <div className="flex flex-col items-center justify-center space-y-4">
                                 {imagePreview ? (
                                     <div className="relative w-full max-w-sm aspect-video rounded-lg overflow-hidden border shadow-lg">
-                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-contain" />
+                                        <Image src={imagePreview} alt="Preview" fill className="object-contain" unoptimized />
                                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <p className="text-white text-sm font-medium">Change Image</p>
                                         </div>

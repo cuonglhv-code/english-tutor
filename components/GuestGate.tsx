@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { useUser } from '@/hooks/useUser'
 
 const GUEST_KEY = 'jaxtina_guest'
@@ -128,7 +129,7 @@ export default function GuestGate({ children, source }: GuestGateProps) {
         </form>
 
         <p className="mt-4 text-center text-xs text-gray-500">
-          Đã có tài khoản? <a href="/login" className="text-red-500 underline">Đăng nhập ngay</a>
+          Đã có tài khoản? <Link href="/login" className="text-red-500 underline">Đăng nhập ngay</Link>
         </p>
       </div>
     </div>
