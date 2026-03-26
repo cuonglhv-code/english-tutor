@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tutor Profile - IELTS Mentor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "on-background": "#1a1c1c",
+              "inverse-primary": "#a5c8ff",
+              "tertiary": "#5c5c5c",
+              "surface-tint": "#005faf",
+              "surface-container-high": "#e8e8e8",
+              "outline-variant": "#c0c7d6",
+              "on-primary-container": "#fefcff",
+              "inverse-surface": "#2f3131",
+              "error-container": "#ffdad6",
+              "on-secondary-container": "#fffbff",
+              "secondary-fixed": "#ffdad6",
+              "error": "#ba1a1a",
+              "surface-bright": "#f9f9f9",
+              "tertiary-fixed": "#e2e2e2",
+              "primary-fixed": "#d4e3ff",
+              "on-tertiary": "#ffffff",
+              "on-secondary-fixed-variant": "#930010",
+              "on-tertiary-fixed-variant": "#474747",
+              "on-tertiary-container": "#fcfcfc",
+              "surface-container-low": "#f3f3f3",
+              "on-secondary-fixed": "#410003",
+              "on-primary-fixed": "#001c3a",
+              "primary": "#005cab",
+              "secondary": "#b7131d",
+              "on-primary-fixed-variant": "#004786",
+              "inverse-on-surface": "#f1f1f1",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#a5c8ff",
+              "on-secondary": "#ffffff",
+              "on-surface-variant": "#404753",
+              "on-surface": "#1a1c1c",
+              "surface-dim": "#dadada",
+              "secondary-fixed-dim": "#ffb3ac",
+              "tertiary-container": "#747474",
+              "outline": "#707785",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#db3232",
+              "on-tertiary-fixed": "#1b1b1b",
+              "on-error-container": "#93000a",
+              "background": "#f9f9f9",
+              "surface-container": "#eeeeee",
+              "tertiary-fixed-dim": "#c6c6c6",
+              "surface-variant": "#e2e2e2",
+              "surface": "#f9f9f9",
+              "primary-container": "#0075d6"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-8 py-4 max-w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-blue-700 dark:text-blue-400 font-headline">IELTS Mentor</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-opacity duration-200" href="#">Dashboard</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-opacity duration-200" href="#">Practice</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-opacity duration-200" href="#">Placement</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Tutors</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 transition-opacity duration-200" href="#">Guides</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-xl font-headline font-bold text-sm hover:opacity-90 transition-all active:scale-95">Start Test</button>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors text-3xl">account_circle</span>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-[1px] w-full"></div>
+</nav>
+<main class="pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
+<!-- Side Navigation (Writing Lab Context) -->
+<aside class="hidden lg:flex flex-col h-fit sticky top-24 p-4 gap-2 bg-slate-50 dark:bg-slate-950 rounded-xl w-64 border-0">
+<div class="flex items-center gap-3 mb-6 px-2">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">history_edu</span>
+</div>
+<div>
+<h3 class="font-['Plus_Jakarta_Sans'] font-extrabold text-slate-900 dark:text-slate-100 text-sm">Writing Lab</h3>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Academic Module</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-transform duration-200 hover:translate-x-1 font-medium text-sm" href="#">
+<span class="material-symbols-outlined">assignment</span> Task Selection
+                </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-transform duration-200 hover:translate-x-1 font-medium text-sm" href="#">
+<span class="material-symbols-outlined">edit_note</span> Drafting
+                </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-transform duration-200 hover:translate-x-1 font-medium text-sm" href="#">
+<span class="material-symbols-outlined">history_edu</span> Model Answers
+                </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-transform duration-200 hover:translate-x-1 font-medium text-sm" href="#">
+<span class="material-symbols-outlined">menu_book</span> Vocabulary
+                </a>
+<a class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg px-4 py-3 font-bold text-sm" href="#">
+<span class="material-symbols-outlined">forum</span> Tutor Feedback
+                </a>
+</nav>
+<button class="mt-8 bg-secondary text-on-secondary py-3 px-4 rounded-xl font-headline font-bold text-sm shadow-lg shadow-secondary/20 hover:opacity-90 active:opacity-70 transition-all">Submit for Review</button>
+</aside>
+<!-- Main Content Canvas -->
+<section class="flex-1 space-y-8">
+<!-- Tutor Profile Header Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 flex flex-col md:flex-row gap-8 items-center md:items-start shadow-[0px_20px_40px_rgba(26,28,28,0.06)] relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-8 -mt-8"></div>
+<div class="relative">
+<div class="w-32 h-32 rounded-full border-4 border-surface-container-low overflow-hidden shadow-lg">
+<img alt="Jaxtina English Tutor" class="w-full h-full object-cover" data-alt="professional portrait of a friendly female english tutor in her 30s with a warm smile, wearing business casual attire in a bright office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnmvq2BBo3vIOt-Ys2TE6ut1RbOA1NVD6cuaRKoCxBOmVDxT9HC8xhNPbfCfe9j2ygSbD6lsxkNGtSp5cG9Imt0RuU2DzH6jw3RBoQFBHLvALKix_IpgmsOTYZhlWVFmM922NzemWSWAKtHU_35XdTpXsKvOlVvbPJelU2W1YEHFUMAL2ZRwqzI31Ey3u6RJSDEHbeOkyA1Jq7gIr2ijsFkyLAlClMpvl9N-u6xaiBr1rUkGREZzBRX9Gb5oiJbawSCmHDqdYD-dQ"/>
+</div>
+<div class="absolute bottom-1 right-1 bg-primary text-on-primary p-1.5 rounded-full border-4 border-white">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1 text-center md:text-left">
+<div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-2">
+<h1 class="text-3xl font-headline font-extrabold tracking-tight text-on-surface">Jaxtina English Tutor</h1>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed text-xs font-bold uppercase tracking-wider">Top Rated</span>
+</div>
+<p class="text-on-surface-variant font-medium mb-4 max-w-xl">Specializing in IELTS Academic preparation with over 8 years of experience. Helping students reach Band 7.5+ through personalized speaking and writing strategies.</p>
+<div class="flex flex-wrap justify-center md:justify-start gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="text-sm font-bold">4.9 (2.4k Reviews)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">public</span>
+<span class="text-sm font-bold">Native Speaker (UK)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span class="text-sm font-bold">Available Now</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Selection Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Level Selection -->
+<div class="md:col-span-5 bg-surface-container-low rounded-xl p-6 flex flex-col gap-4">
+<h3 class="font-headline font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">bar_chart</span>
+                        Select Your Level
+                    </h3>
+<div class="grid grid-cols-1 gap-3">
+<label class="relative flex items-center p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:shadow-md transition-shadow group">
+<input checked="" class="hidden peer" name="level" type="radio"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded-full peer-checked:border-primary peer-checked:bg-primary transition-all mr-4 flex items-center justify-center">
+<div class="w-2 h-2 bg-white rounded-full"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-sm">Beginner</span>
+<span class="text-xs text-on-surface-variant italic">A1 - A2 Foundation</span>
+</div>
+</label>
+<label class="relative flex items-center p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:shadow-md transition-shadow group">
+<input class="hidden peer" name="level" type="radio"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded-full peer-checked:border-primary peer-checked:bg-primary transition-all mr-4 flex items-center justify-center">
+<div class="w-2 h-2 bg-white rounded-full"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-sm">Intermediate</span>
+<span class="text-xs text-on-surface-variant italic">B1 - B2 Core Skills</span>
+</div>
+</label>
+<label class="relative flex items-center p-4 bg-surface-container-lowest rounded-xl cursor-pointer hover:shadow-md transition-shadow group">
+<input class="hidden peer" name="level" type="radio"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded-full peer-checked:border-primary peer-checked:bg-primary transition-all mr-4 flex items-center justify-center">
+<div class="w-2 h-2 bg-white rounded-full"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-sm">Advanced</span>
+<span class="text-xs text-on-surface-variant italic">C1 - C2 Mastery</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Focus Area Selection -->
+<div class="md:col-span-7 bg-surface-container-low rounded-xl p-6 flex flex-col gap-4">
+<h3 class="font-headline font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">target</span>
+                        Focus Area
+                    </h3>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center gap-3 p-6 bg-surface-container-lowest rounded-xl border-2 border-transparent hover:border-primary/20 hover:shadow-md transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-3xl text-primary">chat_bubble</span>
+<span class="font-bold text-xs uppercase tracking-tight">Free Conversation</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-6 bg-primary-fixed text-on-primary-fixed rounded-xl border-2 border-primary hover:shadow-md transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">edit_square</span>
+<span class="font-bold text-xs uppercase tracking-tight">IELTS Writing</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-6 bg-surface-container-lowest rounded-xl border-2 border-transparent hover:border-primary/20 hover:shadow-md transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-3xl text-primary">mic</span>
+<span class="font-bold text-xs uppercase tracking-tight">Speaking</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-6 bg-surface-container-lowest rounded-xl border-2 border-transparent hover:border-primary/20 hover:shadow-md transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-3xl text-primary">menu_book</span>
+<span class="font-bold text-xs uppercase tracking-tight">Vocabulary</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Suggested Topics -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline font-bold text-xl mb-1">Suggested Topics</h3>
+<p class="text-on-surface-variant text-sm">Popular discussion points for your current level</p>
+</div>
+<button class="text-primary font-bold text-sm hover:underline">View All Topics</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="p-4 bg-surface rounded-xl hover:bg-primary-fixed transition-colors group cursor-pointer border border-outline-variant/20">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">eco</span>
+<span class="font-bold text-sm">Climate Change</span>
+</div>
+<p class="text-xs text-on-surface-variant">Analyze Task 2 essay structures regarding environmental policy.</p>
+</div>
+<div class="p-4 bg-surface rounded-xl hover:bg-primary-fixed transition-colors group cursor-pointer border border-outline-variant/20">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">devices</span>
+<span class="font-bold text-sm">Future of AI</span>
+</div>
+<p class="text-xs text-on-surface-variant">Discuss vocabulary related to automation and tech ethics.</p>
+</div>
+<div class="p-4 bg-surface rounded-xl hover:bg-primary-fixed transition-colors group cursor-pointer border border-outline-variant/20">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">travel_explore</span>
+<span class="font-bold text-sm">Globalization</span>
+</div>
+<p class="text-xs text-on-surface-variant">Develop complex sentence structures for Part 3 speaking.</p>
+</div>
+</div>
+</div>
+<!-- Primary Action Footer Area -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-surface-bright rounded-xl p-8 border border-primary/10">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-green-700">timer</span>
+</div>
+<div>
+<p class="font-bold text-lg">Instant Connection</p>
+<p class="text-sm text-on-surface-variant">Average wait time: <span class="text-green-700 font-bold">&lt; 1 minute</span></p>
+</div>
+</div>
+<button class="w-full md:w-auto bg-gradient-to-br from-secondary to-secondary-container text-on-secondary px-12 py-4 rounded-xl font-headline font-extrabold text-lg shadow-xl shadow-secondary/30 hover:scale-105 active:scale-95 transition-all">
+                    Start Session Now
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-slate-100 dark:bg-slate-900 mt-20 border-t border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center">
+<div class="mb-6 md:mb-0">
+<p class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400">© 2024 IELTS Mentor Academic. All rights reserved.</p>
+</div>
+<div class="flex gap-8 md:justify-end">
+<a class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Institutional Access</a>
+<a class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>

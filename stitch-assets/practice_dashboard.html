@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Writing Practice | IELTS Mentor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-background": "#1a1c1c",
+                        "inverse-primary": "#a5c8ff",
+                        "tertiary": "#5c5c5c",
+                        "surface-tint": "#005faf",
+                        "surface-container-high": "#e8e8e8",
+                        "outline-variant": "#c0c7d6",
+                        "on-primary-container": "#fefcff",
+                        "inverse-surface": "#2f3131",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#fffbff",
+                        "secondary-fixed": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary-fixed": "#e2e2e2",
+                        "primary-fixed": "#d4e3ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#930010",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "on-tertiary-container": "#fcfcfc",
+                        "surface-container-low": "#f3f3f3",
+                        "on-secondary-fixed": "#410003",
+                        "on-primary-fixed": "#001c3a",
+                        "primary": "#005cab",
+                        "secondary": "#b7131d",
+                        "on-primary-fixed-variant": "#004786",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#a5c8ff",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#404753",
+                        "on-surface": "#1a1c1c",
+                        "surface-dim": "#dadada",
+                        "secondary-fixed-dim": "#ffb3ac",
+                        "tertiary-container": "#747474",
+                        "outline": "#707785",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#db3232",
+                        "on-tertiary-fixed": "#1b1b1b",
+                        "on-error-container": "#93000a",
+                        "background": "#f9f9f9",
+                        "surface-container": "#eeeeee",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "surface-variant": "#e2e2e2",
+                        "surface": "#f9f9f9",
+                        "primary-container": "#0075d6"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-8 py-4 max-w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-blue-700 dark:text-blue-400">IELTS Mentor</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:opacity-80 transition-opacity duration-200" href="#">Dashboard</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Practice</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:opacity-80 transition-opacity duration-200" href="#">Placement</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:opacity-80 transition-opacity duration-200" href="#">Tutors</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold text-sm tracking-tight text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:opacity-80 transition-opacity duration-200" href="#">Guides</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary text-on-primary px-6 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity">Start Test</button>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-[1px] w-full"></div>
+</nav>
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col h-screen w-64 fixed left-0 top-0 p-4 gap-2 bg-slate-50 dark:bg-slate-950 pt-24 z-40">
+<div class="px-4 mb-6">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="edit_note">edit_note</span>
+</div>
+<div>
+<h2 class="font-['Plus_Jakarta_Sans'] font-extrabold text-slate-900 dark:text-slate-100 leading-tight">Writing Lab</h2>
+<p class="text-xs text-on-surface-variant">Academic Module</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg px-4 py-3 font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-['Inter'] text-sm font-medium">Task Selection</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+<span class="font-['Inter'] text-sm font-medium">Drafting</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+<span class="font-['Inter'] text-sm font-medium">Model Answers</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-['Inter'] text-sm font-medium">Vocabulary</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-['Inter'] text-sm font-medium">Tutor Feedback</span>
+</a>
+</nav>
+<div class="mt-auto p-4">
+<button class="w-full bg-secondary-container text-white py-3 rounded-xl font-semibold shadow-lg shadow-secondary/20 hover:opacity-90 transition-opacity">Submit for Review</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-24 pb-12 px-8 min-h-screen">
+<div class="max-w-6xl mx-auto">
+<!-- Header Section -->
+<header class="mb-12">
+<h1 class="font-headline text-5xl font-extrabold text-on-background tracking-tight mb-4">Writing Practice</h1>
+<p class="text-on-surface-variant text-lg max-w-2xl">Master the Academic Writing module with curated tasks, real-time analytics, and professional model answers.</p>
+</header>
+<!-- Filters Section -->
+<section class="mb-8 flex flex-wrap items-center gap-4">
+<div class="flex bg-surface-container-low p-1 rounded-xl">
+<button class="px-6 py-2 rounded-lg bg-surface-container-lowest shadow-sm text-sm font-semibold text-primary">All Tasks</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface">Task 1</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface">Task 2</button>
+</div>
+<div class="flex gap-2">
+<select class="bg-surface-container-low border-none rounded-xl text-sm font-medium px-4 py-2 focus:ring-2 focus:ring-primary text-on-surface-variant">
+<option>Difficulty: All</option>
+<option>Band 5.0 - 6.0</option>
+<option>Band 6.5 - 7.5</option>
+<option>Band 8.0+</option>
+</select>
+<select class="bg-surface-container-low border-none rounded-xl text-sm font-medium px-4 py-2 focus:ring-2 focus:ring-primary text-on-surface-variant">
+<option>Type: All Categories</option>
+<option>Line Graph</option>
+<option>Bar Chart</option>
+<option>Pie Chart</option>
+<option>Process Diagram</option>
+<option>Opinion Essay</option>
+<option>Discussion Essay</option>
+</select>
+</div>
+<div class="ml-auto relative group">
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-xl text-sm focus:ring-2 focus:ring-primary w-64" placeholder="Search tasks..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2 text-on-surface-variant text-lg">search</span>
+</div>
+</section>
+<!-- Task Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Task Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 flex flex-col group border border-outline-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">Task 1</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-semibold">Band 7.5</span>
+</div>
+</div>
+<div class="mb-4 aspect-video rounded-lg overflow-hidden relative">
+<img alt="Data Visualization" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="professional line graph showing complex data trends with clean blue and grey colors on a white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCATuzzStKeQDM8ctwZpaQvzdyOl8MMb14UkvYZnAnGr_nvW7L9MA2S1d65LHFeSHTtVNYfGPalB5voqfAMbxJfM9osC_0fdziyyRHKfHPadxxuGktC0c1ZTWEo3cT0Yt8koxwtypcDka9eXgZ4FZULbLkfRmHWEJbG6dJXkf1GQOJKwH3IBlCt9jRtpSY1EZ6n9yyRDWGCuYvm3xpl5GmapYEzVQ2PpiGSn_blVbZpRUrEdn7rEP3sEQbEsYt46PL0Bd1fOyz9CAk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<span class="absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 bg-black/20 backdrop-blur-md rounded">Line Graph</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors leading-snug">Global Energy Consumption Trends (2000-2023)</h3>
+<p class="text-on-surface-variant text-sm mb-6 line-clamp-2">Summarize the information by selecting and reporting the main features, and make comparisons where relevant.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg" data-icon="groups">groups</span>
+<span class="text-xs font-medium">12.4k practiced</span>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-primary-container transition-colors">
+                            Start <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 flex flex-col group border border-outline-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">Task 2</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-semibold">Band 8.5</span>
+</div>
+</div>
+<div class="mb-4 aspect-video rounded-lg overflow-hidden relative">
+<img alt="Digital World" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="conceptual digital connectivity image with abstract networking lines and glowing nodes against a deep blue tech background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhhgtC9GU-4chOBv0FrkqSIhJki3iWj4F634s26zhfGsxunImAp-v2cWxzNtBheBXGS6org0hNEL64xoodXZ3JXVKT0F2RVueXqZbStGYHoysE1IycDU9kqu6Xzzi8NqwbbIAZQzkUd51zp4H2RrVA0tn7YANxJdkv-jbsIy377jH4vmw1zW2FxkBIHLbRtOSuY32VFHa3aQUIGpr0_RvcKghTGIo50d_gGWimxA3fK0PTi90kA8uXX_GHIkfLL0MkfFqGpPv-xnw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<span class="absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 bg-black/20 backdrop-blur-md rounded">Opinion Essay</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors leading-snug">The Impact of AI on Modern Education</h3>
+<p class="text-on-surface-variant text-sm mb-6 line-clamp-2">Some believe artificial intelligence will replace teachers. To what extent do you agree or disagree?</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg" data-icon="groups">groups</span>
+<span class="text-xs font-medium">8.1k practiced</span>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-primary-container transition-colors">
+                            Start <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Task Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 flex flex-col group border border-outline-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">Task 1</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-semibold">Band 6.5</span>
+</div>
+</div>
+<div class="mb-4 aspect-video rounded-lg overflow-hidden relative">
+<img alt="Business Data" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="clean bar chart visualization showing comparative growth stats with vibrant colors and soft ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6d-0vcrsrzH5Oj14RDj7sz9vWsANPxeb7zf_FUY0IwI8DGqV0VV099_rwXot4L-XmQxnPK6L6xDyY8vnLKHNk4MNA8nybqdHr4gGdOORk6WPY_88VJhdZJCT2BaqzpjboWkBI1Eu0Qdvp9U_Wp-UXqdHxuwYt-Wpkf72CjXpwO5nHJn7uIsAcueASDcmObx6ptJ9y2-34GMr-UDfhUSGOzzVDGaOoiFeofAC7UABYpC-p_UnVALfK4RUkOSK41l9Bpo79qmZn0Go"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<span class="absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 bg-black/20 backdrop-blur-md rounded">Bar Chart</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors leading-snug">Employment Rates in G7 Nations (2022)</h3>
+<p class="text-on-surface-variant text-sm mb-6 line-clamp-2">The bar chart illustrates the percentage of employment across various sectors in seven developed nations.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg" data-icon="groups">groups</span>
+<span class="text-xs font-medium">5.7k practiced</span>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-primary-container transition-colors">
+                            Start <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Task Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 flex flex-col group border border-outline-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary/10 text-secondary text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">Task 2</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-semibold">Band 7.0</span>
+</div>
+</div>
+<div class="mb-4 aspect-video rounded-lg overflow-hidden relative">
+<img alt="Economic Growth" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="conceptual representation of economic success with rising arrows and stacks of coins in a bright airy studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAajrVaXFhiFAhFlCn_5GBss3fJKFtKQgayH-cAjXTbWeKaJ4MVV9pmRtrALfp2K-ZeRErKfbkdBjbZYNEDbWqx6h49GjaewkfY_b4opb1a0IIvr_x4P-PBsqH1mBlMZpEoae1IwEecdzUcjjsxW4NWxR47-FQ1aQNKZhSbgYZRAc8_XN_tzTJh7sjWH1FQJgrGCE_-tCAqEo_NE7Jegxa39rhsvnCOg3H15thSOz4ARjfCCVds-6tzs-NuTpAd4GrmoDVlM4a-PFU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<span class="absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 bg-black/20 backdrop-blur-md rounded">Discussion Essay</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-2 group-hover:text-primary transition-colors leading-snug">Economic Development vs. Environmental Policy</h3>
+<p class="text-on-surface-variant text-sm mb-6 line-clamp-2">Discuss both views and give your own opinion on whether countries should prioritize the economy or the environment.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg" data-icon="groups">groups</span>
+<span class="text-xs font-medium">15.2k practiced</span>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-primary-container transition-colors">
+                            Start <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bento Featured Section -->
+<section class="mt-20">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 bg-gradient-to-br from-primary to-primary-container rounded-2xl p-8 text-white relative overflow-hidden group">
+<div class="relative z-10">
+<h2 class="font-headline text-3xl font-extrabold mb-4">Premium Writing Feedback</h2>
+<p class="max-w-md text-white/90 mb-8">Get your essays graded by former IELTS examiners with detailed Band Descriptor analysis in under 24 hours.</p>
+<button class="bg-white text-primary px-8 py-3 rounded-xl font-bold hover:bg-surface-bright transition-colors">Upgrade to Pro</button>
+</div>
+<span class="material-symbols-outlined absolute -right-8 -bottom-8 text-[200px] text-white/10 rotate-12 group-hover:rotate-0 transition-transform duration-700" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="bg-surface-container-high rounded-2xl p-8 flex flex-col justify-center border border-outline-variant/10">
+<div class="mb-6">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+<span class="text-sm font-bold uppercase tracking-widest text-primary">Your Progress</span>
+</div>
+<h3 class="font-headline text-4xl font-extrabold text-on-background">7.5</h3>
+<p class="text-on-surface-variant text-sm">Average predicted band score</p>
+</div>
+<div class="w-full bg-white rounded-full h-2 mb-2 overflow-hidden">
+<div class="bg-primary h-full w-[75%] rounded-full"></div>
+</div>
+<p class="text-xs text-on-surface-variant font-medium">+0.5 from last week</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-slate-100 dark:bg-slate-900">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center border-t border-slate-200 dark:border-slate-800 pt-12">
+<div class="mb-8 md:mb-0">
+<p class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400">© 2024 IELTS Mentor Academic. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap gap-6 md:justify-end">
+<a class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Institutional Access</a>
+<a class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>

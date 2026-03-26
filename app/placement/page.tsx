@@ -13,32 +13,34 @@ export default async function PlacementIntroPage() {
   } = await supabase.auth.getUser();
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      <div className="max-w-3xl mx-auto px-4 py-16 sm:py-24">
+    <main className="min-h-screen bg-surface">
+      <div className="max-w-4xl mx-auto px-4 py-20 sm:py-32">
         {/* Header */}
-        <div className="text-center mb-12">
-          <span className="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-4">
+        <div className="text-center mb-16 space-y-4">
+          <span className="inline-block gradient-secondary text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
             Free Assessment
           </span>
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4 leading-tight">
+          <h1 className="text-5xl sm:text-6xl font-black text-on-surface mb-6 tracking-tight font-display">
             IELTS Placement Test
             <br />
-            <span className="text-blue-600">Bài kiểm tra xếp lớp IELTS</span>
+            <span className="text-primary italic">Bài kiểm tra xếp lớp</span>
           </h1>
-          <p className="text-slate-600 text-lg max-w-xl mx-auto leading-relaxed">
-            This test assesses your current level in Reading, Listening, and
-            Writing to suggest the most suitable study plan.
-          </p>
-          <p className="text-slate-500 text-base max-w-xl mx-auto mt-1">
-            Bài kiểm tra đánh giá trình độ hiện tại về Reading, Listening và
-            Writing để gợi ý lộ trình học phù hợp.
-          </p>
+          <div className="max-w-2xl mx-auto space-y-2">
+            <p className="text-on-surface-variant text-xl font-medium leading-relaxed">
+              This test assesses your current level in Reading, Listening, and
+              Writing to suggest the most suitable study plan.
+            </p>
+            <p className="text-on-surface-variant/60 text-base italic">
+              Bài kiểm tra đánh giá trình độ hiện tại về Reading, Listening và
+              Writing để gợi ý lộ trình học phù hợp.
+            </p>
+          </div>
         </div>
 
         {/* Section cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
           <SectionCard
-            icon={<BookOpen className="h-6 w-6 text-blue-600" />}
+            icon={<BookOpen className="h-6 w-6 text-primary" />}
             title="Reading"
             subtitle="Reading"
             duration="60 min"
@@ -56,7 +58,7 @@ export default async function PlacementIntroPage() {
             color="teal"
           />
           <SectionCard
-            icon={<PenLine className="h-6 w-6 text-amber-600" />}
+            icon={<PenLine className="h-6 w-6 text-secondary" />}
             title="Writing"
             subtitle="Writing"
             duration="60 min"
@@ -67,13 +69,17 @@ export default async function PlacementIntroPage() {
         </div>
 
         {/* Time notice */}
-        <div className="flex items-start gap-3 bg-slate-100 rounded-xl p-4 mb-8 text-sm text-slate-600">
-          <Clock className="h-5 w-5 text-slate-400 mt-0.5 shrink-0" />
+        <div className="flex items-start gap-4 bg-white/50 backdrop-blur-md rounded-3xl p-6 mb-12 text-sm text-on-surface-variant shadow-stitched border-none">
+          <div className="p-3 bg-primary/10 rounded-2xl">
+            <Clock className="h-6 w-6 text-primary" />
+          </div>
           <div>
-            <strong className="text-slate-700">Total time: ~2.5 hours</strong>
-            <span className="text-slate-400 mx-2">·</span>
-            <span className="text-slate-500">Tổng thời gian: khoảng 2.5 giờ</span>
-            <p className="text-slate-500 mt-1">
+            <div className="flex items-center gap-2 mb-1">
+               <strong className="text-on-surface font-black uppercase tracking-wider text-xs">Total time: ~2.5 hours</strong>
+               <span className="text-primary/20">•</span>
+               <span className="text-on-surface-variant/70 italic font-medium">Tổng thời gian: khoảng 2.5 giờ</span>
+            </div>
+            <p className="text-on-surface-variant leading-relaxed">
               Each section has a countdown timer. Your progress is saved, so you
               can resume if you reload. / Mỗi phần có đồng hồ đếm ngược. Tiến
               trình được lưu khi tải lại trang.
@@ -84,28 +90,28 @@ export default async function PlacementIntroPage() {
         {/* Auth gate / CTA */}
         {user ? (
           <div className="text-center">
-            <Button asChild size="lg" className="rounded-full px-10 text-base h-12">
+            <Button asChild size="lg" className="rounded-2xl px-12 text-lg h-14 gradient-secondary border-none shadow-lg hover:scale-105 transition-transform">
               <Link href="/placement/test">
-                Start Placement Test · Bắt đầu kiểm tra
+                Start Placement Test · Bắt đầu
                 <ChevronRight className="h-5 w-5 ml-2" />
               </Link>
             </Button>
-            <p className="text-xs text-slate-400 mt-3">
-              Signed in as {user.email} · Results will be saved to your profile.
+            <p className="text-[10px] font-bold text-on-surface-variant/40 mt-4 uppercase tracking-widest">
+              Signed in as {user.email} · Results will be saved
             </p>
           </div>
         ) : (
-          <div className="text-center space-y-3">
-            <div className="flex items-center gap-2 justify-center text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3 mb-2">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <span>
+          <div className="text-center space-y-6">
+            <div className="flex items-center gap-3 justify-center text-sm text-secondary bg-secondary/5 border-none rounded-2xl p-4 mb-4 max-w-lg mx-auto">
+              <AlertCircle className="h-5 w-5 shrink-0" />
+              <span className="font-bold">
                 Please log in to take the test and save your results. ·
                 Đăng nhập để làm bài và lưu kết quả.
               </span>
             </div>
-            <Button asChild size="lg" className="rounded-full px-10 text-base h-12">
+            <Button asChild size="lg" className="rounded-2xl px-12 text-lg h-14 gradient-secondary border-none shadow-lg hover:scale-105 transition-transform">
               <Link href="/login?next=/placement/test">
-                Log in to Start · Đăng nhập để bắt đầu
+                Log in to Start · Đăng nhập
                 <ChevronRight className="h-5 w-5 ml-2" />
               </Link>
             </Button>
@@ -128,27 +134,31 @@ interface SectionCardProps {
 }
 
 const colorMap = {
-  blue:  { bg: "bg-blue-50",  border: "border-blue-100",  badge: "bg-blue-100 text-blue-700" },
-  teal:  { bg: "bg-teal-50",  border: "border-teal-100",  badge: "bg-teal-100 text-teal-700" },
-  amber: { bg: "bg-amber-50", border: "border-amber-100", badge: "bg-amber-100 text-amber-700" },
+  blue:  { bg: "bg-primary/5",    badge: "bg-primary text-white" },
+  teal:  { bg: "bg-teal-500/5",   badge: "bg-teal-600 text-white" },
+  amber: { bg: "bg-secondary/5", badge: "bg-secondary text-white" },
 };
 
 function SectionCard({ icon, title, subtitle, duration, description, descriptionVi, color }: SectionCardProps) {
   const c = colorMap[color];
   return (
-    <div className={`rounded-xl border ${c.border} ${c.bg} p-5 flex flex-col gap-3`}>
+    <div className={`rounded-3xl border-none ${c.bg} p-6 flex flex-col gap-4 shadow-sm hover:shadow-stitched transition-all hover:-translate-y-1`}>
       <div className="flex items-center justify-between">
-        {icon}
-        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${c.badge}`}>
+        <div className="p-2.5 bg-white rounded-2xl shadow-sm">
+           {icon}
+        </div>
+        <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest ${c.badge}`}>
           {duration}
         </span>
       </div>
       <div>
-        <p className="font-semibold text-slate-800">{title}</p>
-        <p className="text-xs text-slate-500">{subtitle}</p>
+        <p className="font-black text-on-surface text-lg font-display tracking-tight">{title}</p>
+        <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest opacity-60">{subtitle}</p>
       </div>
-      <p className="text-xs text-slate-600">{description}</p>
-      <p className="text-xs text-slate-500 italic">{descriptionVi}</p>
+      <div className="space-y-2">
+        <p className="text-sm text-on-surface-variant leading-relaxed font-medium">{description}</p>
+        <p className="text-xs text-on-surface-variant/50 italic">{descriptionVi}</p>
+      </div>
     </div>
   );
 }

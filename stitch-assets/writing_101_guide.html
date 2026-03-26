@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Writing 101 Guide | IELTS Mentor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "on-background": "#1a1c1c",
+              "inverse-primary": "#a5c8ff",
+              "tertiary": "#5c5c5c",
+              "surface-tint": "#005faf",
+              "surface-container-high": "#e8e8e8",
+              "outline-variant": "#c0c7d6",
+              "on-primary-container": "#fefcff",
+              "inverse-surface": "#2f3131",
+              "error-container": "#ffdad6",
+              "on-secondary-container": "#fffbff",
+              "secondary-fixed": "#ffdad6",
+              "error": "#ba1a1a",
+              "surface-bright": "#f9f9f9",
+              "tertiary-fixed": "#e2e2e2",
+              "primary-fixed": "#d4e3ff",
+              "on-tertiary": "#ffffff",
+              "on-secondary-fixed-variant": "#930010",
+              "on-tertiary-fixed-variant": "#474747",
+              "on-tertiary-container": "#fcfcfc",
+              "surface-container-low": "#f3f3f3",
+              "on-secondary-fixed": "#410003",
+              "on-primary-fixed": "#001c3a",
+              "primary": "#005cab",
+              "secondary": "#b7131d",
+              "on-primary-fixed-variant": "#004786",
+              "inverse-on-surface": "#f1f1f1",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#a5c8ff",
+              "on-secondary": "#ffffff",
+              "on-surface-variant": "#404753",
+              "on-surface": "#1a1c1c",
+              "surface-dim": "#dadada",
+              "secondary-fixed-dim": "#ffb3ac",
+              "tertiary-container": "#747474",
+              "outline": "#707785",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#db3232",
+              "on-tertiary-fixed": "#1b1b1b",
+              "on-error-container": "#93000a",
+              "background": "#f9f9f9",
+              "surface": "#f9f9f9",
+              "primary-container": "#0075d6"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .asymmetric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+        @media (max-width: 768px) {
+            .asymmetric-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-8 py-4 max-w-full">
+<div class="text-xl font-bold tracking-tighter text-blue-700 dark:text-blue-400 font-headline">
+                IELTS Mentor
+            </div>
+<div class="hidden md:flex items-center gap-8 font-headline font-semibold text-sm tracking-tight">
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:opacity-80 transition-opacity duration-200" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:opacity-80 transition-opacity duration-200" href="#">Practice</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:opacity-80 transition-opacity duration-200" href="#">Placement</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:opacity-80 transition-opacity duration-200" href="#">Tutors</a>
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1" href="#">Guides</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:opacity-80 transition-opacity">account_circle</span>
+<button class="bg-gradient-to-br from-secondary to-secondary-container text-on-secondary px-5 py-2 rounded-xl text-sm font-semibold shadow-sm hover:opacity-90 transition-all active:scale-95">
+                    Start Test
+                </button>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-[1px] w-full"></div>
+</nav>
+<!-- SideNavBar (Suppressed for Resource Page Focus) -->
+<main class="pt-24 pb-20 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
+<!-- Hero Header -->
+<header class="mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed mb-6 font-label text-xs font-semibold uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">menu_book</span> Academic Module
+            </div>
+<h1 class="font-headline font-extrabold text-5xl md:text-7xl text-on-surface tracking-tight leading-tight mb-6">
+                Writing 101 <span class="text-primary italic">Guide.</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+                A masterclass in academic precision. Master the structures, vocabulary, and logic required to achieve a Band 8.0+ in your writing assessment.
+            </p>
+</header>
+<!-- Category Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-20">
+<!-- Data Visuals Card -->
+<div class="md:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/15 flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div>
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 text-primary">
+<span class="material-symbols-outlined text-3xl">insights</span>
+</div>
+<h3 class="font-headline font-bold text-2xl mb-3">Data Visuals</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Mastering line graphs, bar charts, and pie charts with objective analytical language.</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-medium">Task 1</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-medium">Trends</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-medium">Comparisons</span>
+</div>
+</div>
+<!-- Process Maps -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/15 flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div>
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center mb-6 text-secondary">
+<span class="material-symbols-outlined text-3xl">account_tree</span>
+</div>
+<h3 class="font-headline font-bold text-xl mb-3">Process Maps</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Passive voice mastery for natural &amp; industrial cycles.</p>
+</div>
+<button class="text-primary font-semibold text-sm flex items-center gap-1 mt-4 group-hover:gap-2 transition-all">Explore <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+<!-- Letter Writing -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/15 flex flex-col justify-between group hover:shadow-md transition-shadow">
+<div>
+<div class="w-12 h-12 rounded-lg bg-tertiary-container/10 flex items-center justify-center mb-6 text-tertiary">
+<span class="material-symbols-outlined text-3xl">mail</span>
+</div>
+<h3 class="font-headline font-bold text-xl mb-3">Letter Writing</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Formal, semi-formal, and informal tone variations.</p>
+</div>
+<button class="text-primary font-semibold text-sm flex items-center gap-1 mt-4 group-hover:gap-2 transition-all">Explore <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+</section>
+<!-- Featured Section: Line Graphs -->
+<section class="mb-20">
+<div class="flex items-baseline justify-between mb-8 border-b border-surface-container-high pb-4">
+<h2 class="font-headline font-extrabold text-3xl">Mastering Line Graphs</h2>
+<span class="text-on-surface-variant font-label text-sm">Chapter 01 — Statistical Analysis</span>
+</div>
+<div class="asymmetric-grid">
+<!-- Visual Example Column -->
+<div class="space-y-6">
+<div class="aspect-video bg-white rounded-xl overflow-hidden shadow-sm relative group">
+<img class="w-full h-full object-cover" data-alt="clean professional line graph showing upward and downward trends in blue and gray colors on a minimalist white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEZ7N2xMsCuf6Hqk9Gq9tv738dIepgCwmL62C_xvLEfY6Blo8lmXB7GT1JbSqOBMUCHzhN_B33VsRA3rRixhHtsXIfblE3SOKePbvlTDuZsX87ESJifSObALH9M2p98-K5Be3noB-0FrZ-UHzqLFYKzVsnCQBhjq4GYRS8Wj3Gu-CIE3ZhKjUMGxnF_pxL-V5XkYQ7FZmSE_MyKN8wGeKVCpXd-_IVJR0PjJa5bp9zihS9XkPUuTeZcrTBpsctKyWIQisfoLpoC5M"/>
+<div class="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors"></div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<h4 class="font-headline font-bold text-lg mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">tips_and_updates</span> Structure Tips
+                        </h4>
+<ul class="space-y-3 text-sm text-on-surface-variant">
+<li class="flex gap-3">
+<span class="text-primary font-bold">01.</span>
+<span><strong>Introduction:</strong> Paraphrase the prompt precisely. Avoid copying words.</span>
+</li>
+<li class="flex gap-3">
+<span class="text-primary font-bold">02.</span>
+<span><strong>Overview:</strong> Mention the overall trend without listing specific numbers.</span>
+</li>
+<li class="flex gap-3">
+<span class="text-primary font-bold">03.</span>
+<span><strong>Details:</strong> Use data points to support your observations of peaks and troughs.</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Vocabulary & Analysis Column -->
+<div class="bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-sm">
+<h3 class="font-headline font-bold text-2xl mb-8">Key Vocabulary</h3>
+<div class="space-y-8">
+<div>
+<p class="font-label text-xs uppercase tracking-widest text-secondary font-bold mb-4">Upward Movements</p>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface rounded-lg border border-outline-variant/10">
+<p class="font-bold text-primary">Surged / Soared</p>
+<p class="text-xs text-on-surface-variant mt-1">Dramatic, fast increases.</p>
+</div>
+<div class="p-4 bg-surface rounded-lg border border-outline-variant/10">
+<p class="font-bold text-primary">Rose steadily</p>
+<p class="text-xs text-on-surface-variant mt-1">Consistent, gradual growth.</p>
+</div>
+</div>
+</div>
+<div>
+<p class="font-label text-xs uppercase tracking-widest text-secondary font-bold mb-4">Fluctuations &amp; Stagnation</p>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface rounded-lg border border-outline-variant/10">
+<p class="font-bold text-primary">Oscillated</p>
+<p class="text-xs text-on-surface-variant mt-1">Repeated ups and downs.</p>
+</div>
+<div class="p-4 bg-surface rounded-lg border border-outline-variant/10">
+<p class="font-bold text-primary">Plateaued</p>
+<p class="text-xs text-on-surface-variant mt-1">Leveled out after growth.</p>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-surface-container-high">
+<p class="italic text-on-surface-variant leading-relaxed">
+                                "The graph illustrates a <span class="text-primary font-semibold">significant upward trend</span> in renewable energy consumption, which <span class="text-primary font-semibold">peaked</span> at 40% in 2022 before <span class="text-primary font-semibold">declining slightly</span> towards the end of the decade."
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Scoring Criteria Section -->
+<section class="bg-surface-container-high/50 rounded-2xl p-8 md:p-16 text-center">
+<h2 class="font-headline font-extrabold text-4xl mb-4">Scoring Criteria</h2>
+<p class="text-on-surface-variant max-w-xl mx-auto mb-12">How examiners evaluate your performance across four key dimensions.</p>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">1</div>
+<h4 class="font-bold text-sm mb-2">Task Response</h4>
+<p class="text-xs text-on-surface-variant">Answering all parts of the question clearly.</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">2</div>
+<h4 class="font-bold text-sm mb-2">Coherence</h4>
+<p class="text-xs text-on-surface-variant">Logical flow and paragraph organization.</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">3</div>
+<h4 class="font-bold text-sm mb-2">Lexical Resource</h4>
+<p class="text-xs text-on-surface-variant">Range and accuracy of vocabulary used.</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">4</div>
+<h4 class="font-bold text-sm mb-2">Grammar</h4>
+<p class="text-xs text-on-surface-variant">Complex structures and error-free sentences.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-slate-100 dark:bg-slate-900">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center border-t border-slate-200 dark:border-slate-800 pt-8 gap-8">
+<div class="font-['Inter'] text-xs text-slate-500 dark:text-slate-400">
+                © 2024 IELTS Mentor Academic. All rights reserved.
+            </div>
+<div class="flex flex-wrap gap-6 md:justify-end font-['Inter'] text-xs text-slate-500 dark:text-slate-400">
+<a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Institutional Access</a>
+<a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+<!-- Progress Orbit -->
+<div class="fixed bottom-8 right-8 z-40 hidden md:block">
+<div class="w-20 h-20 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center shadow-xl border border-white/50 relative overflow-hidden group">
+<svg class="absolute inset-0 w-full h-full -rotate-90">
+<circle class="text-primary-fixed/30" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-dasharray="213" stroke-dashoffset="64" stroke-width="4"></circle>
+</svg>
+<div class="flex flex-col items-center">
+<span class="text-xs font-bold text-primary leading-none">70%</span>
+<span class="text-[8px] font-label text-on-surface-variant uppercase tracking-tighter">Done</span>
+</div>
+</div>
+</div>
+</body></html>

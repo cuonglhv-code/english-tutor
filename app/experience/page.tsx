@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createBrowserClient } from '@/lib/supabase'
+import { Badge } from "@/components/ui/badge"
 
 const GUEST_KEY = 'jaxtina_guest'
 
@@ -71,201 +72,228 @@ export default function ExperiencePage() {
   // ── GATE VIEW ──────────────────────────────────────────────────────────────
   if (!guest) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-        <div className="w-full max-w-md">
-          {/* Logo / Brand */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-lg">J</div>
-              <span className="text-white font-bold text-xl">Jaxtina</span>
+      <div className="min-h-screen bg-surface flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-4xl grid md:grid-cols-2 gap-12 items-center">
+          {/* Brand/Value Prop Side */}
+          <div className="space-y-8 text-center md:text-left">
+            <div className="inline-flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl gradient-primary flex items-center justify-center text-white font-black text-2xl italic shadow-lg">J.</div>
+              <span className="text-on-surface font-black text-2xl font-display tracking-tight">Jaxtina.</span>
             </div>
-            <h1 className="text-3xl font-bold text-white">Try the Experience</h1>
-            <p className="text-gray-400 mt-2 text-sm">
-              Practice with our AI Tutor or test yourself with IELTS Vocabulary Quiz — free, no account needed.
-            </p>
+            <div className="space-y-4">
+              <h1 className="text-5xl lg:text-7xl font-black text-on-surface leading-[1.05] tracking-tighter font-display">
+                Master IELTS with <span className="text-primary italic">Clinical Accuracy.</span>
+              </h1>
+              <p className="text-xl text-on-surface-variant font-medium leading-relaxed max-w-md mx-auto md:mx-0">
+                Experience the world&apos;s most advanced IELTS preparation ecosystem. Start your free trial today.
+              </p>
+            </div>
+            <div className="hidden md:flex items-center gap-4">
+              <div className="flex -space-x-3">
+                 {[1,2,3].map(i => (
+                   <div key={i} className="w-10 h-10 rounded-full bg-surface-container-highest border-2 border-surface shadow-sm" />
+                 ))}
+              </div>
+              <p className="text-xs font-black text-on-surface-variant/40 uppercase tracking-widest">
+                Trusted by 12,000+ candidates
+              </p>
+            </div>
           </div>
 
           {/* Gate Card */}
-          <div className="bg-gray-900 border border-gray-700 rounded-2xl p-8 shadow-2xl">
-            <h2 className="text-lg font-semibold text-white mb-1">Nhập thông tin để bắt đầu</h2>
-            <p className="text-gray-500 text-sm mb-6">Hoặc <Link href="/login" className="text-red-400 hover:text-red-300 underline">đăng nhập</Link> nếu đã có tài khoản</p>
+          <div className="bg-white rounded-[32px] p-10 shadow-stitched border-none">
+            <h2 className="text-2xl font-black text-on-surface font-display tracking-tight mb-2">Begin Experience</h2>
+            <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-8 leading-relaxed">
+              Unlock access to AI tutors or <Link href="/login" className="text-primary hover:underline decoration-2 underline-offset-4">Sign in</Link>
+            </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <input
-                  type="text"
-                  placeholder="Họ và tên *"
-                  value={form.name}
-                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  required
-                  className="w-full px-4 py-3 rounded-xl bg-gray-800 text-white border border-gray-600 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 placeholder-gray-500 transition"
-                />
-              </div>
-              <div>
-                <input
-                  type="email"
-                  placeholder="Email *"
-                  value={form.email}
-                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  required
-                  className="w-full px-4 py-3 rounded-xl bg-gray-800 text-white border border-gray-600 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 placeholder-gray-500 transition"
-                />
-              </div>
-              <div>
-                <input
-                  type="tel"
-                  placeholder="Số điện thoại * (VD: 0912 345 678)"
-                  value={form.phone}
-                  onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                  required
-                  className="w-full px-4 py-3 rounded-xl bg-gray-800 text-white border border-gray-600 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 placeholder-gray-500 transition"
-                />
-              </div>
+              <input
+                type="text"
+                placeholder="Full Name *"
+                value={form.name}
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                required
+                className="w-full px-6 py-4 rounded-2xl bg-surface-container-low text-on-surface border-none focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/30 transition-all font-medium"
+              />
+              <input
+                type="email"
+                placeholder="Academic Email *"
+                value={form.email}
+                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                required
+                className="w-full px-6 py-4 rounded-2xl bg-surface-container-low text-on-surface border-none focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/30 transition-all font-medium"
+              />
+              <input
+                type="tel"
+                placeholder="Phone Number *"
+                value={form.phone}
+                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                required
+                className="w-full px-6 py-4 rounded-2xl bg-surface-container-low text-on-surface border-none focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/30 transition-all font-medium"
+              />
 
-              {error && (
-                <p className="text-red-400 text-sm">{error}</p>
-              )}
+              {error && <p className="text-secondary text-[10px] font-black uppercase tracking-widest px-2">{error}</p>}
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-3 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white font-semibold rounded-xl transition flex items-center justify-center gap-2"
+                className="w-full py-5 gradient-primary text-white font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-4"
               >
-                {submitting ? (
-                  <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Đang xử lý...</>
-                ) : (
-                  'Bắt đầu →'
-                )}
+                {submitting ? 'Authenticating...' : 'Enter Hub →'}
               </button>
             </form>
 
-            <p className="text-gray-600 text-xs text-center mt-5">
-              Thông tin của bạn được bảo mật và không chia sẻ cho bên thứ ba.
+            <p className="text-[9px] text-on-surface-variant/20 uppercase font-black text-center mt-8 tracking-widest leading-relaxed">
+              Your data is encrypted using institutional security standards.
             </p>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // ── HUB VIEW (after gate passed) ───────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-950 px-4 py-16">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-surface px-6 py-20">
+      <div className="max-w-6xl mx-auto">
         {/* Welcome header */}
-        <div className="text-center mb-12 animate-in fade-in slide-in-from-top duration-700">
-          <p className="text-red-400 text-sm font-medium uppercase tracking-widest mb-2">Xin chào, {guest.name.split(' ').pop()}!</p>
-          <h1 className="text-4xl font-bold text-white mb-3">Chọn trải nghiệm của bạn</h1>
-          <p className="text-gray-400">Luyện tập cùng AI Tutor, kiểm tra kiến thức, hoặc chinh phục thành ngữ — miễn phí.</p>
+        <div className="text-center mb-16 space-y-4">
+          <Badge variant="outline" className="px-5 py-1.5 rounded-full border-primary/20 bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest">
+            Welcome back, {guest.name.split(' ').pop()}!
+          </Badge>
+          <h1 className="text-5xl md:text-6xl font-black text-on-surface font-display tracking-tight leading-none">
+            Choose Your <span className="text-primary italic">Mode.</span>
+          </h1>
+          <p className="text-on-surface-variant/60 font-medium text-lg max-w-2xl mx-auto leading-relaxed">
+            Practice with elite AI tutors, benchmark your level with scientific assessments, or master vocabulary with SRS logic.
+          </p>
         </div>
 
         {/* Three experience cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom duration-700 delay-200">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
           {/* AI Tutor Card */}
-          <Link href="/tutor" className="group block h-full">
-            <div className="bg-gray-900 border border-gray-700 hover:border-red-500 rounded-2xl p-8 transition-all duration-300 hover:shadow-lg hover:shadow-red-900/20 h-full flex flex-col items-center text-center">
-              {/* Icon */}
-              <div className="w-14 h-14 rounded-2xl bg-red-600/20 border border-red-600/30 flex items-center justify-center mb-6 group-hover:bg-red-600/30 transition">
-                <svg className="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          <Link href="/tutor" className="group block">
+            <div className="bg-white rounded-[32px] p-10 h-full shadow-stitched border-none hover:-translate-y-2 transition-all duration-500 hover:shadow-2xl flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-[20px] bg-primary/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-sm">
+                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
               </div>
 
-              <div className="flex-1">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <h2 className="text-xl font-bold text-white">AI Tutor</h2>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-red-600/20 text-red-400 border border-red-600/30 font-medium">AI</span>
+              <div className="flex-1 space-y-4">
+                <div className="flex items-center justify-center gap-3">
+                  <h2 className="text-2xl font-black text-on-surface font-display tracking-tight">AI Tutor</h2>
+                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                 </div>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                  Hỏi bất kỳ câu hỏi nào về các nội dung học tiếng Anh. AI của chúng tôi sẽ giải thích, sửa lỗi và hướng dẫn bạn tức thì.
+                <p className="text-on-surface-variant/60 text-sm font-medium leading-relaxed italic">
+                  Instant academic feedback, grammar precision, and personalized study paths.
                 </p>
-                <ul className="space-y-2 text-sm text-gray-500 text-left">
-                  <li><span className="text-green-400 mr-2">✓</span> Giải đáp thắc mắc về các nội dung học tiếng Anh</li>
-                  <li><span className="text-green-400 mr-2">✓</span> Phân tích lỗi ngữ pháp & từ vựng</li>
-                  <li><span className="text-green-400 mr-2">✓</span> Gợi ý cải thiện IELTS band score</li>
-                </ul>
+                <div className="pt-6 space-y-3">
+                  <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" /> 98% Correlation Score
+                  </div>
+                  <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" /> Real-time Recovery
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-8 flex items-center text-red-400 text-sm font-semibold group-hover:gap-3 gap-2 transition-all">
-                Bắt đầu chat
-                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+              <div className="mt-10 px-6 py-3 bg-surface rounded-xl text-primary text-[10px] font-black uppercase tracking-widest group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                Start Masterclass
               </div>
             </div>
           </Link>
 
-          {/* Quiz Card */}
-          <Link href="/quiz" className="group block h-full">
-            <div className="bg-gray-900 border border-gray-700 hover:border-orange-500 rounded-2xl p-8 transition-all duration-300 hover:shadow-lg hover:shadow-orange-900/20 h-full flex flex-col items-center text-center">
-              {/* Icon */}
-              <div className="w-14 h-14 rounded-2xl bg-orange-600/20 border border-orange-600/30 flex items-center justify-center mb-6 group-hover:bg-orange-600/30 transition">
-                <svg className="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
+          {/* Placement Card */}
+          <Link href="/placement" className="group block">
+            <div className="bg-white rounded-[32px] p-10 h-full shadow-stitched border-none hover:-translate-y-2 transition-all duration-500 hover:shadow-2xl flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-[20px] bg-secondary/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-sm">
+                <Award className="w-8 h-8 text-secondary" />
               </div>
 
-              <div className="flex-1">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <h2 className="text-xl font-bold text-white">Knowledge Quiz</h2>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-orange-600/20 text-orange-400 border border-orange-600/30 font-medium">IELTS</span>
+              <div className="flex-1 space-y-4">
+                <div className="flex items-center justify-center gap-3">
+                  <h2 className="text-2xl font-black text-on-surface font-display tracking-tight">Assessment</h2>
                 </div>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                  Kiểm tra và mở rộng kiến thức tổng quát của bạn theo chủ đề. Xem kết quả ngay và so sánh với bảng xếp hạng.
+                <p className="text-on-surface-variant/60 text-sm font-medium leading-relaxed italic">
+                  Scientific diagnostic to pinpoint your current band score and curriculum gaps.
                 </p>
-                <ul className="space-y-2 text-sm text-gray-500 text-left">
-                  <li><span className="text-green-400 mr-2">✓</span> Kiến thức theo chủ đề</li>
-                  <li><span className="text-green-400 mr-2">✓</span> Kết quả ngay lập tức</li>
-                  <li><span className="text-green-400 mr-2">✓</span> Thử thách cùng bạn bè</li>
-                </ul>
+                <div className="pt-6 space-y-3">
+                  <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-secondary" /> CEFR Integrated
+                  </div>
+                  <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-secondary" /> Skill Radar Chart
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-8 flex items-center text-orange-400 text-sm font-semibold group-hover:gap-3 gap-2 transition-all">
-                Bắt đầu Quiz
-                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+              <div className="mt-10 px-6 py-3 bg-surface rounded-xl text-secondary text-[10px] font-black uppercase tracking-widest group-hover:bg-secondary group-hover:text-white transition-all shadow-sm">
+                Begin Assessment
               </div>
             </div>
           </Link>
 
           {/* Vocabulary Challenge Card */}
           <Link href="/vocabulary-challenge" className="group block h-full">
-            <div className="bg-gray-900 border border-gray-700 hover:border-purple-500 rounded-2xl p-8 transition-all duration-300 hover:shadow-lg hover:shadow-purple-900/20 h-full flex flex-col items-center text-center">
-              {/* Icon */}
-              <div className="w-14 h-14 rounded-2xl bg-purple-600/20 border border-purple-600/30 flex items-center justify-center mb-6 group-hover:bg-purple-600/30 transition">
-                <svg className="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
-                </svg>
+            <div className="bg-white rounded-[32px] p-10 h-full shadow-stitched border-none hover:-translate-y-2 transition-all duration-500 hover:shadow-2xl flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-[20px] bg-on-surface-variant/5 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-sm text-on-surface-variant/40">
+                <TrendingUp className="w-8 h-8" />
               </div>
 
-              <div className="flex-1">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <h2 className="text-xl font-bold text-white">Vocabulary Challenge</h2>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-purple-600/20 text-purple-400 border border-purple-600/30 font-medium">NEW</span>
+              <div className="flex-1 space-y-4">
+                <div className="flex items-center justify-center gap-3">
+                  <h2 className="text-2xl font-black text-on-surface font-display tracking-tight">Vocabulary</h2>
                 </div>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                  Học thành ngữ tiếng Anh qua 4 giai đoạn: Flashcard → Trắc nghiệm → Gõ từ → Ghép câu. Có hệ thống lặp lại thông minh (SRS).
+                <p className="text-on-surface-variant/60 text-sm font-medium leading-relaxed italic">
+                  Master academic idioms using SRS logic and intelligent repetition algorithms.
                 </p>
-                <ul className="space-y-2 text-sm text-gray-500 text-left">
-                  <li><span className="text-green-400 mr-2">✓</span> Idioms phổ biến</li>
-                  <li><span className="text-green-400 mr-2">✓</span> 4 chế độ luyện tập khác nhau</li>
-                  <li><span className="text-green-400 mr-2">✓</span> Ghi nhớ thông minh với SRS</li>
-                </ul>
+                <div className="pt-6 space-y-3">
+                  <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-on-surface-variant/20" /> Spaced Repetition
+                  </div>
+                  <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-on-surface-variant/20" /> 4 Study Modes
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-8 flex items-center text-purple-400 text-sm font-semibold group-hover:gap-3 gap-2 transition-all">
-                Bắt đầu luyện tập
-                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+              <div className="mt-10 px-6 py-3 bg-surface rounded-xl text-on-surface-variant/60 text-[10px] font-black uppercase tracking-widest group-hover:bg-on-surface-variant group-hover:text-white transition-all shadow-sm">
+                Train Memory
               </div>
             </div>
           </Link>
         </div>
       </div>
     </div>
-  )
+  );
+}
+
+// Sub-components used
+function CheckCircle2({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+function Award({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15l-2 5l2 2l2-2l-2-5z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15V3" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8z" />
+    </svg>
+  );
+}
+
+function TrendingUp({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7h8m0 0v8m0-8l-9 9-4-4-6 6" />
+    </svg>
+  );
 }

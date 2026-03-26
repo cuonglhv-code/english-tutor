@@ -11,6 +11,7 @@ import {
   Target,
   Flame,
   BookOpen,
+  Layout,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -153,25 +154,27 @@ export default function DashboardPage() {
   ] as const;
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="mx-auto max-w-5xl space-y-6">
+    <div className="min-h-screen bg-surface py-12 px-6">
+      <div className="mx-auto max-w-6xl space-y-10">
 
         {/* ══════════════════════════════════════════════════════════════════
             PAGE HEADER
         ══════════════════════════════════════════════════════════════════ */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2 sm:px-0">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-black">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 px-2 sm:px-0">
+          <div className="space-y-2">
+            <h1 className="text-4xl sm:text-5xl font-black font-display tracking-tight text-on-surface mb-1">
               {lang === "vi"
-                ? "Bảng điều khiển học tập"
-                : "IELTS Learning Dashboard"}
+                ? "Academic Analytics"
+                : "Learning Dashboard"}
             </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground">{user.email}</p>
+            <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-on-surface-variant/40">
+               {user.email} <span className="mx-2 opacity-50">•</span> Student ID: {user.id.slice(0, 8).toUpperCase()}
+            </p>
           </div>
-          <Button asChild className="w-full sm:w-auto min-h-[44px]">
+          <Button asChild size="lg" className="w-full sm:w-auto h-14 rounded-2xl gradient-primary border-none shadow-lg hover:scale-105 transition-transform">
             <Link href="/">
               <PenLine className="h-4 w-4 mr-2" />
-              {lang === "vi" ? "Viết bài mới" : "New Essay"}
+              {lang === "vi" ? "New Practice Session" : "New Essay"}
             </Link>
           </Button>
         </div>
@@ -179,235 +182,231 @@ export default function DashboardPage() {
         {/* ══════════════════════════════════════════════════════════════════
             SECTION 1 — LMS: GOALS + COUNTDOWN
         ══════════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
           {/* Goal Tracker (2/3 width on desktop) */}
-          <Card className="lg:col-span-2">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Target className="h-4 w-4 text-jaxtina-red" />
-                {lang === "vi" ? "Mục tiêu Band Score" : "Band Score Goals"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <GoalTracker
-                goals={goals}
-                writingCurrentBand={progress?.average_band}
-                lang={lang}
-                onUpdate={(updated) => setGoals(updated)}
-              />
-            </CardContent>
-          </Card>
+          <div className="lg:col-span-2 bg-white rounded-3xl p-8 shadow-stitched border-none">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-secondary/10 rounded-xl">
+                 <Target className="h-5 w-5 text-secondary" />
+              </div>
+              <h2 className="font-black font-display text-xl tracking-tight text-on-surface uppercase">
+                {lang === "vi" ? "Mục tiêu Band Score" : "Academic Goals"}
+              </h2>
+            </div>
+            <GoalTracker
+              goals={goals}
+              writingCurrentBand={progress?.average_band}
+              lang={lang}
+              onUpdate={(updated) => setGoals(updated)}
+            />
+          </div>
 
           {/* Exam Countdown (1/3 width on desktop) */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Flame className="h-4 w-4 text-orange-500" />
-                {lang === "vi" ? "Lịch thi" : "Exam Countdown"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ExamCountdown
-                examDate={examDate}
-                lang={lang}
-                onUpdate={(updated) => setExamDate(updated)}
-              />
-            </CardContent>
-          </Card>
+          <div className="bg-surface-container-low rounded-3xl p-8 border-none">
+            <div className="flex items-center gap-3 mb-8">
+               <div className="p-2.5 bg-primary/10 rounded-xl">
+                 <Flame className="h-5 w-5 text-primary" />
+               </div>
+               <h2 className="font-black font-display text-lg tracking-tight text-on-surface uppercase">
+                {lang === "vi" ? "Lịch thi" : "Countdown"}
+              </h2>
+            </div>
+            <ExamCountdown
+              examDate={examDate}
+              lang={lang}
+              onUpdate={(updated) => setExamDate(updated)}
+            />
+          </div>
         </div>
 
         {/* ══════════════════════════════════════════════════════════════════
             SECTION 2 — LMS: ACTIVITY HEATMAP
         ══════════════════════════════════════════════════════════════════ */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-jaxtina-blue" />
+        <div className="bg-white rounded-3xl p-8 shadow-stitched border-none">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2.5 bg-primary/10 rounded-xl">
+               <BookOpen className="h-5 w-5 text-primary" />
+            </div>
+            <h2 className="font-black font-display text-xl tracking-tight text-on-surface uppercase">
               {lang === "vi"
-                ? "Biểu đồ \"chăm chỉ\" của bạn (8 tuần gần nhất)"
-                : "Practice Activity — last 8 weeks"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ActivityHeatmap activityLog={activityLog} lang={lang} />
-          </CardContent>
-        </Card>
+                ? "Theo dõi tiến độ học tập (8 tuần)"
+                : "Practice Velocity — last 8 weeks"}
+            </h2>
+          </div>
+          <ActivityHeatmap activityLog={activityLog} lang={lang} />
+        </div>
 
         {/* ══════════════════════════════════════════════════════════════════
             SECTION DIVIDER
         ══════════════════════════════════════════════════════════════════ */}
-        <div className="flex items-center gap-3 pt-2">
-          <div className="h-px flex-1 bg-border" />
-          <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            {lang === "vi" ? "Phân tích Writing" : "Writing Analysis"}
+        <div className="flex items-center gap-6 pt-6">
+          <div className="h-px flex-1 bg-on-surface-variant/10" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 leading-none">
+            {lang === "vi" ? "Phân tích Writing" : "IELTS Writing Performance"}
           </span>
-          <div className="h-px flex-1 bg-border" />
+          <div className="h-px flex-1 bg-on-surface-variant/10" />
         </div>
 
         {/* ══════════════════════════════════════════════════════════════════
-            SECTION 3 — Writing: Overview Stats (unchanged)
+            SECTION 3 — Writing: Overview Stats
         ══════════════════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="pt-5 pb-4 text-center">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-                {t("dashboard", "totalSubmissions", lang)}
-              </p>
-              <p className="text-3xl font-black">{submissions.length}</p>
-              <div className="flex justify-center gap-2 mt-1">
-                <Badge variant="default" className="text-[10px]">
-                  T1: {task1Count}
-                </Badge>
-                <Badge variant="secondary" className="text-[10px]">
-                  T2: {task2Count}
-                </Badge>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white rounded-3xl p-8 shadow-stitched border-none text-center group hover:-translate-y-1 transition-transform">
+            <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-4">
+              {t("dashboard", "totalSubmissions", lang)}
+            </p>
+            <p className="text-5xl font-black font-display text-on-surface mb-4">{submissions.length}</p>
+            <div className="flex justify-center gap-2">
+              <Badge variant="secondary" className="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-surface border-none text-on-surface-variant/60">
+                T1: {task1Count}
+              </Badge>
+              <Badge variant="secondary" className="px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-surface border-none text-on-surface-variant/60">
+                T2: {task2Count}
+              </Badge>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 shadow-stitched border-none text-center hover:-translate-y-1 transition-transform">
+            <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-4">
+              {t("dashboard", "avgBand", lang)}
+            </p>
+            <p
+              className={`text-5xl font-black font-display ${progress ? bandToColor(progress.average_band) : "text-on-surface-variant/20"
+                }`}
+            >
+              {progress ? progress.average_band : "—"}
+            </p>
+            <p className="text-[9px] font-bold text-on-surface-variant/40 mt-3 uppercase tracking-tighter italic">Overall Performance</p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 shadow-stitched border-none text-center hover:-translate-y-1 transition-transform">
+            <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-4">
+              {lang === "vi" ? "Độ tin cậy AI" : "Scoring Logic"}
+            </p>
+            <div className="flex flex-col items-center gap-3">
+              <div className="flex items-center gap-3">
+                <ScoringMethodBadge method="ai_examiner" lang={lang} size="xs" />
+                <span className="font-display font-black text-xl text-on-surface">{aiCount}</span>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-5 pb-4 text-center">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-                {t("dashboard", "avgBand", lang)}
-              </p>
-              <p
-                className={`text-3xl font-black ${progress ? bandToColor(progress.average_band) : ""
-                  }`}
-              >
-                {progress ? progress.average_band : "—"}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="pt-5 pb-4 text-center">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-                {lang === "vi" ? "AI / Dự phòng" : "AI / Fallback"}
-              </p>
-              <div className="flex flex-col items-center gap-1.5 mt-2">
-                <div className="flex items-center gap-2">
-                  <ScoringMethodBadge method="ai_examiner" lang={lang} size="xs" />
-                  <span className="font-bold text-lg">{aiCount}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ScoringMethodBadge
-                    method="rule_based_fallback"
-                    lang={lang}
-                    size="xs"
-                  />
-                  <span className="font-bold text-lg">{ruleCount}</span>
-                </div>
+              <div className="flex items-center gap-3">
+                <ScoringMethodBadge
+                  method="rule_based_fallback"
+                  lang={lang}
+                  size="xs"
+                />
+                <span className="font-display font-black text-xl text-on-surface-variant/40">{ruleCount}</span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardContent className="pt-5 pb-4 text-center">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-                {lang === "vi" ? "Bài gần nhất" : "Last Submission"}
-              </p>
-              <p className="text-sm font-semibold mt-2">
-                {progress?.last_submission_at
-                  ? new Date(progress.last_submission_at).toLocaleDateString(
-                    lang === "vi" ? "vi-VN" : "en-GB",
-                    { day: "2-digit", month: "short", year: "numeric" }
-                  )
-                  : "—"}
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white rounded-3xl p-8 shadow-stitched border-none text-center hover:-translate-y-1 transition-transform">
+            <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-4">
+              {lang === "vi" ? "Bài gần nhất" : "Activity"}
+            </p>
+            <p className="text-xl font-black font-display text-on-surface mt-4 uppercase tracking-tighter">
+              {progress?.last_submission_at
+                ? new Date(progress.last_submission_at).toLocaleDateString(
+                  lang === "vi" ? "vi-VN" : "en-GB",
+                  { day: "2-digit", month: "short" }
+                )
+                : "—"}
+            </p>
+            <p className="text-[9px] font-bold text-on-surface-variant/40 mt-1 uppercase tracking-widest">Last Practice Date</p>
+          </div>
         </div>
 
         {/* ══════════════════════════════════════════════════════════════════
-            SECTION 4 — Per-criterion averages (unchanged)
+            SECTION 4 — Per-criterion averages
         ══════════════════════════════════════════════════════════════════ */}
         {avgPerCriterion && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <BarChart2 className="h-4 w-4 text-jaxtina-red" />
+          <div className="bg-surface-container-low rounded-3xl p-8 border-none">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-primary/10 rounded-xl">
+                 <BarChart2 className="h-5 w-5 text-primary" />
+              </div>
+              <h2 className="font-black font-display text-xl tracking-tight text-on-surface uppercase">
                 {lang === "vi"
                   ? "Band trung bình theo tiêu chí"
-                  : "Average Band by Criterion"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-3">
-                {criteriaStats.map(({ key, label }) => {
-                  const avg = avgPerCriterion[key];
-                  return (
-                    <div key={key} className="flex sm:block items-center justify-between border-b sm:border-0 pb-2 sm:pb-0 last:border-0 text-center sm:text-center">
-                      <p className="text-xs text-muted-foreground mb-1 leading-tight text-left sm:text-center max-w-[140px] sm:max-w-none">
-                        {label}
-                      </p>
-                      <p
-                        className={`text-xl sm:text-2xl font-black ${avg ? bandToColor(avg) : ""
-                          }`}
-                      >
-                        {avg ?? "—"}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
+                  : "Criterion Mastery"}
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
+              {criteriaStats.map(({ key, label }) => {
+                const avg = avgPerCriterion[key];
+                return (
+                  <div key={key} className="bg-white p-6 rounded-2xl shadow-sm text-center">
+                    <p className="text-[9px] font-black text-on-surface-variant/40 leading-none mb-3 uppercase tracking-widest h-8 flex items-center justify-center">
+                      {label}
+                    </p>
+                    <p
+                      className={`text-3xl font-black font-display ${avg ? bandToColor(avg) : "text-on-surface-variant/20"
+                        }`}
+                    >
+                      {avg ?? "—"}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         )}
 
         {/* ══════════════════════════════════════════════════════════════════
-            SECTION 5 — Band progression chart (unchanged)
+            SECTION 5 — Band progression chart
         ══════════════════════════════════════════════════════════════════ */}
         {submissions.length >= 2 && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-jaxtina-blue" />
+          <div className="bg-white rounded-3xl p-10 shadow-stitched border-none">
+            <div className="flex items-center gap-3 mb-10">
+              <div className="p-2.5 bg-primary/10 rounded-xl">
+                 <TrendingUp className="h-5 w-5 text-primary" />
+              </div>
+              <h2 className="font-black font-display text-xl tracking-tight text-on-surface uppercase">
                 {t("dashboard", "bandProgression", lang)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BandProgressChart
-                submissions={submissions}
-                lang={lang}
-                targetBand={
-                  profile?.target_writing_band
-                    ? parseFloat(profile.target_writing_band)
-                    : undefined
-                }
-              />
-            </CardContent>
-          </Card>
+              </h2>
+            </div>
+            <BandProgressChart
+              submissions={submissions}
+              lang={lang}
+              targetBand={
+                profile?.target_writing_band
+                  ? parseFloat(profile.target_writing_band)
+                  : undefined
+              }
+            />
+          </div>
         )}
 
         {/* ══════════════════════════════════════════════════════════════════
-            SECTION 6 — Recent feedback (unchanged)
+            SECTION 6 — Recent feedback
         ══════════════════════════════════════════════════════════════════ */}
         {submissions.length > 0 && (
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">
+          <div className="bg-white rounded-3xl p-8 shadow-stitched border-none">
+            <div className="flex items-center gap-3 mb-8">
+               <div className="p-2.5 bg-secondary/10 rounded-xl">
+                  <Layout className="h-5 w-5 text-secondary" />
+               </div>
+               <h2 className="font-black font-display text-xl tracking-tight text-on-surface uppercase">
                 {t("dashboard", "recentFeedback", lang)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <RecentFeedbackPanel submissions={submissions} lang={lang} />
-            </CardContent>
-          </Card>
+              </h2>
+            </div>
+            <RecentFeedbackPanel submissions={submissions} lang={lang} />
+          </div>
         )}
 
         {/* ══════════════════════════════════════════════════════════════════
-            SECTION 7 — Submission history (unchanged)
+            SECTION 7 — Submission history
         ══════════════════════════════════════════════════════════════════ */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">
+        <div className="bg-white rounded-3xl p-8 shadow-stitched border-none">
+          <div className="flex items-center gap-3 mb-8">
+             <div className="p-2.5 bg-on-surface-variant/10 rounded-xl">
+                <PenLine className="h-5 w-5 text-on-surface-variant/40" />
+             </div>
+             <h2 className="font-black font-display text-xl tracking-tight text-on-surface uppercase">
               {t("dashboard", "submissionHistory", lang)}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SubmissionHistoryTable submissions={submissions} lang={lang} />
-          </CardContent>
-        </Card>
+            </h2>
+          </div>
+          <SubmissionHistoryTable submissions={submissions} lang={lang} />
+        </div>
 
       </div>
     </div>

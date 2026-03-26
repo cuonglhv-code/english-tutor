@@ -99,36 +99,42 @@ export default function HomeScreenClient({ userId }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
+    <div className="min-h-screen bg-surface flex flex-col items-center justify-start py-16 px-4">
       {/* Hero */}
-      <div className="flex flex-col items-center text-center mb-8">
-        <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg transform -rotate-3 hover:rotate-0 transition-transform duration-300">
-          <span className="text-3xl font-black text-white italic">J.</span>
+      <div className="flex flex-col items-center text-center mb-12 space-y-4">
+        <div className="w-20 h-20 gradient-primary rounded-3xl flex items-center justify-center mb-4 shadow-lg transform -rotate-6 hover:rotate-0 transition-all duration-500 ease-out group">
+          <span className="text-4xl font-black text-white italic group-hover:scale-110 transition-transform">J.</span>
         </div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-1">Jaxtina English Tutor</h1>
-        <p className="text-gray-500 text-sm">AI-powered English practice for Vietnamese learners</p>
+        <div className="space-y-2">
+          <h1 className="text-4xl sm:text-5xl font-black text-on-surface tracking-tight font-display mb-1">
+            English Tutor
+          </h1>
+          <p className="text-on-surface-variant font-medium text-lg max-w-md mx-auto leading-relaxed">
+            AI-powered academic practice for Vietnamese IELTS candidates
+          </p>
+        </div>
       </div>
 
       {/* Tab toggle */}
-      <div className="flex bg-white rounded-full p-1 shadow mb-6">
+      <div className="flex bg-white/50 backdrop-blur-md rounded-2xl p-1.5 shadow-sm border-none mb-10">
         <button
           onClick={() => setTab('start')}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
-            tab === 'start' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-gray-700'
+          className={`px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+            tab === 'start' ? 'gradient-primary text-white shadow-md' : 'text-on-surface-variant/60 hover:text-on-surface'
           }`}
         >
           Start Session
         </button>
         <button
           onClick={() => setTab('favourites')}
-          className={`px-5 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-1 ${
-            tab === 'favourites' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-gray-700'
+          className={`px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
+            tab === 'favourites' ? 'gradient-primary text-white shadow-md' : 'text-on-surface-variant/60 hover:text-on-surface'
           }`}
         >
           <Star className="h-3.5 w-3.5" />
           Favourites
           {favourites.length > 0 && (
-            <span className="ml-1 bg-yellow-400 text-white text-xs rounded-full px-1.5">
+            <span className={`ml-1 bg-white ${tab === 'favourites' ? 'text-primary' : 'text-primary/40'} text-[10px] font-black rounded-full px-2 py-0.5`}>
               {favourites.length}
             </span>
           )}
@@ -136,23 +142,23 @@ export default function HomeScreenClient({ userId }: Props) {
       </div>
 
       {lastSession && tab === 'start' && (
-        <div className="w-full max-w-md bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6 flex items-center justify-between shadow-sm animate-in slide-in-from-top duration-300">
-          <div>
-            <p className="font-bold text-blue-800 text-sm">Continue last session?</p>
-            <p className="text-[10px] text-blue-600 font-medium">
+        <div className="w-full max-w-md bg-white/80 backdrop-blur-sm border-none rounded-3xl p-6 mb-8 flex items-center justify-between shadow-stitched animate-in slide-in-from-top duration-500 ease-out">
+          <div className="space-y-1">
+            <p className="font-black text-on-surface text-sm uppercase tracking-wider">Continue last session?</p>
+            <p className="text-xs text-on-surface-variant/60 font-medium italic">
               {lastSession.skillArea} · {lastSession.level} · {lastSession.messageCount} messages
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3">
             <button 
               onClick={() => router.push('/tutor/session?continue=true')} 
-              className="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow-md active:scale-95 transition-all"
+              className="gradient-primary text-white px-5 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-md hover:scale-105 transition-transform active:scale-95"
             >
               Continue
             </button>
             <button 
               onClick={() => { localStorage.removeItem('lastTutorSession'); setLastSession(null) }} 
-              className="text-gray-400 text-xs hover:text-gray-600 underline"
+              className="text-on-surface-variant/40 text-[10px] font-black uppercase tracking-widest hover:text-secondary transition-colors"
             >
               Start fresh
             </button>
@@ -161,12 +167,12 @@ export default function HomeScreenClient({ userId }: Props) {
       )}
 
       {tab === 'start' ? (
-        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md">
-          <h2 className="font-semibold text-gray-700 mb-4">Choose your session</h2>
+        <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-stitched border-none">
+          <h2 className="font-black text-on-surface text-xl font-display tracking-tight mb-6">Choose your session</h2>
 
           {/* Level picker */}
-          <div className="mb-4">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
+          <div className="mb-6">
+            <label className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-3 block">
               Your Level
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -175,10 +181,10 @@ export default function HomeScreenClient({ userId }: Props) {
                   key={l}
                   onClick={() => setLevel(l)}
                   title={LEVEL_TOOLTIPS[l]}
-                  className={`px-2 py-2 rounded-lg text-xs font-medium border transition-all ${
+                  className={`px-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border-none transition-all ${
                     level === l
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 text-gray-600 hover:border-blue-300'
+                      ? 'gradient-primary text-white shadow-md'
+                      : 'bg-surface-container-low text-on-surface-variant/60 hover:bg-surface-container-highest'
                   }`}
                 >
                   {l}
@@ -188,22 +194,22 @@ export default function HomeScreenClient({ userId }: Props) {
           </div>
 
           {/* Skill area picker */}
-          <div className="mb-5">
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
+          <div className="mb-8">
+            <label className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-3 block">
               Skill Area
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               {SKILL_AREAS.map((s) => (
                 <button
                   key={s}
                   onClick={() => setSkill(s)}
-                  className={`px-3 py-2.5 rounded-lg text-sm font-medium border transition-all text-left flex items-center gap-2 ${
+                  className={`px-4 py-4 rounded-xl text-xs font-black uppercase tracking-widest border-none transition-all text-left flex items-center gap-3 ${
                     skill === s
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 text-gray-600 hover:border-blue-300'
+                      ? 'gradient-primary text-white shadow-md'
+                      : 'bg-surface-container-low text-on-surface-variant/60 hover:bg-surface-container-highest'
                   }`}
                 >
-                  <span>{SKILL_ICONS[s]}</span>
+                  <span className="text-xl filter grayscale contrast-125 brightness-110">{SKILL_ICONS[s]}</span>
                   {s}
                 </button>
               ))}
@@ -211,18 +217,18 @@ export default function HomeScreenClient({ userId }: Props) {
           </div>
 
           {/* Starter prompts preview */}
-          <div className="mb-5">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+          <div className="mb-8">
+            <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-3">
               Sample starters
             </p>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               {(startersBySkill[skill] ?? []).map((p, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2 bg-gray-50 border border-gray-100 rounded-lg px-3 py-2 group cursor-pointer hover:bg-blue-50 transition-colors"
+                  className="flex items-center gap-3 bg-surface-container-low rounded-xl px-4 py-2.5 group cursor-pointer hover:bg-white hover:shadow-sm transition-all"
                   onClick={() => handleStart(p)}
                 >
-                  <p className="flex-1 text-xs text-gray-500 truncate cursor-pointer">
+                  <p className="flex-1 text-xs text-on-surface-variant/70 font-medium truncate italic leading-relaxed">
                     {p}
                   </p>
                   <button
@@ -233,11 +239,11 @@ export default function HomeScreenClient({ userId }: Props) {
                     title={isFavourited(p) ? 'Remove from favourites' : 'Save to favourites'}
                     className={`shrink-0 transition-colors ${
                       isFavourited(p)
-                        ? 'text-yellow-400'
-                        : 'text-gray-300 group-hover:text-yellow-300'
+                        ? 'text-primary'
+                        : 'text-on-surface-variant/20 group-hover:text-primary/40'
                     }`}
                   >
-                    <Star className="h-3.5 w-3.5" fill={isFavourited(p) ? 'currentColor' : 'none'} />
+                    <Star className="h-4 w-4" fill={isFavourited(p) ? 'currentColor' : 'none'} />
                   </button>
                 </div>
               ))}
@@ -246,56 +252,56 @@ export default function HomeScreenClient({ userId }: Props) {
 
           <button
             onClick={() => handleStart()}
-            className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-md active:scale-[0.98]"
+            className="w-full py-4 gradient-secondary text-white rounded-2xl font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] transition-transform active:scale-[0.98] border-none"
           >
             Start Practising →
           </button>
-          <p className="text-center text-[10px] text-gray-400 mt-3 font-medium uppercase tracking-tight">
-            ⏱️ Estimated session: ~10–15 minutes
+          <p className="text-center text-[10px] text-on-surface-variant/40 mt-4 font-black uppercase tracking-widest">
+            ⏱️ Average session: 15 minutes
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md">
-          <h2 className="font-semibold text-gray-700 mb-1">Saved Favourite Prompts</h2>
-          <p className="text-xs text-gray-400 mb-4">
-            Click <strong>Use</strong> to jump straight into that session.
+        <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-stitched border-none">
+          <h2 className="font-black text-on-surface text-xl font-display tracking-tight mb-2">Saved Favourites</h2>
+          <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-6 leading-relaxed">
+            Click <strong>Use</strong> to jump into session
           </p>
 
           {favsLoading ? (
-            <div className="text-center py-8 text-gray-400 text-sm italic animate-pulse">Loading…</div>
+            <div className="text-center py-12 text-on-surface-variant/40 text-xs font-black uppercase tracking-widest animate-pulse">Synchronizing…</div>
           ) : favourites.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
-              <Star className="h-10 w-10 mx-auto mb-3 opacity-20" />
-              <p className="font-semibold text-gray-600">⭐ No saved questions yet.</p>
-              <p className="text-xs mt-1 px-4 leading-relaxed italic">
-                During a session, tap the ★ icon next to any message to save it here.
+            <div className="text-center py-20">
+              <Star className="h-16 w-16 mx-auto mb-6 text-on-surface-variant/10" />
+              <p className="font-black text-on-surface text-lg font-display uppercase tracking-tight">No saved questions</p>
+              <p className="text-xs mt-2 px-6 text-on-surface-variant/40 font-medium leading-relaxed italic">
+                During a session, tap the ★ icon highlight to preserve your best prompts.
               </p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-4">
               {favourites.map((f, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-2 p-3 bg-yellow-50 border border-yellow-100 rounded-xl hover:shadow-sm transition-shadow"
+                  className="flex items-start gap-4 p-5 bg-surface-container-low rounded-2xl hover:bg-white hover:shadow-sm transition-all group"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-yellow-700 mb-0.5">
+                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1.5">
                       {f.skill} · {f.level}
                     </p>
-                    <p className="text-sm text-gray-700 leading-snug">{f.text}</p>
+                    <p className="text-sm text-on-surface/80 font-medium leading-relaxed italic">{`"${f.text}"`}</p>
                   </div>
-                  <div className="flex flex-col gap-1 shrink-0">
+                  <div className="flex flex-col gap-2 shrink-0">
                     <button
                       onClick={() => handleUseFavourite(f)}
-                      className="text-xs px-2 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                      className="text-[10px] px-3 py-1.5 gradient-primary text-white rounded-lg font-black uppercase tracking-widest shadow-sm hover:scale-105 transition-transform"
                     >
                       Use
                     </button>
                     <button
                       onClick={() => remove(i)}
-                      className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-lg hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center"
+                      className="text-[10px] px-3 py-1.5 bg-white text-on-surface-variant/40 rounded-lg hover:text-secondary hover:bg-secondary/5 transition-colors font-black uppercase tracking-widest"
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
