@@ -66,9 +66,9 @@ export const en = {
     desc: "Sign in with your academic credentials to access Jaxtina Tutor.",
     emailLabel: "Academic Email",
     passwordLabel: "Password",
-    loginBtn: "Authorize Access",
+    loginBtn: "Sign in",
     noAccount: "Don't have an account?",
-    registerLink: "Create one",
+    registerLink: "Register",
     forgotPassword: "Forgot password?",
   },
   practice: {

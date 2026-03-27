@@ -341,8 +341,8 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
                                 >
                                     <span className="relative z-10">
                                         {loading
-                                            ? (mode === "login" ? 'Authorizing...' : 'Registering...')
-                                            : (mode === "login" ? dict.login.loginBtn : (lang === 'vi' ? 'Tạo tài khoản' : 'Join Now'))
+                                            ? (mode === "login" ? (lang === 'vi' ? 'Đang đăng nhập...' : 'Signing in...') : (lang === 'vi' ? 'Đang đăng ký...' : 'Registering...'))
+                                            : (mode === "login" ? dict.login.loginBtn : (lang === 'vi' ? 'Đăng ký' : 'Join Now'))
                                         }
                                     </span>
                                     <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />

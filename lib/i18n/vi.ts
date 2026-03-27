@@ -68,9 +68,9 @@ export const vi: Dictionary = {
     desc: "Đăng nhập bằng thông tin học thuật để truy cập Jaxtina Tutor.",
     emailLabel: "Email học thuật",
     passwordLabel: "Mật khẩu",
-    loginBtn: "Xác thực truy cập",
+    loginBtn: "Đăng nhập",
     noAccount: "Chưa có tài khoản?",
-    registerLink: "Tạo tài khoản mới",
+    registerLink: "Đăng ký",
     forgotPassword: "Quên mật khẩu?",
   },
   practice: {
