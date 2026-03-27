@@ -126,80 +126,99 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
     };
 
     return (
-        <div className="relative min-h-screen w-full flex flex-col lg:grid lg:grid-cols-2 overflow-hidden bg-surface">
-            {/* Background Orbs */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none select-none opacity-40">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px]" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-secondary/10 blur-[120px]" />
+        <div className="relative min-h-screen w-full flex flex-col lg:grid lg:grid-cols-2 overflow-hidden bg-[#FAFAF8] font-sans">
+            {/* Background Playful Blobs */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+                <motion.div 
+                    animate={{ 
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, 0],
+                        x: [0, 20, 0] 
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute -top-[15%] -left-[10%] w-[60%] h-[60%] rounded-full bg-[#26A69A]/5 blur-[100px]" 
+                />
+                <motion.div 
+                    animate={{ 
+                        scale: [1, 1.2, 1],
+                        rotate: [0, -5, 0],
+                        x: [0, -30, 0] 
+                    }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    className="absolute -bottom-[20%] -right-[15%] w-[70%] h-[70%] rounded-full bg-[#FF7043]/5 blur-[120px]" 
+                />
+                {/* Wavy Dots Pattern */}
+                <div className="absolute inset-0 opacity-[0.4] pointer-events-none" 
+                     style={{ backgroundImage: 'radial-gradient(#26A69A 0.8px, transparent 0.8px)', backgroundSize: '40px 40px' }} />
             </div>
 
             {/* Left Column: Branding & Marketing (Desktop Only) */}
-            <div className="hidden lg:flex flex-col justify-center p-12 xl:p-32 relative overflow-hidden bg-gradient-to-b from-white to-surface-container-low/30">
-                {/* Academic Context Motif - Faint Notation Grid */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-                     style={{ backgroundImage: 'radial-gradient(#000 0.5px, transparent 0.5px)', backgroundSize: '24px 24px' }} />
-                
-                {/* Soft Vertical Depth */}
-                <div className="absolute top-[20%] left-[-10%] w-[60%] h-[60%] bg-primary/5 blur-[120px] rounded-full" />
-                
-                <div className="max-w-xl space-y-20 relative z-10">
+            <div className="hidden lg:flex flex-col justify-center p-12 xl:p-32 relative overflow-hidden">
+                <div className="max-w-xl space-y-16 relative z-10">
                     {/* Logo Section */}
-                    <div className="flex items-center gap-5 group cursor-pointer w-fit">
-                        <div className="h-16 w-16 rounded-[22px] bg-primary flex items-center justify-center shadow-[0_12px_40px_rgba(var(--primary-rgb),0.15)] group-hover:scale-105 transition-all duration-700">
-                            <GraduationCap className="h-9 w-9 text-white" />
+                    <div className="flex items-center gap-4 group cursor-pointer w-fit">
+                        <div className="h-14 w-14 rounded-2xl bg-[#FF7043] flex items-center justify-center shadow-lg shadow-orange-200 group-hover:scale-105 transition-all duration-500">
+                            <GraduationCap className="h-8 w-8 text-white" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-3xl font-black tracking-tighter text-on-surface font-display">
-                                Jaxtina<span className="text-primary italic">Tutor</span>
+                            <span className="text-2xl font-black tracking-tighter text-slate-800">
+                                Jaxtina<span className="text-[#FF7043]">Tutor</span>
                             </span>
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-30 -mt-1">Powered by Claude AI</span>
+                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#26A69A] -mt-1">Powered by Claude AI</span>
                         </div>
                     </div>
 
                     {/* Headline & Subtext */}
-                    <div className="space-y-10">
-                        <h2 className="text-7xl font-black leading-[0.85] tracking-tighter font-display text-on-surface">
-                            <span className="opacity-90">{lang === "vi" ? "Nâng tầm" : "Elevate"}</span>
-                            <br />
-                            <span className="text-primary font-bold tracking-tight inline-block mt-2" style={{ letterSpacing: '-0.02em' }}>
-                                {lang === "vi" ? "Học thuật." : "Academic Tone."}
+                    <div className="space-y-8">
+                        {/* Gamified Pill */}
+                        <div className="inline-flex items-center gap-2 bg-[#26A69A]/10 px-4 py-1.5 rounded-full border border-[#26A69A]/20">
+                            <span className="w-2 h-2 rounded-full bg-[#26A69A] animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-[#26A69A]">
+                                {dict.login.heroPill}
                             </span>
+                        </div>
+                        
+                        <h2 className="text-6xl font-black leading-[1.05] tracking-tight text-slate-900 font-display">
+                            <span className="text-slate-500">{dict.login.heroTitleLine1}</span>
+                            <br />
+                            <span className="text-slate-800">{dict.login.heroTitleLine2}</span>
+                            <br />
+                            <span className="text-[#FF7043] drop-shadow-sm">{dict.login.heroTitleLine3}</span>
                         </h2>
-                        <p className="text-[22px] text-on-surface-variant font-medium leading-[1.6] opacity-60 max-w-[85%] border-l-4 border-primary/10 pl-8 py-2">
+                        
+                        <p className="text-xl text-slate-600/80 font-medium leading-relaxed max-w-[90%] border-l-4 border-slate-200 pl-6">
                             {dict.login.desc}
                         </p>
                     </div>
 
-                    {/* Benefit Cards Container */}
-                    <div className="grid grid-cols-2 gap-8 pt-4">
-                        {/* Benefit Card 1 */}
-                        <div className="group space-y-5 p-8 rounded-[40px] bg-white/60 backdrop-blur-xl border border-white shadow-[0_15px_45px_rgba(0,0,0,0.03)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.06)] hover:-translate-y-2 transition-all duration-700">
-                            <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center relative overflow-hidden group-hover:bg-secondary/20 transition-colors">
-                                <Zap className="h-6 w-6 text-secondary relative z-10" />
-                                <div className="absolute inset-0 bg-secondary/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                    {/* Mission Cards ("Feature Cards") Container */}
+                    <div className="grid grid-cols-2 gap-6 pt-4">
+                        {/* Mission Tile 1 */}
+                        <div className="group space-y-4 p-7 rounded-[32px] bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.04)] hover:-translate-y-1 transition-all duration-500">
+                            <div className="w-10 h-10 rounded-full bg-[#26A69A]/10 flex items-center justify-center">
+                                <Zap className="h-5 w-5 text-[#26A69A]" />
                             </div>
-                            <div className="space-y-2">
-                                <p className="font-black text-[14px] uppercase tracking-[0.2em] text-on-surface">
-                                    {lang === "vi" ? "Chấm điểm tức thì" : "Instant Scoring"}
+                            <div className="space-y-1.5">
+                                <p className="font-black text-[12px] uppercase tracking-wider text-slate-800">
+                                    {dict.login.feature1Title}
                                 </p>
-                                <p className="text-[12px] text-on-surface-variant opacity-50 font-semibold leading-relaxed">
-                                    {lang === "vi" ? "Kết quả phản hồi trong 10 giây" : "Band score & feedback in 10s"}
+                                <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
+                                    {dict.login.feature1Body}
                                 </p>
                             </div>
                         </div>
 
-                        {/* Benefit Card 2 */}
-                        <div className="group space-y-5 p-8 rounded-[40px] bg-white/60 backdrop-blur-xl border border-white shadow-[0_15px_45px_rgba(0,0,0,0.03)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.06)] hover:-translate-y-2 transition-all duration-700">
-                            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center relative overflow-hidden group-hover:bg-primary/20 transition-colors">
-                                <ShieldCheck className="h-6 w-6 text-primary relative z-10" />
-                                <div className="absolute inset-0 bg-primary/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                        {/* Mission Tile 2 */}
+                        <div className="group space-y-4 p-7 rounded-[32px] bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.04)] hover:-translate-y-1 transition-all duration-500">
+                            <div className="w-10 h-10 rounded-full bg-[#FF7043]/10 flex items-center justify-center">
+                                <ShieldCheck className="h-5 w-5 text-[#FF7043]" />
                             </div>
-                            <div className="space-y-2">
-                                <p className="font-black text-[14px] uppercase tracking-[0.2em] text-on-surface">
-                                    {lang === "vi" ? "An toàn" : "Secure Auth"}
+                            <div className="space-y-1.5">
+                                <p className="font-black text-[12px] uppercase tracking-wider text-slate-800">
+                                    {dict.login.feature2Title}
                                 </p>
-                                <p className="text-[12px] text-on-surface-variant opacity-50 font-semibold leading-relaxed">
-                                    {lang === "vi" ? "Tiêu chuẩn bảo mật tổ chức" : "Institutional security standards"}
+                                <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
+                                    {dict.login.feature2Body}
                                 </p>
                             </div>
                         </div>
@@ -207,171 +226,131 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
                 </div>
             </div>
 
-            {/* Right Column: Form */}
+            {/* Right Column: Playful Form */}
             <div className="relative flex flex-col justify-center lg:items-center overflow-y-auto px-4 sm:px-8 py-12 lg:py-0 w-full">
-                <div className="w-full max-w-[440px] space-y-10 relative">
-                    {/* Visual background for the card section */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.02)_0%,transparent_70%)] pointer-events-none" />
+                <div className="w-full max-w-[420px] space-y-8 relative">
+                    
+                    {/* Level Up Chip (Gamification touch) */}
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="hidden lg:flex absolute -top-12 -right-8 bg-white px-4 py-2 rounded-2xl shadow-lg border border-slate-100 items-center gap-3 z-20"
+                    >
+                        <div className="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center text-white font-bold text-xs">⭐</div>
+                        <p className="text-[11px] font-bold text-slate-700">Level up your band score!</p>
+                    </motion.div>
 
-                    {/* Compact Hero (Mobile Only) */}
-                    <div className="flex lg:hidden flex-col items-center text-center space-y-6 mb-12">
-                        <div className="h-20 w-20 rounded-[28px] bg-primary flex items-center justify-center shadow-stitched mb-2">
-                            <GraduationCap className="h-10 w-10 text-white" />
-                        </div>
-                        <h1 className="text-4xl font-black tracking-tight font-display">
-                            {lang === "vi" ? "Chấm thi IELTS AI" : "IELTS AI Examiner"}
-                        </h1>
-                        <p className="text-base text-muted-foreground px-6 leading-relaxed opacity-60">
-                            {lang === "vi"
-                                ? "Nhận kết quả Band Score và nhận xét chi tiết ngay lập tức cho bài viết của bạn."
-                                : "Get your IELTS Writing band score and detailed feedback instantly."}
-                        </p>
-                    </div>
-
-                    <Card className="border-none shadow-[0_40px_100px_rgba(0,0,0,0.06)] lg:bg-white lg:backdrop-blur-2xl rounded-[3rem] relative overflow-hidden border border-white/40">
-                        {/* Inner Top Glow */}
-                        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
+                    <Card className="border-none shadow-[0_30px_80px_rgba(0,0,0,0.05)] bg-white rounded-[3.5rem] relative overflow-hidden">
+                        {/* Playful Top Gradient */}
+                        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#26A69A]/5 to-transparent pointer-events-none" />
                         
-                        <CardHeader className="space-y-4 pt-12 pb-8 px-10">
-                            <div className="flex items-center justify-between">
-                                <CardTitle className="text-4xl font-black font-display tracking-tight text-on-surface leading-tight">
-                                    {mode === "login" ? dict.login.title : (lang === 'vi' ? 'Tạo tài khoản' : 'Join Jaxtina')}
-                                </CardTitle>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setMode(mode === "login" ? "register" : "login")}
-                                    className="text-primary font-black uppercase tracking-[0.2em] text-[10px] px-3 py-1 h-auto rounded-full bg-primary/5 hover:bg-primary/10 transition-all"
-                                >
-                                    {mode === "login" ? dict.login.registerLink : dict.login.loginBtn}
-                                </Button>
-                            </div>
-                            <CardDescription className="text-[11px] font-black uppercase tracking-[0.25em] text-on-surface-variant opacity-30 leading-none">
-                                {mode === "login" ? dict.login.desc : (lang === 'vi' ? 'Tham gia hệ sinh thái học thuật của chúng tôi.' : 'Join our institutional ecosystem.')}
+                        <CardHeader className="space-y-3 pt-12 pb-6 px-10 text-center relative z-10">
+                            <CardTitle className="text-3xl font-black tracking-tight text-slate-900">
+                                {dict.login.hubHeader}
+                            </CardTitle>
+                            <CardDescription className="text-[13px] font-medium text-slate-500 max-w-[80%] mx-auto">
+                                {dict.login.hubSubline}
                             </CardDescription>
                         </CardHeader>
 
-                        <CardContent className="px-10 pb-12 space-y-10">
-                            <form onSubmit={handleAuth} className="space-y-6">
+                        <CardContent className="px-10 pb-12 space-y-8 relative z-10">
+                            <form onSubmit={handleAuth} className="space-y-5">
                                 <AnimatePresence mode="wait">
                                     {mode === "register" && (
                                         <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -10 }}
-                                            className="space-y-2.5"
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            className="space-y-1.5 overflow-hidden"
                                         >
-                                            <Label className={`flex items-center gap-2 ml-4 text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${errors.displayName ? "text-secondary" : "text-on-surface-variant/40"}`}>
-                                                {lang === 'vi' ? 'Tên hiển thị' : 'Display Name'}
+                                            <Label className="ml-5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                                {lang === 'vi' ? 'Họ tên' : 'Full Name'}
                                             </Label>
-                                            <div className="relative group">
-                                                <User className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" />
+                                            <div className="relative">
+                                                <User className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300" />
                                                 <Input
-                                                    placeholder={lang === "vi" ? "Ví dụ: Nguyễn Văn A" : "e.g. John Doe"}
-                                                    className={`rounded-[24px] h-14 pl-14 bg-surface-container-low border-2 border-transparent focus-visible:ring-0 focus-visible:border-primary/20 focus-visible:bg-white text-base font-semibold shadow-sm transition-all ${errors.displayName ? "border-secondary/30 bg-secondary/5" : ""}`}
+                                                    placeholder={lang === "vi" ? "Nhập họ tên của bạn" : "Enter your full name"}
+                                                    className="rounded-[32px] h-14 pl-14 bg-slate-50 border-slate-200 focus-visible:ring-[#26A69A] focus-visible:ring-offset-0 text-base font-semibold"
                                                     value={displayName}
-                                                    onChange={(e) => {
-                                                        setDisplayName(e.target.value);
-                                                        if (errors.displayName) setErrors(prev => ({ ...prev, displayName: "" }));
-                                                    }}
+                                                    onChange={(e) => setDisplayName(e.target.value)}
                                                     disabled={loading}
                                                 />
                                             </div>
-                                            {errors.displayName && <p className="text-[10px] font-black text-secondary ml-4 uppercase tracking-widest animate-in fade-in slide-in-from-top-1">{errors.displayName}</p>}
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
 
-                                <div className="space-y-2.5">
-                                    <Label className={`flex items-center gap-2 ml-4 text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${errors.email ? "text-secondary" : "text-on-surface-variant/40"}`}>
+                                <div className="space-y-1.5">
+                                    <Label className="ml-5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                                         {dict.login.emailLabel}
                                     </Label>
-                                    <div className="relative group">
-                                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" />
+                                    <div className="relative">
+                                        <Mail className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300" />
                                         <Input
                                             type="email"
                                             placeholder="email@example.com"
-                                            className={`rounded-[24px] h-14 pl-14 bg-surface-container-low border-2 border-transparent focus-visible:ring-0 focus-visible:border-primary/20 focus-visible:bg-white text-base font-semibold shadow-sm transition-all ${errors.email ? "border-secondary/30 bg-secondary/5" : ""}`}
+                                            className="rounded-[32px] h-14 pl-14 bg-slate-50 border-slate-200 focus-visible:ring-[#26A69A] focus-visible:ring-offset-0 text-base font-semibold"
                                             value={email}
-                                            onChange={(e) => {
-                                                setEmail(e.target.value);
-                                                if (errors.email) setErrors(prev => ({ ...prev, email: "" }));
-                                            }}
+                                            onChange={(e) => setEmail(e.target.value)}
                                             required
                                             disabled={loading}
                                         />
                                     </div>
-                                    {errors.email && <p className="text-[10px] font-black text-secondary ml-4 uppercase tracking-widest animate-in fade-in slide-in-from-top-1">{errors.email}</p>}
                                 </div>
 
-                                <div className="space-y-2.5">
-                                    <Label className={`flex items-center gap-2 ml-4 text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${errors.password ? "text-secondary" : "text-on-surface-variant/40"}`}>
+                                <div className="space-y-1.5">
+                                    <Label className="ml-5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                                         {dict.login.passwordLabel}
                                     </Label>
-                                    <div className="relative group">
-                                        <Lock className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" />
+                                    <div className="relative">
+                                        <Lock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300" />
                                         <Input
                                             type="password"
                                             placeholder="••••••••"
-                                            className={`rounded-[24px] h-14 pl-14 bg-surface-container-low border-2 border-transparent focus-visible:ring-0 focus-visible:border-primary/20 focus-visible:bg-white text-base font-semibold shadow-sm transition-all ${errors.password ? "border-secondary/30 bg-secondary/5" : ""}`}
+                                            className="rounded-[32px] h-14 pl-14 bg-slate-50 border-slate-200 focus-visible:ring-[#26A69A] focus-visible:ring-offset-0 text-base font-semibold"
                                             value={password}
-                                            onChange={(e) => {
-                                                setPassword(e.target.value);
-                                                if (errors.password) setErrors(prev => ({ ...prev, password: "" }));
-                                            }}
+                                            onChange={(e) => setPassword(e.target.value)}
                                             required
                                             disabled={loading}
                                         />
                                     </div>
-                                    {errors.password ? (
-                                        <p className="text-[10px] font-black text-secondary ml-4 uppercase tracking-widest animate-in fade-in slide-in-from-top-1">{errors.password}</p>
-                                    ) : mode === "register" && (
-                                        <p className="text-[10px] text-muted-foreground ml-4 opacity-40 font-bold tracking-wide">
-                                            {lang === "vi" ? "* Ít nhất 8 ký tự" : "* Minimum 8 characters"}
-                                        </p>
-                                    )}
                                 </div>
 
                                 <Button
                                     type="submit"
-                                    className={`w-full h-16 rounded-[28px] font-black text-[13px] uppercase tracking-[0.3em] shadow-[0_15px_40px_-10px_rgb(var(--primary-rgb),0.3)] hover:shadow-[0_20px_50px_-10px_rgb(var(--primary-rgb),0.4)] transition-all duration-300 active:scale-[0.98] hover:-translate-y-0.5 overflow-hidden group
-                                        ${mode === "login" ? "bg-gradient-to-r from-primary to-[#ff4d4d]" : "bg-gradient-to-r from-secondary to-[#fb923c]"}
-                                    `}
+                                    className="w-full h-15 rounded-[32px] font-black text-sm uppercase tracking-wider transition-all duration-300 active:scale-[0.97] bg-gradient-to-r from-[#FF7043] to-[#FF8A65] shadow-lg shadow-orange-200 hover:shadow-xl hover:shadow-orange-200 border-b-4 border-orange-700"
                                     disabled={loading}
                                 >
-                                    <span className="relative z-10">
-                                        {loading
-                                            ? (mode === "login" ? (lang === 'vi' ? 'Đang đăng nhập...' : 'Signing in...') : (lang === 'vi' ? 'Đang đăng ký...' : 'Registering...'))
-                                            : (mode === "login" ? dict.login.loginBtn : (lang === 'vi' ? 'Đăng ký' : 'Join Now'))
-                                        }
-                                    </span>
-                                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    {loading ? (lang === 'vi' ? 'Đang xử lý...' : 'Processing...') : dict.login.loginBtn}
                                 </Button>
                             </form>
 
-                            <div className="pt-8 border-t border-dashed border-on-surface-variant/10">
-                                <div className="flex bg-surface-container-low border border-on-surface-variant/5 rounded-3xl p-5 gap-4 items-center group/help">
-                                    <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover/help:scale-110 transition-transform duration-500">
-                                        <ShieldCheck className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <div className="space-y-0.5">
-                                        <p className="text-[13px] font-black text-on-surface uppercase tracking-wide">
-                                            {lang === "vi" ? "Gặp khó khăn?" : "Trouble logging in?"}
-                                        </p>
-                                        <p className="text-[10.5px] text-on-surface-variant leading-snug opacity-40 font-medium">
-                                            {lang === "vi"
-                                                ? "Kiểm tra kỹ email của bạn. Liên hệ đội ngũ hỗ trợ nếu cần thêm trợ giúp."
-                                                : "Please confirm your email link if registering. Contact support if needed."}
-                                        </p>
-                                    </div>
-                                </div>
+                            <div className="text-center pt-4">
+                                <p className="text-sm font-semibold text-slate-400">
+                                    {mode === "login" ? dict.login.noAccount : (lang === 'vi' ? 'Đã có tài khoản?' : 'Already have an account?')}
+                                    {" "}
+                                    <button 
+                                        onClick={() => setMode(mode === "login" ? "register" : "login")}
+                                        className="text-[#26A69A] font-black hover:underline underline-offset-4"
+                                    >
+                                        {mode === "login" ? dict.login.registerLink : dict.login.loginBtn}
+                                    </button>
+                                </p>
+                                {mode === 'login' && (
+                                    <p className="mt-2 text-[11px] font-bold text-slate-400/50 uppercase tracking-widest">
+                                        {dict.login.noAccountSuffix}
+                                    </p>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
 
-                    <p className="text-center px-4 text-[10px] text-on-surface-variant tracking-[0.2em] font-black uppercase opacity-20">
-                        Official IELTS Product of Jaxtina English Group
-                    </p>
+                    {/* Minimal Branding Footer */}
+                    <div className="flex flex-col items-center gap-3 opacity-40">
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Jaxtina English Group</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     .order("score", { ascending: false })
     .order("time_seconds", { ascending: true })  // ← correct column name
     .order("played_at", { ascending: false })
-    .limit(10);
+    .limit(50);
 
   if (error) {
     console.error("[quiz/leaderboard GET]", error.message);

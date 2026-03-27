@@ -20,8 +20,16 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-start py-10 px-4">
-      <div className="w-full max-w-3xl">
+    <div className="relative min-h-screen bg-[#FAFAF8] py-16 px-6 overflow-hidden">
+      {/* Background Decorations */}
+      <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] rounded-full bg-[#26A69A]/5 blur-[100px] pointer-events-none transition-all duration-1000" />
+      <div className="absolute bottom-[20%] right-[-5%] w-[40%] h-[40%] rounded-full bg-[#FF7043]/5 blur-[120px] pointer-events-none transition-all duration-1000" />
+      <div 
+        className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        style={{ backgroundImage: 'radial-gradient(#26A69A 0.8px, transparent 0.8px)', backgroundSize: '24px 24px' }}
+      />
+      
+      <div className="relative w-full max-w-3xl mx-auto z-10">
         <QuizGameClient />
       </div>
     </div>

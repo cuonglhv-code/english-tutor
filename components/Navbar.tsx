@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare, User as UserIcon, Gamepad2, FileText, Menu, X } from "lucide-react";
+import { PenLine, BookOpen, LayoutDashboard, LogIn, LogOut, Library, Mail, ShieldCheck, ClipboardList, MessageSquare, User as UserIcon, Gamepad2, FileText, Menu, X, GraduationCap } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { createBrowserClient } from "@/lib/supabase";
@@ -16,9 +16,8 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 function JaxtinaMark() {
   return (
     <div className="flex items-center gap-2 group cursor-pointer">
-      <div className="relative flex items-center justify-center h-10 w-10 rounded-2xl bg-primary shadow-lg group-hover:scale-105 transition-transform">
-        <span className="font-display font-black text-xl text-white">J.</span>
-        <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-secondary border-2 border-white" />
+      <div className="relative flex items-center justify-center h-11 w-11 rounded-[1.25rem] bg-[#FF7043] shadow-lg shadow-orange-200 group-hover:scale-105 transition-all duration-500">
+        <GraduationCap className="h-6 w-6 text-white" />
       </div>
     </div>
   );
@@ -159,16 +158,16 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-surface/80 backdrop-blur-xl shadow-stitched">
+    <nav className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-xl border-b border-slate-100 shadow-sm">
       <div className="mx-auto max-w-7xl flex h-20 items-center justify-between px-6">
         <Link href={`/${lang}`} className="flex items-center gap-4">
           <JaxtinaMark />
           <div className="flex flex-col leading-none shrink-0 min-w-0">
-            <span className="font-display font-black text-xl tracking-tighter text-on-surface">
+            <span className="font-display font-black text-xl tracking-tighter text-slate-800">
               Jaxtina
-              <span className="text-primary ml-1">Tutor</span>
+              <span className="text-[#FF7043] ml-0.5">Tutor</span>
             </span>
-            <span className="text-[10px] text-on-surface-variant font-black uppercase tracking-[0.15em] -mt-1 opacity-60">
+            <span className="text-[9px] text-[#26A69A] font-bold uppercase tracking-[0.2em] -mt-0.5">
               Powered by Claude AI
             </span>
           </div>
@@ -180,22 +179,22 @@ export function Navbar() {
               <div className="relative" ref={practiceRef}>
                 <button
                   onClick={() => setPracticeOpen(o => !o)}
-                  className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-colors text-on-surface-variant"
+                  className="hidden sm:flex items-center gap-1.5 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all text-slate-600 active:scale-95"
                   aria-haspopup="menu"
                   aria-expanded={practiceOpen}
                 >
-                  <PenLine className="h-4 w-4 text-primary" /> {dict.nav.practice}
+                  <PenLine className="h-4 w-4 text-[#FF7043]" /> {dict.nav.practice}
                 </button>
 
                 {practiceOpen && (
                   <div
                     role="menu"
-                    className="absolute left-0 mt-2 w-56 rounded-xl border bg-card shadow-lg p-2"
+                    className="absolute left-0 mt-3 w-60 rounded-[2rem] border border-slate-100 bg-white shadow-xl shadow-slate-200/50 p-2 z-50 overflow-hidden"
                   >
                     <Link
                       href={`/${lang}`}
                       onClick={() => setPracticeOpen(false)}
-                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-[#FF7043] transition-colors"
                       role="menuitem"
                     >
                       <PenLine className="h-4 w-4" />
@@ -204,7 +203,7 @@ export function Navbar() {
                     <Link
                       href={`/${lang}/practice-library`}
                       onClick={() => setPracticeOpen(false)}
-                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-[#FF7043] transition-colors"
                       role="menuitem"
                     >
                       <Library className="h-4 w-4" />
@@ -213,7 +212,7 @@ export function Navbar() {
                     <Link
                       href={`/${lang}/full-test`}
                       onClick={() => setPracticeOpen(false)}
-                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
+                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-[#FF7043] transition-colors"
                       role="menuitem"
                     >
                       <FileText className="h-4 w-4" />
@@ -224,21 +223,21 @@ export function Navbar() {
               </div>
               <Link
                 href={`/${lang}/writing-101/guide`}
-                className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-colors text-on-surface-variant"
+                className="hidden sm:flex items-center gap-1.5 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all text-slate-600"
               >
-                <BookOpen className="h-4 w-4 text-primary" />
+                <BookOpen className="h-4 w-4 text-[#26A69A]" />
                 <span className="hidden sm:inline">{dict.nav.writing101}</span>
               </Link>
               <Link
                 href={`/${lang}/courses`}
-                className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-colors text-on-surface-variant"
+                className="hidden sm:flex items-center gap-1.5 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all text-slate-600"
               >
-                <BookOpen className="h-4 w-4 text-primary" />
+                <BookOpen className="h-4 w-4 text-[#26A69A]" />
                 <span className="hidden sm:inline">{dict.nav.courses}</span>
               </Link>
               <Link
                 href={`/${lang}/placement`}
-                className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 transition-colors"
+                className="hidden sm:flex items-center gap-1.5 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#26A69A] bg-[#26A69A]/10 hover:bg-[#26A69A]/20 transition-all"
               >
                 <ClipboardList className="h-4 w-4" />
                 <span className="hidden sm:inline">PLACEMENT</span>
@@ -246,10 +245,9 @@ export function Navbar() {
             </>
           )}
 
-
           <Link
             href={`/${lang}/experience`}
-            className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-secondary hover:bg-secondary/10 transition-colors"
+            className="hidden sm:flex items-center gap-1.5 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#FF7043] bg-[#FF7043]/10 hover:bg-[#FF7043]/20 transition-all"
           >
             <MessageSquare className="h-4 w-4" />
             <span className="hidden sm:inline">{lang === "vi" ? "Trải nghiệm" : "Experience"}</span>
@@ -270,11 +268,11 @@ export function Navbar() {
               <div className="relative" ref={profileRef}>
                 <button
                   onClick={() => setProfileOpen(o => !o)}
-                  className="hidden sm:flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium hover:bg-muted transition-colors"
+                  className="hidden sm:flex items-center gap-3 rounded-full px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 transition-all border border-slate-200 shadow-sm active:scale-95"
                   aria-haspopup="menu"
                   aria-expanded={profileOpen}
                 >
-                  <UserIcon className="h-4 w-4" />
+                  <UserIcon className="h-4 w-4 text-[#26A69A]" />
                   <span className="hidden sm:inline">
                     {displayName || user.email?.split("@")[0] || (lang === "vi" ? "Hồ sơ" : "Profile")}
                   </span>
@@ -283,67 +281,75 @@ export function Navbar() {
                 {profileOpen && (
                   <div
                     role="menu"
-                    className="absolute right-0 mt-2 w-72 rounded-xl border bg-card shadow-lg p-2"
+                    className="absolute right-0 mt-3 w-80 rounded-[2.5rem] border border-slate-100 bg-white shadow-2xl shadow-slate-300/50 p-3 z-50 overflow-hidden"
                   >
-                    <div className="px-3 py-2">
-                      <div className="text-xs font-semibold text-muted-foreground">
+                    <div className="px-5 py-4 bg-slate-50/50 rounded-[2rem] mb-2 border border-slate-100">
+                      <div className="text-[10px] font-black text-[#26A69A] uppercase tracking-[0.2em] mb-1">
                         {lang === "vi" ? "HỒ SƠ HỌC VIÊN" : "STUDENT PROFILE"}
                       </div>
-                      <div className="mt-1 text-sm font-bold text-foreground truncate">
+                      <div className="text-base font-black text-slate-800 truncate">
                         {displayName || user.email || user.id}
                       </div>
                       {user.email && (
-                        <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                        <div className="text-xs text-slate-400 font-bold truncate tracking-tight">{user.email}</div>
                       )}
                     </div>
 
-                    <div className="my-2 h-px bg-border" />
+                    <div className="space-y-1">
+                      <Link
+                        href={`/${lang}/dashboard`}
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-[#FF7043] transition-colors"
+                        role="menuitem"
+                      >
+                        <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center">
+                          <LayoutDashboard className="h-4 w-4 text-orange-400" />
+                        </div>
+                        {dict.nav.dashboard}
+                      </Link>
 
-                    <Link
-                      href={`/${lang}/dashboard`}
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors text-on-surface-variant font-medium"
-                      role="menuitem"
-                    >
-                      <LayoutDashboard className="h-4 w-4" />
-                      {dict.nav.dashboard}
-                    </Link>
-
-                    <Link
-                      href={`/${lang}/inbox`}
-                      onClick={() => { setUnread(0); setProfileOpen(false); }}
-                      className="flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors"
-                      role="menuitem"
-                    >
-                      <span className="flex items-center gap-2">
-                        <Mail className="h-4 w-4" />
-                        {lang === "vi" ? "Hộp thư" : "Inbox"}
-                      </span>
-                      {unread > 0 && (
-                        <span className="min-w-[18px] h-5 px-1.5 rounded-full bg-jaxtina-red text-white text-[10px] font-black flex items-center justify-center">
-                          {unread > 99 ? "99+" : unread}
+                      <Link
+                        href={`/${lang}/inbox`}
+                        onClick={() => { setUnread(0); setProfileOpen(false); }}
+                        className="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-[#26A69A] transition-colors"
+                        role="menuitem"
+                      >
+                        <span className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-xl bg-teal-50 flex items-center justify-center">
+                            <Mail className="h-4 w-4 text-teal-400" />
+                          </div>
+                          {lang === "vi" ? "Hộp thư" : "Inbox"}
                         </span>
-                      )}
-                    </Link>
+                        {unread > 0 && (
+                          <span className="min-w-[18px] h-5 px-1.5 rounded-full bg-[#FF7043] text-white text-[10px] font-black flex items-center justify-center">
+                            {unread > 99 ? "99+" : unread}
+                          </span>
+                        )}
+                      </Link>
 
-                    <Link
-                      href={`/${lang}/student`}
-                      onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted transition-colors text-on-surface-variant font-medium"
-                      role="menuitem"
-                    >
-                      <BookOpen className="h-4 w-4" />
-                      {lang === "vi" ? "Thông tin học viên" : "Student details"}
-                    </Link>
+                      <Link
+                        href={`/${lang}/student`}
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-[#26A69A] transition-colors"
+                        role="menuitem"
+                      >
+                        <div className="w-8 h-8 rounded-xl bg-teal-50 flex items-center justify-center">
+                          <BookOpen className="h-4 w-4 text-teal-400" />
+                        </div>
+                        {lang === "vi" ? "Thông tin học viên" : "Student details"}
+                      </Link>
+                    </div>
 
-                    <div className="my-2 h-px bg-border" />
+                    <div className="my-2 h-px bg-slate-100 px-4" />
 
                     <button
                       onClick={() => { setProfileOpen(false); handleLogout(); }}
-                      className="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-left hover:bg-muted transition-colors"
+                      className="w-full flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors text-left"
                       role="menuitem"
                     >
-                      <LogOut className="h-4 w-4" />
+                      <div className="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center">
+                        <LogOut className="h-4 w-4" />
+                      </div>
                       {dict.nav.logout}
                     </button>
                   </div>
@@ -353,7 +359,7 @@ export function Navbar() {
           ) : (
             <Link
               href={`/${lang}/login`}
-              className="hidden sm:flex items-center gap-1.5 rounded-lg px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-primary text-white shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+              className="hidden sm:flex items-center gap-1.5 rounded-full px-6 py-2.5 text-[11px] font-black uppercase tracking-widest bg-gradient-to-r from-[#FF7043] to-[#FF8A65] text-white shadow-xl shadow-orange-200 border-b-4 border-orange-700 hover:scale-[1.03] active:scale-95 transition-all"
             >
               <LogIn className="h-4 w-4" />
               <span className="hidden sm:inline">{dict.nav.login}</span>

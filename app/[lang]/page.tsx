@@ -84,24 +84,32 @@ export default function PracticePage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface py-16 px-6 md:px-12">
-      <div className="mx-auto max-w-4xl pt-12">
+    <div className="relative min-h-screen bg-[#FAFAF8] py-16 px-6 md:px-12 overflow-hidden">
+      {/* Background Decorations */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#26A69A]/5 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#FF7043]/5 blur-[100px] pointer-events-none" />
+      <div 
+        className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        style={{ backgroundImage: 'radial-gradient(#26A69A 0.8px, transparent 0.8px)', backgroundSize: '24px 24px' }}
+      />
+
+      <div className="relative mx-auto max-w-4xl pt-12 z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-3 rounded-full bg-primary/5 px-6 py-2 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-8 border border-primary/5">
+          <div className="inline-flex items-center gap-3 rounded-full bg-[#26A69A]/10 px-6 py-2.5 text-[#26A69A] text-[11px] font-black uppercase tracking-[0.2em] mb-8 border border-[#26A69A]/10 shadow-sm">
             <GraduationCap className="h-4 w-4" />
             Jaxtina Mastery Platform
           </div>
-          <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter leading-[0.9] text-on-surface mb-10">
+          <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter leading-[0.95] text-slate-800 mb-10">
             {lang === 'vi' ? 'Nhận ' : 'Get Your '}
-            <span className="text-primary italic">Band Score</span>
+            <span className="text-[#FF7043]">Band Score</span>
             <br />
             {lang === 'vi' ? 'Ngay lập tức' : 'Instantly.'}
           </h1>
-          <p className="mt-8 text-on-surface-variant opacity-60 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-8 text-slate-500 text-lg font-bold max-w-2xl mx-auto leading-relaxed">
             {lang === 'vi' 
               ? "Mô phỏng buổi chấm thi IELTS học thuật • Phản hồi theo từng tiêu chí • Chuẩn bị cho Band 8.0+" 
               : "Simulate an elite IELTS marking session • Individual criterion feedback • Designed for Band 8.0+"}
@@ -122,21 +130,21 @@ export default function PracticePage() {
                   `}
                 >
                   <div className={`
-                    flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-[11px] font-black 
-                    ${isActive ? "bg-primary text-white shadow-xl shadow-primary/20" : isDone ? "bg-white text-primary" : "bg-surface-container-low text-on-surface-variant"}
+                    flex h-12 w-12 shrink-0 items-center justify-center rounded-[1.25rem] text-sm font-black 
+                    ${isActive ? "bg-[#FF7043] text-white shadow-xl shadow-orange-200" : isDone ? "bg-white text-[#26A69A] border border-[#26A69A]/20" : "bg-slate-100 text-slate-400"}
                   `}>
                     {isDone ? "✓" : `0${i + 1}`}
                   </div>
-                  <span className={`text-[11px] font-black uppercase tracking-[0.2em] whitespace-nowrap ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
+                  <span className={`text-[11px] font-black uppercase tracking-[0.2em] whitespace-nowrap ${isActive ? "text-[#FF7043]" : "text-slate-400"}`}>
                     {s}
                   </span>
                 </div>
               );
             })}
           </div>
-          <div className="h-2 w-full bg-surface-container-low rounded-full overflow-hidden mb-2">
+          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden mb-2 border border-slate-200/50 shadow-inner">
             <motion.div 
-                className="h-full bg-primary shadow-lg shadow-primary/10"
+                className="h-full bg-gradient-to-r from-[#FF7043] to-[#FF8A65] shadow-lg shadow-orange-100"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}

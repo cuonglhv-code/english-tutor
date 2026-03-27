@@ -90,7 +90,7 @@ function TaskAccordion({
             type="multiple"
             value={openItems}
             onValueChange={setOpenItems}
-            className="w-full space-y-3"
+            className="w-full space-y-4"
         >
             {rows.map((row, idx) => {
                 const itemId = `row-${idx}`;
@@ -99,38 +99,37 @@ function TaskAccordion({
                     <AccordionItem 
                         key={itemId} 
                         value={itemId} 
-                        className="border-none rounded-2xl mb-3 px-4 bg-white shadow-stitched overflow-hidden transition-all last:mb-0"
+                        className="border-none rounded-[2rem] mb-4 bg-white shadow-[0_15px_40px_rgba(0,0,0,0.03)] border-b-4 border-slate-100 overflow-hidden transition-all last:mb-0 hover:shadow-xl hover:-translate-y-1"
                     >
-                        <AccordionTrigger className="hover:no-underline py-4 text-left group">
-                            <div className="flex items-center gap-3">
-                                <Badge
-                                    variant="secondary"
-                                    className="shrink-0 text-[11px] h-6 w-6 p-0 flex items-center justify-center rounded-lg gradient-secondary text-white border-none shadow-sm group-data-[state=open]:rotate-12 transition-transform"
+                        <AccordionTrigger className="hover:no-underline py-6 px-8 text-left group">
+                            <div className="flex items-center gap-5">
+                                <div
+                                    className="shrink-0 h-10 w-10 flex items-center justify-center rounded-2xl bg-[#FF7043]/10 text-[#FF7043] font-black text-xs border border-[#FF7043]/10 shadow-sm group-data-[state=open]:rotate-12 transition-transform"
                                 >
-                                    {idx + 1}
-                                </Badge>
-                                <span className="font-bold text-base font-display">
+                                    {String(idx + 1).padStart(2, '0')}
+                                </div>
+                                <span className="font-black text-xl font-display tracking-tight text-slate-800">
                                     {row.questionType}{" "}
                                     {viTitle !== row.questionType && (
-                                        <span className="font-normal opacity-60">/ <em className="vi" lang="vi">{viTitle}</em></span>
+                                        <span className="font-medium text-slate-400 text-sm ml-2">/ <em className="not-italic" lang="vi">{viTitle}</em></span>
                                     )}
                                 </span>
                             </div>
                         </AccordionTrigger>
-                        <AccordionContent className="pt-2 pb-6">
-                            <div className="grid gap-6 sm:grid-cols-3 border-t border-dashed border-muted pt-6 mt-2">
+                        <AccordionContent className="pt-2 pb-10 px-8">
+                            <div className="grid gap-10 sm:grid-cols-3 border-t border-slate-100 pt-10 mt-2">
                                 <Section
-                                    icon={<AlignLeft className="h-4 w-4 text-primary" />}
+                                    icon={<div className="p-2 bg-slate-50 rounded-lg"><AlignLeft className="h-4 w-4 text-slate-400" /></div>}
                                     heading={L("colStructure")}
                                     text={row.structure}
                                 />
                                 <Section
-                                    icon={<CheckCircle2 className="h-4 w-4 text-green-600" />}
+                                    icon={<div className="p-2 bg-[#26A69A]/10 rounded-lg"><CheckCircle2 className="h-4 w-4 text-[#26A69A]" /></div>}
                                     heading={L("colTips")}
                                     text={row.tips}
                                 />
                                 <Section
-                                    icon={<AlertCircle className="h-4 w-4 text-orange-500" />}
+                                    icon={<div className="p-2 bg-[#FF7043]/10 rounded-lg"><AlertCircle className="h-4 w-4 text-[#FF7043]" /></div>}
                                     heading={L("colMistakes")}
                                     text={row.mistakes}
                                 />
@@ -165,24 +164,24 @@ export function TaskExplanationClient({ task1, task2 }: Props) {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             <div className="flex gap-4 flex-wrap items-center">
                 {/* Dropdown 2: Task */}
-                <div className="w-56">
+                <div className="w-64">
                     <Select value={activeTab} onValueChange={(v: any) => switchTab(v)}>
-                        <SelectTrigger className="font-semibold bg-white">
+                        <SelectTrigger className="h-14 font-black bg-white rounded-2xl border-none shadow-[0_10px_25px_rgba(0,0,0,0.03)] focus:ring-[#FF7043]/20">
                             <SelectValue placeholder="Select task..." />
                         </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="task1">{L("tab1")}</SelectItem>
-                            <SelectItem value="task2">{L("tab2")}</SelectItem>
+                        <SelectContent className="rounded-2xl border-none shadow-2xl">
+                            <SelectItem value="task1" className="font-bold py-3">{L("tab1")}</SelectItem>
+                            <SelectItem value="task2" className="font-bold py-3">{L("tab2")}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
 
                 <button
                     onClick={toggleAll}
-                    className="ml-auto rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground border border-border hover:bg-muted transition-colors bg-white shadow-sm"
+                    className="ml-auto rounded-full px-8 py-4 text-[10px] font-black uppercase tracking-widest text-[#FF7043] border border-[#FF7043]/20 hover:bg-[#FF7043] hover:text-white transition-all bg-white shadow-xl shadow-orange-100/50 active:scale-95"
                 >
                     {openItems.length === allIds.length ? L("collapseAll") : L("expandAll")}
                 </button>

@@ -6,30 +6,32 @@
 
 @layer base {
   :root {
-    --background: #f9f9f9;
-    --foreground: #1a1c1c;
+    --background: #FAFAF8;
+    --foreground: #1E293B; /* Slate 800 */
     --card: #ffffff;
-    --card-foreground: #1a1c1c;
-    --border: #c0c7d626; /* Ghost Border - 15% opacity */
-    --input: #c0c7d626;
-    --ring: #005cab;
-    --muted: #f3f3f3;
-    --muted-foreground: #404753;
-    --accent: #f3f3f3;
-    --accent-foreground: #1a1c1c;
+    --card-foreground: #1E293B;
+    --border: #E2E8F0; /* Slate 200 */
+    --input: #F1F5F9;
+    --ring: #26A69A;
+    --muted: #F8FAFC;
+    --muted-foreground: #64748B;
+    --accent: #F1F5F9;
+    --accent-foreground: #1E293B;
 
-    /* Stitch Core Palette */
-    --primary: #005cab;
-    --primary-container: #0075d6;
-    --secondary: #b7131d;
-    --secondary-container: #db3232;
-    --surface: #f9f9f1;
-    --surface-bright: #fcfcfc;
-    --surface-container: #eeeeee;
-    --surface-container-low: #f3f3f3;
+    /* Playful Gamified Palette */
+    --primary: #FF7043; /* Coral - Primary Action */
+    --primary-foreground: #ffffff;
+    --secondary: #26A69A; /* Teal - Success/Mission */
+    --secondary-foreground: #ffffff;
+    
+    --surface: #FAFAF8;
+    --surface-bright: #ffffff;
+    --surface-container: #F1F5F9;
+    --surface-container-low: #F8FAFC;
     --surface-container-lowest: #ffffff;
-    --outline-variant: #c0c7d6;
-    --on-surface-variant: #404753;
+    
+    --on-surface-variant: #475569;
+    --radius: 3rem; /* Target radius for cards */
   }
 
   .dark {

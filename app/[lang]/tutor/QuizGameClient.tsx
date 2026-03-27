@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createBrowserClient } from "@/lib/supabase";
 import { useTranslation } from "@/lib/i18n/useTranslation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, TrendingUp } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────
 interface Question {
@@ -58,9 +58,9 @@ function Confetti({ active }: { active: boolean }) {
 
 function ProgressBar({ current, total }: { current: number; total: number }) {
   return (
-    <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+    <div className="w-full h-4 bg-slate-100/50 rounded-full overflow-hidden border border-slate-200/50 shadow-inner">
       <div
-        className="h-full bg-gradient-to-r from-yellow-300 to-pink-400 rounded-full transition-all duration-500"
+        className="h-full bg-gradient-to-r from-[#FF7043] to-[#FF8A65] rounded-full transition-all duration-700 ease-out border-r border-orange-400/30"
         style={{ width: `${(current / total) * 100}%` }}
       />
     </div>
@@ -105,28 +105,33 @@ function Leaderboard({ onBack, dict }: { onBack: () => void; dict: any }) {
   const rows = data[tab] || [];
 
   return (
-    <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-3 mb-6 pt-2">
+    <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-slate-50 relative overflow-hidden">
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#FF7043]/5 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#26A69A]/5 blur-[100px] pointer-events-none" />
+      
+      <div className="relative max-w-2xl mx-auto">
+        <div className="flex items-center gap-4 mb-8">
           <button
             onClick={onBack}
-            className="bg-white/20 hover:bg-white/30 text-white rounded-2xl px-4 py-2 font-black transition-all"
+            className="w-12 h-12 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-2xl transition-all active:scale-95 group"
           >
-            {dict.quiz.leaderboard.back}
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           </button>
-          <h1 className="text-3xl font-black text-white">{dict.quiz.leaderboard.title}</h1>
-          <span className="ml-auto text-white/60 text-xs font-semibold">{dict.quiz.leaderboard.top10}</span>
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight leading-none mb-1">{dict.quiz.leaderboard.title}</h1>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{dict.quiz.leaderboard.top10}</p>
+          </div>
         </div>
 
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-6">
           {[5, 10, 15, 20].map((n) => (
             <button
               key={n}
               onClick={() => { setTab(n); setExpandedId(null); }}
-              className={`flex-1 py-2.5 rounded-2xl font-black text-sm transition-all border-2
+              className={`flex-1 py-3.5 rounded-2xl font-black text-xs transition-all border-b-4
                 ${tab === n
-                  ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-105 shadow-lg"
-                  : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
+                  ? "bg-[#FF7043] text-white border-orange-700 shadow-lg -translate-y-0.5"
+                  : "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200"}`}
             >
               {n} {dict.quiz.stats.question}s
             </button>
@@ -471,97 +476,126 @@ Respond ONLY with valid JSON, no markdown:
 
   if (phase === "setup")
     return (
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
+      <div className="bg-white rounded-[3rem] p-8 shadow-[0_32px_64px_rgba(0,0,0,0.06)] border border-slate-50 relative overflow-hidden">
+        {/* Background Decorations */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#26A69A]/5 blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#FF7043]/5 blur-[100px] pointer-events-none" />
+        
         <style>{`
           @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
           .btn-pop:active { transform: scale(.95); }
         `}</style>
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center py-6">
-            <div className="text-5xl mb-1">🧠✨</div>
-            <h1 className="text-5xl font-black text-white drop-shadow-lg">{dict.quiz.title}</h1>
-            <p className="text-white/80 mt-1">{dict.quiz.subtitle}</p>
+        <div className="relative max-w-2xl mx-auto">
+          <div className="text-center py-8">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FF7043]/10 text-[10px] font-black text-[#FF7043] uppercase tracking-widest border border-[#FF7043]/10 mb-4">
+              <TrendingUp className="w-3 h-3" />
+              Test your knowledge!
+            </div>
+            <h1 className="text-5xl font-black text-slate-800 tracking-tight leading-none mb-2">{dict.quiz.title}</h1>
+            <p className="text-slate-400 font-medium">{dict.quiz.subtitle}</p>
           </div>
 
           <Link
             href={`/${lang}/experience`}
-            className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full bg-white/10 border border-purple-300/20 text-white text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/20 hover:border-purple-300/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all group"
+            className="inline-flex items-center gap-2 mb-8 px-6 py-2.5 rounded-full bg-slate-50 border border-slate-100 text-slate-400 text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-[#FF7043] hover:border-[#FF7043]/20 hover:shadow-lg transition-all group"
           >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             {lang === 'vi' ? 'Quay lại' : 'Back to Experience'}
           </Link>
 
           <button
             onClick={() => setShowLb(true)}
-            className="btn-pop w-full mb-8 py-3.5 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-lg transition-all flex items-center justify-center gap-2"
+            className="btn-pop w-full mb-10 py-4 rounded-full font-black text-base text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-100 transition-all flex items-center justify-center gap-2 shadow-sm"
           >
-            {dict.quiz.viewLeaderboard}
+            ⭐ {dict.quiz.viewLeaderboard}
           </button>
 
-          <div className="bg-white/15 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/30">
-            <h2 className="text-white font-black text-xl mb-2">{dict.quiz.yourName}</h2>
-            <input
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              placeholder={dict.quiz.namePlaceholder}
-              maxLength={24}
-              className="w-full mb-6 px-4 py-3 rounded-2xl bg-white/90 text-gray-800 font-bold text-base placeholder-gray-400 outline-none focus:ring-2 focus:ring-yellow-300"
-            />
-
-            <h2 className="text-white font-black text-xl mb-3">{dict.quiz.pickTopics}</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-8">
-              {CATEGORIES.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => toggleCat(c.id)}
-                  className={`btn-pop py-3 px-3 rounded-2xl font-bold text-[13px] transition-all duration-150 border-2 flex items-center gap-2
-                  ${cats.includes(c.id)
-                      ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-[1.03] shadow-lg"
-                      : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
-                >
-                  <span className="text-base shrink-0">{c.emoji}</span>
-                  <span className="truncate">{c.label}</span>
-                </button>
-              ))}
+          <div className="space-y-10">
+            <div>
+              <h2 className="text-slate-800 font-black text-xl mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-lg bg-[#FF7043]/10 flex items-center justify-center text-[#FF7043] text-sm">1</span>
+                {dict.quiz.yourName}
+              </h2>
+              <input
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                placeholder={dict.quiz.namePlaceholder}
+                maxLength={24}
+                className="w-full px-6 py-4 rounded-[1.5rem] bg-slate-50 text-slate-800 font-bold text-lg placeholder-slate-300 outline-none border-2 border-transparent focus:border-[#FF7043]/20 focus:bg-white transition-all shadow-inner"
+              />
             </div>
 
-            <h2 className="text-white font-black text-xl mb-3">{dict.quiz.difficulty}</h2>
-            <div className="flex flex-col sm:flex-row gap-3 mb-8">
-              {Object.entries(DIFF).map(([k, v]) => (
-                <button
-                  key={k}
-                  onClick={() => setDiff(k)}
-                  className={`btn-pop flex-1 py-3.5 rounded-2xl font-black text-sm transition-all border-2
-                  ${diff === k
-                      ? `bg-gradient-to-r ${v.color} text-white border-white/40 scale-[1.03] shadow-lg`
-                      : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
-                >
-                  {v.emoji} {v.label}
-                </button>
-              ))}
+            <div>
+              <h2 className="text-slate-800 font-black text-xl mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-lg bg-[#26A69A]/10 flex items-center justify-center text-[#26A69A] text-sm">2</span>
+                {dict.quiz.pickTopics}
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => toggleCat(c.id)}
+                    className={`btn-pop py-4 px-4 rounded-2xl font-black text-[13px] transition-all duration-200 border-2 flex flex-col items-center gap-2 shadow-sm
+                    ${cats.includes(c.id)
+                        ? "bg-[#26A69A] text-white border-[#1e867c] scale-105 shadow-xl shadow-[#26A69A]/20"
+                        : "bg-white text-slate-500 border-slate-100 hover:border-[#26A69A]/30 hover:bg-slate-50"}`}
+                  >
+                    <span className="text-3xl mb-1">{c.emoji}</span>
+                    <span className="truncate leading-none uppercase tracking-tighter">{c.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <h2 className="text-white font-black text-xl mb-3">{dict.quiz.questionCount}</h2>
-            <div className="grid grid-cols-2 sm:flex sm:flex-row gap-3 mb-10">
-              {[5, 10, 15, 20].map((n) => (
-                <button
-                  key={n}
-                  onClick={() => setNumQ(n)}
-                  className={`btn-pop flex-1 py-4 rounded-2xl font-black text-lg transition-all border-2
-                  ${numQ === n
-                      ? "bg-yellow-300 text-gray-900 border-yellow-200 scale-[1.03] shadow-lg"
-                      : "bg-white/20 text-white border-white/20 hover:bg-white/30"}`}
-                >
-                  {n}
-                </button>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h2 className="text-slate-800 font-black text-xl mb-4 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center text-orange-500 text-sm">3</span>
+                  {dict.quiz.difficulty}
+                </h2>
+                <div className="flex flex-col gap-3">
+                  {Object.entries(DIFF).map(([k, v]) => (
+                    <button
+                      key={k}
+                      onClick={() => setDiff(k)}
+                      className={`btn-pop flex-1 py-3.5 rounded-2xl font-black text-sm transition-all border-b-4
+                      ${diff === k
+                          ? `bg-[#FF7043] text-white border-orange-700 shadow-lg -translate-y-0.5`
+                          : "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200"}`}
+                    >
+                      {v.emoji} {v.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-slate-800 font-black text-xl mb-4 flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 text-sm">4</span>
+                  {dict.quiz.questionCount}
+                </h2>
+                <div className="grid grid-cols-2 gap-3">
+                  {[5, 10, 15, 20].map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => setNumQ(n)}
+                      className={`btn-pop py-3.5 rounded-2xl font-black text-lg transition-all border-b-4
+                      ${numQ === n
+                          ? "bg-[#26A69A] text-white border-[#1e867c] shadow-lg -translate-y-0.5"
+                          : "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200"}`}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <button
               onClick={generate}
-              className="btn-pop w-full py-4 rounded-2xl font-black text-xl text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all hover:scale-[1.02]"
+              className="btn-pop w-full py-5 rounded-full font-black text-2xl text-white bg-gradient-to-r from-[#FF7043] to-[#FF8A65] border-b-4 border-orange-700 shadow-xl shadow-orange-100 hover:scale-[1.02] active:scale-95 transition-all mt-4"
             >
-              {dict.quiz.letsGo}
+              🚀 {dict.quiz.letsGo}
             </button>
           </div>
         </div>
@@ -581,93 +615,95 @@ Respond ONLY with valid JSON, no markdown:
     const q = questions[qIdx];
     const optLabels = ["A", "B", "C", "D"];
     return (
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
+      <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-slate-50 relative overflow-hidden">
         <Confetti active={confetti} />
         <style>{`
           @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
           @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
           .shake { animation: shake .4s ease; }
         `}</style>
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center justify-between mb-3">
-            <div className="bg-white/20 rounded-2xl px-3 py-2 text-white font-black text-sm">
+        <div className="relative max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <div className="bg-slate-50 text-slate-400 rounded-full px-4 py-1.5 font-black text-[10px] uppercase tracking-widest border border-slate-100 shadow-sm">
               {dict.quiz.stats.question} {qIdx + 1}/{questions.length}
             </div>
             <StreakBadge streak={streak} label={dict.quiz.stats.streak} />
             <div className="flex gap-2">
-              <div className={`rounded-2xl px-3 py-2 font-black text-sm ${elapsed >= 60 ? "bg-red-400 text-white animate-pulse" : "bg-white/20 text-white"}`}>
+              <div className={`rounded-full px-4 py-1.5 font-black text-[10px] uppercase tracking-widest border transition-all ${elapsed >= 60 ? "bg-red-50 text-red-500 border-red-100 animate-pulse" : "bg-slate-50 text-slate-400 border-slate-100"}`}>
                 ⏱ {fmt(elapsed)}
               </div>
-              <div className="bg-yellow-300 rounded-2xl px-3 py-2 text-gray-900 font-black text-sm">
+              <div className="bg-[#26A69A]/10 border border-[#26A69A]/20 rounded-full px-4 py-1.5 text-[#26A69A] font-black text-[10px] uppercase tracking-widest shadow-sm">
                 ⭐ {dict.quiz.stats.score}: {score}
               </div>
             </div>
           </div>
           <ProgressBar current={qIdx} total={questions.length} />
 
-          <div className={`mt-4 bg-white rounded-3xl p-6 shadow-2xl ${shake ? "shake" : ""}`}>
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
-              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">
+          <div className={`mt-8 bg-slate-50/50 rounded-[2rem] p-8 border border-white shadow-xl ${shake ? "shake" : ""}`}>
+            <div className="flex items-center gap-2 mb-6 flex-wrap">
+              <span className="px-4 py-1.5 bg-white border border-slate-100 text-slate-500 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
                 {CATEGORIES.find((c) => c.id === q.category)?.emoji || "🎯"} {q.category}
               </span>
-              <span className={`px-3 py-1 rounded-full text-sm font-bold text-white bg-gradient-to-r ${DIFF[diff].color}`}>
+              <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-sm bg-[#FF7043]`}>
                 {DIFF[diff].emoji} {diff}
               </span>
-              <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-sm font-bold">
+              <span className="px-4 py-1.5 bg-white border border-slate-100 text-slate-300 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">
                 👤 {playerName || "Anonymous"}
               </span>
             </div>
-            <h2 className="text-xl font-black text-gray-800 leading-snug mb-5">{q.question}</h2>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight leading-tight mb-8">
+              {q.question}
+            </h2>
 
-            <div className="grid grid-cols-1 gap-3 mb-5">
+            <div className="grid grid-cols-1 gap-3 mb-8">
               {q.options.map((opt, i) => {
-                let cls = "w-full p-4 rounded-2xl font-bold text-left transition-all duration-200 border-2 flex items-center gap-3 ";
+                let cls = "w-full p-5 rounded-2xl font-black text-left transition-all duration-200 border-b-4 flex items-center gap-4 ";
                 if (!revealed) {
                   cls +=
                     chosen === i
-                      ? "bg-indigo-500 text-white border-indigo-400 scale-[1.02] shadow-md"
-                      : "bg-gray-50 text-gray-800 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50";
+                      ? "bg-[#26A69A] text-white border-[#1e867c] scale-[1.02] shadow-xl shadow-[#26A69A]/20"
+                      : "bg-white text-slate-500 border-slate-100 hover:border-[#26A69A]/30 hover:bg-slate-50";
                 } else {
-                  if (i === q.correctAnswer) cls += "bg-green-400 text-white border-green-300 scale-[1.02] shadow-md";
-                  else if (i === chosen) cls += "bg-red-400 text-white border-red-300";
-                  else cls += "bg-gray-100 text-gray-400 border-gray-200";
+                  if (i === q.correctAnswer) cls += "bg-[#26A69A] text-white border-[#1e867c] scale-[1.02] shadow-xl shadow-[#26A69A]/20";
+                  else if (i === chosen) cls += "bg-[#FF7043] text-white border-orange-700";
+                  else cls += "bg-white/50 text-slate-300 border-slate-50 scale-95 opacity-50";
                 }
                 return (
                   <button key={i} onClick={() => !revealed && setChosen(i)} className={cls}>
-                    <span className="w-8 h-8 flex items-center justify-center rounded-full bg-white/30 font-black text-sm shrink-0">
+                    <span className="w-10 h-10 flex items-center justify-center rounded-xl bg-black/5 font-black text-sm shrink-0">
                       {optLabels[i]}
                     </span>
-                    <span>{opt}</span>
-                    {revealed && i === q.correctAnswer && <span className="ml-auto text-xl">✅</span>}
-                    {revealed && i === chosen && i !== q.correctAnswer && <span className="ml-auto text-xl">❌</span>}
+                    <span className="flex-1">{opt}</span>
+                    {revealed && i === q.correctAnswer && <span className="text-2xl drop-shadow-sm">✅</span>}
+                    {revealed && i === chosen && i !== q.correctAnswer && <span className="text-2xl drop-shadow-sm">❌</span>}
                   </button>
                 );
               })}
             </div>
 
             {revealed && (q.funFact || q.source) && (
-              <div className="space-y-2 mb-4">
+              <div className="space-y-4 mb-8">
                 {q.funFact && (
-                  <div className="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4 flex gap-2">
-                    <span className="text-2xl">💡</span>
-                    <p className="text-sm text-yellow-800 font-semibold">{q.funFact}</p>
+                  <div className="bg-orange-50/50 border border-orange-100 rounded-[1.5rem] p-5 flex gap-4">
+                    <span className="text-3xl filter drop-shadow-sm">💡</span>
+                    <p className="text-sm text-orange-800 font-bold leading-relaxed">{q.funFact}</p>
                   </div>
                 )}
                 {q.source && (
-                  <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-3 flex gap-2 items-start">
-                    <span className="text-lg">📚</span>
+                  <div className="bg-teal-50/50 border border-teal-100 rounded-[1.5rem] p-4 flex gap-4 items-start">
+                    <span className="text-2xl filter drop-shadow-sm">📚</span>
                     <div className="flex-1">
-                      <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className="uppercase tracking-wide text-blue-400 text-[10px] font-semibold">Source</span>
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <span className="uppercase tracking-[0.2em] text-teal-400 text-[9px] font-black">Verify source</span>
                         <div className="relative group">
-                          <span className="cursor-pointer text-blue-300 hover:text-blue-500 text-xs select-none">ⓘ</span>
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-800 text-white text-[11px] font-normal rounded-xl p-2.5 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 leading-snug">
+                          <span className="cursor-pointer text-teal-300 hover:text-teal-500 text-xs select-none">ⓘ</span>
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 bg-slate-800 text-white text-[10px] font-medium rounded-2xl p-3 shadow-2xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-10 leading-relaxed border border-white/10">
                             This source was suggested by AI and may not be exact. Always double-check it yourself! 🔍
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-800" />
                           </div>
                         </div>
                       </div>
-                      <p className="text-xs text-blue-700 font-semibold">{q.source}</p>
+                      <p className="text-xs text-teal-700 font-black">{q.source}</p>
                     </div>
                   </div>
                 )}
@@ -676,7 +712,7 @@ Respond ONLY with valid JSON, no markdown:
 
             <button
               onClick={handleCheck}
-              className="w-full py-4 rounded-2xl font-black text-lg text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-lg transition-all hover:scale-[1.02]"
+              className="w-full py-5 rounded-full font-black text-xl text-white bg-gradient-to-r from-[#FF7043] to-[#FF8A65] border-b-4 border-orange-700 shadow-xl shadow-orange-100 hover:scale-[1.02] active:scale-95 transition-all"
             >
               {!revealed ? dict.quiz.gameplay.checkAnswer : qIdx + 1 === questions.length ? dict.quiz.gameplay.seeResults : dict.quiz.gameplay.nextQuestion}
             </button>
@@ -694,36 +730,39 @@ Respond ONLY with valid JSON, no markdown:
           pct >= 40 ? ["🥉", dict.quiz.results.notBad] :
             ["📚", dict.quiz.results.keepStudying];
     return (
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-4 rounded-3xl">
+      <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-slate-50 relative overflow-hidden">
+        <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] rounded-full bg-[#26A69A]/5 blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[20%] right-[-5%] w-[40%] h-[40%] rounded-full bg-[#FF7043]/5 blur-[120px] pointer-events-none" />
+        
         <Confetti active={pct >= 60} />
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center py-6">
-            <div className="text-7xl mb-1">{medalEmoji}</div>
-            <h1 className="text-4xl font-black text-white">{msg}</h1>
-            <p className="text-white/90 text-lg mt-1 font-bold">{playerName || "Anonymous"}</p>
+        <div className="relative max-w-2xl mx-auto">
+          <div className="text-center py-10">
+            <div className="text-8xl mb-4 filter drop-shadow-xl animate-bounce">{medalEmoji}</div>
+            <h1 className="text-4xl sm:text-5xl font-black text-slate-800 tracking-tight leading-none mb-2">{msg}</h1>
+            <p className="text-slate-400 text-lg font-bold mb-8">{playerName || "Anonymous"}</p>
             <div className="flex justify-center gap-4 mt-3">
-              <span className="bg-white/20 rounded-2xl px-4 py-2 text-white font-black">
+              <span className="bg-[#26A69A]/10 border border-[#26A69A]/20 rounded-2xl px-6 py-3 text-[#26A69A] font-black text-sm shadow-sm transition-transform hover:scale-105">
                 ⭐ {score}/{questions.length} · {pct}%
               </span>
-              <span className="bg-white/20 rounded-2xl px-4 py-2 text-white font-black">
+              <span className="bg-slate-50 border border-slate-100 rounded-2xl px-6 py-3 text-slate-400 font-black text-sm shadow-sm transition-transform hover:scale-105">
                 ⏱ {fmt(elapsed)}
               </span>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 shadow-2xl space-y-3 mb-4 max-h-[40vh] overflow-y-auto">
+          <div className="bg-slate-50/50 rounded-[2rem] p-6 border border-white shadow-xl space-y-3 mb-8 max-h-[40vh] overflow-y-auto">
             {history.map((h, i) => (
               <div
                 key={i}
-                className={`p-4 rounded-2xl border-2 ${h.correct ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}`}
+                className={`p-5 rounded-2xl border-b-4 transition-all hover:scale-[1.01] ${h.correct ? "border-green-100 bg-white" : "border-red-100 bg-white"}`}
               >
-                <p className="font-bold text-gray-800 text-sm mb-1">{h.q.question}</p>
-                <p className={`text-sm font-semibold ${h.correct ? "text-green-600" : "text-red-500"}`}>
-                  {h.correct ? "✅" : "❌"} Your answer: {h.q.options[h.chosen]}
+                <p className="font-black text-slate-700 text-sm mb-2">{h.q.question}</p>
+                <p className={`text-sm font-black flex items-center gap-2 ${h.correct ? "text-[#26A69A]" : "text-[#FF7043]"}`}>
+                  {h.correct ? "✅" : "❌"} {dict.quiz.results.yourAnswer || 'Your answer'}: <span className="underline decoration-2 underline-offset-4">{h.q.options[h.chosen]}</span>
                 </p>
                 {!h.correct && (
-                  <p className="text-sm text-green-700 font-semibold">
-                    ✅ Correct: {h.q.options[h.q.correctAnswer]}
+                  <p className="text-sm text-[#26A69A] font-black mt-2 flex items-center gap-2">
+                    ✅ {dict.quiz.results.correctAnswer || 'Correct'}: <span className="bg-[#26A69A]/10 px-2 py-0.5 rounded-lg">{h.q.options[h.q.correctAnswer]}</span>
                   </p>
                 )}
               </div>
@@ -731,31 +770,31 @@ Respond ONLY with valid JSON, no markdown:
           </div>
 
           {userId.startsWith('guest-') && (
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 text-center mb-6">
-              <p className="text-white text-sm font-black mb-4 uppercase tracking-widest leading-relaxed">
+            <div className="bg-white rounded-[2rem] p-8 text-center mb-8 border-b-4 border-orange-50 shadow-xl group">
+              <p className="text-slate-400 text-[10px] font-black mb-4 uppercase tracking-[0.2em] leading-relaxed group-hover:text-[#FF7043] transition-colors">
                 {lang === 'vi' 
                   ? 'Bạn đang ở chế độ Khách. Tạo tài khoản để lưu kết quả và xem phân tích!' 
                   : 'You’re in Guest Mode. Create a free account to save this and unlock full analytics.'}
               </p>
               <button
                 onClick={() => router.push(`/${lang}/register`)}
-                className="w-full py-4 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all"
+                className="w-full py-5 rounded-full font-black text-base text-white bg-gradient-to-r from-[#FF7043] to-[#FF8A65] border-b-4 border-orange-700 shadow-xl shadow-orange-100 hover:scale-[1.02] active:scale-95 transition-all"
               >
                 {lang === 'vi' ? 'Tạo tài khoản Miễn phí' : 'Create Free Account'}
               </button>
             </div>
           )}
           
-          <div className="flex gap-3">
+          <div className="flex gap-4 mb-4">
             <button
               onClick={() => setShowLb(true)}
-              className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-[1.02]"
+              className="flex-1 py-5 rounded-full font-black text-base text-slate-600 bg-slate-50 border border-slate-100 transition-all hover:bg-white hover:shadow-lg hover:scale-[1.02] active:scale-95 shadow-sm"
             >
               {dict.quiz.results.leaderboard}
             </button>
             <button
               onClick={reset}
-              className="flex-1 py-4 rounded-2xl font-black text-base text-gray-900 bg-gradient-to-r from-yellow-300 to-orange-400 hover:opacity-90 shadow-xl transition-all hover:scale-[1.02]"
+              className="flex-1 py-5 rounded-full font-black text-base text-white bg-gradient-to-r from-[#FF7043] to-[#FF8A65] border-b-4 border-orange-700 shadow-xl shadow-orange-100 hover:scale-[1.02] active:scale-95 transition-all"
             >
               {dict.quiz.results.playAgain}
             </button>
