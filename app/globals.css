@@ -21,8 +21,10 @@
     /* Playful Gamified Palette */
     --primary: #FF7043; /* Coral - Primary Action */
     --primary-foreground: #ffffff;
+    --primary-container: #FF8A65;
     --secondary: #26A69A; /* Teal - Success/Mission */
     --secondary-foreground: #ffffff;
+    --secondary-container: #4DB6AC;
     
     --surface: #FAFAF8;
     --surface-bright: #ffffff;

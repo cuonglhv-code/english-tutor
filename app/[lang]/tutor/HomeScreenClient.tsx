@@ -106,21 +106,21 @@ export default function HomeScreenClient({ userId }: Props) {
           <span className="text-4xl font-black text-white italic group-hover:scale-110 transition-transform">J.</span>
         </div>
         <div className="space-y-2">
-          <h1 className="text-4xl sm:text-5xl font-black text-on-surface tracking-tight font-display mb-1">
+          <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight font-display mb-1">
             English Tutor
           </h1>
-          <p className="text-on-surface-variant font-medium text-lg max-w-md mx-auto leading-relaxed">
+          <p className="text-slate-700 font-medium text-lg max-w-md mx-auto leading-relaxed">
             AI-powered academic practice for Vietnamese IELTS candidates
           </p>
         </div>
       </div>
 
       {/* Tab toggle */}
-      <div className="flex bg-white/50 backdrop-blur-md rounded-2xl p-1.5 shadow-sm border-none mb-10">
+      <div className="flex bg-white/80 backdrop-blur-md rounded-2xl p-1.5 shadow-sm border border-slate-200/60 mb-10">
         <button
           onClick={() => setTab('start')}
           className={`px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-            tab === 'start' ? 'gradient-primary text-white shadow-md' : 'text-on-surface-variant/60 hover:text-on-surface'
+            tab === 'start' ? 'gradient-primary text-white shadow-md' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           Start Session
@@ -128,7 +128,7 @@ export default function HomeScreenClient({ userId }: Props) {
         <button
           onClick={() => setTab('favourites')}
           className={`px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
-            tab === 'favourites' ? 'gradient-primary text-white shadow-md' : 'text-on-surface-variant/60 hover:text-on-surface'
+            tab === 'favourites' ? 'gradient-primary text-white shadow-md' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <Star className="h-3.5 w-3.5" />
@@ -142,10 +142,10 @@ export default function HomeScreenClient({ userId }: Props) {
       </div>
 
       {lastSession && tab === 'start' && (
-        <div className="w-full max-w-md bg-white/80 backdrop-blur-sm border-none rounded-3xl p-6 mb-8 flex items-center justify-between shadow-stitched animate-in slide-in-from-top duration-500 ease-out">
+        <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 mb-8 flex items-center justify-between shadow-[0_18px_40px_rgba(15,23,42,0.08)] animate-in slide-in-from-top duration-500 ease-out">
           <div className="space-y-1">
-            <p className="font-black text-on-surface text-sm uppercase tracking-wider">Continue last session?</p>
-            <p className="text-xs text-on-surface-variant/60 font-medium italic">
+            <p className="font-black text-slate-900 text-sm uppercase tracking-wider">Continue last session?</p>
+            <p className="text-xs text-slate-600 font-medium italic">
               {lastSession.skillArea} · {lastSession.level} · {lastSession.messageCount} messages
             </p>
           </div>
@@ -167,12 +167,12 @@ export default function HomeScreenClient({ userId }: Props) {
       )}
 
       {tab === 'start' ? (
-        <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-stitched border-none">
-          <h2 className="font-black text-on-surface text-xl font-display tracking-tight mb-6">Choose your session</h2>
+        <div className="bg-white rounded-[3rem] p-8 w-full max-w-md shadow-[0_18px_40px_rgba(15,23,42,0.08)] border border-slate-200">
+          <h2 className="font-black text-slate-900 text-xl font-display tracking-tight mb-6">Choose your session</h2>
 
           {/* Level picker */}
           <div className="mb-6">
-            <label className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-3 block">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">
               Your Level
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -181,10 +181,10 @@ export default function HomeScreenClient({ userId }: Props) {
                   key={l}
                   onClick={() => setLevel(l)}
                   title={LEVEL_TOOLTIPS[l]}
-                  className={`px-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border-none transition-all ${
+                  className={`px-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
                     level === l
-                      ? 'gradient-primary text-white shadow-md'
-                      : 'bg-surface-container-low text-on-surface-variant/60 hover:bg-surface-container-highest'
+                      ? 'gradient-primary text-white shadow-md border-transparent'
+                      : 'bg-slate-100 text-slate-800 border-slate-200 hover:bg-slate-200 hover:border-slate-300'
                   }`}
                 >
                   {l}
@@ -195,7 +195,7 @@ export default function HomeScreenClient({ userId }: Props) {
 
           {/* Skill area picker */}
           <div className="mb-8">
-            <label className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-3 block">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">
               Skill Area
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -203,13 +203,15 @@ export default function HomeScreenClient({ userId }: Props) {
                 <button
                   key={s}
                   onClick={() => setSkill(s)}
-                  className={`px-4 py-4 rounded-xl text-xs font-black uppercase tracking-widest border-none transition-all text-left flex items-center gap-3 ${
+                  className={`px-4 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all text-left flex items-center gap-3 border ${
                     skill === s
-                      ? 'gradient-primary text-white shadow-md'
-                      : 'bg-surface-container-low text-on-surface-variant/60 hover:bg-surface-container-highest'
+                      ? 'gradient-primary text-white shadow-md border-transparent'
+                      : 'bg-slate-100 text-slate-800 border-slate-200 hover:bg-slate-200 hover:border-slate-300'
                   }`}
                 >
-                  <span className="text-xl filter grayscale contrast-125 brightness-110">{SKILL_ICONS[s]}</span>
+                  <span className={`text-xl ${skill === s ? '' : 'filter grayscale contrast-125 brightness-110 opacity-70'}`}>
+                    {SKILL_ICONS[s]}
+                  </span>
                   {s}
                 </button>
               ))}
@@ -218,17 +220,17 @@ export default function HomeScreenClient({ userId }: Props) {
 
           {/* Starter prompts preview */}
           <div className="mb-8">
-            <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-3">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">
               Sample starters
             </p>
             <div className="space-y-2">
               {(startersBySkill[skill] ?? []).map((p, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 bg-surface-container-low rounded-xl px-4 py-2.5 group cursor-pointer hover:bg-white hover:shadow-sm transition-all"
+                  className="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-4 py-2.5 group cursor-pointer hover:bg-white hover:border-slate-200 hover:shadow-sm transition-all"
                   onClick={() => handleStart(p)}
                 >
-                  <p className="flex-1 text-xs text-on-surface-variant/70 font-medium truncate italic leading-relaxed">
+                  <p className="flex-1 text-xs text-slate-700 font-medium truncate italic leading-relaxed">
                     {p}
                   </p>
                   <button
@@ -261,9 +263,9 @@ export default function HomeScreenClient({ userId }: Props) {
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-stitched border-none">
-          <h2 className="font-black text-on-surface text-xl font-display tracking-tight mb-2">Saved Favourites</h2>
-          <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest mb-6 leading-relaxed">
+        <div className="bg-white rounded-[3rem] p-8 w-full max-w-md shadow-[0_18px_40px_rgba(15,23,42,0.08)] border border-slate-200">
+          <h2 className="font-black text-slate-900 text-xl font-display tracking-tight mb-2">Saved Favourites</h2>
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6 leading-relaxed">
             Click <strong>Use</strong> to jump into session
           </p>
 
@@ -282,13 +284,13 @@ export default function HomeScreenClient({ userId }: Props) {
               {favourites.map((f, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-4 p-5 bg-surface-container-low rounded-2xl hover:bg-white hover:shadow-sm transition-all group"
+                  className="flex items-start gap-4 p-5 bg-slate-50 border border-slate-100 rounded-2xl hover:bg-white hover:border-slate-200 hover:shadow-sm transition-all group"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1.5">
                       {f.skill} · {f.level}
                     </p>
-                    <p className="text-sm text-on-surface/80 font-medium leading-relaxed italic">{`"${f.text}"`}</p>
+                    <p className="text-sm text-slate-700 font-medium leading-relaxed italic">{`"${f.text}"`}</p>
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">
                     <button
