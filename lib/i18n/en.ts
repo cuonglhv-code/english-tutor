@@ -67,7 +67,7 @@ export const en = {
     heroTitleLine2: "English Skills.",
     heroTitleLine3: "Ace the IELTS.",
     title: "Jaxtina Tutor",
-    desc: "Built for Vietnamese learners, with AI feedback that feels like a personal tutor.",
+    desc: "Built for Vietnamese learners, with AI feedback instantly.",
     hubHeader: "Sign in to your IELTS hub",
     hubSubline: "Continue your personalized training plan.",
     emailLabel: "Academic Email",

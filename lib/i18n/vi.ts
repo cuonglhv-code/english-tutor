@@ -69,7 +69,7 @@ export const vi: Dictionary = {
     heroTitleLine2: "Tiếng Anh của bạn.",
     heroTitleLine3: "Chinh phục IELTS.",
     title: "Jaxtina Tutor",
-    desc: "Được xây dựng cho người Việt, với phản hồi AI chân thực như gia sư riêng.",
+    desc: "Được xây dựng cho người Việt, với phản hồi từ AI tức thì.",
     hubHeader: "Đăng nhập vào IELTS hub",
     hubSubline: "Tiếp tục lộ trình đào tạo cá nhân hóa của bạn.",
     emailLabel: "Email học thuật",
