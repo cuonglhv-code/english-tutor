@@ -27,6 +27,7 @@ const PUBLIC_ROUTES = [
   "/experience",
   "/vocabulary-challenge",
   "/vocabulary-game.html",
+  "/jaxtinaspeak.html",
   "/api",
   // Note: /placement (intro only) is handled via EXACT_PUBLIC_ROUTES below
 ];
@@ -172,5 +173,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // Exclude Next.js internals, static assets, and any .html files in /public
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.html$).*)"],
 };
