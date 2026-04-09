@@ -39,6 +39,9 @@ export const vi: Dictionary = {
     cardVocabTitle: "Từ vựng",
     cardVocabDesc: "Làm chủ các thành ngữ học thuật bằng SRS logic và thuật toán lặp lại thông minh.",
     cardVocabBtn: "Luyện trí nhớ",
+    cardSpeakTitle: "Speaking",
+    cardSpeakDesc: "Huấn luyện viên phát âm AI với phản hồi phát âm theo thời gian thực và chấm điểm lưu loát.",
+    cardSpeakBtn: "Luyện Speaking →",
   },
   writing101: {
     badge: "Module Học thuật",

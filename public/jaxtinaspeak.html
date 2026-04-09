@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaxtina Speak - Master Your English</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B0F19',      // Deep Space Blue
+                            surface: '#1E293B',   // Slate 800
+                            primary: '#4F46E5',   // Indigo 600
+                            secondary: '#D946EF', // Fuchsia 500
+                            accent: '#06B6D4',    // Cyan 500
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 8s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        float: {
+                            '0%, 100%': { transform: 'scale(1.05) translateY(0)' },
+                            '50%': { transform: 'scale(1.1) translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 10px rgba(6, 182, 212, 0.2)' },
+                            '100%': { boxShadow: '0 0 25px rgba(6, 182, 212, 0.6)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0B0F19;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(217, 70, 239, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.2) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(6, 182, 212, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #06B6D4;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #06B6D4;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+        
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: #06B6D4;
+            cursor: pointer;
+            margin-top: -4px;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.4); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.8); }
+
+        .text-gradient {
+            background: linear-gradient(to right, #06B6D4, #D946EF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Mobile Native App Feel Utilities */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .safe-area-pb { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500/30 selection:text-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+
+        // --- ASSETS ---
+        const CHAR_IMAGES = [
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/1.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/2.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/3.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/4.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/5.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/6.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/7.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/8.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/9.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/10..jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/11.jpg",
+            "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/12.jpg"
+        ];
+        const DONE_IMAGE = "https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/A%CC%89nh/done.png";
+
+        // --- FULL DATASET ---
+        const RAW_DATA = [
+            {
+                id: 't1', title: 'Topic 1 – Study', icon: 'fa-graduation-cap', image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80',
+                questions: [
+                    { t: "Are you a student or are you working?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/1Q/1q1.mp3", s: "Well, you know, I'm currently a senior at Hanoi University, which is one of the reputable schools in Vietnam. You know, the admission is incredibly competitive, so I'm very proud of being a student here.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic1/q1study.mp3", v: ["currently a senior", "reputable schools", "admission", "incredibly competitive", "proud of"] },
+                    { t: "What are you studying?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/1Q/1q2.mp3", s: "Well, you know, I am majoring in accounting. So, as you can probably guess, I deal a lot with numbers day in, day out. It really can be overwhelming at times, but I'd like to think that I have a knack for maths and calculations so I'm able to handle it well.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic1/q2study.mp3", v: ["majoring in", "deal with numbers", "day in, day out", "overwhelming", "have a knack for"] },
+                    { t: "What's the most difficult part of your study?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/1Q/1q3.mp3", s: "Well, you know, I'd say it's probably the workload. I mean, there are so many assignments and students are always under a lot of pressure from deadlines. But fortunately, the teachers at my university are incredibly supportive. They are always willing to give guidance, and that makes a huge difference.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic1/q3study.mp3", v: ["workload", "assignments", "under pressure", "deadlines", "supportive", "give guidance"] },
+                    { t: "What do you like most about your school?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/1Q/1q4.mp3", s: "Well, I guess the most enjoyable aspect is definitely the supportive learning environment. The facilities are top-notch; I mean, all the classrooms are modern and well-equipped. Besides, as I mentioned before, the teachers and classmates are incredibly helpful and friendly. So all in all, it's a great place to study.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic1/q4study.mp3", v: ["enjoyable aspect", "learning environment", "top-notch", "well-equipped", "all in all"] }
+                ]
+            },
+            { id: 't2', title: 'Topic 2 – Work', icon: 'fa-briefcase', image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80', questions: [{ t: "Are you a student or are you working?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/1Q/1q1.mp3", s: "I'm currently working as an English teacher at IBC University, which is considered one of the top universities in Vietnam. I'm really passionate about my job as I find it a very rewarding line of work.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic2/q1work.mp3", v: ["passionate about", "rewarding", "line of work", "top universities"] }, { t: "What do you like about your job?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/2Q/2q2.mp3", s: "To be honest, the first thing that comes to mind is the salary. I make what I'd consider a lucrative income, which means not only do I have enough to cover my bills, but I also have some extra to spend on whatever I want. For example, on payday, I often treat myself to a meal at a high-end restaurant or splurge on a nice shirt.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic2/q2_1work.mp3", v: ["comes to mind", "lucrative income", "cover my bills", "treat myself", "splurge on"] }, { t: "What do you dislike about your job?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/2Q/2q3.mp3", s: "Well, if I had to pick one thing, it would be the overwhelming workload. I have a very hectic schedule, which means I'm always up to my ears in deadlines. As a result, this leaves me with very little quality time for family and friends. So, looking ahead, my main goal is to achieve a better work-life balance and enjoy life more.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic2/q3work.mp3", v: ["overwhelming workload", "hectic schedule", "up to my ears", "quality time", "work-life balance"] }, { t: "What do you do after work?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/2Q/2q4.mp3", s: "When I get off work, my colleagues and I often hit the bar to grab a couple of drinks. Sometimes we'll get a bite to eat too, if we're all feeling up to it. It's really fun and a fantastic way to blow off some steam after a long day.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic2/q4work.mp3", v: ["get off work", "hit the bar", "grab a couple of drinks", "get a bite to eat", "blow off some steam"] }] },
+            { id: 't3', title: 'Topic 3 – Leisure Time', icon: 'fa-gamepad', image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80', questions: [{ t: "Do you have any hobbies?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/3Q/3q1.mp3", s: "Well, everyone has their own leisure pursuits, and one of my perennial favourites is reading. The book I'm reading at the moment is \"Peace Is Every Step\" by the renowned author, Thich Nhat Hanh. It is a classic, really, and I highly recommend it.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic3/q1leisure.mp3", v: ["leisure pursuits", "perennial favourites", "renowned author", "highly recommend"] }, { t: "Is it important to have a hobby?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/3Q/3q2.mp3", s: "Definitely! Nowadays, life is getting more and more hectic, which leaves many people feeling completely burnt out. That's why it's necessary to have a hobby to de-stress. It's not just a pastime, but a vital act of self-care.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic3/q2leisure.mp3", v: ["hectic", "burnt out", "de-stress", "pastime", "self-care"] }, { t: "Is it harmful to spend too much time on a hobby?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/3Q/3q3.mp3", s: "Definitely, I believe spending excessive time on a hobby may have an adverse effect on people. You may end up not having enough time for your priorities, like family and work. For example, it's easy for me to lose myself in books and neglect the deadlines at work.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic3/q3leisure.mp3", v: ["excessive time", "adverse effect", "priorities", "lose myself in", "neglect"] }, { t: "What free-time activities would you love to try in the future?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/3Q/3q4.mp3", s: "I'd love to have a crack at something more energetic in the future, perhaps kickboxing. From what I've seen, it looks like an absolute blast! Moreover, I imagine it would be a fantastic way to get lean and truly blow off some steam after a stressful week.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/topic3/q4leisure.mp3", v: ["have a crack at", "energetic", "absolute blast", "get lean", "blow off some steam"] }] },
+            { id: 't4', title: 'Topic 4 – TV and Music', icon: 'fa-music', image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80', questions: [{ t: "Did you often watch television when you were a child?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/4Q/4q1.mp3", s: "Oh! Definitely. When I was a kid, my parents often sat me down in front of the telly and turned on some cartoons, trying to get me to finish my meal. And looking back, I realize that probably wasn't the healthiest habit, but it has become one of my warmest childhood memories.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%204/q1.1topic4.mp3", v: ["sat me down", "in front of the telly", "looking back", "healthiest habit", "warmest childhood memories"] }, { t: "Do you like listening to music?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/4Q/4q2.mp3", s: "Absolutely. Music is my off switch after a long day. I'm big on Sơn Tùng M-TP, huge right now among youngsters, and his music is my secret weapon for shaking off the stress.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%204/q1.2topic4.mp3", v: ["off switch", "big on", "secret weapon", "shaking off the stress"] }, { t: "How often do you watch TV?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/4Q/4q3.mp3", s: "To be honest, life keeps getting busier. I'm up to my ears in work, so the TV stays off most nights. When I need a breather, I just scroll short clips on social media: quick laughs, mini-docs, and language shorts to unwind and keep my English sharp.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%204/q2.1topic4.mp3", v: ["keeps getting busier", "up to my ears", "need a breather", "unwind", "keep my English sharp"] }, { t: "How often do you listen to music?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/4Q/4q4.mp3", s: "Honestly, music is part of my day. I keep it on in the background at home. When I need to focus, I switch to instrumentals or lo-fi without lyrics. And my daily commute wouldn't be the same without it; it makes the journey feel shorter.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%204/q2.2topic4.mp3", v: ["part of my day", "in the background", "instrumentals", "daily commute", "make the journey feel shorter"] }, { t: "What types of music do you like?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/4Q/4q5.mp3", s: "I'm all about pop because I come for the catchy, bright beats, but I stay for the lyrics that feel like they were written about my own life. It's truly the best of both worlds.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%204/q3.1topic4.mp3", v: ["all about", "catchy", "bright beats", "best of both worlds"] }, { t: "What kind of TV programmes do you like most?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/4Q/4q6.mp3", s: "I'm all about sitcoms because I come for the quick laughs, but I stay for the witty banter. It's truly the best of both worlds.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%204/q3.2topic4.mp3", v: ["sitcoms", "quick laughs", "witty banter"] }] },
+            { id: 't5', title: 'Topic 5 – Plans and Goals', icon: 'fa-bullseye', image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&q=80', questions: [{ t: "What plan do you currently have?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/5Q/5q1.mp3", s: "Well, you know, actually, at the moment, I'm planning to lose weight and get leaner. To be honest, I've put off this plan for too long, and my body has been so out of shape.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%205/q1v1.mp3", v: ["lose weight", "get leaner", "put off", "out of shape"] }, { t: "When do you plan to start that?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/5Q/5q2.mp3", s: "Hopefully this month. I'm really a procrastinator, so I have to make up my mind quickly. Next week, I'm planning to sign up for a gym membership and start working out.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%205/q2.mp3", v: ["procrastinator", "make up my mind", "sign up for", "gym membership"] }, { t: "How do you intend to achieve that?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/5Q/5q3.mp3", s: "As I was saying, hitting the gym is probably the first step. However, it's difficult to stay the course, because there are always excuses not to work out. So in order to achieve my fitness goal, I have to look for an accountability partner, you know, someone who is fit and willing to coach me and hold me accountable.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%205/q3.mp3", v: ["hitting the gym", "stay the course", "accountability partner", "hold me accountable"] }, { t: "How do you feel about this plan?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/5Q/5q4.mp3", s: "Honestly, getting started is the easy part. The real challenge for me is the follow-through. But I believe that with hard work, self-discipline, and the support of my accountability partner, I won't let myself down. After all, nothing is impossible.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%205/q4.mp3", v: ["getting started", "follow-through", "self-discipline", "let myself down", "nothing is impossible"] }, { t: "If you go abroad, do you plan to live in the countryside or a big city?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/5Q/5q5.mp3", s: "Well, everyone has their own choice. I'm leaning towards big cities. I love the energy of metropolises. It can get a bit hectic at times, but I think living in cities is a lot of fun. By contrast, a lot of people like the peacefulness of the countryside, but personally, I'm not a fan.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%205/q5.mp3", v: ["leaning towards", "metropolises", "hectic", "peacefulness", "not a fan"] }] },
+            { id: 't6', title: 'Topic 6 – Ideal City', icon: 'fa-city', image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80', questions: [{ t: "What kind of cities do you like?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/6Q/6q1.mp3", s: "Well, you know, I guess, my ideal city would be a place where I have access to good educational facilities, medical services, and transport links, which does wonders for my quality of life.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%207/q1.mp3", v: ["ideal city", "access to", "educational facilities", "transport links", "quality of life"] }, { t: "Do you like the city you are living in now?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/6Q/6q2.mp3", s: "Why not! When you set foot in a metropolis like Hanoi, the thing that probably takes your breath away is the city skyline; I mean, it's a wonderful mix of old and new. The city itself has many flowered and cobbled streets. For example, the Old Quarter is full of antique brick houses and historic buildings. It is a conservation area and a real must-go destination in Hanoi.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%207/q2.2.mp3", v: ["set foot in", "metropolis", "takes your breath away", "skyline", "cobbled streets", "conservation area"] }, { t: "Which city have you been to recently?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/6Q/6q2.mp3", s: "Well, you know, I just paid a visit to Hue last month, which is a city in central Vietnam. When it comes to Hue, people immediately think of the old capital, golden palaces, temples, gorgeous dancing performances, and majestic landscapes. Well, I really recommend it.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%207/q3.mp3", v: ["paid a visit to", "old capital", "majestic landscapes", "recommend it"] }, { t: "Do you prefer the city or the countryside?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/6Q/6q4.mp3", s: "Well, everyone has their own choice; I'm kind of leaning towards a big city. I love the energy of metropolises. It can get a bit hectic at times, but I think the city has better career prospects. A lot of people like the sleepiness of the countryside, but personally, I'm not a fan.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%207/q4.mp3", v: ["leaning towards", "career prospects", "sleepiness", "hectic"] }] },
+            { id: 't7', title: 'Topic 7 – Peaceful Hometown', icon: 'fa-house-chimney', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80', questions: [{ t: "Where are you from?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/7Q/7q1.mp3", s: "I'm from Hanoi, which is located in the Red River Delta. As you probably know, it's the capital of Vietnam. Personally, I think Hanoi is one of the most beautiful colonial cities in Indochina. It's quite hectic, but it's also famous for its great food, the iconic Red River, and its unique architecture.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%207.1/q1.1.mp3", v: ["located in", "colonial cities", "hectic", "iconic", "unique architecture"] }, { t: "What do you dislike about your hometown?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/7Q/7q2.mp3", s: "Well, you know, I'm currently living in Hanoi. As you can probably guess, I often get stuck in traffic jams, and honestly, it's a nightmare driving during rush hour. I mean, the roads are jam-packed, bumper to bumper with scooters, cars, and bicycles. It's absolutely chaotic.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%207.1/q2.1.mp3", v: ["stuck in traffic jams", "nightmare", "rush hour", "jam-packed", "bumper to bumper", "chaotic"] }, { t: "What do you like most about your hometown?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/7Q/7q3.mp3", s: "Well, you know, I'm actually a bit of a foodie. I'd say the greatest appeal of Hanoi is its incredible diversity of cuisine, which makes it well-known both at home and abroad. For instance, Pho has been ranked among the Top 5 street foods in the world by GlobalPost. On top of that, I really love the people here — they're always willing to give others a hand when needed.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%207.1/q3.mp3", v: ["a bit of a foodie", "greatest appeal", "diversity of cuisine", "well-known", "give others a hand"] }, { t: "Do you prefer living in the city or the countryside?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/7Q/7q4.mp3", s: "Well, everyone has their own preference. I'm kind of leaning towards the countryside. You know, I love staying away from the hustle and bustle of life in big cities. Besides, the cost of living is quite reasonable, and it really does wonders for people who are living on a budget, like me.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%207.1/q4.1.mp3", v: ["preference", "leaning towards", "hustle and bustle", "cost of living", "living on a budget"] }] },
+            { id: 't8', title: 'Topic 8 – Food & Cooking', icon: 'fa-utensils', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80', questions: [{ t: "What kinds of food do you particularly like?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/7Q/7q4.mp3", s: "I'd have to say that Asian cuisine is my favorite. I am a huge fan of bold flavors and spices used in Vietnamese and Thai dishes. Something I often daydream about is eating Bún Riêu, which is a lip-smacking Vietnamese noodle soup served with a crab broth. You know, it's every bit as delicious as it sounds.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%208/q1.mp3", v: ["Asian cuisine", "huge fan of", "bold flavors", "daydream about", "lip-smacking"] }, { t: "Is there any food you don't like?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/8Q/8q2.mp3", s: "I'm not a fussy eater, but there are a few things that kind of put me off. For example, I cannot stand Mamtom, which is essentially shrimp paste used in a lot of Vietnamese recipes. A lot of people like it, but I think it smells awful. Definitely not my cup of tea.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%208/q2.mp3", v: ["fussy eater", "put me off", "cannot stand", "smells awful", "not my cup of tea"] }, { t: "What kinds of food are the most popular in Vietnam?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/8Q/8q3.mp3", s: "I think street food is a staple around here. You can find bustling food stalls all around Hanoi, and they are my go-to places for a cheap and cheerful meal. I mean, gourmet restaurants are nice and all, but street food is what Vietnam is all about.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%208/q3.mp3", v: ["street food", "staple", "bustling", "go-to places", "cheap and cheerful", "gourmet restaurants"] }, { t: "Do you like cooking?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/8Q/8q4.mp3", s: "Actually, I'd like to think that cooking is my forte. I developed a passion for culinary arts when I first watched the cooking show MasterChef. Since then, I have learned a lot of recipes and I can whip up a dinner really easily.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%208/q4.mp3", v: ["my forte", "passion for culinary arts", "recipes", "whip up"] }, { t: "Who usually does the cooking in your home?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/8Q/8q5.mp3", s: "Mostly my mother, but I take turns sometimes. To me, she's the best cook ever who can always guarantee lovely home-cooked food. Unlike her cooking, the quality of my food is a bit hit-and-miss.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%208/q5.mp3", v: ["take turns", "guarantee", "home-cooked food", "hit-and-miss"] }] },
+            { id: 't9', title: 'Topic 9 – Healthy Fruits', icon: 'fa-apple-whole', image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=800&q=80', questions: [{ t: "Do you usually eat fruit and vegetables every day?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/9Q/9q1.mp3", s: "Absolutely. Fruits and veggies are an indispensable part of my diet. I always carry a big bag of dried fruits to snack on whenever I get the munchies, and for lunch, I usually opt for some kind of fresh salad. It's quite a healthy eating habit. However, nowadays, I am wary of the chemical preservatives used to extend their shelf life, so I eat them less than before.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%209/q1.mp3", v: ["indispensable part", "snack on", "get the munchies", "opt for", "wary of", "preservatives"] }, { t: "Is it important to eat fruit?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/9Q/9q2.mp3", s: "Well, I think fruits play a vital role in people's health. They provide various kinds of vitamins, minerals, and fiber, which do wonders for the digestive system, and can also help slow down the aging process. Well, you know, I highly recommend eating fruits on a daily basis.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%209/q2.mp3", v: ["vital role", "vitamins, minerals, and fiber", "digestive system", "aging process", "daily basis"] }, { t: "What kind of fruit do you enjoy the most?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/9Q/9q3.mp3", s: "I have to say that mango is my all-time favourite. Ripe mangos are so sweet and soft, they practically melt in your mouth. For me, their taste is the essence of summer, and it always cheers me up. And you can do a bunch of things with mangos, too. You know, you can eat them, you can juice them, or even blend them into smoothies. Actually, unripe mangos make for a lip-smacking salad.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%209/q3.mp3", v: ["all-time favourite", "melt in your mouth", "essence of", "cheers me up", "blend them", "smoothies"] }, { t: "Are there any special fruits in your hometown?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/9Q/9q4.mp3", s: "Wow, so many delicious fruits pop into my head! But if I had to pick one standout from Vietnam, it'd be the mangosteen. It mainly comes from Southeast Asia, but it's a real special treat for us here in Hanoi when it's in season. The flesh inside is absolutely heavenly, so soft with a sweet and sour taste, and it makes a wonderfully light and pure refreshment.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%209/q4.mp3", v: ["pop into my head", "standout", "special treat", "in season", "heavenly", "refreshment"] }] },
+            { id: 't10', title: 'Topic 10 – Holidays', icon: 'fa-umbrella-beach', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80', questions: [{ t: "What do you do on your holidays?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/10Q/10q1.mp3", s: "Well, it kind of really depends. If I only have a few days off, I'll just stay at home and lounge about, maybe put on a movie or something, you know? On the other hand, if it's an extended holiday, I will probably go traveling. My favorite destination is Bangkok, because of the food and culture.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2010/q1.mp3", v: ["lounge about", "extended holiday", "destination", "food and culture"] }, { t: "Do you think holidays are becoming more and more important?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/10Q/10q2.mp3", s: "Definitely. You know, nowadays life is very hectic, and I'm always up to my ears in work, so it's crucial to just take a break and get away from it all. Besides, holidays can really be a powerful tool for personal development. They help us to broaden our horizons about places and history, and connects us to other cultures and people.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2010/q2.mp3", v: ["hectic", "up to my ears", "get away from it all", "personal development", "broaden our horizons"] }, { t: "What kinds of places do you like to go on holiday?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/10Q/10q3.mp3", s: "My travel destinations of choice are metropolises. To my mind, big cities are the best places to explore a country's culture and feast on its delicious food. But from time to time, I might go somewhere quieter, like a nice and secluded beach resort, for example.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2010/q3.1.mp3", v: ["destinations of choice", "metropolises", "explore", "feast on", "secluded"] }, { t: "Do you prefer traveling alone or in a group?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/10Q/10q5.mp3", s: "Well, I'm kind of leaning towards traveling in the company of my friends or family. It's more economical, I think, as you can split the costs of accommodation and meals. And on top of that, the more the merrier, you know.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2010/q4.1.mp3", v: ["in the company of", "economical", "split the costs", "the more the merrier"] }] },
+            { id: 't11', title: 'Topic 11 – Festivals', icon: 'fa-masks-theater', image: 'https://images.unsplash.com/photo-1514525253440-b393452e3728?w=800&q=80', questions: [{ t: "What is your favorite festival?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/11Q/11q1.mp3", s: "Well, personally speaking, I love Tet in Vietnam to death because it's a symbol of new beginnings and optimism. Well, I think Tet is the most anticipated occasion for us. It is a joyous time for people from all walks of life to return home, gather with their families, and welcome the New Year together.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2011/1.mp3", v: ["love ... to death", "symbol of", "optimism", "anticipated occasion", "walks of life"] }, { t: "How do you celebrate this festival?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/11Q/11q2.mp3", s: "Well, as I was saying, Tet is highly significant to me, so I put great emphasis on the preparation phase. My whole family partakes in various activities together, such as cleaning the house, decorating, and cooking traditional dishes. Most importantly, one of the most indispensable items for us is the kumquat tree or peach blossoms. They are always set in a place of honor to signal a bountiful year ahead.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2011/2.mp3", v: ["significant", "emphasis on", "preparation phase", "partakes in", "indispensable items", "bountiful year"] }, { t: "What special activities and food do people have for this festival?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/11Q/11q3.mp3", s: "Traditionally, there's a whole array of Tet specialties, like the five-fruit tray, jellied meat, and pickled onions, to name a few. However, Banh Chung undoubtedly reigns supreme; it's a long-standing dish that has become the soul of the Tet holiday. On top of the food, there are also a variety of activities people do to welcome the New Year. For instance, we visit relatives and friends, pay respect to our ancestors, and dress up in traditional clothes. But ultimately, for many of us, nothing beats the simple joy of reuniting with family during the holiday.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2011/3.mp3", v: ["whole array of", "specialties", "reigns supreme", "long-standing", "pay respect to", "reuniting"] }, { t: "Which do you prefer, traditional festivals or modern events like music festivals?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/11Q/11q4.mp3", s: "That's a tough choice, but I'd choose traditional festivals every time. For me, the difference is simple: modern events are about losing yourself in the crowd for a night, while traditional festivals are about finding yourself in your family and roots. So, yeah, I definitely prefer finding myself.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2011/4.mp3", v: ["tough choice", "losing yourself", "crowd", "roots", "finding yourself"] }] },
+            { id: 't12', title: 'Topic 12 – Weather', icon: 'fa-cloud-sun', image: 'https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=800&q=80', questions: [{ t: "What's the weather like where you live?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/12Q/12q1.mp3", s: "Well, Vietnam is a tropical country, as you can imagine, it is pretty much hot and humid year-round. However, in Northern cities like Hanoi, we actually do enjoy four distinct seasons. So in summery months, it can get really sweltering. By contrast, temperatures can really dip in the winter.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2012/1.mp3", v: ["tropical country", "humid", "distinct seasons", "sweltering", "temperatures", "dip"] }, { t: "What type of weather do you like best?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/12Q/12q2.mp3", s: "I'd consider myself a cold-weather person. I adore the crisp mornings at the end of fall and the chill of winter. I guess it's mainly because I love the cozy feeling of bundling up in my favorite sweaters and overcoats while sipping a hot cup of coffee.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2012/2.mp3", v: ["cold-weather person", "adore", "crisp mornings", "chill", "cozy feeling", "bundling up"] }, { t: "When does it rain the most in your hometown?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/12Q/12q3.mp3", s: "I'd say the rainy season in my hometown is typically in summer, with lots of on-and-off showers and heavy downpours throughout the day. Honestly, I cannot stand it because I tend to get completely soaked whenever I step outside. And unfortunately, traffic often gets really bad when it starts raining.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2012/3.mp3", v: ["rainy season", "showers", "heavy downpours", "soaked", "traffic"] }, { t: "Do you prefer rainy days or sunny days?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/12Q/12q4.mp3", s: "Well, you know, I'm fond of rain, so I prefer rainy days to boiling weather. Rain always brings back happy memories of my childhood. Of course, rain isn't always pleasant. It can be quite annoying, especially when I'm heading to school in the morning, and the roads become dangerously slippery for driving.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2012/4.mp3", v: ["fond of", "boiling weather", "happy memories", "annoying", "slippery"] }, { t: "Can you remember any time when it rained particularly heavily in your hometown?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/12Q/12q5.mp3", s: "The first thing that springs to my mind is the torrential rain in 2008. I mean, it was pouring for days, and most streets were completely flooded with water. You know, students and workers even had a whole week off. There were long lines of people rushing to the supermarket to stock up on food and other supplies because there was no telling when the rain was gonna stop.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2012/5.mp3", v: ["springs to my mind", "torrential rain", "flooded", "stock up on", "no telling"] }] },
+            { id: 't13', title: 'Topic 13 – Indoor Activities', icon: 'fa-chess-board', image: 'https://images.unsplash.com/photo-1555597408-26bc8e548a46?w=800&q=80', questions: [{ t: "Do you play any indoor games?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/13Q/13q1.mp3", s: "Well, honestly, I don't play a lot of indoor games. However, if I had to pick one that really catches my attention, it would definitely be Monopoly. It's a classic real estate trading board game, originally from America, and it's super popular worldwide. I really enjoy playing it because it's not just about luck; you need to strategize a lot. And it's really taking off in Vietnam these days!", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2013/1.mp3", v: ["catches my attention", "classic", "popular worldwide", "strategize", "taking off"] }, { t: "Do you prefer to play indoor games or outdoor games?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/13Q/13q2.mp3", s: "As a matter of fact, I kind of lean towards outdoor activities rather than staying inside. Playing outdoor games keeps me physically active, which might reduce my risk of health problems like obesity or diabetes later in life. Indoor games are fun too, but they aren't always my go-to choice.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2013/2.mp3", v: ["lean towards", "staying inside", "physically active", "reduce risk", "go-to choice"] }, { t: "What indoor games did you play when you were a child?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/13Q/13q3.mp3", s: "Well, looking back on my childhood, I remember I mostly played video games, not board games. However, every now and then, I did play chess, which was probably the most popular board game at the time. The reason why I was into this intellectual game was probably that I enjoyed the challenge of thinking ahead and trying to outwit my opponent.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2013/3.mp3", v: ["looking back", "every now and then", "intellectual game", "thinking ahead", "outwit"] }, { t: "What sorts of indoor games do children play now?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/13Q/13q4.mp3", s: "Well, it goes without saying that video games are truly dominant these days. I mean, children can play games on their game consoles or smartphones for hours on end. I think it's really quite detrimental to their health, and their parents definitely should help them break this habit before their eyesight gets worse. On top of that, they should seek out some board games that have the ability to stimulate children's creativity and encourage social interaction.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2013/4.mp3", v: ["goes without saying", "dominant", "hours on end", "detrimental", "stimulate creativity"] }] },
+            { id: 't14', title: 'Topic 14 – Sports', icon: 'fa-dumbbell', image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80', questions: [{ t: "Do you like playing sports?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/14Q/14q1.mp3", s: "Well, in my head, I'd consider myself a pretty athletic person with a natural affinity for sports. My go-to sport is football; it's fun to play and loads of fun to watch. However, when it comes to the actual game, I tend to get cold feet and play like a complete novice.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2014/1.mp3", v: ["athletic person", "natural affinity", "go-to sport", "cold feet", "novice"] }, { t: "Do you often do physical exercise?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/14Q/14q2.mp3", s: "Yes, I do exercise on a regular basis. Though I wouldn't say I'm a gym junkie, I put great emphasis on getting into shape and always spare time to work out at the gym 3–4 days a week. Ultimately, I see it as a good investment in my long-term health, both physically and mentally.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2014/2.mp3", v: ["regular basis", "gym junkie", "getting into shape", "spare time", "investment"] }, { t: "How do you exercise?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/14Q/14q3.mp3", s: "Basically, I alternate my routine depending on my schedule. On days when I have more energy and time, I really like to challenge myself at the gym with a mix of running and weight training. On busier days, however, a simple yoga routine or a few minutes of meditation at home is perfect to keep me centered.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2014/3.mp3", v: ["alternate my routine", "schedule", "challenge myself", "busier days", "centered"] }, { t: "What sports are the most popular in your country?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/14Q/14q4.mp3", s: "Oh, for sure. Football is a big deal in Vietnam, especially as a spectator sport. Whenever there's an important match, you'll find cafes packed with football fanatics, all there to root for their favorite team. Honestly, it's more than just a sport; it's a moment of incredible national pride and unity.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2014/4.mp3", v: ["big deal", "spectator sport", "packed with", "root for", "national pride"] }, { t: "Do you have any plans for exercise in the future?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/14Q/14q5.mp3", s: "Yes, definitely. I've actually been thinking about adding something new to my routine. Firstly, I'm considering taking up a sport like boxing. I think it would be a fantastic way to build self-discipline and improve my reflexes, just for leisure, of course. Additionally, I'll continue to maintain my current fitness regime to make sure I stay in good shape.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2014/5.mp3", v: ["routine", "taking up", "self-discipline", "reflexes", "fitness regime"] }] },
+            { id: 't16', title: 'Topic 16 – Personality', icon: 'fa-user-gear', image: 'https://images.unsplash.com/photo-1533227297464-60f95d9e516a?w=800&q=80', questions: [{ t: "How would you describe yourself?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/16Q/16q1.mp3", s: "Well, you know, I would say I am a perfectionist, I mean I always try to do things meticulously. Well, sometimes I feel that I'm kind of a bit of a control freak. I think it is my negative trait that makes me stressed out when I can't get the tasks done successfully.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2016/q1v1.mp3", v: ["perfectionist", "meticulously", "control freak", "negative trait", "stressed out"] }, { t: "Are you similar to your brother(s)/sister(s)?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/16Q/16q2.mp3", s: "Well, we're like chalk and cheese. Frankly, my brother is a real loner and pretty reserved. But he always puts others first and tries to be all things to all people. By contrast, I am a real party animal, and people often call me the life and soul of the party. Having said that, I can be a bit self-centered and bad-tempered person, so I'm working on that.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2016/q2.mp3", v: ["chalk and cheese", "loner", "reserved", "party animal", "life and soul"] }, { t: "What do you think patience is?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/16Q/16q3.mp3", s: "Well, I think patience is a core virtue and a defining trait of great people. Unfortunately, people nowadays become impatient easily. For instance, many people want to get leaner quickly, so they throw themselves into working out for hours on end each day. After a fortnight, as you can probably guess, they give up because they lack staying power.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2016/q3v1.mp3", v: ["core virtue", "defining trait", "impatient", "get leaner", "staying power"] }, { t: "Do you think patience is important?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/16Q/16q6.mp3", s: "Absolutely. I believe patience is a vital quality that everyone should cultivate. In my opinion, learning to wait for the right time is the key to success. In fact, most successful entrepreneurs are willing to get their hands dirty, and at the same time, they know how to keep a cool head. Obviously, they don't let impatience cloud their judgment.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2016/q4v1.mp3", v: ["vital quality", "cultivate", "key to success", "get their hands dirty", "keep a cool head"] }, { t: "Do you think you are a polite person?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/16Q/16q9.mp3", s: "Well, it's kind of a tough question, but I do think I'm a polite person. I treat other people nicely and patiently, and I don't insult anyone unless they truly deserve it. Also, I always apologize sincerely when I make mistakes, and I show my gratitude whenever people help me.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2016/q5v1.mp3", v: ["tough question", "polite", "insult", "apologize sincerely", "show my gratitude"] }] },
+            { id: 't17', title: 'Topic 17 – Happy Family', icon: 'fa-people-roof', image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&q=80', questions: [{ t: "Do you have a large or small family?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/17Q/17q1.mp3", s: "I come from a fairly small nuclear family. It's just the four of us: my parents, my older sister, and me. However, my extended family is quite large, and we're all very close. On holidays, we all gather under one roof, share stories, and enjoy home-cooked food.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2017/q1.mp3", v: ["nuclear family", "extended family", "gather", "under one roof", "home-cooked food"] }, { t: "Who do you take after in your family?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/17Q/17q2.mp3", s: "Well, when it comes to personality, I'd say I take after my father. We're both quite easy-going and share the same sense of humor. However, in terms of looks, everyone says I'm the spitting image of my mother. I have her eyes and smile. It's an interesting mix, to be honest.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2017/q2.mp3", v: ["take after", "easy-going", "sense of humor", "spitting image", "interesting mix"] }, { t: "How do you spend your time with family?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/17Q/17q3.mp3", s: "Well, home is where my heart belongs, so even though I'm working in another city, far from my hometown, I still set aside time to be with my family at the end of each month. We often spend quality time together, enjoying scrumptious home-cooked meals prepared by my mom. It's a tradition that truly runs in my family.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2017/q3.mp3", v: ["heart belongs", "set aside time", "quality time", "scrumptious", "runs in my family"] }, { t: "Is family important to you?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/17Q/17q4.mp3", s: "Yes, absolutely. Family matters most to me. They're the people I love most, my own flesh and blood. They've sacrificed a lot to raise me and have always given me unconditional love. After a hectic day or when I face difficulties, going home to my family is the best way to find peace and warmth.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2017/q4.mp3", v: ["matters most", "flesh and blood", "sacrificed", "unconditional love", "peace and warmth"] }, { t: "How has your family influenced you?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/17Q/17q5.mp3", s: "My family has definitely shaped who I am. They've instilled in me core values such as respect, integrity, and good manners. I've also inherited humility from my mother, as well as discipline and patience from my father. I'd have to say that they are my backbone, helping me overcome life's ups and downs and inspiring me to become a reliable breadwinner for my family.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2017/q5.mp3", v: ["shaped who I am", "core values", "integrity", "backbone", "ups and downs"] }] },
+            { id: 't18', title: 'Topic 18 – Friendship', icon: 'fa-user-group', image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80', questions: [{ t: "Do you think friendship is important?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/18Q/18q1.mp3", s: "Well, without a doubt, friendships play a vital role in our lives. We all need a shoulder to cry on from time to time. Good friends always stand by us and cheer us up when we have ups and downs. Besides, they make our lives more colorful by sharing motivational stories and laughter. So, I'd say friendship is truly one of the most precious gifts of life.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2018/q1.mp3", v: ["vital role", "shoulder to cry on", "stand by", "cheer us up", "precious gifts"] }, { t: "Do you have many close friends?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/18Q/18q2.mp3", s: "Well, you know, I'm an extrovert, so socializing with a lot of people is my forte. I mean, I have a lot of friends, but only a handful of close buddies. One friend I can confide in is worth more than a thousand fair-weather friends who show up only when things are going well.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2018/q2.mp3", v: ["extrovert", "socializing", "handful of", "confide in", "fair-weather friends"] }, { t: "What kind of people do you like to have as friends?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/18Q/18q3.mp3", s: "Well, you know, I'm very picky, so I only love to forge friendships with people who are near and dear to me. I value honesty and loyalty, I mean, people who always speak openly from their hearts and never talk behind my back. By contrast, I can't stand befriending people who are full of drama and always make fun of people.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2018/q3.mp3", v: ["picky", "forge friendships", "near and dear", "loyalty", "talk behind my back"] }, { t: "Do you still keep in touch with your friends from school?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/18Q/18q4.mp3", s: "Absolutely. I'm lucky that my high school friends are still my go-to people. Even though we're all busy, our group chat is always buzzing, and when we meet, it feels like no time has passed at all. They're friends for life, and I honestly can't imagine weathering life's storms without them.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2018/q4.mp3", v: ["keep in touch", "go-to people", "buzzing", "friends for life", "weathering life's storms"] }, { t: "How do you support your friend in difficult times?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/18Q/18q5.mp3", s: "My approach is never one-size-fits-all; it depends on the challenge they're facing. I start by listening and really trying to put myself in their shoes, without jumping to conclusions. The aim is to keep a cool head, which helps us break the problem down and figure out the next possible steps together. That's more useful than simply getting emotional with them.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2018/q5.mp3", v: ["one-size-fits-all", "put myself in their shoes", "jumping to conclusions", "cool head", "getting emotional"] }] },
+            { id: 't19', title: 'Topic 19 – Shopping', icon: 'fa-bag-shopping', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80', questions: [{ t: "Are there any shops near your house?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/19Q/19q1.mp3", s: "Well, there is a real hotspot with all kinds of shops around my neighborhood. There are lots of high-end boutiques selling designer clothes. In addition, there is also an abundance of street food stalls and grocery stores. So you really have everything in one place.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2020/1.mp3", v: ["hotspot", "high-end boutiques", "abundance of", "street food stalls", "everything in one place"] }, { t: "Do you like shopping?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/19Q/19q2.mp3", s: "Absolutely, my work is incredibly stressful, so every now and then I really need some retail therapy. Well, actually, I don't consider myself a shopaholic, but from time to time, on payday, I hit the mall and treat myself to something nice, maybe technology items. Therefore, I think shopping is one pastime that elevates my mood.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2020/2.mp3", v: ["retail therapy", "shopaholic", "hit the mall", "pastime", "elevates my mood"] }, { t: "How often do you go shopping?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/19Q/19q3.mp3", s: "Well, you know, not much. You know, as I was saying, I always have my hands full. I mean, not only do I have a hectic schedule with my work, but I'm also up to the ears in domestic tasks. Besides, I am kind of a minimalist, I prefer a simple style. Therefore, when I go shopping, I always purchase basic necessities like groceries or my daily supplies.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2020/3.mp3", v: ["hands full", "hectic schedule", "up to the ears", "minimalist", "basic necessities"] }, { t: "Do you prefer shopping online or in a shop?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/19Q/19q4.mp3", s: "Well, even though online shopping is really popular nowadays, I find myself shopping more in the shops. Honestly, I don't often have much time for just window-shopping. So, when I actually buy things, I like going to brick-and-mortar stores. It's important for me to see and check the products carefully, and really feel them in my hands.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2020/4.mp3", v: ["window-shopping", "brick-and-mortar stores", "check the products", "feel them"] }, { t: "Do you spend much when you go shopping?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/19Q/19q5.mp3", s: "Well, you know, it really depends on my budget. If I have a feeling flush, I don't mind splurging on buying technology items. However, sometimes I run out of money, I have to make cutbacks on my spending in order to save up money for urgent needs.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2020/6.mp3", v: ["depends on my budget", "feeling flush", "splurging on", "cutbacks", "urgent needs"] }] },
+            { id: 't20', title: 'Topic 20 – Fashion', icon: 'fa-shirt', image: 'https://images.unsplash.com/photo-1490481651871-618bf7d20e25?w=800&q=80', questions: [{ t: "What kinds of clothes do you usually wear?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/20Q/20q1.mp3", s: "Well, it sort of depends. When I go to work, I always try to look sharp because I work in a formal environment, so I often dress up in a suit or shirt. By contrast, when I'm just hanging out with my friends or taking a leisurely stroll, you are more likely to find me in casual outfits like a well-worn pair of jeans, t-shirts, and some sneakers because I don't like drawing attention.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2019/q1.mp3", v: ["look sharp", "formal environment", "hanging out", "casual outfits", "drawing attention"] }, { t: "What kind of clothes do you dislike?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/20Q/20q2.mp3", s: "Well, I'd have to say that I'm not a social butterfly, so I am not a fan of outlandish and untidy-looking clothes. For example, T-shirts with flashy colors, ripped jeans, or even skull face masks are definitely not my style. On top of that, I can't judge anyone because they have a different eye for fashion, and I'm also kind of an old-fashioned person.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2019/q2.mp3", v: ["social butterfly", "outlandish", "untidy-looking", "not my style", "eye for fashion"] }, { t: "Where do you buy your clothes?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/20Q/20q3.mp3", s: "Hmm, again, it kind of depends. If I am feeling flush, I might go to the chic boutique and splurge on some designer clothes. On the other hand, if I'm short on cash, I might shop at flea markets. You can score some great deals there and buy tons of clothes without breaking the bank.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2019/q3.mp3", v: ["chic boutique", "short on cash", "flea markets", "score some great deals", "breaking the bank"] }, { t: "Do you think fashion brands are important to people?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/20Q/20q4.mp3", s: "Well, you know, I think it is a really tough question. Everyone has their own opinions, but from my point of view, I have to say \"Yes\". I consider high-end items a symbol of status. You know, as people get rich, they want to put on things that project their wealth and success. Say, dressing up with an expensive timepiece and lavish clothes is an easy way to do this.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2019/q4.mp3", v: ["tough question", "high-end items", "symbol of status", "project their wealth", "lavish clothes"] }] },
+            { id: 't21', title: 'Topic 21 – History', icon: 'fa-landmark', image: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=800&q=80', questions: [{ t: "Do you like history?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/21Q/21q1.mp3", s: "Yes, I take a very keen interest in history. I find learning about historical events and historical figures really fascinating. World history is pretty cool, but I am more interested in Vietnam's history. I'm fascinated by the rich heritage of Vietnam, our past struggles against foreign colonization and how peace was established in the country.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2021/1.mp3", v: ["keen interest", "historical events", "fascinating", "rich heritage", "colonization"] }, { t: "What historical event do you find most interesting?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/21Q/21q2.mp3", s: "Well, for me, the Declaration of Independence is definitely one of the biggest milestones in Vietnam's history. On September 2nd, 1945, President HCM declared to the world that Vietnam officially became a sovereign state, ending over a thousand years of foreign domination.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2021/2.mp3", v: ["Declaration of Independence", "milestones", "declared", "sovereign state", "domination"] }, { t: "Do you think history is important?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/21Q/21q3.mp3", s: "Without a doubt, it's impossible to deny the importance of history. It instills in people a sense of patriotism and an appreciation for peace and order. Secondly, history acts as a mirror. It teaches us valuable lessons so we don't repeat the horrors of war.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2021/3.mp3", v: ["impossible to deny", "instills", "patriotism", "appreciation", "horrors of war"] }, { t: "How can we make history lessons more interesting?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/21Q/21q4.mp3", s: "Simply put, we need to move away from the rote memorization of dry and dusty facts. Instead, educators should use history documentaries to provide a vivid portrayal of the past. This transforms a boring lesson into an involved experience for students.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2021/4.mp3", v: ["move away from", "rote memorization", "vivid portrayal", "transforms", "involved experience"] }, { t: "Is there any historical figure you admire?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/21Q/21q5.mp3", s: "General Vo Nguyen Giap was a military genius and a statesman. He is renowned for leading the Vietnamese army to defeat the French at Dien Bien Phu. In addition to his military career, he was also a passionate history teacher and a national hero who inspired millions of people.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2021/5.mp3", v: ["military genius", "statesman", "renowned for", "defeat", "inspired"] }] },
+            { id: 't22', title: 'Topic 22 – Celebrities', icon: 'fa-star', image: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=800&q=80', questions: [{ t: "If you could introduce one thing about Vietnam to international friends, what would it be?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/22Q/22q1.mp3", s: "If I could share one thing about Vietnam, it would be the Áo Dài, our iconic traditional dress. It's more than just clothes; it's an elegant symbol of Vietnamese culture and grace. You can see the Áo Dài in many places, not just for special events like the start of the school year or the Tet holiday, but also as a familiar daily wear for many women. Compared to Japan's Kimonos or Korea's Hanboks, often for very special occasions, the Áo Dài feels more part of modern life while still being deeply traditional. The Áo Dài is uniquely beautiful and graceful - it truly represents the spirit of Vietnam.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2022/1.1.mp3", v: ["iconic", "elegant symbol", "grace", "familiar", "spirit of Vietnam"] }, { t: "Who is your favorite celebrity in Vietnam?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/22Q/22q2.mp3", s: "I guess it's not just me, but also a large number of young people who have been highly impressed by Son Tung MTP, a prominent pop singer in Vietnam. His music is fantastic, and he has a very nice personality. Even though he got a bad rap about copying music, I gotta say I'm still a diehard fan.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2022/2.mp3", v: ["highly impressed", "prominent", "personality", "bad rap", "diehard fan"] }, { t: "Do you like any foreign celebrities?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/22Q/22q3.mp3", s: "As a matter of fact, yes. I've been an avid fan of Western pop singers for quite some time now, especially world-class performers, like Adele, Bruno Mars. Well, their songs would always be on top of my list because of their amazing voices and highly inspiring lyrics.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2022/3.1.mp3", v: ["avid fan", "world-class", "performers", "top of my list", "inspiring lyrics"] }, { t: "Would you want to be a celebrity in the future?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/22Q/22q4.mp3", s: "Well, to be honest, I've never thought about it, but I'd have to say that entering showbiz isn't really the path I'd choose. Rising to stardom means losing a great deal of privacy as well as having less time with family and friends, so I guess I'd prefer to stay as a part of the general public.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2022/4.mp3", v: ["entering showbiz", "path I'd choose", "rising to stardom", "privacy", "general public"] }, { t: "How do celebrities influence their fans in Vietnam?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/22Q/22q5.mp3", s: "Well, in Vietnam, for the most part, people, especially teenagers, tend to imitate appearance of their idols, like clothing, hairstyle, or makeup. I mean, they want to wear the same fashion or act in the same way as their favorite celebrities. So, for example, if a celebrity endorses a certain product, it is going to sell like hotcakes.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2022/5.mp3", v: ["imitate", "appearance", "idols", "endorses", "sell like hotcakes"] }] },
+            { id: 't23', title: 'Topic 23 – Internet & Tech', icon: 'fa-wifi', image: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&q=80', questions: [{ t: "How often do you use the Internet?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/23Q/23q1.mp3", s: "Well, you know, currently I'm an online marketer, so using the Internet is essential for me. I probably spend at least 8 to 10 hours a day setting advertising campaigns and monitoring their results. Honestly, I think it's an unhealthy habit because staring at the computer screen for hours on end can lead to me becoming nearsighted later on.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2023/1.mp3", v: ["essential", "setting advertising campaigns", "monitoring", "unhealthy habit", "nearsighted"] }, { t: "Is the internet very important to you?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/23Q/23q2.mp3", s: "Well, you know, nowadays, we are living in the booming digital age. That's why we have more and more access to state-of-the-art technologies such as AI, robotics, and smartphones. Honestly, I think the Internet truly means the world to me; I cannot imagine living a day without using it. It brings me numerous benefits, such as boosting productivity in both work and study. On top of that, it's an unlimited source of recreation that helps me unwind.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2023/2.mp3", v: ["booming digital age", "state-of-the-art", "means the world to me", "boosting productivity", "recreation"] }, { t: "What are the benefits of children using the internet?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/23Q/23q3.mp3", s: "Well, people often think that the Internet is absolutely detrimental to kids, but I believe it does wonders for children's development in some ways. For instance, educational websites like Curious World and BabyTV can actually boost the cognitive development of young children. On the other hand, the Internet can be quite time-consuming. I mean, children usually lose track of time when they are online, and they may not have enough time for other priorities, such as their schoolwork.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2023/3.mp3", v: ["detrimental", "does wonders for", "cognitive development", "time-consuming", "lose track of time"] }, { t: "Do you enjoy using technology?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/23Q/23q4.mp3", s: "Well, I wouldn't call myself a techie, but I'm quite keen on using technological gadgets, especially smartphones. I mean, they're indispensable for boosting my productivity at work. However, I sometimes find myself over-reliant on them, getting lost in social media. So, I really need to cut back on my smartphone use for my well-being.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2023/4.mp3", v: ["techie", "gadgets", "indispensable", "over-reliant", "cut back on"] }, { t: "What do you think about the impact of Artificial Intelligence (AI)?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/23Q/23q5.mp3", s: "Well, AI is definitely the talk of the town right now. Personally, I think it's a real game-changer; it can take care of mundane tasks in seconds, which saves me a lot of time. So I treat it as a co-pilot that helps me work smarter, as long as I don't rely on it too much.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2023/5.mp3", v: ["talk of the town", "game-changer", "mundane tasks", "co-pilot", "work smarter"] }] },
+            { id: 't24', title: 'Topic 24 – Environment', icon: 'fa-leaf', image: 'https://images.unsplash.com/photo-1473187983305-f615310e7daa?w=800&q=80', questions: [{ t: "Do you think pollution is a big problem nowadays?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/24Q/24q1.mp3", s: "Definitely. Yes. Nowadays, the Earth is suffering because our natural environment is getting more and more polluted. In particular, air and water pollution have increased at an alarming rate. Well, why am I saying that? Because, you know, a lot of factories are dumping toxic waste into the rivers and oceans day in, day out. And on top of that, exhaust fumes from cars and motorbikes pollute the air constantly. Well, I'd have to say that it's absolutely hazardous to our health.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2024/1.mp3", v: ["suffering", "polluted", "alarming rate", "dumping toxic waste", "exhaust fumes", "hazardous"] }, { t: "What causes environmental problems?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/24Q/24q2.mp3", s: "Well, I think many things are destroying and endangering the environment. And there are a lot of environmental problems we're facing right now, like deforestation, acid rain, the greenhouse effect... you know, the list goes on. But from my point of view, one of the most important causes is the way human behavior impacts the environment. Well, littering is certainly one of them. I think it's a detrimental habit that a lot of people still do all over the world, both intentionally and unintentionally. So, how do we stop that? It's a really big question.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2024/2.mp3", v: ["destroying", "endangering", "deforestation", "greenhouse effect", "littering", "detrimental habit"] }, { t: "How does environmental pollution directly affect people's daily lives and health?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/24Q/24q3.mp3", s: "Honestly, environmental pollution hits us hard every single day. It impacts both our health and overall quality of life. For health, think of dirty air causing breathing problems like asthma, or unclean water leading to stomach issues. For daily life, imagine smoggy skies limiting outdoor fun and foul smells making things unpleasant. This is a constant threat to our health, truly lowering our quality of life. So, simply put, pollution directly attacks our health and happiness.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2024/3.mp3", v: ["hits us hard", "impacts", "breathing problems", "foul smells", "constant threat", "attacks"] }, { t: "What should we do to protect the environment?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/24Q/24q4.mp3", s: "Well, it's clear we all have a responsibility to do something, even just a small thing, to protect our environment. First off, instead of driving, we should definitely consider walking, cycling, or using public transport more. What's more, we ought to team up with groups or non-profit organizations to run campaigns. For example, we can donate food and clothes to charities or schools, collect litter from public places, or even join the Earth Hour event. Ultimately, we need to always be mindful that our actions can directly impact the environment.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2024/4.mp3", v: ["responsibility", "public transport", "team up with", "run campaigns", "donate", "mindful"] }] },
+            { id: 't25', title: 'Topic 25 – Time Management', icon: 'fa-clock', image: 'https://images.unsplash.com/photo-1501139083538-0139583c61ee?w=800&q=80', questions: [{ t: "When are you most productive during the day?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/25Q/25q1.mp3", s: "Well, like many others, I am a morning person. Especially when I've got a good night's sleep the night before, I usually feel quite rested in the morning and will be up for anything that the day may throw at me. There have been a couple of times when I've tried to stay up late and work, but I just never could stay awake.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2025/1.1.mp3", v: ["morning person", "rested", "up for anything", "stay up late", "stay awake"] }, { t: "What part of your day do you like best?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/25Q/25q2.mp3", s: "Absolutely, the morning, there's just something about Hanoi mornings, you know. At daybreak, if you are lucky, you will catch the sunrise; it's a glorious sight. At this hour, the city is quieter, and I love the feeling of getting up early to enjoy some of that tranquility before the madness begins.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2025/2.1.mp3", v: ["daybreak", "catch the sunrise", "glorious sight", "tranquility", "madness begins"] }, { t: "Do you think it's important to be on time?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/25Q/25q3.mp3", s: "Well, it's vitally important to be punctual because it's a crucial way to show respect to other people and to earn their respect in return. In fact, I always try to turn up on time because, you know, people say that arriving late is a way of saying that you think your own time is more valuable than that of the person who is waiting for you.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2025/3.mp3", v: ["vitally important", "punctual", "crucial way", "turn up on time", "valuable"] }, { t: "How do you feel when others are late?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/25Q/25q4.mp3", s: "Well, being late means they are stealing the precious time of other people for unacceptable reasons, such as oversleeping or being lazy, so that really gets on my nerves, to be honest. However, in some cases, if there is an objective reason like heavy rain or a bus breakdown, being late is justifiable.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2025/4.mp3", v: ["stealing", "precious time", "unacceptable reasons", "gets on my nerves", "justifiable"] }, { t: "How do you manage your time?", a: "https://pub-ebf32511d6134c0f9a0e6b58cc02161c.r2.dev/25Q/25q5.mp3", s: "Well, I'd have to say that it is an interesting question. I always talk to myself that \"Time is life. Loss of time is loss of life,\" so I try to spend my time as productively as possible. Say, I often prioritize tasks that matter to me most by using a number of time management tools like \"To-do list\", \"Trello\", \"Pomodoro\". Finally, doing only one thing at a moment is the key to ensuring peak productivity.", sa: "https://pub-80b3f861270a4c7a918b059b10e5ad55.r2.dev/Topic%2025/5.mp3", v: ["productively", "prioritize tasks", "time management tools", "peak productivity"] }] }
+        ];
+
+        // --- GLOBAL UTILS ---
+        const AudioPlayer = {
+            currentAudio: null,
+            playFile: (url, onEnd) => {
+                AudioPlayer.stop();
+                if (!url) return;
+                const audio = new Audio(url);
+                AudioPlayer.currentAudio = audio;
+                audio.play().catch(e => console.error("Audio Play Error:", e));
+                if (onEnd) audio.onended = onEnd;
+            },
+            playTTS: (text, rate = 0.9, onEnd) => {
+                AudioPlayer.stop();
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = rate;
+                    // Changed voice settings to prefer a female voice if available
+                    const voices = window.speechSynthesis.getVoices();
+                    const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Woman') || v.name.includes('Zira') || v.name.includes('Samantha') || v.name.includes('Google UK English Female'));
+                    if(femaleVoice) utterance.voice = femaleVoice;
+
+                    utterance.onend = onEnd;
+                    window.speechSynthesis.speak(utterance);
+                }
+            },
+            stop: () => {
+                if (AudioPlayer.currentAudio) {
+                    AudioPlayer.currentAudio.pause();
+                    AudioPlayer.currentAudio.currentTime = 0;
+                    AudioPlayer.currentAudio = null;
+                }
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            }
+        };
+
+        // Ensure voices are loaded before trying to use them
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+
+        // --- CUSTOM LOGO COMPONENT ---
+        const Logo = ({ className, imgClass }) => (
+            <div className={`flex items-center justify-center select-none ${className || ''}`}>
+                <img src="https://pub-fb7050b51d5740048d3a80c1e770cafa.r2.dev/logo.png" alt="Jaxtina Logo" className={`object-contain drop-shadow-[0_0_25px_rgba(255,255,255,0.4)] ${imgClass || 'h-16 sm:h-20'}`} />
+            </div>
+        );
+
+        // --- CUSTOM AUDIO PLAYER COMPONENT (Smooth seeking) ---
+        function MediaPlayer({ src }) {
+            const audioRef = useRef(null);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [currentTime, setCurrentTime] = useState(0);
+            const [duration, setDuration] = useState(0);
+
+            useEffect(() => {
+                const audio = audioRef.current;
+                if (!audio) return;
+
+                const updateTime = () => setCurrentTime(audio.currentTime);
+                const updateDuration = () => setDuration(audio.duration);
+                const onEnded = () => setIsPlaying(false);
+
+                audio.addEventListener('timeupdate', updateTime);
+                audio.addEventListener('loadedmetadata', updateDuration);
+                audio.addEventListener('ended', onEnded);
+
+                return () => {
+                    audio.removeEventListener('timeupdate', updateTime);
+                    audio.removeEventListener('loadedmetadata', updateDuration);
+                    audio.removeEventListener('ended', onEnded);
+                    audio.pause(); // cleanup
+                };
+            }, [src]);
+
+            const togglePlay = () => {
+                const audio = audioRef.current;
+                if (!audio) return;
+                
+                // Stop any global audio first
+                AudioPlayer.stop();
+
+                if (isPlaying) {
+                    audio.pause();
+                } else {
+                    audio.play();
+                }
+                setIsPlaying(!isPlaying);
+            };
+
+            const handleSeek = (e) => {
+                const audio = audioRef.current;
+                if (!audio) return;
+                const newTime = parseFloat(e.target.value);
+                audio.currentTime = newTime;
+                setCurrentTime(newTime);
+            };
+
+            const formatTime = (time) => {
+                if (isNaN(time)) return "00:00";
+                const mins = Math.floor(time / 60);
+                const secs = Math.floor(time % 60);
+                return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            };
+
+            return (
+                <div className="bg-black/40 p-4 rounded-xl border border-white/10 mt-2">
+                    <audio ref={audioRef} src={src} preload="metadata" />
+                    <div className="flex items-center gap-3">
+                        <button 
+                            onClick={togglePlay}
+                            className="w-10 h-10 rounded-full bg-cyan-400 text-slate-900 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105 transition"
+                        >
+                            {isPlaying ? <i className="fa-solid fa-pause"></i> : <i className="fa-solid fa-play ml-1"></i>}
+                        </button>
+                        <div className="flex-1 flex flex-col justify-center">
+                            <input 
+                                type="range" 
+                                min="0" 
+                                max={duration || 0} 
+                                value={currentTime} 
+                                onChange={handleSeek}
+                                className="w-full h-1 bg-slate-600 rounded-lg appearance-none cursor-pointer"
+                            />
+                            <div className="flex justify-between text-[10px] text-gray-400 mt-1 font-mono">
+                                <span>{formatTime(currentTime)}</span>
+                                <span>{formatTime(duration)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- COMPONENT: MODAL (POPUP) ---
+        function Modal({ isOpen, onClose, title, children }) {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
+                    <div className="glass-card rounded-2xl shadow-[0_0_40px_rgba(6,182,212,0.2)] max-w-md w-full overflow-hidden animate-slide-up border border-cyan-400/30">
+                        <div className="p-6">
+                            <h3 className="text-xl font-display font-bold text-cyan-400 mb-4 text-center">{title}</h3>
+                            {children}
+                        </div>
+                        <div className="bg-indigo-900/30 p-4 flex justify-end border-t border-white/5">
+                            <button onClick={onClose} className="text-sm text-gray-300 hover:text-white font-medium transition">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- COMPONENT: SUMMARY VIEW ---
+        function SummaryView({ totalQuestions, timeSpent, onHome }) {
+            const messages = [
+                "Keep going!",
+                "Just 1% better every day is enough.",
+                "You're almost there.",
+                "Persistence is the key to success.",
+                "Great job, keep it up!"
+            ];
+            const randomMsg = useMemo(() => messages[Math.floor(Math.random() * messages.length)], []);
+
+            return (
+                <div className="min-h-screen flex items-center justify-center p-4 animate-fade-in relative overflow-hidden">
+                    {/* Background glows */}
+                    <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-cyan-500/20 rounded-full blur-[100px]"></div>
+                    <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-fuchsia-500/20 rounded-full blur-[100px]"></div>
+
+                    <div className="glass-card max-w-lg w-full p-8 rounded-3xl text-center border border-cyan-400/30 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative overflow-hidden z-10">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500"></div>
+                        
+                        <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-cyan-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(6,182,212,0.5)] animate-float border-2 border-white/20 mt-4">
+                            <i className="fa-solid fa-trophy text-4xl text-white"></i>
+                        </div>
+                        
+                        <h2 className="text-3xl font-display font-bold text-white mb-2">Completed!</h2>
+                        <p className="text-cyan-400 font-medium text-lg mb-8 italic">"{randomMsg}"</p>
+                        
+                        <div className="grid grid-cols-2 gap-4 mb-8">
+                            <div className="bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
+                                <div className="text-sm text-gray-400 mb-1">Questions</div>
+                                <div className="text-3xl font-bold text-white">{totalQuestions}</div>
+                            </div>
+                            <div className="bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
+                                <div className="text-sm text-gray-400 mb-1">Time</div>
+                                <div className="text-3xl font-bold text-white">{timeSpent}</div>
+                            </div>
+                        </div>
+
+                        <button onClick={onHome} className="w-full bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white py-4 rounded-xl font-bold transition transform hover:scale-105 shadow-lg shadow-fuchsia-500/30 border border-white/10">
+                            Back to Topics
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- COMPONENT: AUDIO RECORDER ---
+        function AudioRecorder({ setHasRecorded }) {
+            const [recording, setRecording] = useState(false);
+            const [url, setUrl] = useState("");
+            const mr = useRef(null);
+            const chunks = useRef([]);
+
+            useEffect(() => {
+                return () => {
+                    if (mr.current) {
+                        mr.current.stream.getTracks().forEach(t => t.stop());
+                    }
+                };
+            }, []);
+
+            const toggle = async () => {
+                if (!recording) {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        mr.current = new MediaRecorder(stream);
+                        mr.current.ondataavailable = e => { if (e.data.size > 0) chunks.current.push(e.data); };
+                        mr.current.onstop = () => {
+                            const blob = new Blob(chunks.current, { type: 'audio/mp3' }); 
+                            const audioUrl = URL.createObjectURL(blob);
+                            setUrl(audioUrl);
+                            if (setHasRecorded) setHasRecorded(true);
+                            chunks.current = [];
+                        };
+                        mr.current.start();
+                        setRecording(true);
+                        AudioPlayer.stop();
+                    } catch (e) { alert("Microphone access required!"); }
+                } else {
+                    if (mr.current) {
+                        mr.current.stop();
+                        mr.current.stream.getTracks().forEach(t => t.stop());
+                    }
+                    setRecording(false);
+                }
+            };
+
+            const handleDelete = () => {
+                setUrl("");
+                if (setHasRecorded) setHasRecorded(false);
+            };
+
+            return (
+                <div className="mt-6 pt-6 border-t border-white/10 z-20 relative">
+                    {!url ? (
+                        <button onClick={toggle} className={`w-full py-4 rounded-xl font-bold transition flex items-center justify-center gap-3 text-sm uppercase tracking-wider ${recording ? 'bg-fuchsia-600 text-white border border-fuchsia-400 animate-pulse shadow-[0_0_20px_rgba(217,70,239,0.5)]' : 'bg-indigo-600 text-white hover:bg-indigo-500 border border-indigo-400/50 shadow-lg'}`}>
+                            {recording ? <><i className="fa-solid fa-stop"></i> Stop Recording</> : <><div className="w-3 h-3 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]"></div> Start Recording</>}
+                        </button>
+                    ) : (
+                        <div className="bg-black/50 p-4 rounded-xl border border-cyan-400/30 flex items-center gap-4 animate-fade-in backdrop-blur-md shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+                            <div className="w-10 h-10 rounded-full bg-cyan-400/20 flex items-center justify-center text-cyan-400"><i className="fa-solid fa-microphone-lines"></i></div>
+                            <div className="flex-1">
+                                <div className="text-xs text-gray-300 mb-1">Your Answer</div>
+                                <audio src={url} controls className="h-8 w-full opacity-90 filter invert grayscale contrast-200" />
+                            </div>
+                            <a href={url} download={`my_answer_${Date.now()}.mp3`} className="text-white hover:text-cyan-400 px-3 flex flex-col items-center text-xs transition">
+                                <i className="fa-solid fa-download text-lg mb-1"></i> MP3
+                            </a>
+                            <button onClick={handleDelete} className="text-fuchsia-400 hover:text-fuchsia-300 text-sm transition">Delete</button>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // --- COMPONENT: STRATEGY BOARD ---
+        function StrategyBoard({ question }) {
+            const [showStrategyDetails, setShowStrategyDetails] = useState(true);
+
+            return (
+                <div className="glass h-full rounded-3xl overflow-hidden flex flex-col shadow-2xl shadow-black/50 border border-white/10 lg:sticky lg:top-24">
+                    <div className="flex justify-between items-center border-b border-white/10 bg-black/40 p-4 shrink-0">
+                        <h3 className="text-cyan-400 font-bold tracking-wider flex items-center text-sm sm:text-base">
+                            <i className="fa-solid fa-chess-board mr-2"></i> STRATEGY BOARD
+                        </h3>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-gray-400 uppercase tracking-wider hidden sm:inline">Hiển thị</span>
+                            <div className="relative inline-block w-8 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" name="toggle" id="strategy-toggle" className="toggle-checkbox absolute block w-4 h-4 rounded-full bg-white border-4 appearance-none cursor-pointer" checked={showStrategyDetails} onChange={() => setShowStrategyDetails(!showStrategyDetails)}/>
+                                <label htmlFor="strategy-toggle" className="toggle-label block overflow-hidden h-4 rounded-full bg-slate-600 cursor-pointer"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="p-4 sm:p-6 flex-1 overflow-y-auto custom-scrollbar">
+                        <div className="animate-fade-in text-gray-200 h-full flex flex-col justify-center">
+                            {showStrategyDetails && (
+                                <div className="flex lg:flex-col overflow-x-auto lg:overflow-x-visible gap-4 pb-4 lg:pb-0 snap-x snap-mandatory hide-scrollbar">
+                                    {[
+                                        { l: 'P', t: 'Point', d: 'Direct Answer', c: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30', shadow: 'shadow-[0_0_10px_rgba(6,182,212,0.2)]', tips: ["To be honest, I would say...", "Personally, I believe..."] },
+                                        { l: 'R', t: 'Reason', d: 'Why do you think so?', c: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/30', shadow: 'shadow-[0_0_10px_rgba(217,70,239,0.2)]', tips: ["This is mainly because...", "Simply put,..."] },
+                                        { l: 'E', t: 'Example', d: 'Specific instance', c: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/30', shadow: 'shadow-[0_0_10px_rgba(79,70,229,0.2)]', tips: ["For instance,...", "Take... as an example"] },
+                                        { l: 'F', t: 'Feeling / Final Thought', d: 'Emotion or Conclusion', c: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', shadow: 'shadow-[0_0_10px_rgba(52,211,153,0.2)]', tips: ["I find it incredibly...", "Ultimately, I feel..."] },
+                                        { l: 'C', t: 'Comparison', d: 'Contrast with others', c: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/30', shadow: 'shadow-[0_0_10px_rgba(251,191,36,0.2)]', tips: ["Unlike others...", "Compared to the past..."] }
+                                    ].map((item, idx) => (
+                                        <div key={idx} className={`min-w-[85vw] sm:min-w-[45vw] lg:min-w-full snap-center shrink-0 border ${item.border} ${item.bg} rounded-2xl p-4 transition hover:bg-white/10 group ${item.shadow} flex flex-col justify-center`}>
+                                            <div className="flex items-center gap-4 mb-2">
+                                                <div className={`w-10 h-10 rounded-xl bg-black/50 flex items-center justify-center font-black text-lg ${item.c} shadow-lg border border-white/10 group-hover:scale-110 transition shrink-0`}>{item.l}</div>
+                                                <div>
+                                                    <strong className={`block ${item.c} text-base`}>{item.t}</strong>
+                                                    <span className="text-[11px] text-gray-400 uppercase tracking-wider block">{item.d}</span>
+                                                </div>
+                                            </div>
+                                            <div className="pl-14 text-xs text-gray-300 italic space-y-1.5 border-l border-white/10 ml-5 mt-1">
+                                                {item.tips.map((tip, i) => <span key={i} className="block opacity-80 hover:opacity-100 hover:text-white transition cursor-default px-2">• "{tip}"</span>)}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            {!showStrategyDetails && (
+                                <div className="text-center text-gray-500 text-sm py-10">
+                                    <i className="fa-solid fa-eye-slash text-3xl mb-3 opacity-50 block"></i>
+                                    Chiến lược đã được ẩn.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- COMPONENT: PRACTICE SESSION ---
+        function PracticeSession({ questions, title, onBack }) {
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [sessionTime, setSessionTime] = useState(0);
+            const [timeLeft, setTimeLeft] = useState(120); // 2 Minutes
+            const [isTimerRunning, setIsTimerRunning] = useState(false);
+            const [recorderKey, setRecorderKey] = useState(0);
+            const [showAIPopup, setShowAIPopup] = useState(false);
+            const [hasRecorded, setHasRecorded] = useState(false);
+            const [currentImage, setCurrentImage] = useState("");
+            const [isFinished, setIsFinished] = useState(false); 
+            const [showVocabHint, setShowVocabHint] = useState(false);
+
+            const currentQ = questions && questions.length > 0 ? questions[currentIndex] : null;
+            
+            const timerRef = useRef(null);
+            const sessionTimerRef = useRef(null);
+            const audioTimeoutRef = useRef(null); // Quản lý độ trễ âm thanh
+
+            useEffect(() => {
+                sessionTimerRef.current = setInterval(() => setSessionTime(prev => prev + 1), 1000);
+                return () => clearInterval(sessionTimerRef.current);
+            }, []);
+
+            useEffect(() => {
+                if (currentQ && !isFinished) loadQuestion();
+                return () => { 
+                    clearInterval(timerRef.current); 
+                    clearTimeout(audioTimeoutRef.current);
+                    AudioPlayer.stop(); 
+                };
+            }, [currentIndex, currentQ, isFinished]);
+
+            const loadQuestion = () => {
+                setIsTimerRunning(true);
+                setTimeLeft(120); // Reset to 120s
+                setHasRecorded(false);
+                setShowVocabHint(false); // Reset Hint
+                
+                // Dừng toàn bộ âm thanh và hủy lệnh chờ trước đó
+                clearTimeout(audioTimeoutRef.current);
+                AudioPlayer.stop();
+                
+                setRecorderKey(p => p + 1);
+                setCurrentImage(CHAR_IMAGES[Math.floor(Math.random() * CHAR_IMAGES.length)]);
+                
+                if (currentQ) {
+                    audioTimeoutRef.current = setTimeout(() => {
+                         if(currentQ.audio) AudioPlayer.playFile(currentQ.audio);
+                         else AudioPlayer.playTTS(currentQ.text);
+                    }, 800);
+                }
+            };
+
+            useEffect(() => {
+                if (isTimerRunning && timeLeft > 0) {
+                    timerRef.current = setInterval(() => setTimeLeft(p => p - 1), 1000);
+                } else if (timeLeft === 0) {
+                    setIsTimerRunning(false);
+                    clearInterval(timerRef.current);
+                }
+                return () => clearInterval(timerRef.current);
+            }, [isTimerRunning, timeLeft]);
+
+            const nextQuestion = () => {
+                // Tắt hoàn toàn audio và hàng chờ phát âm thanh khi chuyển câu
+                clearTimeout(audioTimeoutRef.current);
+                AudioPlayer.stop();
+
+                if (currentIndex < questions.length - 1) {
+                    setCurrentIndex(p => p + 1);
+                } else {
+                    setIsFinished(true); 
+                    clearInterval(sessionTimerRef.current); 
+                }
+            };
+
+            const formatTime = (s) => `${Math.floor(s / 60)}:${s % 60 < 10 ? '0' : ''}${s % 60}`;
+
+            if (isFinished) {
+                return (
+                    <SummaryView 
+                        totalQuestions={questions.length} 
+                        timeSpent={formatTime(sessionTime)} 
+                        onHome={onBack} 
+                    />
+                );
+            }
+
+            if (!currentQ) return <div className="p-10 text-center text-white">Loading data...</div>;
+
+            return (
+                <div className="max-w-7xl mx-auto p-4 min-h-screen flex flex-col relative z-10 pb-28 lg:pb-10">
+                    {/* Header */}
+                    <div className="glass p-3 sm:p-4 rounded-2xl mb-6 flex justify-between items-center sticky top-4 z-40 border border-cyan-400/20 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+                        <div className="flex items-center gap-3 sm:gap-4 w-full lg:w-auto">
+                            <button onClick={() => {
+                                clearTimeout(audioTimeoutRef.current);
+                                AudioPlayer.stop();
+                                onBack();
+                            }} className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white transition shrink-0">
+                                <i className="fa-solid fa-arrow-left"></i>
+                            </button>
+                            {/* Logo inside Practice Header */}
+                            <div className="mr-2 sm:mr-4 border-r border-white/10 pr-3 sm:pr-6 shrink-0">
+                                <Logo imgClass="h-8 sm:h-12 lg:h-16" />
+                            </div>
+                            <div className="flex-1">
+                                <div className="flex flex-col sm:flex-row sm:gap-4 text-xs font-bold text-gray-300">
+                                    <span className="flex items-center gap-1.5"><i className="fa-solid fa-list-ol text-fuchsia-400"></i> {currentIndex + 1}/{questions.length}</span>
+                                    <span className="flex items-center gap-1.5"><i className="fa-regular fa-clock text-cyan-400"></i> {formatTime(sessionTime)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Desktop Actions */}
+                        <div className="hidden lg:flex gap-3 items-center">
+                            <button onClick={() => setShowAIPopup(true)} className="bg-gradient-to-r from-indigo-600 to-fuchsia-600 hover:from-indigo-500 hover:to-fuchsia-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-[0_0_15px_rgba(217,70,239,0.4)] transition flex items-center gap-2 border border-white/10">
+                                <i className="fa-solid fa-chalkboard-user"></i> <span>Nhận xét cùng Jaxtina English Teacher</span>
+                            </button>
+                            <button onClick={nextQuestion} className="bg-cyan-400 hover:bg-cyan-300 text-slate-900 px-6 py-2.5 rounded-xl text-sm font-black shadow-[0_0_15px_rgba(6,182,212,0.4)] transition flex items-center gap-2">
+                                Next <i className="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+                        {/* Question Area */}
+                        <div className="lg:col-span-7 flex flex-col">
+                            <div className="glass p-5 sm:p-8 rounded-3xl flex-1 flex flex-col relative overflow-hidden border-t border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)] min-h-[60vh] lg:min-h-[500px]">
+                                
+                                {/* Full Cover Background Image */}
+                                <div className="absolute inset-0 z-0 pointer-events-none">
+                                    <img 
+                                        src={hasRecorded ? DONE_IMAGE : currentImage} 
+                                        alt="Character" 
+                                        className="w-full h-full object-cover object-top opacity-20 filter contrast-125 transition-opacity duration-1000" 
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-[#0B0F19]/90 to-transparent"></div>
+                                </div>
+
+                                <div className="flex-1 flex flex-col justify-center relative z-10 mt-4 sm:mt-8">
+                                    <div className="inline-flex self-start items-center gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-cyan-900/40 border border-cyan-400/30 text-[10px] sm:text-xs font-bold text-cyan-400 mb-4 sm:mb-6 uppercase tracking-widest backdrop-blur-md shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                                        <div className="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse"></div>
+                                        Question
+                                    </div>
+                                    <h3 className="text-2xl sm:text-4xl lg:text-5xl font-display font-bold text-white leading-tight mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                                        "{currentQ.text}"
+                                    </h3>
+
+                                    {/* VOCAB HINT BUTTON */}
+                                    <div className="mb-6">
+                                        <button 
+                                            onClick={() => setShowVocabHint(!showVocabHint)}
+                                            className="text-xs sm:text-sm font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 hover:text-white px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg backdrop-blur-sm"
+                                        >
+                                            <i className="fa-solid fa-lightbulb text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]"></i>
+                                            {showVocabHint ? "Hide Vocabulary" : "Vocabulary Hints"}
+                                        </button>
+                                        
+                                        {/* Vocab List Display */}
+                                        {showVocabHint && (
+                                            <div className="mt-3 sm:mt-4 bg-indigo-900/40 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-indigo-400/30 animate-fade-in shadow-[0_0_20px_rgba(79,70,229,0.2)]">
+                                                <p className="text-[10px] sm:text-[11px] text-indigo-300 uppercase tracking-widest mb-3 font-bold">Recommended Vocabulary</p>
+                                                <div className="flex flex-wrap gap-2 sm:gap-3">
+                                                    {currentQ.v ? (
+                                                        currentQ.v.map((word, idx) => (
+                                                            <span key={idx} className="bg-black/40 text-cyan-100 text-xs sm:text-[15px] font-medium px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-cyan-500/20 shadow-sm hover:border-cyan-400/60 hover:bg-black/60 transition cursor-default">
+                                                                {word}
+                                                            </span>
+                                                        ))
+                                                    ) : (
+                                                        <span className="text-gray-400 text-xs sm:text-sm italic">No specific vocabulary hints for this question.</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <button 
+                                        onClick={() => currentQ.audio ? AudioPlayer.playFile(currentQ.audio) : AudioPlayer.playTTS(currentQ.text)} 
+                                        className="self-start inline-flex items-center gap-3 text-xs sm:text-sm font-bold text-white bg-indigo-600/30 hover:bg-indigo-600/60 border border-indigo-400/30 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full transition group backdrop-blur-md shadow-lg"
+                                    >
+                                        <i className="fa-solid fa-volume-high group-hover:scale-110 transition text-cyan-400"></i> 
+                                        {currentQ.audio ? "Play Audio" : "Play TTS"}
+                                    </button>
+                                </div>
+
+                                <div className="mt-8 sm:mt-10 relative z-10 bg-black/50 p-5 sm:p-6 rounded-3xl border border-white/5 backdrop-blur-md">
+                                    <div className="flex justify-between items-end mb-3">
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Time Remaining</span>
+                                        <div className={`text-3xl sm:text-4xl font-mono font-bold tracking-tight ${timeLeft < 10 ? 'text-fuchsia-500 animate-pulse drop-shadow-[0_0_10px_rgba(217,70,239,0.8)]' : 'text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]'}`}>
+                                            {formatTime(timeLeft)}
+                                        </div>
+                                    </div>
+                                    <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-white/5">
+                                        <div className={`h-full transition-all duration-1000 ease-linear ${timeLeft < 20 ? 'bg-fuchsia-500 shadow-[0_0_10px_rgba(217,70,239,0.8)]' : 'bg-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.8)]'}`} style={{ width: `${(timeLeft / 120) * 100}%` }}></div>
+                                    </div>
+                                    <AudioRecorder key={recorderKey} setHasRecorded={setHasRecorded} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="lg:col-span-5 h-auto lg:h-auto">
+                            <StrategyBoard question={currentQ} />
+                        </div>
+                    </div>
+
+                    {/* Mobile/Tablet Bottom Action Bar */}
+                    <div className="fixed bottom-0 left-0 w-full glass-card p-4 rounded-t-[2rem] border-t border-cyan-400/30 z-50 lg:hidden flex justify-between gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.7)] safe-area-pb backdrop-blur-xl">
+                        <button onClick={() => setShowAIPopup(true)} className="flex-1 bg-gradient-to-r from-indigo-600 to-fuchsia-600 hover:from-indigo-500 hover:to-fuchsia-500 text-white py-3.5 rounded-2xl text-sm font-bold shadow-[0_0_15px_rgba(217,70,239,0.4)] transition flex items-center justify-center gap-2 border border-white/20 active:scale-95">
+                            <i className="fa-solid fa-chalkboard-user"></i> <span>Nhận xét</span>
+                        </button>
+                        <button onClick={nextQuestion} className="flex-1 bg-cyan-400 hover:bg-cyan-300 text-slate-900 py-3.5 rounded-2xl text-sm font-black shadow-[0_0_15px_rgba(6,182,212,0.4)] transition flex items-center justify-center gap-2 active:scale-95">
+                            Next <i className="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    {/* Jaxtina English Teacher Popup */}
+                    <Modal isOpen={showAIPopup} onClose={() => setShowAIPopup(false)} title="Nhận xét cùng Jaxtina English Teacher">
+                        <div className="text-center space-y-6">
+                            <div className="w-24 h-24 bg-gradient-to-br from-fuchsia-500 to-indigo-500 rounded-full mx-auto flex items-center justify-center text-4xl text-white shadow-[0_0_30px_rgba(217,70,239,0.4)] mb-4 border-2 border-white/20">
+                                <i className="fa-solid fa-chalkboard-user"></i>
+                            </div>
+                            <p className="text-gray-300 text-[15px] leading-relaxed">
+                                Hãy tải xuống câu trả lời bạn vừa ghi âm, sau đó truy cập vào đường link bên dưới để gửi cho <strong>Jaxtina English Teacher</strong>. Bạn sẽ nhận được đánh giá chi tiết về phát âm, ngữ pháp và từ vựng!
+                            </p>
+                            <a href="https://gemini.google.com/gem/1xImqjvFGH7SEyXOkZEpEuuNOG4pfj-ki?usp=sharing" target="_blank" className="block w-full bg-gradient-to-r from-cyan-500 to-indigo-500 hover:from-cyan-400 hover:to-indigo-400 text-white py-3.5 rounded-xl font-bold transition transform hover:scale-105 shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-white/20">
+                                <i className="fa-solid fa-location-arrow mr-2"></i> Mở Chat với Jaxtina English Teacher
+                            </a>
+                        </div>
+                    </Modal>
+                </div>
+            );
+        }
+
+        // --- COMPONENT: LANDING & SELECTION ---
+        function LandingPage({ topics, onStart }) {
+            const [step, setStep] = useState('mode_select'); // 'mode_select', 'random_config', 'topic_select', 'topic_ready'
+            const [selectedIds, setSelectedIds] = useState(new Set());
+            const [questionLimit, setQuestionLimit] = useState(5);
+            const [randomLimit, setRandomLimit] = useState(5);
+
+            const toggleTopic = (id) => {
+                const newSet = new Set(selectedIds);
+                if (newSet.has(id)) newSet.delete(id);
+                else newSet.add(id);
+                setSelectedIds(newSet);
+            };
+
+            const handleStartTopicConfig = () => {
+                if (selectedIds.size === 0) return alert("Vui lòng chọn ít nhất 1 chủ đề!");
+                setStep('topic_ready');
+            };
+
+            const confirmStartTopic = (mode) => {
+                let chosenTopics = topics.filter(t => selectedIds.has(t.id));
+                let allQs = chosenTopics.flatMap(t => t.questions);
+                
+                if (mode === 'random') {
+                    allQs = allQs.sort(() => 0.5 - Math.random());
+                }
+                
+                if (questionLimit > 0) {
+                    allQs = allQs.slice(0, questionLimit);
+                }
+
+                onStart({ 
+                    title: "Practice Session", 
+                    questions: allQs 
+                });
+            };
+
+            const confirmStartRandom = () => {
+                let allQs = topics.flatMap(t => t.questions);
+                // Xáo trộn toàn bộ câu hỏi từ mọi chủ đề
+                allQs = allQs.sort(() => 0.5 - Math.random());
+                
+                if (randomLimit > 0) {
+                    allQs = allQs.slice(0, randomLimit);
+                }
+
+                onStart({ 
+                    title: "Random Practice", 
+                    questions: allQs 
+                });
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden z-10">
+                    {/* Glowing background orbs */}
+                    <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] animate-blob"></div>
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] animate-blob animation-delay-2000"></div>
+
+                    <div className="text-center mb-10 z-10 animate-fade-in flex flex-col items-center">
+                        <Logo imgClass="h-28 sm:h-40 lg:h-48" className="mb-8 transform transition-transform hover:scale-110 cursor-default" />
+                        
+                        <h1 className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] mt-2">
+                            Master Your <span className="text-gradient">English</span>
+                        </h1>
+                        <p className="text-gray-400 text-lg font-light tracking-wide max-w-xl mx-auto px-4">
+                            Interactive Speaking Practice Simulator
+                        </p>
+                    </div>
+
+                    {/* MÀN HÌNH 1: CHỌN CHẾ ĐỘ */}
+                    {step === 'mode_select' && (
+                        <div className="w-full max-w-4xl glass rounded-3xl p-8 sm:p-12 animate-slide-up z-10 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative text-center">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500 rounded-t-3xl"></div>
+                            
+                            <h2 className="text-3xl font-display font-bold text-white mb-8">Choose Practice Mode</h2>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <button onClick={() => setStep('random_config')} className="group flex flex-col items-center p-8 rounded-2xl bg-gradient-to-b from-white/10 to-white/5 border border-cyan-400/30 hover:border-cyan-400 hover:from-cyan-900/40 hover:to-cyan-900/10 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.1)] hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] transform hover:-translate-y-2">
+                                    <div className="w-20 h-20 rounded-full bg-cyan-400/20 text-cyan-400 flex items-center justify-center text-4xl mb-6 shadow-[0_0_15px_rgba(6,182,212,0.5)] group-hover:scale-110 transition-transform border border-cyan-400/50">
+                                        <i className="fa-solid fa-dice"></i>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-white mb-3">Luyện tập Ngẫu nhiên</h3>
+                                    <p className="text-gray-400 text-sm leading-relaxed">Hệ thống sẽ xáo trộn các câu hỏi từ tất cả các chủ đề để thử thách phản xạ của bạn.</p>
+                                </button>
+
+                                <button onClick={() => setStep('topic_select')} className="group flex flex-col items-center p-8 rounded-2xl bg-gradient-to-b from-white/10 to-white/5 border border-fuchsia-400/30 hover:border-fuchsia-400 hover:from-fuchsia-900/40 hover:to-fuchsia-900/10 transition-all duration-300 shadow-[0_0_20px_rgba(217,70,239,0.1)] hover:shadow-[0_0_30px_rgba(217,70,239,0.4)] transform hover:-translate-y-2">
+                                    <div className="w-20 h-20 rounded-full bg-fuchsia-400/20 text-fuchsia-400 flex items-center justify-center text-4xl mb-6 shadow-[0_0_15px_rgba(217,70,239,0.5)] group-hover:scale-110 transition-transform border border-fuchsia-400/50">
+                                        <i className="fa-solid fa-list-check"></i>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-white mb-3">Luyện tập Theo chủ đề</h3>
+                                    <p className="text-gray-400 text-sm leading-relaxed">Chọn các chủ đề cụ thể mà bạn muốn ôn tập và tùy chỉnh số lượng câu hỏi.</p>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* MÀN HÌNH 2A: CẤU HÌNH RANDOM */}
+                    {step === 'random_config' && (
+                        <div className="w-full max-w-xl glass rounded-3xl p-10 animate-slide-up z-10 text-center border border-cyan-400/30 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                            <div className="w-20 h-20 rounded-full bg-cyan-400/20 text-cyan-400 flex items-center justify-center text-4xl mb-6 mx-auto shadow-[0_0_15px_rgba(6,182,212,0.5)] border border-cyan-400/50">
+                                <i className="fa-solid fa-dice"></i>
+                            </div>
+                            <h2 className="text-3xl font-display font-bold text-white mb-4">Luyện tập Ngẫu nhiên</h2>
+                            <p className="text-gray-400 mb-8 text-sm">Bạn muốn thử sức với bao nhiêu câu hỏi ngẫu nhiên?</p>
+                            
+                            <div className="flex flex-col items-center gap-6 mb-8">
+                                <div className="bg-black/40 p-4 rounded-2xl border border-white/10 shadow-inner flex items-center gap-4">
+                                    <span className="text-lg font-bold text-gray-300 uppercase tracking-wide">Số câu:</span>
+                                    <input 
+                                        type="number" 
+                                        min="1" 
+                                        value={randomLimit} 
+                                        onChange={(e) => setRandomLimit(parseInt(e.target.value))}
+                                        className="w-24 bg-cyan-900/30 border border-cyan-500/50 rounded-xl px-4 py-2 text-cyan-400 font-bold text-2xl text-center focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:bg-cyan-900 shadow-inner"
+                                    />
+                                </div>
+                                <button 
+                                    onClick={confirmStartRandom}
+                                    className="w-full bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white px-8 py-4 rounded-xl font-black text-lg shadow-[0_0_20px_rgba(6,182,212,0.4)] transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3 border border-white/20"
+                                >
+                                    <i className="fa-solid fa-play"></i> Bắt đầu luyện tập
+                                </button>
+                            </div>
+                            
+                            <button onClick={() => setStep('mode_select')} className="text-gray-500 hover:text-cyan-400 text-sm font-bold uppercase tracking-wider transition flex items-center justify-center gap-2 mx-auto">
+                                <i className="fa-solid fa-arrow-left"></i> Quay lại chọn chế độ
+                            </button>
+                        </div>
+                    )}
+
+                    {/* MÀN HÌNH 2B: CHỌN CHỦ ĐỀ */}
+                    {step === 'topic_select' && (
+                        <div className="w-full max-w-5xl glass rounded-3xl p-6 sm:p-10 animate-slide-up z-10 border border-fuchsia-400/30 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative">
+                            <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-6 border-b border-white/5 pb-6">
+                                <div>
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <button onClick={() => setStep('mode_select')} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition mr-2">
+                                            <i className="fa-solid fa-arrow-left text-sm"></i>
+                                        </button>
+                                        <h2 className="text-2xl font-display font-bold text-white">Select Practice Topics</h2>
+                                    </div>
+                                    <p className="text-gray-400 text-sm ml-12">Choose the topics you want to review today</p>
+                                </div>
+                                <div className="flex items-center gap-4 bg-black/40 p-2.5 rounded-xl border border-white/10 shadow-inner">
+                                    <span className="text-sm font-bold text-gray-300 ml-2 uppercase tracking-wide">Questions:</span>
+                                    <input 
+                                        type="number" 
+                                        min="1" 
+                                        value={questionLimit} 
+                                        onChange={(e) => setQuestionLimit(parseInt(e.target.value))}
+                                        className="w-20 bg-fuchsia-900/30 border border-fuchsia-500/30 rounded-lg px-3 py-1.5 text-fuchsia-400 font-bold text-center focus:outline-none focus:ring-2 focus:ring-fuchsia-400 focus:bg-fuchsia-900/50 shadow-inner"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 max-h-[400px] overflow-y-auto custom-scrollbar pr-2 mb-8">
+                                {topics.map(topic => {
+                                    const isSelected = selectedIds.has(topic.id);
+                                    return (
+                                        <div 
+                                            key={topic.id} 
+                                            onClick={() => toggleTopic(topic.id)}
+                                            className={`
+                                                cursor-pointer p-5 rounded-2xl border text-center transition-all duration-300 relative overflow-hidden group backdrop-blur-sm
+                                                ${isSelected 
+                                                    ? 'bg-fuchsia-600/30 border-fuchsia-400 text-white shadow-[0_0_20px_rgba(217,70,239,0.3)]' 
+                                                    : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:border-white/30'}
+                                            `}
+                                        >
+                                            <div className={`text-3xl mb-3 transition-transform group-hover:scale-110 ${isSelected ? 'text-fuchsia-400 drop-shadow-[0_0_10px_rgba(217,70,239,0.8)]' : 'text-gray-500'}`}>
+                                                <i className={`fa-solid ${topic.icon}`}></i>
+                                            </div>
+                                            <div className="text-[11px] font-bold uppercase tracking-wider truncate px-1">{topic.displayTitle}</div>
+                                            {isSelected && <div className="absolute top-2 right-2 text-cyan-400 text-sm shadow-sm"><i className="fa-solid fa-circle-check"></i></div>}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div className="flex justify-center mt-2">
+                                <button 
+                                    onClick={handleStartTopicConfig}
+                                    className="bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white px-12 py-4 rounded-2xl font-black text-lg shadow-[0_0_20px_rgba(217,70,239,0.4)] transition transform hover:scale-105 active:scale-95 flex items-center gap-3 border border-white/20"
+                                >
+                                    Tiếp tục <i className="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* MÀN HÌNH 3: XÁC NHẬN CHỦ ĐỀ */}
+                    {step === 'topic_ready' && (
+                        <div className="w-full max-w-2xl glass rounded-3xl p-10 animate-slide-up z-10 text-center border border-fuchsia-400/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                            <h2 className="text-4xl font-display font-bold text-white mb-3">Sẵn sàng?</h2>
+                            <p className="text-gray-400 mb-10 text-lg">Bạn đã chọn <span className="text-cyan-400 font-bold px-1">{selectedIds.size}</span> chủ đề với giới hạn <span className="text-fuchsia-400 font-bold px-1">{questionLimit}</span> câu hỏi/chủ đề.</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <button onClick={() => confirmStartTopic('sequential')} className="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-indigo-600/20 hover:border-indigo-400/50 transition-all duration-300 backdrop-blur-sm shadow-lg">
+                                    <div className="w-20 h-20 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition border border-indigo-400/30 group-hover:shadow-[0_0_20px_rgba(79,70,229,0.4)]">
+                                        <i className="fa-solid fa-arrow-down-1-9 text-3xl"></i>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white mb-2">Học Theo Thứ Tự</h3>
+                                    <p className="text-sm text-gray-400">Các câu hỏi sẽ hiện ra lần lượt.</p>
+                                </button>
+
+                                <button onClick={() => confirmStartTopic('random')} className="group p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-fuchsia-500/20 hover:border-fuchsia-400/50 transition-all duration-300 backdrop-blur-sm shadow-lg">
+                                    <div className="w-20 h-20 bg-fuchsia-400/20 text-fuchsia-400 rounded-full flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition border border-fuchsia-400/30 group-hover:shadow-[0_0_20px_rgba(217,70,239,0.4)]">
+                                        <i className="fa-solid fa-shuffle text-3xl"></i>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white mb-2">Học Xáo Trộn</h3>
+                                    <p className="text-sm text-gray-400">Trộn lẫn các câu trong chủ đề đã chọn.</p>
+                                </button>
+                            </div>
+                            
+                            <button onClick={() => setStep('topic_select')} className="mt-10 text-gray-500 hover:text-fuchsia-400 text-sm font-bold uppercase tracking-wider transition">
+                                <i className="fa-solid fa-arrow-left mr-2"></i> Quay lại chọn chủ đề
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function App() {
+            const [sessionData, setSessionData] = useState(null);
+            const [showGuide, setShowGuide] = useState(false);
+            
+            const cleanTopics = useMemo(() => RAW_DATA.map(t => ({
+                ...t,
+                displayTitle: t.title.replace(/^Topic \d+ – /, ''),
+                questions: t.questions.map((q, i) => ({
+                    id: `${t.id}_q${i}`,
+                    text: q.t,
+                    audio: q.a,
+                    sample: q.s,
+                    sampleAudio: q.sa,
+                    v: q.v
+                }))
+            })), []);
+
+            return (
+                <div className="min-h-screen font-sans flex flex-col relative">
+                    {!sessionData ? (
+                        <LandingPage 
+                            topics={cleanTopics} 
+                            onStart={(data) => setSessionData(data)} 
+                        />
+                    ) : (
+                        <PracticeSession 
+                            title={sessionData.title}
+                            questions={sessionData.questions}
+                            onBack={() => setSessionData(null)} 
+                        />
+                    )}
+
+                    {/* Nút Hướng dẫn nổi ở mọi trang */}
+                    <button 
+                        onClick={() => setShowGuide(true)}
+                        className="fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-[60] bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white rounded-full p-3 sm:px-4 sm:py-2 shadow-[0_0_15px_rgba(217,70,239,0.4)] hover:scale-105 transition flex items-center justify-center gap-2 border border-white/30 text-sm font-bold opacity-80 hover:opacity-100"
+                    >
+                        <i className="fa-solid fa-circle-info text-lg"></i>
+                        <span className="hidden sm:inline">Hướng dẫn</span>
+                    </button>
+
+                    {/* Popup Hướng dẫn */}
+                    <Modal isOpen={showGuide} onClose={() => setShowGuide(false)} title="📖 Hướng dẫn sử dụng">
+                        <div className="text-gray-300 text-[15px] space-y-4 text-left">
+                            <p>Chào mừng bạn đến với <strong>Jaxtina Speak</strong>! Dưới đây là các bước để luyện tập hiệu quả:</p>
+                            <ul className="space-y-3 list-none mt-4">
+                                <li className="flex gap-3 items-start bg-white/5 p-3 rounded-xl border border-white/5">
+                                    <span className="text-cyan-400 bg-cyan-400/10 w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"><i className="fa-solid fa-1 text-xs"></i></span> 
+                                    <span className="text-sm leading-relaxed"><strong>Chọn chế độ <i className="fa-solid fa-dice text-cyan-400 mx-1"></i>:</strong> Luyện tập <strong>Ngẫu nhiên</strong> (trộn mọi chủ đề) hoặc luyện tập <strong>Theo chủ đề</strong> cụ thể. Thiết lập số câu hỏi mong muốn.</span>
+                                </li>
+                                <li className="flex gap-3 items-start bg-white/5 p-3 rounded-xl border border-white/5">
+                                    <span className="text-fuchsia-400 bg-fuchsia-400/10 w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"><i className="fa-solid fa-2 text-xs"></i></span> 
+                                    <span className="text-sm leading-relaxed"><strong>Nghe & Trả lời <i className="fa-solid fa-microphone-lines text-fuchsia-400 mx-1"></i>:</strong> Bấm nghe câu hỏi và nhấn nút <strong className="text-fuchsia-400">Start Recording</strong> để ghi âm câu trả lời của bạn.</span>
+                                </li>
+                                <li className="flex gap-3 items-start bg-white/5 p-3 rounded-xl border border-white/5">
+                                    <span className="text-indigo-400 bg-indigo-400/10 w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"><i className="fa-solid fa-3 text-xs"></i></span> 
+                                    <span className="text-sm leading-relaxed"><strong>Sử dụng chiến lược <i className="fa-solid fa-chess-board text-indigo-400 mx-1"></i>:</strong> Bật gợi ý Từ vựng hoặc xem bảng Công thức <strong>PREF(C)</strong> bên tay phải để biết cách lên ý tưởng trả lời ăn điểm.</span>
+                                </li>
+                                <li className="flex gap-3 items-start bg-white/5 p-3 rounded-xl border border-white/5">
+                                    <span className="text-emerald-400 bg-emerald-400/10 w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"><i className="fa-solid fa-4 text-xs"></i></span> 
+                                    <span className="text-sm leading-relaxed"><strong>Nhận xét chi tiết <i className="fa-solid fa-ranking-star text-emerald-400 mx-1"></i>:</strong> Tải file MP3 vừa ghi âm xuống, bấm vào nút <strong className="text-cyan-400">Nhận xét cùng Jaxtina</strong> và gửi file để được sửa lỗi chi tiết!</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </Modal>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { createBrowserClient } from '@/lib/supabase'
 import { Badge } from "@/components/ui/badge"
 import { useTranslation } from '@/lib/i18n/useTranslation'
-import { 
+import {
   Layout, Award, TrendingUp, CheckCircle2,
-  Bot, Flame, Trophy, Globe, Crown, Zap, Activity, AlertCircle
+  Bot, Flame, Trophy, Globe, Crown, Zap, Activity, AlertCircle, Mic
 } from 'lucide-react'
 
 const GUEST_KEY = 'jaxtina_guest'
@@ -106,8 +106,8 @@ export default function ExperiencePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          <ExperienceCard 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <ExperienceCard
             href={`/${lang}/tutor`}
             icon={<Bot className="w-10 h-10 text-white" />}
             title={dict.landing.cardTutorTitle}
@@ -118,7 +118,7 @@ export default function ExperiencePage() {
             status="ONLINE"
             chip="Skill Boost Active"
           />
-          <ExperienceCard 
+          <ExperienceCard
             href={`/${lang}/quiz`}
             icon={<Trophy className="w-10 h-10 text-white" />}
             title={dict.landing.cardAssessmentTitle}
@@ -130,7 +130,7 @@ export default function ExperiencePage() {
             bonus="+450 XP"
             chip="Arena Mode"
           />
-          <ExperienceCard 
+          <ExperienceCard
             href={`/${lang}/vocabulary-challenge`}
             icon={<Activity className="w-10 h-10 text-white" />}
             title={dict.landing.cardVocabTitle}
@@ -141,124 +141,165 @@ export default function ExperiencePage() {
             chip="Combo x3"
             progress={65}
           />
+          <ExperienceCard
+            href="/jaxtinaspeak.html"
+            external
+            icon={<Mic className="w-10 h-10 text-white" />}
+            title={dict.landing.cardSpeakTitle}
+            desc={dict.landing.cardSpeakDesc}
+            btnText={dict.landing.cardSpeakBtn}
+            variants={['Pronunciation AI', 'Fluency Scoring']}
+            accent="purple"
+            status="NEW"
+            chip="Beta"
+          />
         </div>
       </div>
     </div>
   );
 }
 
-function ExperienceCard({ 
+function ExperienceCard({
   href, icon, title, desc, btnText, variants, accent,
-  status, bonus, chip, progress 
+  status, bonus, chip, progress, external
 }: any) {
   const isCyan = accent === 'cyan'
   const isOrange = accent === 'orange'
   const isTeal = accent === 'teal'
+  const isPurple = accent === 'purple'
 
-  return (
-    <Link href={href} className="group block h-full">
-      <motion.div 
-        whileHover={{ y: -10 }}
-        className={`
+  const chipIcon = chip === 'Arena Mode'
+    ? <Globe className="w-3 h-3" />
+    : chip === 'Skill Boost Active'
+    ? <Activity className="w-3 h-3" />
+    : <Zap className="w-3 h-3" />
+
+  const inner = (
+    <motion.div
+      whileHover={{ y: -10 }}
+      className={`
         relative bg-white/95 rounded-[3rem] p-10 h-full
         border-b-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] transition-all duration-500
         flex flex-col items-center text-center
         ${isCyan ? 'border-cyan-100 shadow-cyan-100/50' : ''}
         ${isOrange ? 'border-orange-100 shadow-orange-100/50' : ''}
         ${isTeal ? 'border-teal-100 shadow-teal-100/50' : ''}
+        ${isPurple ? 'border-purple-100 shadow-purple-100/50' : ''}
+      `}
+    >
+      {/* Status Pills */}
+      <div className="absolute top-8 left-8 flex gap-2">
+        {status === 'ONLINE' && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 text-[9px] font-black text-green-600 tracking-widest leading-none border border-green-100">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            ONLINE
+          </div>
+        )}
+        {status === 'HOT' && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-50 text-[9px] font-black text-orange-600 tracking-widest leading-none border border-orange-100">
+            <Flame className="w-3 h-3 text-orange-500 fill-orange-500/20" />
+            HOT
+          </div>
+        )}
+        {status === 'NEW' && (
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-50 text-[9px] font-black text-purple-600 tracking-widest leading-none border border-purple-100">
+            <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+            NEW
+          </div>
+        )}
+      </div>
+
+      {bonus && (
+        <div className="absolute top-8 right-8">
+          <div className="px-4 py-1.5 rounded-full bg-yellow-50 text-[10px] font-black text-yellow-700 tracking-widest leading-none border border-yellow-100 shadow-sm">
+            {bonus}
+          </div>
+        </div>
+      )}
+
+      {/* Icon container */}
+      <div className={`
+        w-24 h-24 rounded-[2rem] flex items-center justify-center mb-10
+        shadow-lg transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3
+        ${isCyan ? 'bg-gradient-to-br from-cyan-400 to-cyan-600 shadow-cyan-200' : ''}
+        ${isOrange ? 'bg-gradient-to-br from-orange-400 to-orange-600 shadow-orange-200' : ''}
+        ${isTeal ? 'bg-gradient-to-br from-teal-400 to-teal-600 shadow-teal-200' : ''}
+        ${isPurple ? 'bg-gradient-to-br from-purple-400 to-purple-600 shadow-purple-200' : ''}
       `}>
-        {/* Status Pills */}
-        <div className="absolute top-8 left-8 flex gap-2">
-          {status === 'ONLINE' && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 text-[9px] font-black text-green-600 tracking-widest leading-none border border-green-100">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              ONLINE
-            </div>
-          )}
-          {status === 'HOT' && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-50 text-[9px] font-black text-orange-600 tracking-widest leading-none border border-orange-100">
-              <Flame className="w-3 h-3 text-orange-500 fill-orange-500/20" />
-              HOT
+        {icon}
+      </div>
+
+      <div className="flex-1 space-y-6 flex flex-col items-center w-full">
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-3xl font-black text-slate-800 font-display tracking-tight uppercase leading-none">
+            {title}
+          </h2>
+          {chip && (
+            <div className={`
+              inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase
+              ${isCyan ? 'bg-cyan-50 text-cyan-600' : isOrange ? 'bg-orange-50 text-orange-600' : isTeal ? 'bg-teal-50 text-teal-600' : 'bg-purple-50 text-purple-600'}
+            `}>
+              {chipIcon}
+              {chip}
             </div>
           )}
         </div>
 
-        {bonus && (
-          <div className="absolute top-8 right-8">
-             <div className="px-4 py-1.5 rounded-full bg-yellow-50 text-[10px] font-black text-yellow-700 tracking-widest leading-none border border-yellow-100 shadow-sm">
-              {bonus}
+        <p className="text-slate-400 text-sm font-bold leading-relaxed px-2">
+          {desc}
+        </p>
+
+        {progress !== undefined && (
+          <div className="w-full py-4 space-y-3">
+            <div className="flex justify-between text-[10px] font-black text-slate-400 tracking-widest">
+              <span>QUEST EXPERIENCE</span>
+              <span className="text-teal-500">{progress}%</span>
+            </div>
+            <div className="h-3 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100 shadow-inner">
+              <div
+                className="h-full bg-gradient-to-r from-teal-400 to-cyan-500 shadow-md transition-all duration-1000"
+                style={{ width: `${progress}%` }}
+              />
             </div>
           </div>
         )}
 
-        {/* Icon container */}
-        <div className={`
-          w-24 h-24 rounded-[2rem] flex items-center justify-center mb-10 
-          shadow-lg transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3
-          ${isCyan ? 'bg-gradient-to-br from-cyan-400 to-cyan-600 shadow-cyan-200' : ''}
-          ${isOrange ? 'bg-gradient-to-br from-orange-400 to-orange-600 shadow-orange-200' : ''}
-          ${isTeal ? 'bg-gradient-to-br from-teal-400 to-teal-600 shadow-teal-200' : ''}
-        `}>
-          {icon}
-        </div>
-
-        <div className="flex-1 space-y-6 flex flex-col items-center w-full">
-          <div className="flex flex-col items-center gap-2">
-            <h2 className="text-3xl font-black text-slate-800 font-display tracking-tight uppercase leading-none">
-              {title}
-            </h2>
-            {chip && (
-              <div className={`
-                inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase
-                ${isCyan ? 'bg-cyan-50 text-cyan-600' : isOrange ? 'bg-orange-50 text-orange-600' : 'bg-teal-50 text-teal-600'}
-              `}>
-                {chip === 'Arena Mode' ? <Globe className="w-3 h-3" /> : chip === 'Skill Boost Active' ? <Activity className="w-3 h-3" /> : <Zap className="w-3 h-3" />}
-                {chip}
+        <div className="pt-6 space-y-3 w-full">
+          {variants.map((v: string) => (
+            <div key={v} className="flex items-center gap-3 text-[11px] font-bold text-slate-400 bg-slate-50/50 p-2.5 rounded-2xl border border-slate-50 transition-colors group-hover:bg-slate-50">
+              <div className={`p-1 rounded-full ${isCyan ? 'bg-cyan-100 text-cyan-600' : isOrange ? 'bg-orange-100 text-orange-600' : isTeal ? 'bg-teal-100 text-teal-600' : 'bg-purple-100 text-purple-600'}`}>
+                <CheckCircle2 className="h-3 w-3" />
               </div>
-            )}
-          </div>
-          
-          <p className="text-slate-400 text-sm font-bold leading-relaxed px-2">
-            {desc}
-          </p>
-          
-          {progress !== undefined && (
-            <div className="w-full py-4 space-y-3">
-              <div className="flex justify-between text-[10px] font-black text-slate-400 tracking-widest">
-                <span>QUEST EXPERIENCE</span>
-                <span className="text-teal-500">{progress}%</span>
-              </div>
-              <div className="h-3 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100 shadow-inner">
-                <div 
-                  className="h-full bg-gradient-to-r from-teal-400 to-cyan-500 shadow-md transition-all duration-1000"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
+              <span className="uppercase tracking-tight">{v}</span>
             </div>
-          )}
-
-          <div className="pt-6 space-y-3 w-full">
-            {variants.map((v: string) => (
-              <div key={v} className="flex items-center gap-3 text-[11px] font-bold text-slate-400 bg-slate-50/50 p-2.5 rounded-2xl border border-slate-50 transition-colors group-hover:bg-slate-50">
-                <div className={`p-1 rounded-full ${isCyan ? 'bg-cyan-100 text-cyan-600' : isOrange ? 'bg-orange-100 text-orange-600' : 'bg-teal-100 text-teal-600'}`}>
-                  <CheckCircle2 className="h-3 w-3" />
-                </div>
-                <span className="uppercase tracking-tight">{v}</span>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
+      </div>
 
-        <div className={`
-          mt-12 w-full py-5 rounded-full text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-500 flex items-center justify-center
-          border-b-4 border-slate-200 bg-slate-100 text-slate-400 group-hover:text-white group-hover:scale-[1.03]
-          ${isCyan ? 'group-hover:bg-cyan-500 group-hover:border-cyan-700 group-hover:shadow-lg group-hover:shadow-cyan-200' : ''}
-          ${isOrange ? 'group-hover:bg-orange-500 group-hover:border-orange-700 group-hover:shadow-lg group-hover:shadow-orange-200' : ''}
-          ${isTeal ? 'group-hover:bg-teal-500 group-hover:border-teal-700 group-hover:shadow-lg group-hover:shadow-teal-200' : ''}
-        `}>
-          {btnText}
-        </div>
-      </motion.div>
+      <div className={`
+        mt-12 w-full py-5 rounded-full text-[11px] font-black uppercase tracking-[0.25em] transition-all duration-500 flex items-center justify-center
+        border-b-4 border-slate-200 bg-slate-100 text-slate-400 group-hover:text-white group-hover:scale-[1.03]
+        ${isCyan ? 'group-hover:bg-cyan-500 group-hover:border-cyan-700 group-hover:shadow-lg group-hover:shadow-cyan-200' : ''}
+        ${isOrange ? 'group-hover:bg-orange-500 group-hover:border-orange-700 group-hover:shadow-lg group-hover:shadow-orange-200' : ''}
+        ${isTeal ? 'group-hover:bg-teal-500 group-hover:border-teal-700 group-hover:shadow-lg group-hover:shadow-teal-200' : ''}
+        ${isPurple ? 'group-hover:bg-purple-500 group-hover:border-purple-700 group-hover:shadow-lg group-hover:shadow-purple-200' : ''}
+      `}>
+        {btnText}
+      </div>
+    </motion.div>
+  )
+
+  if (external) {
+    return (
+      <a href={href} className="group block h-full">
+        {inner}
+      </a>
+    )
+  }
+
+  return (
+    <Link href={href} className="group block h-full">
+      {inner}
     </Link>
   )
 }

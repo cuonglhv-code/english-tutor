@@ -37,6 +37,9 @@ export const en = {
     cardVocabTitle: "Vocabulary",
     cardVocabDesc: "Master academic idioms using SRS logic and intelligent repetition algorithms.",
     cardVocabBtn: "Train Memory",
+    cardSpeakTitle: "Speaking",
+    cardSpeakDesc: "AI-powered speaking coach with real-time pronunciation feedback and fluency scoring.",
+    cardSpeakBtn: "Practice Speaking →",
   },
   writing101: {
     badge: "Academic Module",
