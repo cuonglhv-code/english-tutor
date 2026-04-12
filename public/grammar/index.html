@@ -1,0 +1,3709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrammarQuest - Learn English Grammar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --terracotta: #D97757;
+            --terracotta-dark: #C46847;
+            --amber: #E8A945;
+            --forest: #2D5A4A;
+            --forest-light: #3D7A5A;
+            --charcoal: #2C2C2C;
+            --grey: #6B6B6B;
+            --cream: #FAF7F2;
+            --sand: #F0EBE3;
+            --taupe: #E5DED4;
+            --coral: #E85D4C;
+            --sage: #8FAE8B;
+            --rose: #C9A8A0;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-ui: 'DM Sans', sans-serif;
+            --shadow-card: 0 4px 24px rgba(44, 44, 44, 0.08);
+            --shadow-hover: 0 8px 32px rgba(44, 44, 44, 0.12);
+            --shadow-button: 0 4px 12px rgba(217, 119, 87, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--sand) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-screen.hidden {
+            display: none;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: var(--space-2xl);
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-hover);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-lg);
+            background: linear-gradient(135deg, var(--terracotta), var(--amber));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-logo svg {
+            width: 48px;
+            height: 48px;
+            color: white;
+        }
+
+        .login-title {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            color: var(--charcoal);
+            margin-bottom: var(--space-sm);
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: var(--grey);
+            margin-bottom: var(--space-xl);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .input-group {
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: var(--space-sm);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px solid var(--taupe);
+            border-radius: 12px;
+            font-family: var(--font-ui);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--terracotta);
+        }
+
+        .btn {
+            padding: var(--space-md) var(--space-xl);
+            border-radius: 12px;
+            font-family: var(--font-ui);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--terracotta);
+            color: white;
+            box-shadow: var(--shadow-button);
+        }
+
+        .btn-primary:hover {
+            background: var(--terracotta-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--forest);
+            border: 2px solid var(--forest);
+        }
+
+        .btn-secondary:hover {
+            background: var(--forest);
+            color: white;
+        }
+
+        .login-error {
+            color: var(--coral);
+            font-size: 13px;
+            margin-top: var(--space-sm);
+            display: none;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        /* User Header */
+        .user-header {
+            background: white;
+            padding: var(--space-md) var(--space-xl);
+            border-bottom: 1px solid var(--taupe);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--terracotta), var(--amber));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-details h3 {
+            font-family: var(--font-ui);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .user-details p {
+            font-size: 13px;
+            color: var(--grey);
+        }
+
+        .user-xp {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--sand);
+            border-radius: 20px;
+        }
+
+        .user-xp svg {
+            width: 20px;
+            height: 20px;
+            color: var(--amber);
+        }
+
+        .user-xp span {
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .user-rank {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: linear-gradient(135deg, var(--amber), var(--terracotta));
+            border-radius: 20px;
+            color: white;
+        }
+
+        .user-rank svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .user-rank span {
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--sand);
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            color: var(--grey);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--taupe);
+            color: var(--charcoal);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--sand) 100%);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(250, 247, 242, 0.7) 0%, rgba(250, 247, 242, 0.95) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: var(--space-xl);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero-text {
+            max-width: 600px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: var(--sand);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 20px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--terracotta);
+            margin-bottom: var(--space-md);
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--charcoal);
+            line-height: 1.2;
+            margin-bottom: var(--space-sm);
+        }
+
+        .hero h1 span { color: var(--terracotta); }
+
+        .hero p {
+            font-size: 14px;
+            color: var(--grey);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-xl);
+        }
+
+        /* Milestone Banner */
+        .milestone-banner {
+            background: linear-gradient(135deg, var(--amber) 0%, var(--terracotta) 100%);
+            border-radius: 16px;
+            padding: var(--space-md) var(--space-lg);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            box-shadow: var(--shadow-card);
+        }
+
+        .milestone-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .milestone-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .milestone-icon svg { width: 24px; height: 24px; }
+
+        .milestone-text h4 {
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .milestone-text p { font-size: 12px; opacity: 0.9; }
+
+        .milestone-progress {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .milestone-bar {
+            width: 120px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .milestone-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .milestone-count {
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            background: var(--sand);
+            border-radius: 16px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xl);
+            box-shadow: var(--shadow-card);
+        }
+
+        .xp-container { flex: 1; }
+
+        .xp-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+            font-family: var(--font-ui);
+            font-size: 14px;
+        }
+
+        .xp-label { font-weight: 600; color: var(--charcoal); }
+        .xp-value { color: var(--terracotta); }
+
+        .xp-bar {
+            height: 12px;
+            background: var(--taupe);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--terracotta), var(--amber));
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .streak-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            background: white;
+            border-radius: 12px;
+        }
+
+        .streak-icon { width: 40px; height: 40px; }
+
+        .streak-count {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--amber);
+        }
+
+        .streak-label {
+            font-size: 11px;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .level-badge {
+            text-align: center;
+            padding: var(--space-md);
+            background: white;
+            border-radius: 12px;
+            min-width: 100px;
+        }
+
+        .level-badge .level {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--forest);
+        }
+
+        .level-badge .level-label {
+            font-size: 11px;
+            color: var(--grey);
+            text-transform: uppercase;
+        }
+
+        /* Level Tabs */
+        .level-tabs {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            border-bottom: 2px solid var(--taupe);
+            padding-bottom: var(--space-md);
+        }
+
+        .level-tab {
+            position: relative;
+            padding: var(--space-md) var(--space-lg);
+            font-family: var(--font-ui);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--grey);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .level-tab:hover { color: var(--charcoal); }
+
+        .level-tab.active { color: var(--terracotta); }
+
+        .level-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: calc(-1 * var(--space-md) - 2px);
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--terracotta);
+            border-radius: 2px;
+        }
+
+        .level-tab .tab-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: var(--space-sm);
+            vertical-align: middle;
+        }
+
+        /* Content Sections */
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        /* Topic Card */
+        .topic-card {
+            background: var(--sand);
+            border-radius: 16px;
+            padding: var(--space-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--terracotta);
+        }
+
+        .topic-card.completed {
+            background: linear-gradient(135deg, var(--sand) 0%, rgba(143, 174, 139, 0.2) 100%);
+        }
+
+        .topic-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-md);
+        }
+
+        .topic-icon {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .topic-icon svg { width: 24px; height: 24px; color: var(--terracotta); }
+
+        .topic-status {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 20px;
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-available { background: rgba(217, 119, 87, 0.1); color: var(--terracotta); }
+        .status-in-progress { background: rgba(232, 169, 69, 0.1); color: var(--amber); }
+        .status-completed { background: rgba(143, 174, 139, 0.2); color: var(--forest); }
+        .status-locked { background: rgba(107, 107, 107, 0.1); color: var(--grey); }
+
+        .topic-title {
+            font-family: var(--font-ui);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: var(--space-sm);
+        }
+
+        .topic-description {
+            font-size: 14px;
+            color: var(--grey);
+            margin-bottom: var(--space-md);
+        }
+
+        .topic-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--taupe);
+        }
+
+        .topic-lessons { font-size: 13px; color: var(--grey); }
+
+        .topic-xp {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--amber);
+        }
+
+        .topic-xp svg { width: 16px; height: 16px; }
+
+        /* Games Section */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--sand), var(--taupe));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--terracotta);
+            font-family: var(--font-heading);
+            font-size: 14px;
+        }
+
+        .game-content { padding: var(--space-lg); }
+
+        .game-title {
+            font-family: var(--font-ui);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: var(--space-sm);
+        }
+
+        .game-description {
+            font-size: 14px;
+            color: var(--grey);
+            margin-bottom: var(--space-md);
+        }
+
+        .game-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .game-difficulty { display: flex; gap: 4px; }
+
+        .difficulty-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--taupe);
+        }
+
+        .difficulty-dot.active { background: var(--terracotta); }
+
+        .game-players { font-size: 13px; color: var(--grey); }
+
+        .game-stats { margin-top: var(--space-sm); }
+
+        .game-stat { font-size: 12px; color: var(--grey); }
+        .game-stat span { font-weight: 600; color: var(--terracotta); }
+
+        /* Leaderboard */
+        .leaderboard-container {
+            background: white;
+            border-radius: 20px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-card);
+            margin-bottom: var(--space-xl);
+        }
+
+        .leaderboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+
+        .leaderboard-title {
+            font-family: var(--font-ui);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--charcoal);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .leaderboard-title svg { width: 24px; height: 24px; color: var(--amber); }
+
+        .leaderboard-tabs {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .leaderboard-tab {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--sand);
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--grey);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-tab.active {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--sand);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover { transform: translateX(4px); }
+
+        .leaderboard-item.top-3 {
+            background: linear-gradient(135deg, rgba(232, 169, 69, 0.1), rgba(217, 119, 87, 0.1));
+            border: 2px solid var(--amber);
+        }
+
+        .leaderboard-item.current-user {
+            background: rgba(45, 90, 74, 0.1);
+            border: 2px solid var(--forest);
+        }
+
+        .rank-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: white; }
+        .rank-2 { background: linear-gradient(135deg, #C0C0C0, #A0A0A0); color: white; }
+        .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); color: white; }
+        .rank-default { background: var(--taupe); color: var(--grey); }
+
+        .leaderboard-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--terracotta), var(--amber));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .leaderboard-info { flex: 1; }
+
+        .leaderboard-name {
+            font-family: var(--font-ui);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .leaderboard-level {
+            font-size: 12px;
+            color: var(--grey);
+        }
+
+        .leaderboard-score {
+            text-align: right;
+        }
+
+        .leaderboard-xp {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--terracotta);
+        }
+
+        .leaderboard-xp-label {
+            font-size: 11px;
+            color: var(--grey);
+        }
+
+        /* Progress Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 20px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-card);
+        }
+
+        .stats-overview { grid-column: span 8; }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: var(--space-lg);
+            background: var(--sand);
+            border-radius: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 12px;
+        }
+
+        .stat-icon svg { width: 24px; height: 24px; }
+
+        .stat-card .stat-value {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--charcoal);
+        }
+
+        .stat-card .stat-name {
+            font-size: 13px;
+            color: var(--grey);
+            margin-top: var(--space-sm);
+        }
+
+        /* Completion Section */
+        .completion-section { grid-column: span 12; margin-top: var(--space-lg); }
+
+        .completion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .completion-title {
+            font-family: var(--font-ui);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .completion-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .completion-category {
+            background: var(--sand);
+            border-radius: 16px;
+            padding: var(--space-lg);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-icon svg { width: 20px; height: 20px; color: var(--terracotta); }
+
+        .category-title {
+            font-family: var(--font-ui);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .category-progress { font-size: 12px; color: var(--grey); }
+        .category-progress span { color: var(--terracotta); font-weight: 600; }
+
+        .category-bar {
+            height: 8px;
+            background: var(--taupe);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: var(--space-md);
+        }
+
+        .category-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--terracotta), var(--amber));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Achievements */
+        .achievements-section { grid-column: span 4; }
+
+        .section-title {
+            font-family: var(--font-ui);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: var(--space-lg);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .achievement {
+            text-align: center;
+            padding: var(--space-md);
+            background: var(--sand);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .achievement:hover { transform: scale(1.05); }
+        .achievement.locked { opacity: 0.4; filter: grayscale(1); }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto var(--space-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .achievement-icon svg { width: 24px; height: 24px; }
+
+        .achievement-name {
+            font-size: 11px;
+            color: var(--grey);
+            font-weight: 500;
+        }
+
+        .milestones-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+
+        .milestone {
+            text-align: center;
+            padding: var(--space-md);
+            background: var(--sand);
+            border-radius: 12px;
+        }
+
+        .milestone.unlocked {
+            background: linear-gradient(135deg, var(--amber), var(--terracotta));
+            color: white;
+        }
+
+        .milestone.locked { opacity: 0.5; }
+
+        .milestone-number {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .milestone-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 44, 44, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: var(--space-xl);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal { transform: scale(1); }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+
+        .modal-title {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            color: var(--charcoal);
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sand);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover { background: var(--taupe); }
+        .modal-close svg { width: 20px; height: 20px; color: var(--charcoal); }
+
+        /* Practice Container */
+        .practice-container {
+            background: white;
+            border-radius: 24px;
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-card);
+        }
+
+        .practice-header { text-align: center; margin-bottom: var(--space-xl); }
+
+        .practice-level {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: rgba(217, 119, 87, 0.1);
+            border-radius: 20px;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--terracotta);
+            margin-bottom: var(--space-md);
+        }
+
+        .practice-question {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            color: var(--charcoal);
+            margin-bottom: var(--space-lg);
+        }
+
+        .practice-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .practice-option {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--sand);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-ui);
+            font-size: 16px;
+        }
+
+        .practice-option:hover {
+            border-color: var(--terracotta);
+            background: rgba(217, 119, 87, 0.05);
+        }
+
+        .practice-option.correct {
+            border-color: var(--sage);
+            background: rgba(143, 174, 139, 0.2);
+        }
+
+        .practice-option.incorrect {
+            border-color: var(--coral);
+            background: rgba(232, 93, 76, 0.1);
+        }
+
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .practice-option.correct .option-letter { background: var(--sage); color: white; }
+        .practice-option.incorrect .option-letter { background: var(--coral); color: white; }
+
+        .practice-feedback {
+            text-align: center;
+            padding: var(--space-lg);
+            border-radius: 12px;
+            margin-bottom: var(--space-lg);
+            display: none;
+        }
+
+        .practice-feedback.show { display: block; }
+        .feedback-correct { background: rgba(143, 174, 139, 0.2); color: var(--forest); }
+        .feedback-incorrect { background: rgba(232, 93, 76, 0.1); color: var(--coral); }
+
+        .feedback-title {
+            font-family: var(--font-ui);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .feedback-explanation { font-size: 14px; line-height: 1.6; }
+
+        .practice-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+        }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Game Modals */
+        .drag-game-container, .matching-container, .timed-container, .fill-blank-container {
+            padding: var(--space-lg);
+        }
+
+        .sentence-builder {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            min-height: 60px;
+            padding: var(--space-lg);
+            background: var(--sand);
+            border-radius: 12px;
+            margin-bottom: var(--space-lg);
+        }
+
+        .word-chip {
+            padding: var(--space-sm) var(--space-md);
+            background: white;
+            border: 2px solid var(--taupe);
+            border-radius: 8px;
+            font-family: var(--font-ui);
+            font-size: 16px;
+            cursor: grab;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .word-chip:hover { border-color: var(--terracotta); transform: translateY(-2px); }
+        .word-chip.dragging { opacity: 0.5; }
+        .word-chip.correct { border-color: var(--sage); background: rgba(143, 174, 139, 0.2); }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            padding: var(--space-lg);
+            background: white;
+            border-radius: 12px;
+            min-height: 80px;
+        }
+
+        .word-bank-title {
+            width: 100%;
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--grey);
+            margin-bottom: var(--space-sm);
+        }
+
+        .matching-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .matching-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .matching-item {
+            padding: var(--space-md) var(--space-lg);
+            background: var(--sand);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-family: var(--font-ui);
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .matching-item:hover { border-color: var(--terracotta); }
+        .matching-item.selected { border-color: var(--terracotta); background: rgba(217, 119, 87, 0.1); }
+        .matching-item.matched { border-color: var(--sage); background: rgba(143, 174, 139, 0.2); }
+
+        .timer-bar {
+            height: 8px;
+            background: var(--taupe);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: var(--space-lg);
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: var(--coral);
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+
+        .timer-fill.warning { background: var(--amber); }
+        .timer-fill.danger { background: var(--coral); }
+
+        .fill-blank-sentence {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            color: var(--charcoal);
+            text-align: center;
+            margin-bottom: var(--space-lg);
+            line-height: 1.8;
+        }
+
+        .fill-blank-input {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto var(--space-lg);
+            display: block;
+        }
+
+        .fill-input {
+            width: 100%;
+            padding: var(--space-md) var(--space-lg);
+            border: 2px solid var(--taupe);
+            border-radius: 12px;
+            font-family: var(--font-ui);
+            font-size: 18px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .fill-input:focus { outline: none; border-color: var(--terracotta); }
+        .fill-input.correct { border-color: var(--sage); background: rgba(143, 174, 139, 0.1); }
+        .fill-input.incorrect { border-color: var(--coral); background: rgba(232, 93, 76, 0.1); }
+
+        .score-display { text-align: center; margin-bottom: var(--space-lg); }
+
+        .score-value {
+            font-family: var(--font-heading);
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--terracotta);
+        }
+
+        .score-label { font-size: 14px; color: var(--grey); }
+
+        .game-result {
+            text-align: center;
+            padding: var(--space-xl);
+        }
+
+        .result-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-lg);
+            background: var(--sage);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-icon svg { width: 40px; height: 40px; color: white; }
+
+        .result-title {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            color: var(--charcoal);
+            margin-bottom: var(--space-sm);
+        }
+
+        .result-score {
+            font-size: 18px;
+            color: var(--grey);
+            margin-bottom: var(--space-lg);
+        }
+
+        .result-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: confetti-fall 3s ease-out forwards;
+            z-index: 2000;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-stats { display: none; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .stats-overview, .achievements-section, .completion-section { grid-column: span 1; }
+            .completion-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 24px; }
+            .user-header { flex-direction: column; gap: var(--space-md); padding: var(--space-md); }
+            .level-tabs { overflow-x: auto; white-space: nowrap; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .progress-section { flex-direction: column; }
+            .leaderboard-item { padding: var(--space-sm); }
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--taupe);
+            border-top-color: var(--terracotta);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-card">
+            <div class="login-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+            </div>
+            <h1 class="login-title">Welcome to GrammarQuest</h1>
+            <p class="login-subtitle">Enter your name to start learning English grammar</p>
+            <form class="login-form" id="login-form">
+                <div class="input-group">
+                    <label class="input-label" for="user-name">Your Name</label>
+                    <input type="text" id="user-name" class="input-field" placeholder="Enter your name" maxlength="20" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="login-btn">Start Learning</button>
+                <p class="login-error" id="login-error">Please enter your name</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Header -->
+    <header class="user-header" id="user-header" style="display: none;">
+        <div class="user-info">
+            <div class="user-avatar" id="user-avatar">A</div>
+            <div class="user-details">
+                <h3 id="header-user-name">User</h3>
+                <p>Learning English</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--space-md);">
+            <div class="user-xp">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                <span id="header-xp">0 XP</span>
+            </div>
+            <div class="user-rank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                </svg>
+                <span id="header-rank">#1</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    Learn English Grammar
+                </div>
+                <h1>Master <span>English Grammar</span> From Basic to Advanced</h1>
+                <p>Interactive lessons, fun games, and personalized practice to help you build confidence.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <div class="main-container" id="main-app" style="display: none;">
+        <!-- Milestone Banner -->
+        <div class="milestone-banner" id="milestone-banner">
+            <div class="milestone-info">
+                <div class="milestone-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                </div>
+                <div class="milestone-text">
+                    <h4 id="milestone-title">Next Milestone: 20 XP</h4>
+                    <p id="milestone-desc">Keep going! You're 0% there!</p>
+                </div>
+            </div>
+            <div class="milestone-progress">
+                <div class="milestone-bar">
+                    <div class="milestone-fill" id="milestone-fill" style="width: 0%;"></div>
+                </div>
+                <span class="milestone-count" id="milestone-count">0/20</span>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <div class="xp-container">
+                <div class="xp-info">
+                    <span class="xp-label">Level Progress</span>
+                    <span class="xp-value"><span id="current-xp">0</span> / <span id="max-xp">100</span> XP</span>
+                </div>
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xp-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="streak-container">
+                <svg class="streak-icon" viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="20" fill="#E8A945" opacity="0.2"/>
+                    <path d="M24 8C24 8 28 16 28 22C28 28 24 32 24 32C24 32 20 28 20 22C20 16 24 8 24 8Z" fill="#E8A945"/>
+                </svg>
+                <div>
+                    <div class="streak-count" id="streak-count">0</div>
+                    <div class="streak-label">Day Streak</div>
+                </div>
+            </div>
+            <div class="level-badge">
+                <div class="level" id="current-level">1</div>
+                <div class="level-label">Level</div>
+            </div>
+        </section>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard-container">
+            <div class="leaderboard-header">
+                <div class="leaderboard-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 21V19M12 21V17M16 21V13M6 21V15"/>
+                        <path d="M3 21H21"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Leaderboard
+                </div>
+                <div class="leaderboard-tabs">
+                    <button class="leaderboard-tab active" onclick="switchLeaderboard('all')">All Time</button>
+                    <button class="leaderboard-tab" onclick="switchLeaderboard('weekly')">This Week</button>
+                </div>
+            </div>
+            <div class="leaderboard-list" id="leaderboard-list">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+
+        <!-- Level Tabs -->
+        <nav class="level-tabs">
+            <button class="level-tab active" data-section="practices">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+                Practices
+            </button>
+            <button class="level-tab" data-section="games">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <circle cx="8" cy="12" r="2"/>
+                    <line x1="15" y1="10" x2="15" y2="14"/>
+                    <line x1="13" y1="12" x2="17" y2="12"/>
+                </svg>
+                Games
+            </button>
+            <button class="level-tab" data-section="progress">
+                <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                Progress
+            </button>
+        </nav>
+
+        <!-- Practices Section -->
+        <section class="content-section active" id="practices">
+            <div class="level-tabs" style="margin-bottom: var(--space-lg); border-bottom: none; padding-bottom: 0;">
+                <button class="level-tab active" data-level="basic">Basic (A1-A2)</button>
+                <button class="level-tab" data-level="intermediate">Intermediate (B1-B2)</button>
+                <button class="level-tab" data-level="advanced">Advanced (C1-C2)</button>
+            </div>
+            <div class="cards-grid" id="topics-container"></div>
+        </section>
+
+        <!-- Games Section -->
+        <section class="content-section" id="games">
+            <div class="games-grid">
+                <div class="game-card" onclick="openGame('drag-drop')">
+                    <div class="game-image">Sentence Builder</div>
+                    <div class="game-content">
+                        <div class="game-title">Sentence Builder</div>
+                        <div class="game-description">Drag and drop words to build correct sentences</div>
+                        <div class="game-meta">
+                            <div class="game-difficulty">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                            <div class="game-players">100 Questions</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card" onclick="openGame('matching')">
+                    <div class="game-image">Word Matching</div>
+                    <div class="game-content">
+                        <div class="game-title">Word Matching</div>
+                        <div class="game-description">Match synonyms, antonyms, and word pairs</div>
+                        <div class="game-meta">
+                            <div class="game-difficulty">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                            <div class="game-players">100 Questions</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card" onclick="openGame('timed')">
+                    <div class="game-image">Timed Challenge</div>
+                    <div class="game-content">
+                        <div class="game-title">Timed Challenge</div>
+                        <div class="game-description">Answer questions before time runs out</div>
+                        <div class="game-meta">
+                            <div class="game-difficulty">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                            </div>
+                            <div class="game-players">100 Questions</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card" onclick="openGame('fill-blank')">
+                    <div class="game-image">Fill in Blank</div>
+                    <div class="game-content">
+                        <div class="game-title">Fill in the Blank</div>
+                        <div class="game-description">Complete sentences with the correct words</div>
+                        <div class="game-meta">
+                            <div class="game-difficulty">
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot active"></span>
+                                <span class="difficulty-dot"></span>
+                            </div>
+                            <div class="game-players">100 Questions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="content-section" id="progress">
+            <div class="dashboard-grid">
+                <div class="dashboard-card stats-overview">
+                    <h3 class="section-title">Your Statistics</h3>
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#D97757" stroke-width="2">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value" id="total-xp">0</div>
+                            <div class="stat-name">Total XP</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#E8A945" stroke-width="2">
+                                    <polyline points="20,6 9,17 4,12"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value" id="completed-exercises">0</div>
+                            <div class="stat-name">Exercises Done</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#2D5A4A" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12,6 12,12 16,14"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value" id="games-played">0</div>
+                            <div class="stat-name">Games Played</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#8FAE8B" stroke-width="2">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                            </div>
+                            <div class="stat-value" id="current-rank">#-</div>
+                            <div class="stat-name">Leaderboard Rank</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-card achievements-section">
+                    <h3 class="section-title">Achievements</h3>
+                    <div class="achievements-grid" id="achievements-grid"></div>
+                    <h3 class="section-title" style="margin-top: var(--space-lg);">Milestones</h3>
+                    <div class="milestones-grid" id="milestones-grid"></div>
+                </div>
+            </div>
+
+            <!-- Completion Section -->
+            <div class="completion-section">
+                <h3 class="completion-title">Your Progress</h3>
+                <div class="completion-grid">
+                    <div class="completion-category">
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22V10"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="category-title">Basic Level</div>
+                                <div class="category-progress"><span id="basic-completed">0</span> / <span id="basic-total">50</span> completed</div>
+                            </div>
+                        </div>
+                        <div class="category-bar">
+                            <div class="category-fill" id="basic-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="completion-category">
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="category-title">Intermediate Level</div>
+                                <div class="category-progress"><span id="intermediate-completed">0</span> / <span id="intermediate-total">50</span> completed</div>
+                            </div>
+                        </div>
+                        <div class="category-bar">
+                            <div class="category-fill" id="intermediate-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="completion-category">
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="category-title">Advanced Level</div>
+                                <div class="category-progress"><span id="advanced-completed">0</span> / <span id="advanced-total">50</span> completed</div>
+                            </div>
+                        </div>
+                        <div class="category-bar">
+                            <div class="category-fill" id="advanced-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Practice Modal -->
+    <div class="modal-overlay" id="practice-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Practice</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="practice-container" id="practice-content"></div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div class="modal-overlay" id="game-modal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="game-modal-title">Game</h2>
+                <button class="modal-close" onclick="closeGameModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="game-content"></div>
+        </div>
+    </div>
+
+    <script src="./js/questionBank.js"></script>
+    <script src="./js/gameQuestions.js"></script>
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://wuejnsqetupivmidxylv.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1ZWpuc3FldHVwaXZtaWR4eWx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0NTM0MTMsImV4cCI6MjA4ODAyOTQxM30.GFk9w-9b7ILZ6ifIy5QX4GOGmfIcCpYKicTSUOEHPe0';
+
+        let supabase = null;
+        let currentUser = null;
+        let currentLevel = 'basic';
+        let currentXP = 0;
+        let userRank = 0;
+        let completedTopics = {};
+        let gamesPlayed = 0;
+        let localMode = false;
+
+        // Initialize Supabase
+        async function initSupabase() {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            await createTableIfNotExists();
+        }
+
+        // Create users table if not exists
+        async function createTableIfNotExists() {
+            try {
+                // Try to select from users table to check if it exists
+                const { data, error } = await supabase.from('users').select('id').limit(1);
+                if (error) {
+                    console.log('Users table may not exist. Please run the SQL schema in Supabase dashboard.');
+                    console.log('Error details:', error.message);
+                    localMode = true;
+                } else {
+                    console.log('Connected to Supabase successfully');
+                    localMode = false;
+                }
+            } catch (e) {
+                console.log('Supabase connection failed, using local mode');
+                console.log('Error details:', e.message);
+                localMode = true;
+            }
+        }
+
+        // Check for existing session
+        async function checkSession() {
+            const savedUser = localStorage.getItem('grammarquest_user');
+            if (savedUser) {
+                const userData = JSON.parse(savedUser);
+                currentUser = userData;
+                currentXP = userData.xp || 0;
+                completedTopics = userData.completedTopics || {};
+                gamesPlayed = userData.gamesPlayed || 0;
+                showMainApp();
+                await fetchLeaderboard();
+            }
+        }
+
+        // Login handler
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('user-name').value.trim();
+
+            if (!name) {
+                document.getElementById('login-error').classList.add('show');
+                return;
+            }
+
+            document.getElementById('login-error').classList.remove('show');
+            document.getElementById('login-btn').disabled = true;
+            document.getElementById('login-btn').textContent = 'Loading...';
+
+            try {
+                if (!localMode) {
+                    // Check if user exists by name
+                    let { data: existingUser, error } = await supabase
+                        .from('users')
+                        .select('*')
+                        .eq('name', name)
+                        .single();
+
+                    if (error && error.code === 'PGRST116') {
+                        // User doesn't exist, create new user
+                        const newUser = {
+                            name: name,
+                            xp: 0,
+                            completed_topics: {},
+                            games_played: 0,
+                            streak: 0,
+                            created_at: new Date().toISOString()
+                        };
+
+                        const { data, error: insertError } = await supabase
+                            .from('users')
+                            .insert([newUser])
+                            .select()
+                            .single();
+
+                        if (insertError) throw insertError;
+                        existingUser = data;
+                    } else if (error) {
+                        throw error;
+                    }
+
+                    currentUser = existingUser;
+                    currentXP = existingUser.xp || 0;
+                    completedTopics = existingUser.completed_topics || {};
+                    gamesPlayed = existingUser.games_played || 0;
+                } else {
+                    throw new Error('Using local mode');
+                }
+            } catch (error) {
+                console.log('Supabase unavailable or error, using local mode');
+                console.log('Error:', error.message);
+                // Create local user
+                currentUser = {
+                    id: 'local_' + Date.now(),
+                    name: name,
+                    xp: 0,
+                    completed_topics: {},
+                    games_played: 0,
+                    streak: 0
+                };
+                currentXP = 0;
+                completedTopics = {};
+                gamesPlayed = 0;
+            }
+
+            // Save to localStorage
+            localStorage.setItem('grammarquest_user', JSON.stringify(currentUser));
+
+            document.getElementById('login-btn').textContent = 'Success!';
+            setTimeout(() => {
+                showMainApp();
+                fetchLeaderboard();
+            }, 500);
+        });
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('grammarquest_user');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('user-header').style.display = 'none';
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('user-name').value = '';
+            document.getElementById('login-btn').disabled = false;
+            document.getElementById('login-btn').textContent = 'Start Learning';
+        }
+
+        // Show main app
+        function showMainApp() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('user-header').style.display = 'flex';
+            document.getElementById('main-app').style.display = 'block';
+
+            // Update user header
+            document.getElementById('user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('header-user-name').textContent = currentUser.name;
+            updateUI();
+            renderTopics('basic');
+            renderAchievements();
+            renderMilestones();
+        }
+
+        // Update UI with user data
+        function updateUI() {
+            document.getElementById('current-xp').textContent = currentXP;
+            document.getElementById('max-xp').textContent = Math.ceil((currentXP + 1) / 100) * 100;
+            document.getElementById('xp-fill').style.width = `${(currentXP % 100)}%`;
+            document.getElementById('total-xp').textContent = currentXP;
+            document.getElementById('header-xp').textContent = `${currentXP} XP`;
+            document.getElementById('streak-count').textContent = currentUser.streak || 0;
+            document.getElementById('current-level').textContent = Math.floor(currentXP / 100) + 1;
+            document.getElementById('completed-exercises').textContent = Object.keys(completedTopics).length;
+            document.getElementById('games-played').textContent = gamesPlayed;
+
+            updateMilestoneBanner();
+            updateCompletionProgress();
+        }
+
+        // Fetch leaderboard
+        async function fetchLeaderboard() {
+            const container = document.getElementById('leaderboard-list');
+            container.innerHTML = '<div class="loading-spinner"></div>';
+
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .order('xp', { ascending: false })
+                    .limit(10);
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    // Create demo leaderboard for local mode
+                    renderLocalLeaderboard();
+                    return;
+                }
+
+                userRank = data.findIndex(u => u.id === currentUser.id) + 1;
+                document.getElementById('current-rank').textContent = `#${userRank || '-'}`;
+                document.getElementById('header-rank').textContent = `#${userRank || '-'}`;
+
+                container.innerHTML = data.map((user, index) => {
+                    const isCurrentUser = user.id === currentUser.id;
+                    const rankClass = index < 3 ? `rank-${index + 1}` : 'rank-default';
+                    const itemClass = `leaderboard-item ${index < 3 ? 'top-3' : ''} ${isCurrentUser ? 'current-user' : ''}`;
+
+                    return `
+                        <div class="${itemClass}">
+                            <div class="rank-badge ${rankClass}">${index + 1}</div>
+                            <div class="leaderboard-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                            <div class="leaderboard-info">
+                                <div class="leaderboard-name">${user.name}${isCurrentUser ? ' (You)' : ''}</div>
+                                <div class="leaderboard-level">Level ${Math.floor((user.xp || 0) / 100) + 1}</div>
+                            </div>
+                            <div class="leaderboard-score">
+                                <div class="leaderboard-xp">${user.xp || 0}</div>
+                                <div class="leaderboard-xp-label">XP</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Leaderboard error:', error);
+                renderLocalLeaderboard();
+            }
+        }
+
+        // Render local leaderboard (when offline)
+        function renderLocalLeaderboard() {
+            const container = document.getElementById('leaderboard-list');
+            const mockLeaderboard = [
+                { name: 'Emma Wilson', xp: 1250, level: 13 },
+                { name: 'James Chen', xp: 980, level: 10 },
+                { name: 'Sofia Rodriguez', xp: 750, level: 8 },
+                { name: currentUser.name, xp: currentXP, level: Math.floor(currentXP / 100) + 1, isCurrentUser: true },
+                { name: 'Liam Johnson', xp: 420, level: 5 },
+                { name: 'Mia Garcia', xp: 380, level: 4 },
+                { name: 'Noah Smith', xp: 290, level: 3 },
+                { name: 'Olivia Brown', xp: 180, level: 2 },
+                { name: 'Ethan Davis', xp: 95, level: 1 },
+                { name: 'Ava Martinez', xp: 45, level: 1 }
+            ].sort((a, b) => b.xp - a.xp);
+
+            userRank = mockLeaderboard.findIndex(u => u.isCurrentUser) + 1;
+            document.getElementById('current-rank').textContent = `#${userRank}`;
+            document.getElementById('header-rank').textContent = `#${userRank}`;
+
+            container.innerHTML = mockLeaderboard.slice(0, 10).map((user, index) => {
+                const rankClass = index < 3 ? `rank-${index + 1}` : 'rank-default';
+                const itemClass = `leaderboard-item ${index < 3 ? 'top-3' : ''} ${user.isCurrentUser ? 'current-user' : ''}`;
+
+                return `
+                    <div class="${itemClass}">
+                        <div class="rank-badge ${rankClass}">${index + 1}</div>
+                        <div class="leaderboard-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${user.name}${user.isCurrentUser ? ' (You)' : ''}</div>
+                            <div class="leaderboard-level">Level ${user.level}</div>
+                        </div>
+                        <div class="leaderboard-score">
+                            <div class="leaderboard-xp">${user.xp}</div>
+                            <div class="leaderboard-xp-label">XP</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function switchLeaderboard(type) {
+            document.querySelectorAll('.leaderboard-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            fetchLeaderboard();
+        }
+
+        // Update XP in database
+        async function updateXP(amount) {
+            currentXP += amount;
+
+            try {
+                const { error } = await supabase
+                    .from('users')
+                    .update({ xp: currentXP })
+                    .eq('id', currentUser.id);
+
+                if (error) throw error;
+            } catch (error) {
+                console.log('XP update saved locally');
+            }
+
+            // Update local storage
+            currentUser.xp = currentXP;
+            localStorage.setItem('grammarquest_user', JSON.stringify(currentUser));
+
+            updateUI();
+            fetchLeaderboard();
+        }
+
+        // Update completed topics
+        async function markTopicCompleted(topicId) {
+            completedTopics[topicId] = true;
+            currentUser.completed_topics = completedTopics;
+            localStorage.setItem('grammarquest_user', JSON.stringify(currentUser));
+
+            try {
+                await supabase
+                    .from('users')
+                    .update({ completed_topics: completedTopics })
+                    .eq('id', currentUser.id);
+            } catch (error) {
+                console.log('Topic progress saved locally');
+            }
+
+            updateCompletionProgress();
+        }
+
+        // Update games played
+        async function incrementGamesPlayed() {
+            gamesPlayed++;
+            currentUser.games_played = gamesPlayed;
+            localStorage.setItem('grammarquest_user', JSON.stringify(currentUser));
+
+            try {
+                await supabase
+                    .from('users')
+                    .update({ games_played: gamesPlayed })
+                    .eq('id', currentUser.id);
+            } catch (error) {
+                console.log('Games played saved locally');
+            }
+        }
+
+        // Milestone banner
+        function updateMilestoneBanner() {
+            const currentMilestone = Math.floor(currentXP / 20) * 20;
+            const nextMilestone = currentMilestone + 20;
+            const progress = ((currentXP - currentMilestone) / 20) * 100;
+
+            document.getElementById('milestone-title').textContent = `Next Milestone: ${nextMilestone} XP`;
+            document.getElementById('milestone-desc').textContent = progress > 0 ? `Keep going! You're ${Math.round(progress)}% there!` : 'New milestone reached!';
+            document.getElementById('milestone-fill').style.width = `${Math.max(0, Math.min(100, progress))}%`;
+            document.getElementById('milestone-count').textContent = `${currentXP}/${nextMilestone}`;
+        }
+
+        // Topics
+        function renderTopics(level) {
+            const container = document.getElementById('topics-container');
+            const topics = {
+                basic: [
+                    { id: 1, title: 'Nouns & Articles', description: 'Learn when to use a, an, and the', lessons: 10, xp: 80, status: 'in-progress' },
+                    { id: 2, title: 'Subject-Verb Agreement', description: 'Match subjects with correct verbs', lessons: 10, xp: 80, status: 'available' },
+                    { id: 3, title: 'Present Simple Tense', description: 'Describe habits and daily routines', lessons: 10, xp: 80, status: 'available' },
+                    { id: 4, title: 'Basic Adjectives', description: 'Describe people and things', lessons: 10, xp: 80, status: 'available' },
+                    { id: 5, title: 'Question Words', description: 'Who, what, where, when, why, how', lessons: 10, xp: 80, status: 'available' },
+                ],
+                intermediate: [
+                    { id: 6, title: 'Past & Future Tenses', description: 'Talk about the past and plans', lessons: 12, xp: 100, status: 'available' },
+                    { id: 7, title: 'Modals', description: 'Can, should, must, would', lessons: 10, xp: 80, status: 'locked' },
+                    { id: 8, title: 'Comparatives & Superlatives', description: 'Compare things with -er and -est', lessons: 10, xp: 80, status: 'locked' },
+                    { id: 9, title: 'Passive Voice', description: 'When the subject receives the action', lessons: 10, xp: 80, status: 'locked' },
+                ],
+                advanced: [
+                    { id: 10, title: 'Perfect Tenses', description: 'Present, past, and future perfect', lessons: 14, xp: 100, status: 'locked' },
+                    { id: 11, title: 'Complex Conditionals', description: 'All conditional sentence types', lessons: 10, xp: 80, status: 'locked' },
+                    { id: 12, title: 'Subjunctive Mood', description: 'Express wishes and hypotheticals', lessons: 10, xp: 80, status: 'locked' },
+                ]
+            }[level] || [];
+
+            container.innerHTML = topics.map(topic => {
+                const status = completedTopics[topic.id] ? 'completed' : topic.status;
+                return `
+                    <div class="topic-card ${status}" onclick="${status !== 'locked' ? `openTopic(${topic.id}, '${level}')` : ''}">
+                        <div class="topic-header">
+                            <div class="topic-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    ${status === 'completed' ? '<polyline points="20,6 9,17 4,12"/>' : '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'}
+                                </svg>
+                            </div>
+                            <span class="topic-status status-${status}">
+                                ${status === 'completed' ? 'Completed' : status === 'in-progress' ? 'In Progress' : status === 'locked' ? 'Locked' : 'Available'}
+                            </span>
+                        </div>
+                        <h3 class="topic-title">${topic.title}</h3>
+                        <p class="topic-description">${topic.description}</p>
+                        <div class="topic-meta">
+                            <span class="topic-lessons">${topic.lessons} questions</span>
+                            <span class="topic-xp">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                                ${topic.xp} XP
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Open topic practice
+        function openTopic(id, level) {
+            const questions = questionBank[level] || [];
+            if (questions.length === 0) {
+                alert('No questions available for this level.');
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            const question = questions[randomIndex];
+
+            document.getElementById('modal-title').textContent = question.topic || 'Grammar Practice';
+            document.getElementById('practice-content').innerHTML = `
+                <div class="practice-header">
+                    <span class="practice-level">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                        +${level === 'basic' ? '10' : level === 'intermediate' ? '20' : '30'} XP
+                    </span>
+                    <h2 class="practice-question">${question.question}</h2>
+                </div>
+                <div class="practice-options">
+                    ${question.options.map((opt, i) => `
+                        <div class="practice-option" onclick="selectOption(this, ${i}, ${question.correct}, ${id}, '${level}')">
+                            <span class="option-letter">${String.fromCharCode(65 + i)}</span>
+                            <span>${opt}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="practice-feedback" id="feedback">
+                    <div class="feedback-title"></div>
+                    <div class="feedback-explanation">${question.explanation}</div>
+                </div>
+                <div class="practice-actions">
+                    <button class="btn btn-primary" id="next-btn" disabled onclick="nextQuestion('${level}')">Next Question</button>
+                </div>
+            `;
+            document.getElementById('practice-modal').classList.add('show');
+        }
+
+        function selectOption(element, index, correctIndex, topicId, level) {
+            const options = document.querySelectorAll('.practice-option');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            setTimeout(() => {
+                if (index === correctIndex) {
+                    element.classList.add('correct');
+                    showFeedback(true);
+                    updateXP(level === 'basic' ? 10 : level === 'intermediate' ? 20 : 30);
+                    markTopicCompleted(topicId);
+                    createConfetti();
+                } else {
+                    element.classList.add('incorrect');
+                    options[correctIndex].classList.add('correct');
+                    showFeedback(false);
+                }
+                document.getElementById('next-btn').disabled = false;
+            }, 300);
+        }
+
+        function showFeedback(isCorrect) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = `practice-feedback show feedback-${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.querySelector('.feedback-title').textContent = isCorrect ? 'Correct! Great job!' : 'Not quite right';
+        }
+
+        function nextQuestion(level) {
+            const topics = { basic: 1, intermediate: 6, advanced: 10 };
+            const id = topics[level] + Math.floor(Math.random() * 5);
+            openTopic(id, level);
+        }
+
+        function closeModal() {
+            document.getElementById('practice-modal').classList.remove('show');
+        }
+
+        // Games
+        function openGame(gameType) {
+            currentGame = gameType;
+            currentQuestionIndex = 0;
+            gameScore = 0;
+            gameQuestions = getRandomQuestions(gameType, 10);
+
+            if (gameQuestions.length === 0) {
+                alert('No questions available for this game.');
+                return;
+            }
+
+            const titles = {
+                'drag-drop': 'Sentence Builder',
+                'matching': 'Word Matching',
+                'timed': 'Timed Challenge',
+                'fill-blank': 'Fill in the Blank'
+            };
+
+            document.getElementById('game-modal-title').textContent = titles[gameType] || 'Game';
+
+            switch(gameType) {
+                case 'drag-drop': loadDragDropQuestion(); break;
+                case 'matching': loadMatchingQuestion(); break;
+                case 'timed': loadTimedQuestion(); break;
+                case 'fill-blank': loadFillBlankQuestion(); break;
+            }
+
+            document.getElementById('game-modal').classList.add('show');
+        }
+
+        let currentGame = null;
+        let gameQuestions = [];
+        let currentQuestionIndex = 0;
+        let gameScore = 0;
+        let timerInterval = null;
+        let timeLeft = 15;
+        let selectedMatch = null;
+
+        function loadDragDropQuestion() {
+            const question = gameQuestions[currentQuestionIndex];
+            const shuffled = [...question.words].sort(() => Math.random() - 0.5);
+
+            document.getElementById('game-content').innerHTML = `
+                <div class="drag-game-container">
+                    <div class="score-display">
+                        <div class="score-value">${gameScore}</div>
+                        <div class="score-label">Question ${currentQuestionIndex + 1}/${gameQuestions.length}</div>
+                    </div>
+                    ${question.hint ? `<p style="margin-bottom: var(--space-md); color: var(--amber); font-size: 14px;">Hint: ${question.hint}</p>` : ''}
+                    <div class="sentence-builder" id="sentence-builder"></div>
+                    <div class="word-bank">
+                        <div class="word-bank-title">Word Bank</div>
+                        <div id="word-bank-container">
+                            ${shuffled.map((word, i) => `<div class="word-chip" draggable="true" data-index="${i}" data-word="${word}">${word}</div>`).join('')}
+                        </div>
+                    </div>
+                    <div style="margin-top: var(--space-lg); text-align: center;">
+                        <button class="btn btn-primary" onclick="checkDragDrop()">Check Answer</button>
+                    </div>
+                    <div class="practice-feedback" id="game-feedback"><div class="feedback-title"></div></div>
+                </div>
+            `;
+            setupDragAndDrop();
+        }
+
+        function setupDragAndDrop() {
+            const chips = document.querySelectorAll('.word-chip');
+            const builder = document.getElementById('sentence-builder');
+
+            chips.forEach(chip => {
+                chip.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', chip.dataset.index);
+                    chip.classList.add('dragging');
+                });
+                chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+            });
+
+            [builder, document.getElementById('word-bank-container')].forEach(container => {
+                container.addEventListener('dragover', (e) => e.preventDefault());
+                container.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const chip = document.querySelector(`.word-chip[data-index="${e.dataTransfer.getData('text/plain')}"]`);
+                    container.appendChild(chip);
+                });
+            });
+        }
+
+        function checkDragDrop() {
+            const builder = document.getElementById('sentence-builder');
+            const chips = builder.querySelectorAll('.word-chip');
+            const userSentence = Array.from(chips).map(c => c.dataset.word);
+            const correct = gameQuestions[currentQuestionIndex].words;
+            const feedback = document.getElementById('game-feedback');
+
+            feedback.classList.add('show');
+            if (JSON.stringify(userSentence) === JSON.stringify(correct)) {
+                feedback.className = 'practice-feedback show feedback-correct';
+                feedback.querySelector('.feedback-title').textContent = 'Perfect! +10 XP';
+                updateXP(10);
+                gameScore += 10;
+                createConfetti();
+                chips.forEach(c => c.classList.add('correct'));
+            } else {
+                feedback.className = 'practice-feedback show feedback-incorrect';
+                feedback.querySelector('.feedback-title').textContent = 'Not quite right.';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < gameQuestions.length) loadDragDropQuestion();
+                else { incrementGamesPlayed(); showGameResult(); }
+            }, 1500);
+        }
+
+        function loadMatchingQuestion() {
+            const pairs = getRandomQuestions('matching', 5);
+            const leftItems = pairs.map(p => ({ text: p.pair[0], pairId: p.id }));
+            const rightItems = pairs.map(p => ({ text: p.pair[1], pairId: p.id })).sort(() => Math.random() - 0.5);
+            selectedMatch = null;
+
+            document.getElementById('game-content').innerHTML = `
+                <div class="matching-container">
+                    <div class="score-display">
+                        <div class="score-value">${gameScore}</div>
+                        <div class="score-label">Matches: <span id="match-count">0</span>/5</div>
+                    </div>
+                    <div class="matching-grid">
+                        <div class="matching-column">
+                            ${leftItems.map((item, i) => `<div class="matching-item" data-pair-id="${item.pairId}" onclick="selectMatch(this, 'left', ${JSON.stringify(pairs).length})">${item.text}</div>`).join('')}
+                        </div>
+                        <div class="matching-column">
+                            ${rightItems.map((item, i) => `<div class="matching-item" data-pair-id="${item.pairId}" onclick="selectMatch(this, 'right', ${pairs.length})">${item.text}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectMatch(element, side, totalPairs) {
+            if (element.classList.contains('matched')) return;
+
+            if (!selectedMatch) {
+                selectedMatch = { element, side };
+                element.classList.add('selected');
+            } else {
+                if (selectedMatch.side === side) {
+                    selectedMatch.element.classList.remove('selected');
+                    selectedMatch = { element, side };
+                    element.classList.add('selected');
+                } else {
+                    if (selectedMatch.element.dataset.pairId === element.dataset.pairId) {
+                        selectedMatch.element.classList.remove('selected');
+                        selectedMatch.element.classList.add('matched');
+                        element.classList.add('matched');
+                        gameScore++;
+                        document.getElementById('match-count').textContent = gameScore;
+
+                        if (gameScore >= totalPairs) {
+                            updateXP(15);
+                            incrementGamesPlayed();
+                            createConfetti();
+                            setTimeout(() => showGameResult(), 500);
+                        }
+                    } else {
+                        selectedMatch.element.classList.remove('selected');
+                    }
+                    selectedMatch = null;
+                }
+            }
+        }
+
+        function loadTimedQuestion() {
+            const question = gameQuestions[currentQuestionIndex];
+            timeLeft = 15;
+
+            document.getElementById('game-content').innerHTML = `
+                <div class="timed-container">
+                    <div class="score-display">
+                        <div class="score-value">${gameScore}</div>
+                        <div class="score-label">Question ${currentQuestionIndex + 1}/${gameQuestions.length}</div>
+                    </div>
+                    <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width: 100%;"></div></div>
+                    <h3 class="practice-question" style="text-align: center; margin-bottom: var(--space-lg);">${question.question}</h3>
+                    <div class="practice-options">
+                        ${question.options.map((opt, i) => `<div class="practice-option" onclick="selectTimedAnswer(this, ${i}, ${question.correct})">${opt}</div>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                const percent = (timeLeft / 15) * 100;
+                const timerFill = document.getElementById('timer-fill');
+                timerFill.style.width = `${percent}%`;
+                timerFill.className = 'timer-fill' + (percent < 30 ? ' danger' : percent < 50 ? ' warning' : '');
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeOutTimed();
+                }
+            }, 100);
+        }
+
+        function selectTimedAnswer(element, index, correctIndex) {
+            clearInterval(timerInterval);
+            const options = document.querySelectorAll('.practice-option');
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (index === correctIndex) {
+                element.classList.add('correct');
+                gameScore += Math.ceil(timeLeft / 3);
+                updateXP(5);
+            } else {
+                element.classList.add('incorrect');
+                options[correctIndex].classList.add('correct');
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < gameQuestions.length) loadTimedQuestion();
+                else { incrementGamesPlayed(); showGameResult(); }
+            }, 1000);
+        }
+
+        function timeOutTimed() {
+            const options = document.querySelectorAll('.practice-option');
+            options.forEach(opt => { opt.style.pointerEvents = 'none'; opt.classList.add('incorrect'); });
+            options[gameQuestions[currentQuestionIndex].correct].classList.add('correct');
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < gameQuestions.length) loadTimedQuestion();
+                else { incrementGamesPlayed(); showGameResult(); }
+            }, 1000);
+        }
+
+        function loadFillBlankQuestion() {
+            const question = gameQuestions[currentQuestionIndex];
+            const sentence = question.sentence.replace('___', '<span style="border-bottom: 2px solid var(--terracotta); padding: 0 8px;">_____</span>');
+
+            document.getElementById('game-content').innerHTML = `
+                <div class="fill-blank-container">
+                    <div class="score-display">
+                        <div class="score-value">${gameScore}</div>
+                        <div class="score-label">Question ${currentQuestionIndex + 1}/${gameQuestions.length}</div>
+                    </div>
+                    <div class="fill-blank-sentence">${sentence}</div>
+                    ${question.hint ? `<p style="text-align: center; margin-bottom: var(--space-md); color: var(--amber); font-size: 14px;">Hint: ${question.hint}</p>` : ''}
+                    <div class="fill-blank-input">
+                        <input type="text" class="fill-input" id="fill-answer" placeholder="Type your answer..." onkeypress="if(event.key === 'Enter') checkFillBlank()">
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="checkFillBlank()">Check Answer</button>
+                    </div>
+                    <div class="practice-feedback" id="fill-feedback"><div class="feedback-title"></div></div>
+                </div>
+            `;
+            document.getElementById('fill-answer').focus();
+        }
+
+        function checkFillBlank() {
+            const input = document.getElementById('fill-answer');
+            const userAnswer = input.value.trim().toLowerCase();
+            const correctAnswer = gameQuestions[currentQuestionIndex].answer.toLowerCase();
+            const feedback = document.getElementById('fill-feedback');
+
+            if (userAnswer === correctAnswer) {
+                input.classList.add('correct');
+                feedback.className = 'practice-feedback show feedback-correct';
+                feedback.querySelector('.feedback-title').textContent = 'Correct! +10 XP';
+                updateXP(10);
+                gameScore += 10;
+                createConfetti();
+            } else {
+                input.classList.add('incorrect');
+                feedback.className = 'practice-feedback show feedback-incorrect';
+                feedback.querySelector('.feedback-title').textContent = `Not quite! Answer: "${gameQuestions[currentQuestionIndex].answer}"`;
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < gameQuestions.length) loadFillBlankQuestion();
+                else { incrementGamesPlayed(); showGameResult(); }
+            }, 2000);
+        }
+
+        function showGameResult() {
+            if (timerInterval) clearInterval(timerInterval);
+            document.getElementById('game-content').innerHTML = `
+                <div class="game-result">
+                    <div class="result-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                    </div>
+                    <h2 class="result-title">Game Complete!</h2>
+                    <p class="result-score">You scored <strong>${gameScore}</strong> points!</p>
+                    <div class="result-actions">
+                        <button class="btn btn-secondary" onclick="closeGameModal()">Close</button>
+                        <button class="btn btn-primary" onclick="openGame('${currentGame}')">Play Again</button>
+                    </div>
+                </div>
+            `;
+            updateUI();
+            fetchLeaderboard();
+        }
+
+        function closeGameModal() {
+            if (timerInterval) clearInterval(timerInterval);
+            document.getElementById('game-modal').classList.remove('show');
+            currentGame = null;
+        }
+
+        // Achievements and Milestones
+        function renderAchievements() {
+            const container = document.getElementById('achievements-grid');
+            const achievements = [
+                { name: 'First Steps', icon: 'M12 22V10M12 10c0-4 3-7 7-7-1 4-4 7-7 7M12 10c0-4-3-7-7-7 1 4 4 7 7 7', unlocked: currentXP >= 10 },
+                { name: 'Week Warrior', icon: 'M12 22c-4 0-8-2-8-8 0-4 4-8 8-12 4 4 8 8 8 12 0 6-4 8-8 8z', unlocked: currentXP >= 100 },
+                { name: 'Grammar Guru', icon: 'M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z', unlocked: currentXP >= 250 },
+                { name: 'Speed Demon', icon: 'M13 2L3 14h9l-1 8 10-12h-9l1-8z', unlocked: currentXP >= 500 },
+                { name: 'Perfect Score', icon: 'M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z', unlocked: currentXP >= 1000 },
+                { name: 'Master', icon: 'M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z', unlocked: currentXP >= 2000 },
+            ];
+
+            container.innerHTML = achievements.map(ach => `
+                <div class="achievement ${ach.unlocked ? '' : 'locked'}" title="${ach.name}">
+                    <div class="achievement-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="${ach.unlocked ? '#D97757' : '#6B6B6B'}" stroke-width="2">${ach.icon}</svg>
+                    </div>
+                    <div class="achievement-name">${ach.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderMilestones() {
+            const container = document.getElementById('milestones-grid');
+            const milestones = [20, 40, 60, 80, 100];
+
+            container.innerHTML = milestones.map(ms => `
+                <div class="milestone ${currentXP >= ms ? 'unlocked' : 'locked'}">
+                    <div class="milestone-number">${ms}</div>
+                    <div class="milestone-label">XP</div>
+                </div>
+            `).join('');
+        }
+
+        function updateCompletionProgress() {
+            const totalQuestions = 150;
+            const completed = Object.keys(completedTopics).length;
+            const percent = (completed / 50) * 100;
+
+            document.getElementById('basic-completed').textContent = Math.min(completed, 50);
+            document.getElementById('basic-fill').style.width = `${Math.min(percent, 100)}%`;
+            document.getElementById('intermediate-completed').textContent = Math.max(0, Math.min(completed - 5, 50));
+            document.getElementById('advanced-completed').textContent = Math.max(0, completed - 10);
+        }
+
+        // Confetti
+        function createConfetti() {
+            const colors = ['#D97757', '#E8A945', '#2D5A4A', '#8FAE8B', '#C9A8A0'];
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Event listeners
+        document.querySelectorAll('.level-tab[data-section]').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.level-tab[data-section]').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(tab.dataset.section).classList.add('active');
+                if (tab.dataset.section === 'progress') {
+                    document.getElementById('games-played').textContent = gamesPlayed;
+                }
+            });
+        });
+
+        document.querySelectorAll('#practices .level-tab[data-level]').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('#practices .level-tab[data-level]').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentLevel = tab.dataset.level;
+                renderTopics(currentLevel);
+            });
+        });
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('show');
+                    if (timerInterval) clearInterval(timerInterval);
+                }
+            });
+        });
+
+        // Initialize
+        initSupabase().then(() => {
+            checkSession();
+        });
+    </script>
+
+<script>
+/**
+ * Iframe 元素高亮注入脚本
+ * 需要在目标网站中引入此脚本来支持跨域 iframe 高亮功能
+ *
+ * 使用方法：
+ * 1. 将此脚本添加到目标网站的 HTML 中
+ * 2. 或通过浏览器扩展、用户脚本等方式注入
+ */
+
+(function () {
+  "use strict";
+
+  // 检查是否在 iframe 中
+  if (window.self === window.top) {
+    return; // 不在 iframe 中，不执行
+  }
+
+  // 检查是否已经初始化过
+  if (window.__iframeHighlightInitialized) {
+    return;
+  }
+  window.__iframeHighlightInitialized = true;
+  console.log("Iframe 高亮脚本已加载");
+
+  // 创建高亮覆盖层
+  var overlay = document.createElement("div");
+  overlay.id = "iframe-highlight-overlay";
+  overlay.style.cssText = "\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100vw;\n    height: 100vh;\n    pointer-events: none;\n    z-index: 999999;\n    overflow: hidden;\n  ";
+
+  // 创建悬停高亮框（虚线边框）
+  var highlightBox = document.createElement("div");
+  highlightBox.id = "iframe-highlight-box";
+  highlightBox.style.cssText = "\n    position: absolute;\n    border: 2px dashed #007AFF;\n    background: rgba(0, 122, 255, 0.08);\n    pointer-events: none;\n    display: none;\n    transition: all 0.1s ease;\n    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);\n    border-radius: 2px;\n  ";
+
+  // 创建选中节点的常驻高亮框（实线边框）
+  var selectedBox = document.createElement("div");
+  selectedBox.id = "iframe-selected-box";
+  selectedBox.style.cssText = "\n    position: absolute;\n    border: 2px solid #007AFF;\n    pointer-events: none;\n    display: none;\n    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 0 8px rgba(255, 107, 53, 0.4);\n    border-radius: 2px;\n    z-index: 1000000;\n  ";
+
+  // 创建悬停标签显示
+  var tagLabel = document.createElement("div");
+  tagLabel.id = "iframe-tag-label";
+  tagLabel.style.cssText = "\n    position: absolute;\n    background: #007AFF;\n    color: white;\n    padding: 2px 6px;\n    font-size: 11px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n    border-radius: 2px;\n    pointer-events: none;\n    display: none;\n    white-space: nowrap;\n    z-index: 1000001;\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);\n    font-weight: 500;\n  ";
+
+  // 创建选中节点标签
+  var selectedLabel = document.createElement("div");
+  selectedLabel.id = "iframe-selected-label";
+  selectedLabel.style.cssText = "\n    position: absolute;\n    background: #007AFF;\n    color: white;\n    padding: 3px 8px;\n    font-size: 11px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n    border-radius: 3px;\n    pointer-events: none;\n    display: none;\n    white-space: nowrap;\n    z-index: 1000002;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);\n    font-weight: 600;\n  ";
+  overlay.appendChild(highlightBox);
+  overlay.appendChild(selectedBox);
+  overlay.appendChild(tagLabel);
+  overlay.appendChild(selectedLabel);
+  document.body.appendChild(overlay);
+
+  // 存储当前选中的元素
+  var selectedElement = null;
+  var highlightEnabled = false;
+
+  // 更新选中元素的高亮显示
+  function updateSelectedHighlight(element) {
+    console.log("updateSelectedHighlight called with:", element);
+    if (!element) {
+      selectedBox.style.display = "none";
+      selectedLabel.style.display = "none";
+      selectedElement = null;
+      console.log("Cleared selected highlight");
+      return;
+    }
+    selectedElement = element;
+    var rect = element.getBoundingClientRect();
+    console.log("Selected element rect:", rect);
+
+    // 更新选中高亮框位置
+    selectedBox.style.display = "block";
+    selectedBox.style.left = "".concat(rect.left - 2, "px");
+    selectedBox.style.top = "".concat(rect.top - 2, "px");
+    selectedBox.style.width = "".concat(rect.width + 4, "px");
+    selectedBox.style.height = "".concat(rect.height + 4, "px");
+
+    // 更新选中标签位置和内容
+    selectedLabel.style.display = "block";
+    selectedLabel.textContent = "\u2713 <".concat(element.tagName.toLowerCase(), ">");
+
+    // 计算标签位置，确保不超出视窗
+    var labelTop = rect.top - 28;
+    var labelLeft = rect.left;
+
+    // 如果标签会超出顶部，显示在元素下方
+    if (labelTop < 5) {
+      labelTop = rect.bottom + 5;
+    }
+
+    // 如果标签会超出右侧，向左调整
+    var labelWidth = selectedLabel.offsetWidth || 100; // 预估宽度
+    if (labelLeft + labelWidth > window.innerWidth - 10) {
+      labelLeft = window.innerWidth - labelWidth - 10;
+    }
+    selectedLabel.style.left = "".concat(Math.max(5, labelLeft), "px");
+    selectedLabel.style.top = "".concat(labelTop, "px");
+    console.log("Selected highlight positioned at:", {
+      left: selectedBox.style.left,
+      top: selectedBox.style.top,
+      width: selectedBox.style.width,
+      height: selectedBox.style.height
+    });
+  }
+  function getElementSelector(element) {
+    if (!(element instanceof Element)) throw new Error('Argument must be a DOM element');
+    var segments = [];
+    var current = element;
+    while (current !== document.documentElement) {
+      var selector = '';
+      // 优先检查唯一ID
+      if (current.id && document.querySelectorAll("#".concat(current.id)).length === 1) {
+        segments.unshift("#".concat(current.id));
+        break; // ID唯一，无需继续向上
+      }
+
+      // 生成类名选择器（取第一个有效类名）
+      var classes = Array.from(current.classList).filter(function (c) {
+        return !c.startsWith('js-');
+      });
+      var className = classes.length > 0 ? ".".concat(classes[0]) : '';
+
+      // 生成位置索引（nth-child）
+      var tag = current.tagName.toLowerCase();
+      if (!className) {
+        var siblings = Array.from(current.parentNode.children);
+        var index = siblings.findIndex(function (el) {
+          return el === current;
+        }) + 1;
+        selector = "".concat(tag, ":nth-child(").concat(index, ")");
+      } else {
+        selector = className;
+      }
+      segments.unshift(selector);
+      current = current.parentElement;
+    }
+
+    // 处理根元素
+    if (current === document.documentElement) {
+      segments.unshift('html');
+    }
+    return segments.join(' > ');
+  }
+
+  // 获取元素文本内容
+  function getElementText(element) {
+    var _element$textContent;
+    if (element.tagName === "INPUT") {
+      return element.value || element.placeholder || "";
+    }
+    if (element.tagName === "TEXTAREA") {
+      return element.value || element.placeholder || "";
+    }
+    var text = ((_element$textContent = element.textContent) === null || _element$textContent === void 0 ? void 0 : _element$textContent.trim()) || "";
+    return text.length > 50 ? text.substring(0, 50) + "..." : text;
+  }
+
+  // 获取元素属性信息
+  function getElementAttributes(element) {
+    var attrs = {};
+    for (var i = 0; i < element.attributes.length; i++) {
+      var attr = element.attributes[i];
+      attrs[attr.name] = attr.value;
+    }
+    return attrs;
+  }
+
+  // 鼠标悬停事件处理
+  function handleMouseOver(e) {
+    if (!highlightEnabled) return;
+    var target = e.target;
+    if (!target || target === overlay || target === highlightBox || target === tagLabel || target === selectedBox || target === selectedLabel) {
+      return;
+    }
+
+    // 避免高亮 html 和 body 元素
+    if (target === document.documentElement || target === document.body) {
+      return;
+    }
+
+    // 如果是已选中的元素，不显示悬停高亮
+    if (target === selectedElement) {
+      highlightBox.style.display = "none";
+      tagLabel.style.display = "none";
+      return;
+    }
+    var rect = target.getBoundingClientRect();
+    var selector = getElementSelector(target);
+    var text = getElementText(target);
+    var attributes = getElementAttributes(target);
+
+    // 更新悬停高亮框位置
+    highlightBox.style.display = "block";
+    highlightBox.style.left = "".concat(rect.left - 2, "px");
+    highlightBox.style.top = "".concat(rect.top - 2, "px");
+    highlightBox.style.width = "".concat(rect.width + 4, "px");
+    highlightBox.style.height = "".concat(rect.height + 4, "px");
+
+    // 更新标签位置和内容
+    tagLabel.style.display = "block";
+    tagLabel.textContent = "<".concat(target.tagName.toLowerCase(), ">");
+
+    // 计算标签位置，确保不超出视窗
+    var labelTop = rect.top - 22;
+    var labelLeft = rect.left;
+
+    // 如果标签会超出顶部，显示在元素下方
+    if (labelTop < 0) {
+      labelTop = rect.bottom + 5;
+    }
+
+    // 如果标签会超出右侧，向左调整
+    if (labelLeft + tagLabel.offsetWidth > window.innerWidth) {
+      labelLeft = window.innerWidth - tagLabel.offsetWidth - 5;
+    }
+    tagLabel.style.left = "".concat(Math.max(0, labelLeft), "px");
+    tagLabel.style.top = "".concat(labelTop, "px");
+
+    // 发送消息到父窗口
+    var elementInfo = {
+      tagName: target.tagName.toLowerCase(),
+      rect: {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+        x: rect.x,
+        y: rect.y
+      },
+      selector: selector,
+      text: text,
+      attributes: attributes,
+      url: window.location.href,
+      path: window.location.pathname,
+      timestamp: Date.now()
+    };
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-hover",
+        data: elementInfo,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 鼠标离开事件处理
+  function handleMouseOut(e) {
+    if (!highlightEnabled) return;
+    var relatedTarget = e.relatedTarget;
+
+    // 如果鼠标移动到高亮相关元素上，不隐藏高亮
+    if (relatedTarget && (relatedTarget === highlightBox || relatedTarget === tagLabel || relatedTarget === overlay || relatedTarget === selectedBox || relatedTarget === selectedLabel)) {
+      return;
+    }
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-hover",
+        data: null,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 点击事件处理
+  function handleClick(e) {
+    var target = e.target;
+    if (!target || target === overlay || target === highlightBox || target === tagLabel || target === selectedBox || target === selectedLabel) {
+      return;
+    }
+
+    // 避免处理 html 和 body 元素
+    if (target === document.documentElement || target === document.body) {
+      return;
+    }
+
+    // 检查是否是交互元素，这些元素需要保留默认行为
+    var isInteractiveElement = ['input', 'textarea', 'select', 'button', 'a'].includes(target.tagName.toLowerCase());
+
+    // 如果高亮功能启用，对于非交互元素阻止默认行为和事件传播
+    if (highlightEnabled) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    var rect = target.getBoundingClientRect();
+    var selector = getElementSelector(target);
+    var text = getElementText(target);
+    var attributes = getElementAttributes(target);
+    console.log("Element clicked:", {
+      tagName: target.tagName,
+      selector: selector,
+      rect: rect
+    });
+
+    // 立即更新选中高亮
+    updateSelectedHighlight(target);
+
+    // 隐藏悬停高亮，因为现在是选中状态
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    var elementInfo = {
+      tagName: target.tagName.toLowerCase(),
+      rect: {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+        x: rect.x,
+        y: rect.y
+      },
+      selector: selector,
+      text: text,
+      attributes: attributes,
+      url: window.location.href,
+      path: window.location.pathname,
+      timestamp: Date.now()
+    };
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-click",
+        data: elementInfo,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 监听来自父窗口的消息
+  function handleParentMessage(event) {
+    console.log("Received message from parent:", event.data);
+    if (event.data.type === "iframe-highlight-toggle") {
+      var enabled = event.data.enabled;
+      console.log("Highlight toggle:", enabled);
+      if (enabled) {
+        enableHighlight();
+      } else {
+        disableHighlight();
+      }
+    } else if (event.data.type === "enable-iframe-highlight") {
+      console.log("Enable iframe highlight");
+      enableHighlight();
+    } else if (event.data.type === "disable-iframe-highlight") {
+      console.log("Disable iframe highlight");
+      disableHighlight();
+    } else if (event.data.type === "toggle-iframe-highlight") {
+      var _enabled = event.data.enabled !== undefined ? event.data.enabled : !highlightEnabled;
+      console.log("Toggle iframe highlight to:", _enabled);
+      if (_enabled) {
+        enableHighlight();
+      } else {
+        disableHighlight();
+      }
+    } else if (event.data.type === "update-selected-element") {
+      var selector = event.data.selector;
+      console.log("Update selected element with selector:", selector);
+      if (selector) {
+        try {
+          var element = document.querySelector(selector);
+          console.log("Found element by selector:", element);
+          updateSelectedHighlight(element);
+        } catch (error) {
+          console.warn("Failed to select element:", error);
+          updateSelectedHighlight(null);
+        }
+      } else {
+        updateSelectedHighlight(null);
+      }
+    } else if (event.data.type === "clear-selected-element") {
+      console.log("Clear selected element");
+      updateSelectedHighlight(null);
+    }
+  }
+
+  // 启用高亮功能
+  function enableHighlight() {
+    console.log("Enabling highlight");
+    document.addEventListener("mouseover", handleMouseOver, true);
+    document.addEventListener("mouseout", handleMouseOut, true);
+    document.addEventListener("click", handleClick, true);
+    highlightEnabled = true;
+    overlay.style.display = "block";
+  }
+
+  // 禁用高亮功能
+  function disableHighlight() {
+    console.log("Disabling highlight");
+    highlightEnabled = false;
+    // 保持事件监听器，但通过 highlightEnabled 变量控制行为
+    // 这样可以保留选中状态的显示
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    // 不隐藏 selectedBox 和 selectedLabel，保留选中状态
+  }
+
+  // 完全禁用高亮功能（移除所有监听器）
+  function fullyDisableHighlight() {
+    console.log("Fully disabling highlight");
+    highlightEnabled = false;
+    document.removeEventListener("mouseover", handleMouseOver, true);
+    document.removeEventListener("mouseout", handleMouseOut, true);
+    document.removeEventListener("click", handleClick, true);
+    overlay.style.display = "none";
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    selectedBox.style.display = "none";
+    selectedLabel.style.display = "none";
+  }
+
+  // 添加事件监听
+  enableHighlight();
+  window.addEventListener("message", handleParentMessage);
+
+  // 暴露全局函数供外部调用
+  window.__iframeHighlightControl = {
+    enable: enableHighlight,
+    disable: disableHighlight,
+    fullyDisable: fullyDisableHighlight,
+    isEnabled: function isEnabled() {
+      return highlightEnabled;
+    },
+    getSelectedElement: function getSelectedElement() {
+      return selectedElement;
+    },
+    updateSelected: updateSelectedHighlight,
+    // 通过消息发送开关控制
+    sendToggleMessage: function sendToggleMessage(enabled) {
+      window.parent.postMessage({
+        type: 'iframe-highlight-status',
+        enabled: enabled || highlightEnabled,
+        source: 'iframe-highlight-injector'
+      }, '*');
+    }
+  };
+
+  // 通知父窗口脚本已加载
+  try {
+    window.parent.postMessage({
+      type: "iframe-highlight-ready",
+      data: {
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: Date.now()
+      },
+      source: "iframe-highlight-injector"
+    }, "*");
+  } catch (error) {
+    console.warn("无法发送就绪消息到父窗口:", error);
+  }
+
+  // 清理函数
+  window.__iframeHighlightCleanup = function () {
+    fullyDisableHighlight();
+    window.removeEventListener("message", handleParentMessage);
+    if (overlay.parentElement) {
+      overlay.parentElement.removeChild(overlay);
+    }
+    delete window.__iframeHighlightInitialized;
+    delete window.__iframeHighlightCleanup;
+  };
+})();
+
+</script>
+
+<script>
+/**
+ * Iframe 元素高亮注入脚本
+ * 需要在目标网站中引入此脚本来支持跨域 iframe 高亮功能
+ *
+ * 使用方法：
+ * 1. 将此脚本添加到目标网站的 HTML 中
+ * 2. 或通过浏览器扩展、用户脚本等方式注入
+ */
+
+(function () {
+  "use strict";
+
+  // 检查是否在 iframe 中
+  if (window.self === window.top) {
+    return; // 不在 iframe 中，不执行
+  }
+
+  // 检查是否已经初始化过
+  if (window.__iframeHighlightInitialized) {
+    return;
+  }
+  window.__iframeHighlightInitialized = true;
+  console.log("Iframe 高亮脚本已加载");
+
+  // 创建高亮覆盖层
+  var overlay = document.createElement("div");
+  overlay.id = "iframe-highlight-overlay";
+  overlay.style.cssText = "\n    position: fixed;\n    top: 0;\n    left: 0;\n    width: 100vw;\n    height: 100vh;\n    pointer-events: none;\n    z-index: 999999;\n    overflow: hidden;\n  ";
+
+  // 创建悬停高亮框（虚线边框）
+  var highlightBox = document.createElement("div");
+  highlightBox.id = "iframe-highlight-box";
+  highlightBox.style.cssText = "\n    position: absolute;\n    border: 2px dashed #007AFF;\n    background: rgba(0, 122, 255, 0.08);\n    pointer-events: none;\n    display: none;\n    transition: all 0.1s ease;\n    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);\n    border-radius: 2px;\n  ";
+
+  // 创建选中节点的常驻高亮框（实线边框）
+  var selectedBox = document.createElement("div");
+  selectedBox.id = "iframe-selected-box";
+  selectedBox.style.cssText = "\n    position: absolute;\n    border: 2px solid #007AFF;\n    pointer-events: none;\n    display: none;\n    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 0 8px rgba(255, 107, 53, 0.4);\n    border-radius: 2px;\n    z-index: 1000000;\n  ";
+
+  // 创建悬停标签显示
+  var tagLabel = document.createElement("div");
+  tagLabel.id = "iframe-tag-label";
+  tagLabel.style.cssText = "\n    position: absolute;\n    background: #007AFF;\n    color: white;\n    padding: 2px 6px;\n    font-size: 11px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n    border-radius: 2px;\n    pointer-events: none;\n    display: none;\n    white-space: nowrap;\n    z-index: 1000001;\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);\n    font-weight: 500;\n  ";
+
+  // 创建选中节点标签
+  var selectedLabel = document.createElement("div");
+  selectedLabel.id = "iframe-selected-label";
+  selectedLabel.style.cssText = "\n    position: absolute;\n    background: #007AFF;\n    color: white;\n    padding: 3px 8px;\n    font-size: 11px;\n    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n    border-radius: 3px;\n    pointer-events: none;\n    display: none;\n    white-space: nowrap;\n    z-index: 1000002;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);\n    font-weight: 600;\n  ";
+  overlay.appendChild(highlightBox);
+  overlay.appendChild(selectedBox);
+  overlay.appendChild(tagLabel);
+  overlay.appendChild(selectedLabel);
+  document.body.appendChild(overlay);
+
+  // 存储当前选中的元素
+  var selectedElement = null;
+  var highlightEnabled = false;
+
+  // 更新选中元素的高亮显示
+  function updateSelectedHighlight(element) {
+    console.log("updateSelectedHighlight called with:", element);
+    if (!element) {
+      selectedBox.style.display = "none";
+      selectedLabel.style.display = "none";
+      selectedElement = null;
+      console.log("Cleared selected highlight");
+      return;
+    }
+    selectedElement = element;
+    var rect = element.getBoundingClientRect();
+    console.log("Selected element rect:", rect);
+
+    // 更新选中高亮框位置
+    selectedBox.style.display = "block";
+    selectedBox.style.left = "".concat(rect.left - 2, "px");
+    selectedBox.style.top = "".concat(rect.top - 2, "px");
+    selectedBox.style.width = "".concat(rect.width + 4, "px");
+    selectedBox.style.height = "".concat(rect.height + 4, "px");
+
+    // 更新选中标签位置和内容
+    selectedLabel.style.display = "block";
+    selectedLabel.textContent = "\u2713 <".concat(element.tagName.toLowerCase(), ">");
+
+    // 计算标签位置，确保不超出视窗
+    var labelTop = rect.top - 28;
+    var labelLeft = rect.left;
+
+    // 如果标签会超出顶部，显示在元素下方
+    if (labelTop < 5) {
+      labelTop = rect.bottom + 5;
+    }
+
+    // 如果标签会超出右侧，向左调整
+    var labelWidth = selectedLabel.offsetWidth || 100; // 预估宽度
+    if (labelLeft + labelWidth > window.innerWidth - 10) {
+      labelLeft = window.innerWidth - labelWidth - 10;
+    }
+    selectedLabel.style.left = "".concat(Math.max(5, labelLeft), "px");
+    selectedLabel.style.top = "".concat(labelTop, "px");
+    console.log("Selected highlight positioned at:", {
+      left: selectedBox.style.left,
+      top: selectedBox.style.top,
+      width: selectedBox.style.width,
+      height: selectedBox.style.height
+    });
+  }
+  function getElementSelector(element) {
+    if (!(element instanceof Element)) throw new Error('Argument must be a DOM element');
+    var segments = [];
+    var current = element;
+    while (current !== document.documentElement) {
+      var selector = '';
+      // 优先检查唯一ID
+      if (current.id && document.querySelectorAll("#".concat(current.id)).length === 1) {
+        segments.unshift("#".concat(current.id));
+        break; // ID唯一，无需继续向上
+      }
+
+      // 生成类名选择器（取第一个有效类名）
+      var classes = Array.from(current.classList).filter(function (c) {
+        return !c.startsWith('js-');
+      });
+      var className = classes.length > 0 ? ".".concat(classes[0]) : '';
+
+      // 生成位置索引（nth-child）
+      var tag = current.tagName.toLowerCase();
+      if (!className) {
+        var siblings = Array.from(current.parentNode.children);
+        var index = siblings.findIndex(function (el) {
+          return el === current;
+        }) + 1;
+        selector = "".concat(tag, ":nth-child(").concat(index, ")");
+      } else {
+        selector = className;
+      }
+      segments.unshift(selector);
+      current = current.parentElement;
+    }
+
+    // 处理根元素
+    if (current === document.documentElement) {
+      segments.unshift('html');
+    }
+    return segments.join(' > ');
+  }
+
+  // 获取元素文本内容
+  function getElementText(element) {
+    var _element$textContent;
+    if (element.tagName === "INPUT") {
+      return element.value || element.placeholder || "";
+    }
+    if (element.tagName === "TEXTAREA") {
+      return element.value || element.placeholder || "";
+    }
+    var text = ((_element$textContent = element.textContent) === null || _element$textContent === void 0 ? void 0 : _element$textContent.trim()) || "";
+    return text.length > 50 ? text.substring(0, 50) + "..." : text;
+  }
+
+  // 获取元素属性信息
+  function getElementAttributes(element) {
+    var attrs = {};
+    for (var i = 0; i < element.attributes.length; i++) {
+      var attr = element.attributes[i];
+      attrs[attr.name] = attr.value;
+    }
+    return attrs;
+  }
+
+  // 鼠标悬停事件处理
+  function handleMouseOver(e) {
+    if (!highlightEnabled) return;
+    var target = e.target;
+    if (!target || target === overlay || target === highlightBox || target === tagLabel || target === selectedBox || target === selectedLabel) {
+      return;
+    }
+
+    // 避免高亮 html 和 body 元素
+    if (target === document.documentElement || target === document.body) {
+      return;
+    }
+
+    // 如果是已选中的元素，不显示悬停高亮
+    if (target === selectedElement) {
+      highlightBox.style.display = "none";
+      tagLabel.style.display = "none";
+      return;
+    }
+    var rect = target.getBoundingClientRect();
+    var selector = getElementSelector(target);
+    var text = getElementText(target);
+    var attributes = getElementAttributes(target);
+
+    // 更新悬停高亮框位置
+    highlightBox.style.display = "block";
+    highlightBox.style.left = "".concat(rect.left - 2, "px");
+    highlightBox.style.top = "".concat(rect.top - 2, "px");
+    highlightBox.style.width = "".concat(rect.width + 4, "px");
+    highlightBox.style.height = "".concat(rect.height + 4, "px");
+
+    // 更新标签位置和内容
+    tagLabel.style.display = "block";
+    tagLabel.textContent = "<".concat(target.tagName.toLowerCase(), ">");
+
+    // 计算标签位置，确保不超出视窗
+    var labelTop = rect.top - 22;
+    var labelLeft = rect.left;
+
+    // 如果标签会超出顶部，显示在元素下方
+    if (labelTop < 0) {
+      labelTop = rect.bottom + 5;
+    }
+
+    // 如果标签会超出右侧，向左调整
+    if (labelLeft + tagLabel.offsetWidth > window.innerWidth) {
+      labelLeft = window.innerWidth - tagLabel.offsetWidth - 5;
+    }
+    tagLabel.style.left = "".concat(Math.max(0, labelLeft), "px");
+    tagLabel.style.top = "".concat(labelTop, "px");
+
+    // 发送消息到父窗口
+    var elementInfo = {
+      tagName: target.tagName.toLowerCase(),
+      rect: {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+        x: rect.x,
+        y: rect.y
+      },
+      selector: selector,
+      text: text,
+      attributes: attributes,
+      url: window.location.href,
+      path: window.location.pathname,
+      timestamp: Date.now()
+    };
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-hover",
+        data: elementInfo,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 鼠标离开事件处理
+  function handleMouseOut(e) {
+    if (!highlightEnabled) return;
+    var relatedTarget = e.relatedTarget;
+
+    // 如果鼠标移动到高亮相关元素上，不隐藏高亮
+    if (relatedTarget && (relatedTarget === highlightBox || relatedTarget === tagLabel || relatedTarget === overlay || relatedTarget === selectedBox || relatedTarget === selectedLabel)) {
+      return;
+    }
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-hover",
+        data: null,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 点击事件处理
+  function handleClick(e) {
+    var target = e.target;
+    if (!target || target === overlay || target === highlightBox || target === tagLabel || target === selectedBox || target === selectedLabel) {
+      return;
+    }
+
+    // 避免处理 html 和 body 元素
+    if (target === document.documentElement || target === document.body) {
+      return;
+    }
+
+    // 检查是否是交互元素，这些元素需要保留默认行为
+    var isInteractiveElement = ['input', 'textarea', 'select', 'button', 'a'].includes(target.tagName.toLowerCase());
+
+    // 如果高亮功能启用，对于非交互元素阻止默认行为和事件传播
+    if (highlightEnabled) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    var rect = target.getBoundingClientRect();
+    var selector = getElementSelector(target);
+    var text = getElementText(target);
+    var attributes = getElementAttributes(target);
+    console.log("Element clicked:", {
+      tagName: target.tagName,
+      selector: selector,
+      rect: rect
+    });
+
+    // 立即更新选中高亮
+    updateSelectedHighlight(target);
+
+    // 隐藏悬停高亮，因为现在是选中状态
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    var elementInfo = {
+      tagName: target.tagName.toLowerCase(),
+      rect: {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+        x: rect.x,
+        y: rect.y
+      },
+      selector: selector,
+      text: text,
+      attributes: attributes,
+      url: window.location.href,
+      path: window.location.pathname,
+      timestamp: Date.now()
+    };
+    try {
+      window.parent.postMessage({
+        type: "iframe-element-click",
+        data: elementInfo,
+        source: "iframe-highlight-injector"
+      }, "*");
+    } catch (error) {
+      console.warn("无法发送消息到父窗口:", error);
+    }
+  }
+
+  // 监听来自父窗口的消息
+  function handleParentMessage(event) {
+    console.log("Received message from parent:", event.data);
+    if (event.data.type === "iframe-highlight-toggle") {
+      var enabled = event.data.enabled;
+      console.log("Highlight toggle:", enabled);
+      if (enabled) {
+        enableHighlight();
+      } else {
+        disableHighlight();
+      }
+    } else if (event.data.type === "enable-iframe-highlight") {
+      console.log("Enable iframe highlight");
+      enableHighlight();
+    } else if (event.data.type === "disable-iframe-highlight") {
+      console.log("Disable iframe highlight");
+      disableHighlight();
+    } else if (event.data.type === "toggle-iframe-highlight") {
+      var _enabled = event.data.enabled !== undefined ? event.data.enabled : !highlightEnabled;
+      console.log("Toggle iframe highlight to:", _enabled);
+      if (_enabled) {
+        enableHighlight();
+      } else {
+        disableHighlight();
+      }
+    } else if (event.data.type === "update-selected-element") {
+      var selector = event.data.selector;
+      console.log("Update selected element with selector:", selector);
+      if (selector) {
+        try {
+          var element = document.querySelector(selector);
+          console.log("Found element by selector:", element);
+          updateSelectedHighlight(element);
+        } catch (error) {
+          console.warn("Failed to select element:", error);
+          updateSelectedHighlight(null);
+        }
+      } else {
+        updateSelectedHighlight(null);
+      }
+    } else if (event.data.type === "clear-selected-element") {
+      console.log("Clear selected element");
+      updateSelectedHighlight(null);
+    }
+  }
+
+  // 启用高亮功能
+  function enableHighlight() {
+    console.log("Enabling highlight");
+    document.addEventListener("mouseover", handleMouseOver, true);
+    document.addEventListener("mouseout", handleMouseOut, true);
+    document.addEventListener("click", handleClick, true);
+    highlightEnabled = true;
+    overlay.style.display = "block";
+  }
+
+  // 禁用高亮功能
+  function disableHighlight() {
+    console.log("Disabling highlight");
+    highlightEnabled = false;
+    // 保持事件监听器，但通过 highlightEnabled 变量控制行为
+    // 这样可以保留选中状态的显示
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    // 不隐藏 selectedBox 和 selectedLabel，保留选中状态
+  }
+
+  // 完全禁用高亮功能（移除所有监听器）
+  function fullyDisableHighlight() {
+    console.log("Fully disabling highlight");
+    highlightEnabled = false;
+    document.removeEventListener("mouseover", handleMouseOver, true);
+    document.removeEventListener("mouseout", handleMouseOut, true);
+    document.removeEventListener("click", handleClick, true);
+    overlay.style.display = "none";
+    highlightBox.style.display = "none";
+    tagLabel.style.display = "none";
+    selectedBox.style.display = "none";
+    selectedLabel.style.display = "none";
+  }
+
+  // 添加事件监听
+  enableHighlight();
+  window.addEventListener("message", handleParentMessage);
+
+  // 暴露全局函数供外部调用
+  window.__iframeHighlightControl = {
+    enable: enableHighlight,
+    disable: disableHighlight,
+    fullyDisable: fullyDisableHighlight,
+    isEnabled: function isEnabled() {
+      return highlightEnabled;
+    },
+    getSelectedElement: function getSelectedElement() {
+      return selectedElement;
+    },
+    updateSelected: updateSelectedHighlight,
+    // 通过消息发送开关控制
+    sendToggleMessage: function sendToggleMessage(enabled) {
+      window.parent.postMessage({
+        type: 'iframe-highlight-status',
+        enabled: enabled || highlightEnabled,
+        source: 'iframe-highlight-injector'
+      }, '*');
+    }
+  };
+
+  // 通知父窗口脚本已加载
+  try {
+    window.parent.postMessage({
+      type: "iframe-highlight-ready",
+      data: {
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: Date.now()
+      },
+      source: "iframe-highlight-injector"
+    }, "*");
+  } catch (error) {
+    console.warn("无法发送就绪消息到父窗口:", error);
+  }
+
+  // 清理函数
+  window.__iframeHighlightCleanup = function () {
+    fullyDisableHighlight();
+    window.removeEventListener("message", handleParentMessage);
+    if (overlay.parentElement) {
+      overlay.parentElement.removeChild(overlay);
+    }
+    delete window.__iframeHighlightInitialized;
+    delete window.__iframeHighlightCleanup;
+  };
+})();
+
+</script>
+</body>
+</html>

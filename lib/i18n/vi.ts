@@ -42,6 +42,9 @@ export const vi: Dictionary = {
     cardSpeakTitle: "Speaking",
     cardSpeakDesc: "Huấn luyện viên phát âm AI với phản hồi phát âm theo thời gian thực và chấm điểm lưu loát.",
     cardSpeakBtn: "Luyện Speaking →",
+    cardGrammarTitle: "Ngữ pháp",
+    cardGrammarDesc: "Chinh phục ngữ pháp tiếng Anh qua bài tập, trò chơi và phản hồi AI theo thời gian thực từ B1 đến C2.",
+    cardGrammarBtn: "Chơi GrammarQuest →",
   },
   writing101: {
     badge: "Module Học thuật",

@@ -40,6 +40,9 @@ export const en = {
     cardSpeakTitle: "Speaking",
     cardSpeakDesc: "AI-powered speaking coach with real-time pronunciation feedback and fluency scoring.",
     cardSpeakBtn: "Practice Speaking →",
+    cardGrammarTitle: "Grammar",
+    cardGrammarDesc: "Master English grammar through structured exercises, games, and real-time AI feedback across B1–C2 levels.",
+    cardGrammarBtn: "Play GrammarQuest →",
   },
   writing101: {
     badge: "Academic Module",

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import {
   Layout, Award, TrendingUp, CheckCircle2,
-  Bot, Flame, Trophy, Globe, Crown, Zap, Activity, AlertCircle, Mic
+  Bot, Flame, Trophy, Globe, Crown, Zap, Activity, AlertCircle, Mic, BookOpen
 } from 'lucide-react'
 
 const GUEST_KEY = 'jaxtina_guest'
@@ -106,7 +106,7 @@ export default function ExperiencePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
           <ExperienceCard
             href={`/${lang}/tutor`}
             icon={<Bot className="w-10 h-10 text-white" />}
@@ -153,6 +153,18 @@ export default function ExperiencePage() {
             status="NEW"
             chip="Beta"
           />
+          <ExperienceCard
+            href="/grammar/index.html"
+            external
+            icon={<BookOpen className="w-10 h-10 text-white" />}
+            title={dict.landing.cardGrammarTitle}
+            desc={dict.landing.cardGrammarDesc}
+            btnText={dict.landing.cardGrammarBtn}
+            variants={['B1–C2 Levels', 'XP & Leaderboard']}
+            accent="green"
+            status="NEW"
+            chip="GrammarQuest"
+          />
         </div>
       </div>
     </div>
@@ -167,6 +179,7 @@ function ExperienceCard({
   const isOrange = accent === 'orange'
   const isTeal = accent === 'teal'
   const isPurple = accent === 'purple'
+  const isGreen = accent === 'green'
 
   const chipIcon = chip === 'Arena Mode'
     ? <Globe className="w-3 h-3" />
@@ -185,6 +198,7 @@ function ExperienceCard({
         ${isOrange ? 'border-orange-100 shadow-orange-100/50' : ''}
         ${isTeal ? 'border-teal-100 shadow-teal-100/50' : ''}
         ${isPurple ? 'border-purple-100 shadow-purple-100/50' : ''}
+        ${isGreen ? 'border-green-100 shadow-green-100/50' : ''}
       `}
     >
       {/* Status Pills */}
@@ -225,6 +239,7 @@ function ExperienceCard({
         ${isOrange ? 'bg-gradient-to-br from-orange-400 to-orange-600 shadow-orange-200' : ''}
         ${isTeal ? 'bg-gradient-to-br from-teal-400 to-teal-600 shadow-teal-200' : ''}
         ${isPurple ? 'bg-gradient-to-br from-purple-400 to-purple-600 shadow-purple-200' : ''}
+        ${isGreen ? 'bg-gradient-to-br from-green-400 to-emerald-600 shadow-green-200' : ''}
       `}>
         {icon}
       </div>
@@ -237,7 +252,7 @@ function ExperienceCard({
           {chip && (
             <div className={`
               inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black tracking-widest uppercase
-              ${isCyan ? 'bg-cyan-50 text-cyan-600' : isOrange ? 'bg-orange-50 text-orange-600' : isTeal ? 'bg-teal-50 text-teal-600' : 'bg-purple-50 text-purple-600'}
+              ${isCyan ? 'bg-cyan-50 text-cyan-600' : isOrange ? 'bg-orange-50 text-orange-600' : isTeal ? 'bg-teal-50 text-teal-600' : isGreen ? 'bg-green-50 text-green-600' : 'bg-purple-50 text-purple-600'}
             `}>
               {chipIcon}
               {chip}
@@ -267,7 +282,7 @@ function ExperienceCard({
         <div className="pt-6 space-y-3 w-full">
           {variants.map((v: string) => (
             <div key={v} className="flex items-center gap-3 text-[11px] font-bold text-slate-400 bg-slate-50/50 p-2.5 rounded-2xl border border-slate-50 transition-colors group-hover:bg-slate-50">
-              <div className={`p-1 rounded-full ${isCyan ? 'bg-cyan-100 text-cyan-600' : isOrange ? 'bg-orange-100 text-orange-600' : isTeal ? 'bg-teal-100 text-teal-600' : 'bg-purple-100 text-purple-600'}`}>
+              <div className={`p-1 rounded-full ${isCyan ? 'bg-cyan-100 text-cyan-600' : isOrange ? 'bg-orange-100 text-orange-600' : isTeal ? 'bg-teal-100 text-teal-600' : isGreen ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'}`}>
                 <CheckCircle2 className="h-3 w-3" />
               </div>
               <span className="uppercase tracking-tight">{v}</span>
@@ -283,6 +298,7 @@ function ExperienceCard({
         ${isOrange ? 'group-hover:bg-orange-500 group-hover:border-orange-700 group-hover:shadow-lg group-hover:shadow-orange-200' : ''}
         ${isTeal ? 'group-hover:bg-teal-500 group-hover:border-teal-700 group-hover:shadow-lg group-hover:shadow-teal-200' : ''}
         ${isPurple ? 'group-hover:bg-purple-500 group-hover:border-purple-700 group-hover:shadow-lg group-hover:shadow-purple-200' : ''}
+        ${isGreen ? 'group-hover:bg-green-500 group-hover:border-green-700 group-hover:shadow-lg group-hover:shadow-green-200' : ''}
       `}>
         {btnText}
       </div>
