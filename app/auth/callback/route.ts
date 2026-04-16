@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const nextParam = searchParams.get("next");
-  const next = safeNext(nextParam, "/en/practice");
+  const next = safeNext(nextParam, "/en/practice-library");
 
   if (code) {
     const cookieStore = await cookies();

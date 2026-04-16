@@ -28,7 +28,7 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
             if (target?.startsWith("/") && !target.startsWith("//")) {
                 router.replace(`/${lang}${target}`);
             } else {
-                router.replace(`/${lang}/practice`);
+                router.replace(`/${lang}/practice-library`);
             }
         }
     }, [userLoading, user, lang, router, searchParams]);
@@ -40,7 +40,7 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
 
     // Default landing after login should be Practice or Tutor.
     // If a protected page redirected here, it will pass `?next=...` and we honor it.
-    const nextUrl = searchParams.get("next") || `/${lang}/practice`;
+    const nextUrl = searchParams.get("next") || `/${lang}/practice-library`;
 
     const validate = () => {
         const newErrors: Record<string, string> = {};
