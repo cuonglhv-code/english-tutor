@@ -22,7 +22,7 @@ export default async function LocaleLayout({
 }) {
   const { lang } = (await params) as { lang: Locale };
   return (
-    <html lang={lang} suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning className="dark">
       <body className="antialiased bg-background text-textPrimary">
         <Navbar />
         <main>{children}</main>

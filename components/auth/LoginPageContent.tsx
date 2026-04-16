@@ -157,7 +157,7 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
     };
 
     return (
-        <div className="relative min-h-screen w-full flex flex-col lg:grid lg:grid-cols-2 overflow-hidden bg-[#FAFAF8] font-sans">
+        <div className="relative min-h-screen w-full flex flex-col lg:grid lg:grid-cols-2 overflow-hidden bg-background font-sans">
             {/* Background Playful Blobs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
                 <motion.div 
@@ -167,7 +167,7 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
                         x: [0, 20, 0] 
                     }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute -top-[15%] -left-[10%] w-[60%] h-[60%] rounded-full bg-[#26A69A]/5 blur-[100px]" 
+                    className="absolute -top-[15%] -left-[10%] w-[60%] h-[60%] rounded-full bg-primary/10 blur-[100px]" 
                 />
                 <motion.div 
                     animate={{ 
