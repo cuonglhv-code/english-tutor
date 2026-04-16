@@ -2,10 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+/** Validate that `next` is a safe internal relative path (no open redirect). */
+function safeNext(raw: string | null, fallback: string): string {
+  if (!raw) return fallback;
+  // Must start with exactly one slash and not be a protocol-relative URL (//)
+  if (raw.startsWith("/") && !raw.startsWith("//")) {
+    return raw;
+  }
+  return fallback;
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/tutor";
+  const nextParam = searchParams.get("next");
+  const next = safeNext(nextParam, "/en/practice");
 
   if (code) {
     const cookieStore = await cookies();

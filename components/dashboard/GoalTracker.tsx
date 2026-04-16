@@ -82,38 +82,47 @@ export function GoalTracker({ goals, writingCurrentBand, lang, onUpdate }: Props
 
   const handleSave = () => {
     startTransition(async () => {
-      const n = (v: string) => v ? parseFloat(v) : null;
+      const n = (v: string) => v ? parseFloat(v) : undefined;
       const result = await updateUserGoalsAction({
-        current_overall:   null,
+        target_band: 0,
+        current_band: 0,
+        weekly_hours: 0,
+        practice_writing: 0,
+        practice_speaking: 0,
         current_reading:   n(form.current_reading),
         current_listening: n(form.current_listening),
         current_writing:   n(form.current_writing),
         current_speaking:  n(form.current_speaking),
-        target_overall:    null,
         target_reading:    n(form.target_reading),
         target_listening:  n(form.target_listening),
         target_writing:    n(form.target_writing),
         target_speaking:   n(form.target_speaking),
+        created_at: new Date().toISOString(),
       });
       if (result.error) {
         toast.error(lang === "vi" ? `Lỗi: ${result.error}` : `Error: ${result.error}`);
       } else {
         toast.success(lang === "vi" ? "Đã lưu mục tiêu!" : "Goals saved!");
         setEditing(false);
+        const n = (v: string) => v ? parseFloat(v) : undefined;
         onUpdate?.({
           id: goals?.id ?? "",
           user_id: goals?.user_id ?? "",
-          updated_at: new Date().toISOString(),
-          current_overall: null,
+          target_band: goals?.target_band ?? 0,
+          current_band: goals?.current_band ?? 0,
+          weekly_hours: goals?.weekly_hours ?? 0,
+          practice_writing: goals?.practice_writing ?? 0,
+          practice_speaking: goals?.practice_speaking ?? 0,
           current_reading:   n(form.current_reading),
           current_listening: n(form.current_listening),
           current_writing:   n(form.current_writing),
           current_speaking:  n(form.current_speaking),
-          target_overall: null,
           target_reading:    n(form.target_reading),
           target_listening:  n(form.target_listening),
           target_writing:    n(form.target_writing),
           target_speaking:   n(form.target_speaking),
+          created_at: goals?.created_at ?? new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         });
       }
     });

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { useTranslation } from '@/lib/i18n/useTranslation'
 import {
   Layout, Award, TrendingUp, CheckCircle2,
-  Bot, Flame, Trophy, Globe, Crown, Zap, Activity, AlertCircle, Mic, BookOpen
+  Bot, Flame, Trophy, Globe, Crown, Zap, Activity, AlertCircle, Mic, BookOpen, Play
 } from 'lucide-react'
 
 const GUEST_KEY = 'jaxtina_guest'
@@ -94,17 +94,57 @@ export default function ExperiencePage() {
           </motion.div>
         )}
 
-        <div className="text-center mb-20 space-y-8">
-          <Badge variant="outline" className="px-8 py-3 rounded-full border-none bg-[#26A69A]/10 text-[#26A69A] text-[11px] font-black uppercase tracking-[0.2em] shadow-sm">
-            {guest ? `${dict.landing.hubWelcome} ${guest.name.split(' ').pop()}!` : 'Welcome to the Hub!'}
-          </Badge>
-          <h1 className="text-6xl md:text-8xl font-display font-black text-slate-800 tracking-tight leading-[0.95] drop-shadow-sm">
-            {dict.landing.hubTitle.split('.')[0]}<span className="text-[#FF7043]">.</span>
-          </h1>
-          <p className="text-slate-500 font-bold text-xl max-w-3xl mx-auto leading-relaxed">
-            {dict.landing.hubDesc}
-          </p>
-        </div>
+        {/* Recommended Action Card */}
+          {guest && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-12 bg-gradient-to-r from-[#26A69A] to-[#2D5A4A] rounded-3xl p-8 text-white shadow-xl"
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div>
+                  <Badge variant="outline" className="px-4 py-1.5 rounded-full bg-white/20 text-white text-[11px] font-black uppercase tracking-[0.2em] mb-4 border-none">
+                    {dict.landing.hubWelcome} {guest.name.split(' ').pop()}!
+                  </Badge>
+                  <h2 className="text-2xl md:text-3xl font-display font-black mb-2">
+                    {dict.landing.hubTitle}
+                  </h2>
+                  <p className="text-white/80 font-medium">
+                    {dict.landing.hubDesc}
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button className="px-8 py-4 bg-white text-[#26A69A] rounded-2xl font-bold flex items-center gap-3 hover:bg-white/90 transition-colors">
+                    <Play className="w-5 h-5" />
+                    {dict.landing.continuePractice}
+                  </button>
+                  <button className="px-8 py-4 bg-white/20 text-white rounded-2xl font-bold hover:bg-white/30 transition-colors">
+                    {dict.landing.quickPractice}
+                  </button>
+                </div>
+              </div>
+              {/* Streak indicator */}
+              <div className="flex items-center gap-2 mt-6 pt-6 border-t border-white/20">
+                <Flame className="w-5 h-5 text-[#E8A945]" />
+                <span className="text-sm font-semibold">🔥 5 {dict.landing.dailyStreak}</span>
+                <span className="text-white/60 text-sm">• Band 6.5 → Target 7.0</span>
+              </div>
+            </motion.div>
+          )}
+
+          {!guest && (
+            <div className="text-center mb-20 space-y-8">
+              <Badge variant="outline" className="px-8 py-3 rounded-full border-none bg-[#26A69A]/10 text-[#26A69A] text-[11px] font-black uppercase tracking-[0.2em] shadow-sm">
+                {'Welcome to the Hub!'}
+              </Badge>
+              <h1 className="text-6xl md:text-8xl font-display font-black text-slate-800 tracking-tight leading-[0.95] drop-shadow-sm">
+                {dict.landing.hubTitle.split('.')[0]}<span className="text-[#FF7043]">.</span>
+              </h1>
+              <p className="text-slate-500 font-bold text-xl max-w-3xl mx-auto leading-relaxed">
+                {dict.landing.hubDesc}
+              </p>
+            </div>
+          )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
           <ExperienceCard

@@ -12,6 +12,10 @@ import {
   Flame,
   BookOpen,
   Layout,
+  Clock,
+  XCircle,
+  FileText,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,6 +50,9 @@ export default function DashboardPage() {
   const [examDate, setExamDate] = useState<UserExamDate | null>(null);
   const [activityLog, setActivityLog] = useState<ActivityDay[]>([]);
 
+  // Engagement events
+  const [engagementEvents, setEngagementEvents] = useState<Array<{ event_name: string; metadata: Record<string, unknown>; created_at: string }>>([]);
+
   const [dataLoading, setDataLoading] = useState(true);
 
   // Auth guard
@@ -66,7 +73,7 @@ export default function DashboardPage() {
       eightWeeksAgo.setDate(eightWeeksAgo.getDate() - 56);
       const cutoffDate = eightWeeksAgo.toISOString().split("T")[0];
 
-      const [subRes, progRes, profileRes, goalsRes, examRes, activityRes] =
+      const [subRes, progRes, profileRes, goalsRes, examRes, activityRes, engagementRes] =
         await Promise.all([
           // Using Supabase via API
           fetch("/api/user/submissions")
@@ -100,6 +107,11 @@ export default function DashboardPage() {
             .eq("user_id", user!.id)
             .gte("activity_date", cutoffDate)
             .order("activity_date", { ascending: true }),
+          supabase
+            .from("engagement_events")
+            .select("event_name, metadata, created_at")
+            .eq("user_id", user!.id)
+            .order("created_at", { ascending: false }),
         ]);
 
       if (!subRes.error) setSubmissions(subRes.data as SubmissionWithFeedback[]);
@@ -107,6 +119,9 @@ export default function DashboardPage() {
       if (!profileRes.error) setProfile(profileRes.data as Profile);
       if (!goalsRes.error) setGoals(goalsRes.data as UserGoals);
       if (!examRes.error) setExamDate(examRes.data as UserExamDate);
+      if (!engagementRes.error && engagementRes.data) {
+        setEngagementEvents(engagementRes.data as Array<{ event_name: string; metadata: Record<string, unknown>; created_at: string }>);
+      }
 
       if (!activityRes.error && activityRes.data) {
         // Aggregate DB rows -> one ActivityDay per date
@@ -115,8 +130,8 @@ export default function DashboardPage() {
           const d = row.activity_date;
           if (!grouped[d]) grouped[d] = { date: d, count: 0, skills: [] };
           grouped[d].count += row.exercises_done;
-          if (!grouped[d].skills.includes(row.skill)) {
-            grouped[d].skills.push(row.skill);
+          if (grouped[d].skills && !grouped[d].skills.includes(row.skill)) {
+            grouped[d].skills!.push(row.skill);
           }
         }
         setActivityLog(Object.values(grouped));
@@ -144,7 +159,7 @@ export default function DashboardPage() {
   const task2Count = submissions.filter((s) => s.task_type === "task2").length;
   const aiCount = submissions.filter((s) => s.scoring_method === "ai_examiner").length;
   const ruleCount = submissions.filter((s) => s.scoring_method === "rule_based_fallback").length;
-  const avgPerCriterion = progress?.average_per_criterion;
+  const avgPerCriterion = progress?.average_per_criterion as Record<string, number> | undefined;
 
   const criteriaStats = [
     { key: "ta", label: "Task Achievement / Task Response" },
@@ -152,6 +167,70 @@ export default function DashboardPage() {
     { key: "lr", label: "Lexical Resource" },
     { key: "gra", label: "Grammatical Range and Accuracy" },
   ] as const;
+
+  // ── Engagement stats ────────────────────────────────────────────────────────
+  const startedCount = engagementEvents.filter(e => e.event_name === 'wizard_started').length;
+  const completedCount = engagementEvents.filter(e => e.event_name === 'submission_completed').length;
+
+  // Deduplicate abandons: if a session_id also has a submission_completed, it was a false abandon
+  // (beforeunload fires on submit navigation). Fall back to raw count for legacy events without session_id.
+  const completedSessionIds = new Set(
+    engagementEvents
+      .filter(e => e.event_name === 'submission_completed' && e.metadata?.session_id)
+      .map(e => e.metadata.session_id as string)
+  );
+  const trueAbandonedCount = engagementEvents
+    .filter(e => e.event_name === 'wizard_abandoned')
+    .filter(e => !e.metadata?.session_id || !completedSessionIds.has(e.metadata.session_id as string))
+    .length;
+
+  const totalTimeMs = engagementEvents
+    .filter(e => e.event_name === 'submission_completed')
+    .reduce((sum, e) => sum + ((e.metadata?.time_spent_ms as number) ?? 0), 0);
+  const totalTimeHours = Math.floor(totalTimeMs / 3_600_000);
+  const totalTimeMins = Math.floor((totalTimeMs % 3_600_000) / 60_000);
+  const totalTimeLabel = totalTimeMs === 0
+    ? '—'
+    : totalTimeHours > 0 ? `${totalTimeHours}h ${totalTimeMins}m` : `${totalTimeMins}m`;
+
+  const abandonRate = startedCount > 0
+    ? Math.round((trueAbandonedCount / startedCount) * 100)
+    : 0;
+
+  const t1EngagementCount = engagementEvents
+    .filter(e => e.event_name === 'submission_completed' && (e.metadata?.task_type === 'task1' || e.metadata?.taskNumber === '1'))
+    .length;
+  const t2EngagementCount = engagementEvents
+    .filter(e => e.event_name === 'submission_completed' && (e.metadata?.task_type === 'task2' || e.metadata?.taskNumber === '2'))
+    .length;
+  const mostPracticed = t1EngagementCount >= t2EngagementCount ? 'Task 1' : 'Task 2';
+
+  // Streak: consecutive days with at least one submission_completed (local date, not UTC)
+  function toLocalDate(iso: string): string {
+    const d = new Date(iso);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+  const completionDays = Array.from(new Set(
+    engagementEvents
+      .filter(e => e.event_name === 'submission_completed')
+      .map(e => toLocalDate(e.created_at))
+  )).sort().reverse();
+  let streak = 0;
+  if (completionDays.length > 0) {
+    const today = toLocalDate(new Date().toISOString());
+    let cursor = today;
+    for (const day of completionDays) {
+      if (day === cursor) {
+        streak++;
+        const d = new Date(cursor);
+        d.setDate(d.getDate() - 1);
+        cursor = d.toISOString().slice(0, 10);
+      } else break;
+    }
+  }
 
   return (
     <div className="relative min-h-screen bg-[#FAFAF8] py-12 px-6 overflow-hidden text-slate-800">
@@ -405,7 +484,7 @@ export default function DashboardPage() {
         )}
 
         {/* SECTION 7 - Submission history */}
-        <div className="bg-white rounded-[2.5rem] p-8 border border-white shadow-2xl shadow-slate-200/20 mb-20 overflow-hidden">
+        <div className="bg-white rounded-[2.5rem] p-8 border border-white shadow-2xl shadow-slate-200/20 overflow-hidden">
           <div className="flex items-center gap-3 mb-8 text-left">
              <div className="p-3 bg-slate-50 rounded-2xl shadow-sm">
                 <PenLine className="h-6 w-6 text-slate-400" />
@@ -415,6 +494,83 @@ export default function DashboardPage() {
             </h2>
           </div>
           <SubmissionHistoryTable submissions={submissions} lang={lang} />
+        </div>
+
+        {/* SECTION DIVIDER */}
+        <div className="flex items-center gap-6 pt-2">
+          <div className="h-px flex-1 bg-slate-200" />
+          <span className="text-[11px] font-black uppercase tracking-[0.3em] text-[#26A69A] leading-none bg-teal-50 px-6 py-3 rounded-full border border-teal-100 shadow-sm">
+            {lang === "vi" ? "Thống kê tương tác" : "Engagement Stats"}
+          </span>
+          <div className="h-px flex-1 bg-slate-200" />
+        </div>
+
+        {/* SECTION 8 - Engagement Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+          {/* Total Time Writing */}
+          <div className="bg-white rounded-[2rem] p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03)] border-b-4 border-teal-100 text-center hover:-translate-y-2 transition-all">
+            <div className="w-12 h-12 rounded-2xl bg-teal-50 flex items-center justify-center mx-auto mb-4">
+              <Clock className="h-5 w-5 text-[#26A69A]" />
+            </div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">
+              {lang === "vi" ? "Tổng thời gian viết" : "Time Writing"}
+            </p>
+            <p className="text-4xl font-black font-display text-slate-800 mt-4 tracking-tighter">{totalTimeLabel}</p>
+            <p className="text-[9px] font-bold text-slate-300 mt-2 uppercase tracking-widest leading-none">
+              {lang === "vi" ? "Tổng cộng" : "Total accumulated"}
+            </p>
+          </div>
+
+          {/* Abandonment Rate */}
+          <div className="bg-white rounded-[2rem] p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03)] border-b-4 border-orange-100 text-center hover:-translate-y-2 transition-all">
+            <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mx-auto mb-4">
+              <XCircle className="h-5 w-5 text-[#FF7043]" />
+            </div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">
+              {lang === "vi" ? "Tỷ lệ bỏ dở" : "Abandonment Rate"}
+            </p>
+            <p className="text-5xl font-black font-display text-slate-800 mt-4 tracking-tighter">
+              {startedCount > 0 ? `${abandonRate}%` : "—"}
+            </p>
+            <p className="text-[9px] font-bold text-slate-300 mt-2 uppercase tracking-widest leading-none">
+              {startedCount > 0 ? `${trueAbandonedCount} / ${startedCount} sessions` : "No data yet"}
+            </p>
+          </div>
+
+          {/* Most Practiced */}
+          <div className="bg-white rounded-[2rem] p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03)] border-b-4 border-slate-100 text-center hover:-translate-y-2 transition-all">
+            <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mx-auto mb-4">
+              <FileText className="h-5 w-5 text-slate-400" />
+            </div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">
+              {lang === "vi" ? "Dạng bài yêu thích" : "Most Practiced"}
+            </p>
+            <p className="text-3xl font-black font-display text-slate-800 mt-4 tracking-tighter uppercase">
+              {completedCount > 0 ? mostPracticed : "—"}
+            </p>
+            <div className="flex justify-center gap-2 mt-3">
+              <Badge variant="secondary" className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-50 border border-slate-100 text-slate-500">
+                T1: {t1EngagementCount}
+              </Badge>
+              <Badge variant="secondary" className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-50 border border-slate-100 text-slate-500">
+                T2: {t2EngagementCount}
+              </Badge>
+            </div>
+          </div>
+
+          {/* Current Streak */}
+          <div className="bg-white rounded-[2rem] p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03)] border-b-4 border-orange-100 text-center hover:-translate-y-2 transition-all">
+            <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center mx-auto mb-4">
+              <Zap className="h-5 w-5 text-[#FF7043]" />
+            </div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">
+              {lang === "vi" ? "Chuỗi ngày luyện tập" : "Current Streak"}
+            </p>
+            <p className="text-5xl font-black font-display text-slate-800 mt-4 tracking-tighter">{streak > 0 ? streak : "—"}</p>
+            <p className="text-[9px] font-bold text-slate-300 mt-2 uppercase tracking-widest leading-none">
+              {streak === 1 ? "day" : streak > 1 ? "days" : "No streak yet"}
+            </p>
+          </div>
         </div>
 
       </div>

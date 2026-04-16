@@ -30,7 +30,8 @@ const TASK_INFO = {
 
 export function StepTask({ data, onUpdate, onNext, onBack }: Props) {
   const { lang } = useLanguage();
-  const [taskType, setTaskType] = useState<"academic" | "general">(data.taskType || "academic");
+  const initialType = data.taskType === "task1" ? "academic" : data.taskType === "task2" ? "general" : (data.taskType as "academic" | "general") || "academic";
+  const [taskType, setTaskType] = useState<"academic" | "general">(initialType);
   const [taskNumber, setTaskNumber] = useState<"1" | "2">(data.taskNumber || "1");
 
   const handleNext = () => {

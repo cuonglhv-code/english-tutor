@@ -16,7 +16,7 @@ export function BandProgressChart({ submissions, lang, targetBand }: Props) {
   const data = [...submissions]
     .sort((a, b) => new Date(a.submitted_at).getTime() - new Date(b.submitted_at).getTime())
     .map((s) => {
-      const fb = s.feedback_results[0];
+      const fb = s.feedback_results?.[0];
       return {
         date: new Date(s.submitted_at).toLocaleDateString(lang === "vi" ? "vi-VN" : "en-GB", { day: "2-digit", month: "short" }),
         Overall: fb?.overall_band ?? null,

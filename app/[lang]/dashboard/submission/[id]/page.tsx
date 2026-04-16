@@ -21,7 +21,7 @@ import type { SubmissionWithFeedback, AnalysisResult, CriterionFeedback } from "
 function reconstructResult(
   submission: SubmissionWithFeedback
 ): AnalysisResult | null {
-  const fb = submission.feedback_results[0];
+  const fb = submission.feedback_results?.[0];
   if (!fb) return null;
 
   const json = fb.feedback_json as Record<string, unknown>;
@@ -86,9 +86,21 @@ function reconstructResult(
     lr: fb.lexical_resource_band ?? 5,
     gra: fb.grammatical_range_accuracy_band ?? 5,
     overall: fb.overall_band ?? 5,
+    task_achievement: fb.task_achievement_band ?? 5,
+    coherence_cohesion: fb.coherence_cohesion_band ?? 5,
+    lexical_resource: fb.lexical_resource_band ?? 5,
+    grammatical_range_accuracy: fb.grammatical_range_accuracy_band ?? 5,
   };
 
   return {
+    taskType: submission.task_type === "task1" ? "task1" : "task2",
+    overallBand: fb.overall_band ?? 5,
+    bandScores: {
+      task_achievement: fb.task_achievement_band ?? 5,
+      coherence_cohesion: fb.coherence_cohesion_band ?? 5,
+      lexical_resource: fb.lexical_resource_band ?? 5,
+      grammatical_range_accuracy: fb.grammatical_range_accuracy_band ?? 5,
+    },
     bands,
     feedback: {
       ta: makeCriterion("ta", bands.ta, taLabel, "task_achievement", "task_achievement_vi"),
@@ -151,7 +163,7 @@ export default function SubmissionDetailPage() {
 
   if (!submission) return null;
 
-  const fb = submission.feedback_results[0];
+  const fb = submission.feedback_results?.[0];
   const isAI = submission.scoring_method === "ai_examiner";
   const result = reconstructResult(submission);
 

@@ -25,10 +25,10 @@ export function SubmissionHistoryTable({ submissions, lang }: Props) {
   const sorted = [...submissions].sort((a, b) => {
     const aVal = sortField === "submitted_at"
       ? new Date(a.submitted_at).getTime()
-      : (a.feedback_results[0]?.overall_band ?? 0);
+      : (a.feedback_results?.[0]?.overall_band ?? 0);
     const bVal = sortField === "submitted_at"
       ? new Date(b.submitted_at).getTime()
-      : (b.feedback_results[0]?.overall_band ?? 0);
+      : (b.feedback_results?.[0]?.overall_band ?? 0);
     return sortAsc ? aVal - bVal : bVal - aVal;
   });
 
@@ -76,7 +76,7 @@ export function SubmissionHistoryTable({ submissions, lang }: Props) {
           </thead>
           <tbody>
             {paged.map((s) => {
-              const fb = s.feedback_results[0];
+              const fb = s.feedback_results?.[0];
               const band = fb?.overall_band;
               return (
                 <tr key={s.id} className="border-t hover:bg-muted/30 transition-colors">
@@ -91,8 +91,8 @@ export function SubmissionHistoryTable({ submissions, lang }: Props) {
                     </Badge>
                   </td>
                   <td className="p-3 hidden md:table-cell max-w-[200px]">
-                    <p className="truncate text-xs text-muted-foreground" title={s.prompt_text}>
-                      {s.prompt_text.slice(0, 80)}{s.prompt_text.length > 80 ? "…" : ""}
+                    <p className="truncate text-xs text-muted-foreground" title={s.prompt_text || ""}>
+                      {(s.prompt_text || "").slice(0, 80)}{(s.prompt_text || "").length > 80 ? "…" : ""}
                     </p>
                   </td>
                   <td className="p-3 text-center">

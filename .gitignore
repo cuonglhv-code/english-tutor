@@ -1,26 +1,5 @@
-# Dependencies
-node_modules/
-
-# Next.js build
-.next/
-out/
-
-# Secrets — NEVER commit these
-.env
-.env.local
-.env.*.local
-
-# Vercel
-.vercel
-
-# Editor
+node_modules
+.next
+.env*.local
+*.log
 .DS_Store
-*.swp
-/jaxtina-ielts-app
-
-# TypeScript build info (generated, not source)
-tsconfig.tsbuildinfo
-
-# Claude Code local settings (machine-specific, not for repo)
-.claude/settings.local.json
-.claude/launch.json

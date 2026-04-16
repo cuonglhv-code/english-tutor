@@ -1,186 +1,178 @@
 export interface WizardData {
-  name: string;
-  age: number;
-  address: string;
-  mobile: string;
-  email: string;
-  currentBands: {
-    listening: string;
-    reading: string;
-    writing: string;
-    speaking: string;
-  };
-  targetBand: string;
-  taskType: "academic" | "general";
-  taskNumber: "1" | "2";
-  question: string;
-  questionImage?: string; // base64 Data URL of uploaded image (display only, not sent to API)
-  essay: string;
-  language: "en" | "vi";
   user_id?: string;
+  taskType: "task1" | "task2" | "academic" | "general";
+  questionImage?: string;
+  questionText?: string;
+  essay?: string;
+  wordCount?: number;
+  question?: string;
   question_id?: string;
+  taskNumber?: "1" | "2";
+  name?: string;
+  email?: string;
+  mobile?: string;
+  language?: string;
+  age?: string;
+  address?: string;
+  currentBands?: {
+    listening?: string;
+    reading?: string;
+    writing?: string;
+    speaking?: string;
+  };
+  targetBand?: string;
 }
 
-export interface BandScores {
-  ta: number;
-  cc: number;
-  lr: number;
-  gra: number;
-  overall: number;
+export interface EssayPlanRequest {
+  essay: string;
+  task_type: "task1" | "task2" | "academic" | "general";
+  task_number?: "1" | "2";
+  prompt_text?: string;
+  language?: string;
+}
+
+export interface EssayPlanResponse {
+  plan: string;
 }
 
 export interface CriterionFeedback {
-  score: number;
-  label: string;
-  // Rule-based fields
-  wellDone: string;
-  improvement: string;
-  descriptorCurrent: string;
-  descriptorNext: string;
-  // AI-only fields (optional)
+  band?: number;
+  score?: number;
+  strengths?: string[];
+  improvements?: string[];
+  examples?: string[];
+  label?: string;
+  wellDone?: string;
+  improvement?: string;
+  descriptorCurrent?: string;
+  descriptorNext?: string;
   bandJustification?: string;
-  // Vietnamese mirrors (optional, AI only)
   wellDone_vi?: string;
   improvement_vi?: string;
   bandJustification_vi?: string;
 }
 
 export interface AnalysisResult {
-  bands: BandScores;
+  taskType: "task1" | "task2";
+  overallBand: number;
+  bandScores: BandScores;
   feedback: {
-    ta: CriterionFeedback;
-    cc: CriterionFeedback;
-    lr: CriterionFeedback;
-    gra: CriterionFeedback;
+    ta?: CriterionFeedback;
+    cc?: CriterionFeedback;
+    lr?: CriterionFeedback;
+    gra?: CriterionFeedback;
+    task_achievement?: CriterionFeedback;
+    coherence_cohesion?: CriterionFeedback;
+    lexical_resource?: CriterionFeedback;
+    grammatical_range_accuracy?: CriterionFeedback;
   };
-  tips: string[];
-  wordCount: number;
-  disclaimer: string;
-  scoring_method?: "ai_examiner" | "rule_based_fallback";
-  // AI-only extras (optional)
-  overallComment?: string;
-  priorityActions?: string[];
-  // Vietnamese mirrors (optional, AI only)
-  overallComment_vi?: string;
-  priorityActions_vi?: string[];
+  executionTime?: number;
+  _full_result?: unknown;
+  bands?: BandScores;
+  tips?: string[];
   tips_vi?: string[];
+  wordCount?: number;
+  disclaimer?: string;
+  scoring_method?: string;
+  overallComment?: string;
+  overallComment_vi?: string;
+  priorityActions?: string[];
+  priorityActions_vi?: string[];
 }
 
-export interface AnalyzeResponse {
-  success: boolean;
-  result?: AnalysisResult;
-  error?: string;
-  scoring_method?: "ai_examiner" | "rule_based_fallback";
+export interface BandScores {
+  task_achievement: number;
+  coherence_cohesion: number;
+  lexical_resource: number;
+  grammatical_range_accuracy: number;
+  ta?: number;
+  cc?: number;
+  lr?: number;
+  gra?: number;
+  overall?: number;
 }
 
-// ─── Raw AI response shape from the Anthropic API ────────────────────────────
+export interface SubmissionWithFeedback {
+  id: string;
+  user_id: string;
+  task_type: "task1" | "task2";
+  question_text: string;
+  prompt_text?: string;
+  question_image?: string;
+  essay: string;
+  essay_text?: string;
+  word_count: number;
+  overall_band: number;
+  band_scores: BandScores;
+  feedback_json: string;
+  submitted_at: string;
+  scoring_method?: string;
+  language?: string;
+  feedback_results?: Array<{
+    id: string;
+    submission_id: string;
+    overall_band: number;
+    task_achievement_band: number;
+    coherence_cohesion_band: number;
+    lexical_resource_band: number;
+    grammatical_range_accuracy_band: number;
+    feedback_json: unknown;
+    generated_at: string;
+  }>;
+}
+
+export interface UserProgress {
+  total_submissions: number;
+  average_band: number;
+  last_submission_at: string;
+  task1_count: number;
+  task2_count: number;
+  average_per_criterion?: number;
+}
+
+export interface Profile {
+  id: string;
+  display_name?: string;
+  role?: string;
+  profile_completed?: boolean;
+  target_band?: number;
+  target_writing_band?: string;
+  exam_date?: string;
+}
 
 export interface AIRawCriterionFeedback {
-  strengths: string;
-  improvements: string;
-  band_justification: string;
-  strengths_vi?: string;
-  improvements_vi?: string;
+  band: number;
+  score: number;
+  strengths: string[];
+  improvements: string[];
+  strengths_vi?: string[];
+  improvements_vi?: string[];
   band_justification_vi?: string;
 }
 
 export interface AIRawFeedback {
+  overall_band: number;
+  band_scores: {
+    task_achievement: number;
+    coherence_cohesion: number;
+    lexical_resource: number;
+    grammatical_range_accuracy: number;
+  };
   task_achievement: AIRawCriterionFeedback;
   coherence_cohesion: AIRawCriterionFeedback;
   lexical_resource: AIRawCriterionFeedback;
   grammatical_range_accuracy: AIRawCriterionFeedback;
-  priority_actions: string[];
+  priority_actions?: string[];
   priority_actions_vi?: string[];
-  overall_comment: string;
+  overall_comment?: string;
   overall_comment_vi?: string;
 }
 
 export interface AIRawResponse {
+  task_type: string;
   task_achievement_band: number;
   coherence_cohesion_band: number;
   lexical_resource_band: number;
   grammatical_range_accuracy_band: number;
-  overall_band: number;
   feedback: AIRawFeedback;
-}
-
-// ─── Essay Plan API ───────────────────────────────────────────────────────────
-
-export interface EssayPlanRequest {
-  task_type: "academic" | "general";
-  task_number: "1" | "2";
-  prompt_text: string;
-  language: "en" | "vi";
-}
-
-export interface EssayPlanResponse {
-  success: boolean;
-  plan?: string;
-  error?: string;
-}
-
-// ─── Supabase schema types ────────────────────────────────────────────────────
-
-export interface Profile {
-  id: string;
-  email: string;
-  display_name: string | null;
-  created_at: string;
-  // Onboarding fields (migration 002)
-  age: number | null;
-  city: string | null;
-  phone: string | null;
-  current_writing_band: string | null;
-  target_writing_band: string | null;
-  profile_completed: boolean;
-}
-
-export interface EssaySubmission {
-  id: string;
-  user_id: string | null;
-  task_type: "task1" | "task2";
-  prompt_text: string;
-  essay_text: string;
-  word_count: number;
-  language: "en" | "vi";
-  submitted_at: string;
-  scoring_method: "ai_examiner" | "rule_based_fallback";
-  // Essay plan fields
-  essay_plan_requested: boolean;
-  essay_plan_text: string | null;
-  // Task 1 Image fields
-  image_path?: string | null;
-  chart_data?: Record<string, unknown> | null;
-  question_id?: string | null;
-}
-
-export interface FeedbackResult {
-  id: string;
-  submission_id: string;
-  overall_band: number;
-  task_achievement_band: number;
-  coherence_cohesion_band: number;
-  lexical_resource_band: number;
-  grammatical_range_accuracy_band: number;
-  feedback_json: AIRawFeedback | Record<string, unknown>;
-  generated_at: string;
-}
-
-export interface UserProgress {
-  user_id: string;
-  average_band: number;
-  total_submissions: number;
-  last_submission_at: string;
-  average_per_criterion: {
-    ta: number;
-    cc: number;
-    lr: number;
-    gra: number;
-  };
-}
-
-// ─── Dashboard types ──────────────────────────────────────────────────────────
-
-export interface SubmissionWithFeedback extends EssaySubmission {
-  feedback_results: FeedbackResult[];
 }

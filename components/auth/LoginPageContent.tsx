@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { GraduationCap, Mail, Lock, User, ShieldCheck, Zap, Globe2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,12 +12,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { useUser } from "@/hooks/useUser";
 
 export function LoginPageContent({ initialMode = "login" }: { initialMode?: "login" | "register" }) {
     const { dict, lang } = useTranslation();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { user, loading: userLoading } = useUser();
     const [mode, setMode] = useState<"login" | "register">(initialMode);
+
+    // Redirect to dashboard if already logged in - no flash
+    useEffect(() => {
+        if (!userLoading && user) {
+            const target = searchParams.get("next");
+            if (target?.startsWith("/") && !target.startsWith("//")) {
+                router.replace(`/${lang}${target}`);
+            } else {
+                router.replace(`/${lang}/practice`);
+            }
+        }
+    }, [userLoading, user, lang, router, searchParams]);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
@@ -47,6 +61,23 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
+    };
+
+    const handleGoogleSignIn = async () => {
+        setLoading(true);
+        const supabase = createBrowserClient();
+        const callbackUrl = new URL(`/auth/callback`, window.location.origin);
+        callbackUrl.searchParams.set('next', nextUrl);
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: callbackUrl.toString(),
+            },
+        });
+        if (error) {
+            toast.error(error.message);
+            setLoading(false);
+        }
     };
 
     const handleAuth = async (e: React.FormEvent) => {
@@ -253,7 +284,29 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
                             </CardDescription>
                         </CardHeader>
 
-                        <CardContent className="px-10 pb-12 space-y-8 relative z-10">
+                        <CardContent className="px-10 pb-12 space-y-6 relative z-10">
+                            {/* Google OAuth */}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full h-14 rounded-[32px] font-bold text-sm flex items-center justify-center gap-3 border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+                                onClick={handleGoogleSignIn}
+                                disabled={loading}
+                            >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src="https://cdn.simpleicons.org/google" alt="Google" className="w-5 h-5" />
+                                {lang === 'vi' ? 'Tiếp tục với Google' : 'Continue with Google'}
+                            </Button>
+
+                            {/* Divider */}
+                            <div className="flex items-center gap-4">
+                                <div className="flex-1 h-px bg-slate-200" />
+                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                    {lang === 'vi' ? 'hoặc' : 'or'}
+                                </span>
+                                <div className="flex-1 h-px bg-slate-200" />
+                            </div>
+
                             <form onSubmit={handleAuth} className="space-y-5">
                                 <AnimatePresence mode="wait">
                                     {mode === "register" && (
@@ -288,7 +341,7 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
                                         <Mail className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300" />
                                         <Input
                                             type="email"
-                                            placeholder="email@example.com"
+                                            placeholder={dict.login.emailPlaceholder || "email@example.com"}
                                             className="rounded-[32px] h-14 pl-14 bg-slate-50 border-slate-200 focus-visible:ring-[#26A69A] focus-visible:ring-offset-0 text-base font-semibold"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
@@ -296,6 +349,7 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
                                             disabled={loading}
                                         />
                                     </div>
+                                    <p className="text-[10px] text-slate-400 ml-5 -mt-1">{dict.login.emailHelper}</p>
                                 </div>
 
                                 <div className="space-y-1.5">
@@ -314,6 +368,7 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
                                             disabled={loading}
                                         />
                                     </div>
+                                    <p className="text-[10px] text-slate-400 ml-5 -mt-1">{dict.login.passwordHelper}</p>
                                 </div>
 
                                 <Button
@@ -341,6 +396,18 @@ export function LoginPageContent({ initialMode = "login" }: { initialMode?: "log
                                         {dict.login.noAccountSuffix}
                                     </p>
                                 )}
+                            </div>
+
+                            {/* Social Proof */}
+                            <div className="flex items-center justify-center gap-2 pt-4 border-t border-slate-100 mt-4">
+                                <div className="flex -space-x-2">
+                                    {[1,2,3,4].map((i) => (
+                                        <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-[#FF7043] to-[#E8A945] border-2 border-white" />
+                                    ))}
+                                </div>
+                                <p className="text-[11px] text-slate-500 font-medium">
+                                    {dict.login.socialProof}
+                                </p>
                             </div>
                         </CardContent>
                     </Card>

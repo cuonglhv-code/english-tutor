@@ -21,13 +21,20 @@ interface Props {
   data: Partial<WizardData>;
   onUpdate: (d: Partial<WizardData>) => void;
   onBack: () => void;
+  startTime?: number;
+  sessionId?: string;
+  onSubmitStart?: () => void;
 }
 
-export function StepWrite({ data, onUpdate, onBack }: Props) {
+export function StepWrite({ data, onUpdate, onBack, startTime, sessionId, onSubmitStart }: Props) {
   const { user } = useUser();
   const { dict, lang, setLang } = useTranslation();
   const [essay, setEssay] = useState(data.essay || "");
-  const [feedbackLang, setFeedbackLang] = useState<"en" | "vi">(data.language || (lang as "en" | "vi") || "en");
+  const initialLang = (() => {
+    const l = data.language || lang;
+    return l === "vi" ? "vi" : "en";
+  })();
+  const [feedbackLang, setFeedbackLang] = useState<"en" | "vi">(initialLang);
   const [loading, setLoading] = useState(false);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [planLoading, setPlanLoading] = useState(false);
@@ -115,6 +122,7 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
   const runAnalysis = async (withPlan: boolean) => {
     setShowPlanModal(false);
     setLoading(true);
+    onSubmitStart?.();
 
     const { questionImage: _img, ...dataForApi } = data as WizardData;
     const fullData: WizardData = {
@@ -166,6 +174,23 @@ export function StepWrite({ data, onUpdate, onBack }: Props) {
         "ielts_result",
         JSON.stringify({ result: json.result, formData: fullData, essayPlan: planText })
       );
+
+      // Fire completion tracking event (fire-and-forget)
+      const timeSpentMs = startTime ? Date.now() - startTime : undefined;
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_name: 'submission_completed',
+          metadata: {
+            time_spent_ms: timeSpentMs,
+            task_type: fullData.taskNumber === '1' ? 'task1' : 'task2',
+            scoring_method: json.result?.scoring_method,
+            session_id: sessionId,
+          },
+        }),
+      }).catch(() => {});
+
       router.push("/results");
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : (lang === 'vi' ? 'Đã có lỗi xảy ra.' : 'An error occurred.'));

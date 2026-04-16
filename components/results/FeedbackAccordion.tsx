@@ -78,6 +78,7 @@ export function FeedbackAccordion({ feedback, lang }: Props) {
       <Accordion type="multiple" defaultValue={["ta", "cc"]} className="px-2">
         {KEYS.map((key) => {
           const item = feedback[key];
+          if (!item) return null;
           const hasVi = Boolean(item.wellDone_vi);
           return (
             <AccordionItem key={key} value={key}>
@@ -85,9 +86,9 @@ export function FeedbackAccordion({ feedback, lang }: Props) {
                 <div className="flex items-center gap-3 w-full pr-2">
                   <Badge
                     variant="outline"
-                    className={`text-base font-bold min-w-[2.5rem] justify-center ${bandToColor(item.score)}`}
+                    className={`text-base font-bold min-w-[2.5rem] justify-center ${bandToColor(item.score ?? 0)}`}
                   >
-                    {item.score}
+                    {item.score ?? 0}
                   </Badge>
                   <span className="font-semibold text-left">{item.label}</span>
                 </div>
@@ -95,9 +96,9 @@ export function FeedbackAccordion({ feedback, lang }: Props) {
               <AccordionContent>
                 <div className="space-y-3 pb-2">
                   {/* Band descriptor (no VI equivalent — these are official EN descriptors) */}
-                  <div className={`rounded-lg p-3 text-sm ${bandToBg(item.score)}`}>
+                  <div className={`rounded-lg p-3 text-sm ${bandToBg(item.score ?? 0)}`}>
                     <p className="font-medium text-muted-foreground text-xs uppercase mb-1">
-                      Band {item.score} {lang === "vi" ? "Mô tả" : "Descriptor"}
+                      Band {item.score ?? 0} {lang === "vi" ? "Mô tả" : "Descriptor"}
                     </p>
                     <p>{item.descriptorCurrent}</p>
                   </div>
@@ -107,8 +108,8 @@ export function FeedbackAccordion({ feedback, lang }: Props) {
                     icon={<CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />}
                     labelEn={t("results", "wellDone", lang) as string}
                     labelVi="Điểm mạnh"
-                    textEn={item.wellDone}
-                    textVi={item.wellDone_vi}
+                    textEn={item.wellDone || ""}
+                    textVi={item.wellDone_vi || ""}
                     bgClass="bg-green-50 dark:bg-green-900/20"
                     textColorClass="text-green-700 dark:text-green-400"
                   />
@@ -118,8 +119,8 @@ export function FeedbackAccordion({ feedback, lang }: Props) {
                     icon={<ArrowUpCircle className="h-4 w-4 text-jaxtina-blue shrink-0" />}
                     labelEn={t("results", "improve", lang) as string}
                     labelVi="Cách cải thiện"
-                    textEn={item.improvement}
-                    textVi={item.improvement_vi}
+                    textEn={item.improvement || ""}
+                    textVi={item.improvement_vi || ""}
                     bgClass="bg-blue-50 dark:bg-blue-900/20"
                     textColorClass="text-jaxtina-blue"
                   />
@@ -144,7 +145,7 @@ export function FeedbackAccordion({ feedback, lang }: Props) {
                   {/* Next band descriptor */}
                   <div className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
                     <span className="font-medium">{t("results", "nextBand", lang)} </span>
-                    {item.descriptorNext}
+                    {item.descriptorNext || ""}
                   </div>
                 </div>
               </AccordionContent>

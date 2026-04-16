@@ -235,13 +235,6 @@ export function Navbar() {
                 <BookOpen className="h-4 w-4 text-[#26A69A]" />
                 <span className="hidden sm:inline">{dict.nav.courses}</span>
               </Link>
-              <Link
-                href={`/${lang}/placement`}
-                className="hidden sm:flex items-center gap-1.5 rounded-full px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[#26A69A] bg-[#26A69A]/10 hover:bg-[#26A69A]/20 transition-all"
-              >
-                <ClipboardList className="h-4 w-4" />
-                <span className="hidden sm:inline">PLACEMENT</span>
-              </Link>
             </>
           )}
 
@@ -506,21 +499,6 @@ export function Navbar() {
                     >
                       <BookOpen className="h-5 w-5 text-primary" />
                       <span>{dict.nav.courses}</span>
-                    </Link>
-                  </motion.div>
-                  <motion.div 
-                    variants={{
-                      open: { opacity: 1, x: 0 },
-                      closed: { opacity: 0, x: -10 }
-                    }}
-                  >
-                    <Link
-                      href={`/${lang}/placement`}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted transition-colors text-primary font-bold"
-                    >
-                      <ClipboardList className="h-5 w-5" />
-                      <span>PLACEMENT</span>
                     </Link>
                   </motion.div>
                 </>

@@ -36,17 +36,18 @@ function BandBar({ score }: { score: number }) {
 }
 
 export function BandsTable({ bands, taskNumber, lang }: Props) {
+  const overall = bands.overall ?? 0;
   const levelLabel =
-    bands.overall >= 8 ? t("results", "expertUser", lang) :
-    bands.overall >= 7 ? t("results", "goodUser", lang) :
-    bands.overall >= 6 ? t("results", "competentUser", lang) :
-    bands.overall >= 5 ? t("results", "modestUser", lang) : t("results", "limitedUser", lang);
+    overall >= 8 ? t("results", "expertUser", lang) :
+    overall >= 7 ? t("results", "goodUser", lang) :
+    overall >= 6 ? t("results", "competentUser", lang) :
+    overall >= 5 ? t("results", "modestUser", lang) : t("results", "limitedUser", lang);
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
       <div className="mb-6 rounded-2xl bg-gradient-to-r from-jaxtina-red to-jaxtina-blue p-6 text-white text-center">
         <p className="text-sm font-medium uppercase tracking-wider opacity-80">{t("results", "overallBand", lang)}</p>
-        <div className="text-5xl sm:text-7xl font-black mt-2 mb-1">{bands.overall}</div>
+        <div className="text-5xl sm:text-7xl font-black mt-2 mb-1">{overall}</div>
         <p className="text-xs sm:text-sm opacity-70 mt-1">{levelLabel}</p>
       </div>
 
@@ -65,7 +66,7 @@ export function BandsTable({ bands, taskNumber, lang }: Props) {
           </thead>
           <tbody>
             {CRITERIA.map(({ key, label }, i) => {
-              const score = bands[key];
+              const score = bands[key] ?? 0;
               return (
                 <motion.tr
                   key={key}

@@ -56,10 +56,13 @@ export function ExamCountdown({ examDate, lang, onUpdate }: Props) {
         );
       } else {
         // Merge with existing row (or create a shell if none existed)
+        const daysRemaining = Math.ceil((new Date(dateInput).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
         onUpdate({
           id:         examDate?.id ?? "",
           user_id:    examDate?.user_id ?? "",
           exam_date:  dateInput,
+          days_remaining: daysRemaining > 0 ? daysRemaining : 0,
+          created_at: examDate?.created_at ?? new Date().toISOString(),
           updated_at: new Date().toISOString(),
         });
         setEditing(false);

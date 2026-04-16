@@ -10,46 +10,36 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        background: "#0D0F14",
+        surface: "#161A24",
+        surfaceAlt: "#1E2330",
+        border: "#2A2F3E",
+        primary: {
+          DEFAULT: "#6C63FF",
+          hover: "#5A52E0",
+          glow: "rgba(108,99,255,0.25)",
+        },
+        accent: {
+          DEFAULT: "#00D4B1",
+          hover: "#00B89A",
+          glow: "rgba(0,212,177,0.20)",
+        },
+        band9: "#FFD700",
+        band7: "#00D4B1",
+        band6: "#6C63FF",
+        band5: "#FF8C42",
+        band4: "#FF4F6B",
+        textPrimary: "#F0F2FF",
+        textSecondary: "#8B92A9",
+        textMuted: "#4E5469",
         "jaxtina-red": "#b7131d",
         "jaxtina-blue": "#005cab",
         "jaxtina-grey": "#404753",
-        primary: {
-          DEFAULT: "var(--primary)",
-          container: "var(--primary-container)",
-        },
-        secondary: {
-          DEFAULT: "var(--secondary)",
-          container: "var(--secondary-container)",
-        },
-        surface: {
-          DEFAULT: "var(--surface)",
-          bright: "var(--surface-bright)",
-          container: {
-            DEFAULT: "var(--surface-container)",
-            low: "var(--surface-container-low)",
-            lowest: "var(--surface-container-lowest)",
-          },
-        },
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        card: {
-          DEFAULT: "var(--card)",
-          foreground: "var(--card-foreground)",
-        },
-        border: "var(--border)",
-        input: "var(--input)",
-        ring: "var(--ring)",
-        muted: {
-          DEFAULT: "var(--muted)",
-          foreground: "var(--muted-foreground)",
-        },
-        accent: {
-          DEFAULT: "var(--accent)",
-          foreground: "var(--accent-foreground)",
-        },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
+        serif: ["Lora", "serif"],
         display: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
       },
       borderRadius: {
@@ -64,6 +54,9 @@ const config: Config = {
         card: "0 4px 24px 0 rgba(0,0,0,0.04)",
         "card-hover": "0 8px 32px 0 rgba(0,0,0,0.08)",
         "card-premium": "0 20px 50px -12px rgba(0, 0, 0, 0.08)",
+        primaryGlow: "0 0 20px rgba(108,99,255,0.4)",
+        primaryGlowHover: "0 0 28px rgba(108,99,255,0.6)",
+        accentGlow: "0 0 20px rgba(0,212,177,0.4)",
       },
     },
   },

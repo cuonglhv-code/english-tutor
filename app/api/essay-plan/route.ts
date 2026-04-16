@@ -36,7 +36,7 @@ ${langInstruction}
 Produce a structured essay plan for a student who is about to write their response. Do NOT write the essay itself.`;
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse<EssayPlanResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse<EssayPlanResponse | { success: boolean; error: string }>> {
   try {
     const body = (await req.json()) as EssayPlanRequest;
 

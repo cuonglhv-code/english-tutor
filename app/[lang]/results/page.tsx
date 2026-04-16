@@ -123,7 +123,7 @@ export default function ResultsPage() {
           </div>
         )}
 
-        <BandsTable bands={result.bands} taskNumber={formData.taskNumber} lang={lang as Lang} />
+        <BandsTable bands={result.bands || result.bandScores} taskNumber={formData.taskNumber || "1"} lang={lang as Lang} />
         <FeedbackAccordion feedback={result.feedback} lang={lang as Lang} />
 
         {/* Priority actions for AI feedback */}
@@ -188,7 +188,7 @@ export default function ResultsPage() {
           </div>
         )}
 
-        <TipsCarousel tips={result.tips} lang={lang as Lang} />
+        <TipsCarousel tips={result.tips || []} lang={lang as Lang} />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-12">
           <Button asChild size="lg" className="h-20 rounded-[24px] bg-secondary hover:bg-secondary/90 text-white font-black uppercase tracking-[0.25em] text-[10px] shadow-2xl shadow-secondary/20 transition-all active:scale-95 border-none">
@@ -206,7 +206,7 @@ export default function ResultsPage() {
         </p>
       </div>
 
-      <SubscribeCTA email={formData.email} name={formData.name} mobile={formData.mobile} />
+      <SubscribeCTA email={formData.email || ""} name={formData.name || ""} mobile={formData.mobile || ""} />
     </div>
   );
 }

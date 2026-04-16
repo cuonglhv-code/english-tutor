@@ -42,7 +42,7 @@ export function StepDetails({ data, onUpdate, onNext }: Props) {
     resolver: zodResolver(schema),
     defaultValues: {
       name: data.name || "",
-      age: data.age || undefined,
+      age: data.age ? Number(data.age) : undefined,
       address: data.address || "",
       mobile: data.mobile || "",
       email: data.email || "",
@@ -57,7 +57,7 @@ export function StepDetails({ data, onUpdate, onNext }: Props) {
   const onSubmit = (values: Schema) => {
     onUpdate({
       name: values.name,
-      age: values.age,
+      age: String(values.age),
       address: values.address,
       mobile: values.mobile,
       email: values.email,

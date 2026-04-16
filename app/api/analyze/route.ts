@@ -176,44 +176,58 @@ function aiToAnalysisResult(
   data: WizardData,
   wordCount: number
 ): AnalysisResult {
-  const taskNumber = data.taskNumber;
-  const taskType = data.taskType;
+  const taskNumber = data.taskNumber || "1";
+  const taskType = data.taskType === "task1" ? "academic" : data.taskType === "task2" ? "general" : data.taskType;
   const taLabel = taskNumber === "1" ? "Task Achievement" : "Task Response";
 
   function makeCriterion(
     criterion: "ta" | "cc" | "lr" | "gra",
     band: number,
     label: string,
-    rawEn: { strengths: string; improvements: string; band_justification: string },
-    rawVi?: { strengths: string; improvements: string; band_justification: string }
+    rawEn: unknown,
+    rawVi?: unknown
   ): CriterionFeedback {
+    const rawEnAny = rawEn as Record<string, unknown> | undefined;
+    const rawViAny = rawVi as Record<string, unknown> | undefined;
     return {
       score: band,
       label,
-      wellDone: rawEn.strengths,
-      improvement: rawEn.improvements,
+      wellDone: String(rawEnAny?.strengths || ""),
+      improvement: String(rawEnAny?.improvements || ""),
       descriptorCurrent: getDescriptor(criterion, Math.floor(band), taskType, taskNumber),
       descriptorNext: getNextDescriptor(criterion, band, taskType, taskNumber),
-      bandJustification: rawEn.band_justification,
-      wellDone_vi: rawVi?.strengths,
-      improvement_vi: rawVi?.improvements,
-      bandJustification_vi: rawVi?.band_justification,
+      bandJustification: String(rawEnAny?.band_justification || ""),
+      wellDone_vi: rawViAny ? String(rawViAny.strengths || "") : undefined,
+      improvement_vi: rawViAny ? String(rawViAny.improvements || "") : undefined,
+      bandJustification_vi: rawViAny ? String(rawViAny.band_justification || "") : undefined,
     };
   }
 
   const bands = {
-    ta: ai.task_achievement_band,
-    cc: ai.coherence_cohesion_band,
-    lr: ai.lexical_resource_band,
-    gra: ai.grammatical_range_accuracy_band,
+    task_achievement: ai.feedback.band_scores.task_achievement,
+    coherence_cohesion: ai.feedback.band_scores.coherence_cohesion,
+    lexical_resource: ai.feedback.band_scores.lexical_resource,
+    grammatical_range_accuracy: ai.feedback.band_scores.grammatical_range_accuracy,
+    ta: ai.feedback.band_scores.task_achievement,
+    cc: ai.feedback.band_scores.coherence_cohesion,
+    lr: ai.feedback.band_scores.lexical_resource,
+    gra: ai.feedback.band_scores.grammatical_range_accuracy,
     overall: roundToHalfBand(
-      (ai.task_achievement_band + ai.coherence_cohesion_band + ai.lexical_resource_band + ai.grammatical_range_accuracy_band) / 4
+      (ai.feedback.band_scores.task_achievement + ai.feedback.band_scores.coherence_cohesion + ai.feedback.band_scores.lexical_resource + ai.feedback.band_scores.grammatical_range_accuracy) / 4
     ),
   };
 
   const fb = ai.feedback;
 
   return {
+    taskType: data.taskType === "task1" ? "task1" : "task2",
+    overallBand: bands.overall,
+    bandScores: {
+      task_achievement: bands.ta,
+      coherence_cohesion: bands.cc,
+      lexical_resource: bands.lr,
+      grammatical_range_accuracy: bands.gra,
+    },
     bands,
     feedback: {
       ta: makeCriterion("ta", bands.ta, taLabel, fb.task_achievement, {
@@ -286,16 +300,16 @@ async function persistToSupabase(
     const enrichedFeedbackJson = {
       ...rawFeedback,
       // Merge VI translations that were added after the primary AI call
-      task_achievement_vi: result.feedback.ta.wellDone_vi
+      task_achievement_vi: result.feedback.ta?.wellDone_vi
         ? { strengths: result.feedback.ta.wellDone_vi, improvements: result.feedback.ta.improvement_vi, band_justification: result.feedback.ta.bandJustification_vi }
         : undefined,
-      coherence_cohesion_vi: result.feedback.cc.wellDone_vi
+      coherence_cohesion_vi: result.feedback.cc?.wellDone_vi
         ? { strengths: result.feedback.cc.wellDone_vi, improvements: result.feedback.cc.improvement_vi, band_justification: result.feedback.cc.bandJustification_vi }
         : undefined,
-      lexical_resource_vi: result.feedback.lr.wellDone_vi
+      lexical_resource_vi: result.feedback.lr?.wellDone_vi
         ? { strengths: result.feedback.lr.wellDone_vi, improvements: result.feedback.lr.improvement_vi, band_justification: result.feedback.lr.bandJustification_vi }
         : undefined,
-      grammatical_range_accuracy_vi: result.feedback.gra.wellDone_vi
+      grammatical_range_accuracy_vi: result.feedback.gra?.wellDone_vi
         ? { strengths: result.feedback.gra.wellDone_vi, improvements: result.feedback.gra.improvement_vi, band_justification: result.feedback.gra.bandJustification_vi }
         : undefined,
       overall_comment_vi: result.overallComment_vi,
@@ -306,11 +320,11 @@ async function persistToSupabase(
 
     const { error: fbErr } = await supabase.from("feedback_results").insert({
       submission_id: submission.id,
-      overall_band: result.bands.overall,
-      task_achievement_band: result.bands.ta,
-      coherence_cohesion_band: result.bands.cc,
-      lexical_resource_band: result.bands.lr,
-      grammatical_range_accuracy_band: result.bands.gra,
+      overall_band: result.bands?.overall ?? result.overallBand,
+      task_achievement_band: result.bands?.ta ?? result.bandScores.task_achievement,
+      coherence_cohesion_band: result.bands?.cc ?? result.bandScores.coherence_cohesion,
+      lexical_resource_band: result.bands?.lr ?? result.bandScores.lexical_resource,
+      grammatical_range_accuracy_band: result.bands?.gra ?? result.bandScores.grammatical_range_accuracy,
       feedback_json: enrichedFeedbackJson,
     });
 
@@ -445,14 +459,14 @@ export async function POST(req: NextRequest) {
         currentBandS: data.currentBands?.speaking || "",
         targetBand: data.targetBand || "",
         taskType: data.taskType,
-        taskNumber: data.taskNumber,
+        taskNumber: data.taskNumber || "",
         question: data.question || "",
-        wordCount: result.wordCount,
-        bandTA: result.bands.ta,
-        bandCC: result.bands.cc,
-        bandLR: result.bands.lr,
-        bandGRA: result.bands.gra,
-        bandOverall: result.bands.overall,
+        wordCount: result.wordCount || 0,
+        bandTA: result.bands?.ta ?? result.bandScores.task_achievement,
+        bandCC: result.bands?.cc ?? result.bandScores.coherence_cohesion,
+        bandLR: result.bands?.lr ?? result.bandScores.lexical_resource,
+        bandGRA: result.bands?.gra ?? result.bandScores.grammatical_range_accuracy,
+        bandOverall: result.bands?.overall ?? result.overallBand,
         feedback: result.feedback,
         subscribed: false,
       })

@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { StepTask } from "@/components/steps/StepTask";
@@ -8,12 +9,29 @@ import { StepWrite } from "@/components/steps/StepWrite";
 import type { WizardData } from "@/types";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { useUser } from "@/hooks/useUser";
-import { LoginPageContent } from "@/components/auth/LoginPageContent";
 import { Loader2, GraduationCap } from "lucide-react";
+
+function trackEvent(name: string, metadata: Record<string, unknown> = {}) {
+  fetch('/api/track', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event_name: name, metadata }),
+  }).catch(() => {});
+}
+
+function generateSessionId(): string {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
 
 export default function PracticePage() {
   const { user, loading: userLoading } = useUser();
   const { dict, lang } = useTranslation();
+  const router = useRouter();
+  const startTimeRef = useRef(Date.now());
+  const trackedStart = useRef(false);
+  const sessionIdRef = useRef<string>(generateSessionId());
+  // Set to true when submission is in-flight — suppresses false wizard_abandoned on unload
+  const submittingRef = useRef(false);
 
   const [step, setStep] = useState(0);
   const [data, setData] = useState<Partial<WizardData>>({});
@@ -54,12 +72,47 @@ export default function PracticePage() {
     } catch { /* ignore */ }
   }, []);
 
+  // Redirect unauthenticated users to login, preserving intended destination
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.push(`/${lang}/login?next=/`);
+    }
+  }, [user, userLoading, lang, router]);
+
+  // Fire wizard_started once after user confirmed
+  useEffect(() => {
+    if (user && !trackedStart.current) {
+      trackedStart.current = true;
+      startTimeRef.current = Date.now();
+      trackEvent('wizard_started', { session_id: sessionIdRef.current });
+    }
+  }, [user]);
+
+  // Fire wizard_abandoned on page unload via sendBeacon — but NOT if a submission is in-flight
+  useEffect(() => {
+    if (!user) return;
+    const handleUnload = () => {
+      if (submittingRef.current) return;
+      const payload = JSON.stringify({
+        event_name: 'wizard_abandoned',
+        metadata: { step, session_id: sessionIdRef.current },
+      });
+      navigator.sendBeacon('/api/track', new Blob([payload], { type: 'application/json' }));
+    };
+    window.addEventListener('beforeunload', handleUnload);
+    return () => window.removeEventListener('beforeunload', handleUnload);
+  }, [user, step]);
+
   const updateData = (d: Partial<WizardData>) => setData((prev) => ({ ...prev, ...d }));
-  const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  const next = () => {
+    const newStep = Math.min(step + 1, STEPS.length - 1);
+    trackEvent('wizard_step_advanced', { step: newStep, session_id: sessionIdRef.current });
+    setStep(newStep);
+  };
   const back = () => setStep((s) => Math.max(s - 1, 0));
   const progress = ((step + 1) / STEPS.length) * 100;
 
-  if (userLoading) {
+  if (userLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-surface">
         <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
@@ -67,20 +120,17 @@ export default function PracticePage() {
     );
   }
 
-  if (!user) {
-    return (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-surface">
-          <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-        </div>
-      }>
-        <LoginPageContent />
-      </Suspense>
-    );
-  }
-
   if (step === 2) {
-    return <StepWrite data={data} onUpdate={updateData} onBack={back} />;
+    return (
+      <StepWrite
+        data={data}
+        onUpdate={updateData}
+        onBack={back}
+        startTime={startTimeRef.current}
+        sessionId={sessionIdRef.current}
+        onSubmitStart={() => { submittingRef.current = true; }}
+      />
+    );
   }
 
   return (

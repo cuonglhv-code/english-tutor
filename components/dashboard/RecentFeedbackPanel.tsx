@@ -20,7 +20,7 @@ export function RecentFeedbackPanel({ submissions, lang }: Props) {
   return (
     <div className="space-y-3">
       {recent.map((s) => {
-        const fb = s.feedback_results[0];
+        const fb = s.feedback_results?.[0];
         const json = fb?.feedback_json as Record<string, unknown> | undefined;
         const overallComment =
           (json?.overall_comment as string | undefined) ??

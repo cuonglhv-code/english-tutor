@@ -251,7 +251,7 @@ function generateTips(
   const tips: string[] = [];
   const curr = parseFloat(currentWritingBand || "0");
 
-  if (bands.ta < 6.5) {
+  if ((bands.ta ?? bands.task_achievement ?? 0) < 6.5) {
     tips.push(
       taskNumber === "1"
         ? "📊 Task 1 essential: Always write an overview (paragraph 2) summarising the 1-2 most significant trends before describing details. This single paragraph can raise your TA score by a full band."
@@ -259,25 +259,21 @@ function generateTips(
     );
   }
 
-  if (bands.cc < 6.5) {
+  if ((bands.cc ?? bands.coherence_cohesion ?? 0) < 6.5) {
     tips.push("🔗 Cohesion tip: Use one cohesive device per paragraph minimum, but vary the type. Mix: contrast (however, nevertheless), addition (furthermore, in addition), result (consequently, therefore), and example (for instance, such as).");
   }
 
-  if (bands.lr < 6.5) {
-    tips.push("📚 Vocabulary tip: Learn 5 topic-specific collocations per common IELTS theme. Environment: 'carbon emissions', 'renewable energy', 'biodiversity loss'. Education: 'academic achievement', 'extracurricular activities'. Technology: 'artificial intelligence', 'digital literacy'.");
-    tips.push("🔄 Paraphrase tip: Never repeat the same content word twice in one paragraph. Alternatives: increase → rise/surge/climb/grow; decrease → decline/fall/drop/plummet; important → significant/crucial/vital/essential.");
-  }
-
-  if (bands.gra < 6.5) {
+  if ((bands.gra ?? bands.grammatical_range_accuracy ?? 0) < 6.5) {
     tips.push("📐 Grammar tip: Practise these 3 complex structures daily: (1) Relative clauses: 'Technology, which has transformed society, continues to evolve.' (2) Conditionals: 'If governments invested more in education, unemployment would decrease.' (3) Passive: 'It is widely believed that...'");
   }
 
-  if (bands.overall >= 7 && bands.overall < 8) {
+  const overall = bands.overall ?? 0;
+  if (overall >= 7 && overall < 8) {
     tips.push("🚀 Band 8 gap: Your writing is strong. To push to Band 8: (1) Eliminate ALL grammatical errors — proofread for subject-verb agreement and article use. (2) Make every example specific with data or names. (3) Use sophisticated vocabulary like 'exacerbate', 'proliferate', 'notwithstanding'.");
   }
 
-  if (curr > 0 && curr < bands.overall) {
-    tips.push(`📈 Progress check: You scored Band ${bands.overall} today — that's ${(bands.overall - curr).toFixed(1)} above your current band of ${curr}. Keep practising under timed conditions (Task 1: 20 min, Task 2: 40 min).`);
+  if (curr > 0 && curr < overall) {
+    tips.push(`📈 Progress check: You scored Band ${overall} today — that's ${(overall - curr).toFixed(1)} above your current band of ${curr}. Keep practising under timed conditions (Task 1: 20 min, Task 2: 40 min).`);
   }
 
   tips.push(
@@ -294,14 +290,14 @@ function generateTips(
 
 export function analyzeEssay(data: WizardData): AnalysisResult {
   const { essay, taskType, taskNumber, question, currentBands } = data;
-  const words = essay.trim().split(/\s+/).filter((w) => w.length > 0);
+  const words = (essay || "").trim().split(/\s+/).filter((w) => w.length > 0);
   const wordCount = words.length;
   const minWords = taskNumber === "1" ? 150 : 250;
 
-  const taRaw = calculateTA(essay, wordCount, minWords, taskType, taskNumber, question);
-  const ccRaw = calculateCC(essay);
-  const lrRaw = calculateLR(essay);
-  const graRaw = calculateGRA(essay);
+  const taRaw = calculateTA(essay || "", wordCount, minWords, taskType || "academic", taskNumber || "1", question || "");
+  const ccRaw = calculateCC(essay || "");
+  const lrRaw = calculateLR(essay || "");
+  const graRaw = calculateGRA(essay || "");
 
   const ta = roundToHalfBand(taRaw);
   const cc = roundToHalfBand(ccRaw);
@@ -309,19 +305,37 @@ export function analyzeEssay(data: WizardData): AnalysisResult {
   const gra = roundToHalfBand(graRaw);
   const overall = roundToHalfBand((ta + cc + lr + gra) / 4);
 
-  const bands: BandScores = { ta, cc, lr, gra, overall };
+  const bands: BandScores = {
+    task_achievement: ta,
+    coherence_cohesion: cc,
+    lexical_resource: lr,
+    grammatical_range_accuracy: gra,
+    ta, cc, lr, gra, overall
+  };
   const taLabel = taskNumber === "1" ? "Task Achievement" : "Task Response";
 
+  const taskTypeValue = taskType === "task1" ? "academic" : taskType === "task2" ? "general" : (taskType || "academic");
+  const taskNumberValue = taskNumber || "1";
+
   return {
+    taskType: taskType === "task2" ? "task2" : "task1",
+    overallBand: overall,
+    bandScores: {
+      task_achievement: ta,
+      coherence_cohesion: cc,
+      lexical_resource: lr,
+      grammatical_range_accuracy: gra,
+    },
     bands,
     feedback: {
-      ta: generateCriterionFeedback("ta", ta, essay, taskType, taskNumber, taLabel),
-      cc: generateCriterionFeedback("cc", cc, essay, taskType, taskNumber, "Coherence & Cohesion"),
-      lr: generateCriterionFeedback("lr", lr, essay, taskType, taskNumber, "Lexical Resource"),
-      gra: generateCriterionFeedback("gra", gra, essay, taskType, taskNumber, "Grammatical Range & Accuracy"),
+      ta: generateCriterionFeedback("ta", ta, essay || "", taskTypeValue, taskNumberValue, taLabel),
+      cc: generateCriterionFeedback("cc", cc, essay || "", taskTypeValue, taskNumberValue, "Coherence & Cohesion"),
+      lr: generateCriterionFeedback("lr", lr, essay || "", taskTypeValue, taskNumberValue, "Lexical Resource"),
+      gra: generateCriterionFeedback("gra", gra, essay || "", taskTypeValue, taskNumberValue, "Grammatical Range & Accuracy"),
     },
-    tips: generateTips(bands, taskType, taskNumber, currentBands?.writing || "0"),
+    tips: generateTips(bands, taskTypeValue, taskNumberValue, currentBands?.writing || "0"),
     wordCount,
     disclaimer: "⚠️ Simulated AI examiner — not an official IELTS result. Bands are indicative only.",
+    scoring_method: "rule_based_fallback",
   };
 }
